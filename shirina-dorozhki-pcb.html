@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ширина дорожки печатной платы по IPC-2221 — онлайн-калькулятор</title>
+<meta name="description" content="Оценочный расчёт ширины дорожки PCB по току, толщине меди и допустимому нагреву с использованием исторической эмпирической формулы IPC-2221.">
+<!-- Яндекс.Метрика: код счётчика вставить сюда на Этапе 2 -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Ширина дорожки печатной платы (IPC‑2221)</h1>
+<p class="intro">Это предварительная оценка для длинной равномерной дорожки. Для ответственной платы проверяйте результат по IPC‑2152, геометрии слоёв и тепловому расчёту.</p>
+<section class="card">
+<div class="f" id="f_i"><label for="i">Постоянный ток</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 1"><span class="u">А</span></div></div><div class="f" id="f_dt"><label for="dt">Допустимый подъём температуры</label><div class="fw"><input id="dt" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">°C</span></div></div><div class="f" id="f_th"><label for="th">Толщина меди</label><div class="fw"><input id="th" type="text" inputmode="decimal" autocomplete="off" value="35" placeholder=""><span class="u">мкм</span></div><div class="hint">Около 35 мкм для 1 oz/ft², 70 мкм для 2 oz/ft²</div></div><div class="f" id="f_layer"><label for="layer">Расположение дорожки</label><div class="fw"><select id="layer"><option value="ext" selected>Наружный слой</option><option value="int">Внутренний слой</option></select></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Как считается</h2>
+<div class="formula">I = k · ΔT^0,44 · A^0,725&nbsp;&nbsp;&nbsp;A = (I/(k·ΔT^0,44))^(1/0,725)</div>
+<p>A — площадь сечения дорожки в mil²; k = 0,048 для наружного и 0,024 для внутреннего слоя. Ширина получается делением A на толщину меди в mil. Это широко используемая старая оценка IPC‑2221; более современный подход IPC‑2152 учитывает конструкцию платы значительно подробнее.</p>
+<h2>Пример расчёта</h2>
+<p>1 А, наружный слой, медь 35 мкм, допустимый нагрев 10 °C: расчётная ширина ≈ <b>0,300 мм</b>; с простым запасом 25% — <b>0,375 мм</b>.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему онлайн-калькуляторы дают разные результаты?</h3><p>Одни используют старую формулу IPC‑2221, другие графики IPC‑2152 или собственную тепловую модель. Также отличаются принятые толщина меди, температура и коэффициент запаса.</p><h3>Можно ли так считать короткую перемычку или полигон?</h3><p>Только как консервативную отправную точку. Короткие проводники и полигоны отводят тепло иначе; узкие места, термобарьеры и переходные отверстия нужно проверять отдельно.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="nagrevanie-dzhoulya-lentsa.html">Нагрев по закону Джоуля–Ленца</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li><li><a href="raschet-radiatora.html">Расчёт радиатора для транзистора и микросхемы</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_u');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function calc(){
+var i=P('i'),dt=P('dt'),th=P('th');
+if([i,dt,th].some(isNaN))return err('Заполните все поля.');
+if(i<=0||dt<=0||th<=0)return err('Ток, нагрев и толщина должны быть больше нуля.');
+if(dt>100)return err('Историческая формула применяется только как грубая оценка; задайте подъём температуры не более 100 °C.');
+var k=S('layer')==='ext'?0.048:0.024;
+var area=Math.pow(i/(k*Math.pow(dt,0.44)),1/0.725),thMil=th/25.4,wMil=area/thMil,w=wMil*0.0254;
+out(row('Расчётная ширина',fmt(w,5)+' мм')+row('С запасом 25%',fmt(w*1.25,5)+' мм')+
+row('Площадь поперечного сечения',fmt(area,5)+' mil²')+
+note('Формула IPC‑2221 — историческая эмпирическая оценка. Она не учитывает длину, медные полигоны, соседние слои, переходные отверстия, температуру среды и реальную теплоотдачу платы.'));
+}
+
+</script>
+</body>
+</html>

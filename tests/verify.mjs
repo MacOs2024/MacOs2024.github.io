@@ -54,7 +54,7 @@ async function calculate(file, values, expected) {
 }
 
 const htmlFiles = fs.readdirSync(sourceDir).filter(file => file.endsWith(".html")).sort();
-check(htmlFiles.length === 26, `Ожидалось 26 HTML-файлов, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 36, `Ожидалось 36 HTML-файлов, найдено ${htmlFiles.length}`);
 
 for (const file of htmlFiles) {
   const dom = await load(file);
@@ -127,6 +127,21 @@ await calculate("raschet-transformatora.html", { p2: "100", u2: "12" }, ["Сеч
 await calculate("raschet-radiatora.html", { pw: "30" }, ["не более 0,333 °C/Вт"]);
 await calculate("vremya-raboty-akkumulyatora.html", { c: "100", p: "100" }, ["Доступная энергия600 Вт·ч", "≈ 6 ч 0 мин"]);
 await calculate("soprotivlenie-provoda.html", { s: "1,5", l: "20", i: "10" }, ["233,3 мОм", "2,33 В", "23,33 Вт"]);
+await calculate("ten-moshchnost-tok.html", { u: "220", p: "2" }, ["Рабочий ток I9,0909 А", "Сопротивление R24,2 Ом"]);
+await calculate("vremya-nagreva-vody.html", { v: "10", t1: "20", t2: "100", p: "2", eff: "90" }, ["Энергия из сети1,0331 кВт·ч", "31"]);
+await calculate("nagrevanie-dzhoulya-lentsa.html", { i: "2", r: "10", t: "60" }, ["Мощность нагрева P40 Вт", "2,4 кДж", "0,66667 Вт·ч"]);
+await calculate("delitel-toka.html", { it: "3", r1: "100", r2: "200" }, ["Ток через R₁2 А", "Ток через R₂1 А", "Напряжение на ветвях200 В"]);
+await calculate("shunt-ampermetra.html", { im: "1", rm: "100", i: "10" }, ["100 мВ", "10 мОм", "0,9999 Вт"]);
+await calculate("dobavochnyy-rezistor-voltmetra.html", { im: "1", rm: "100", u: "100" }, ["Добавочный резистор99,9 кОм", "Полное входное сопротивление100 кОм"]);
+await calculate("awg-mm2.html", { awg: "12" }, ["12 AWG", "2,0525 мм", "3,3088 мм²"]);
+await calculate("shirina-dorozhki-pcb.html", { i: "1", dt: "10", th: "35" }, ["Расчётная ширина0,30039 мм", "С запасом 25%0,37548 мм"]);
+await calculate("ne555-astabilnyy.html", { r1: "10", r2: "100", c: "100" }, ["68,7 Гц", "52,381 %"]);
+await calculate("ne555-monostabilnyy.html", { r: "100", c: "10" }, ["1,1 с"]);
+await calculate("ten-moshchnost-tok.html", { mode: "r", u: "220", r: "24,2" }, ["Мощность P2000 Вт", "Рабочий ток I9,0909 А"]);
+await calculate("awg-mm2.html", { mode: "s", area: "2,5" }, ["13 AWG", "Площадь сечения2,5 мм²"]);
+await calculate("shirina-dorozhki-pcb.html", { layer: "int", i: "1", dt: "10", th: "35" }, ["Расчётная ширина0,78144 мм"]);
+await calculate("vremya-nagreva-vody.html", { v: "10", t1: "20", t2: "110", p: "2", eff: "90" }, ["не учитывает кипение"]);
+await calculate("ne555-monostabilnyy.html", { r: "-1", c: "10" }, ["должны быть больше нуля"]);
 
 {
   const dom = await load("zakon-oma.html");
@@ -140,7 +155,7 @@ await calculate("soprotivlenie-provoda.html", { s: "1,5", l: "20", i: "10" }, ["
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 26, `В sitemap должно быть 26 URL, найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 36, `В sitemap должно быть 36 URL, найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 for (const file of htmlFiles) {
