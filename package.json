@@ -1,0 +1,10 @@
+{
+  "name": "voltcalc",
+  "private": true,
+  "scripts": {
+    "test": "node tests/verify.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "29.0.1"
+  }
+}
