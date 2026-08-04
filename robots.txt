@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+
 Sitemap: https://macos2024.github.io/sitemap.xml

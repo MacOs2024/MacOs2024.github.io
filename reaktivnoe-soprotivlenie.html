@@ -5,7 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Реактивное сопротивление онлайн — калькулятор Xc конденсатора и XL катушки</title>
 <meta name="description" content="Расчёт ёмкостного (Xc) и индуктивного (XL) реактивного сопротивления на заданной частоте. Формулы Xc = 1/(2πfC), XL = 2πfL и примеры.">
-<!-- Яндекс.Метрика: код счётчика вставить сюда на Этапе 2 -->
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -61,6 +72,31 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 .ccard span{font-size:13px;color:#5c6660}
 @media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+#printfoot{display:none}
 </style>
 </head>
 <body>
@@ -70,9 +106,13 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <h1>Реактивное сопротивление конденсатора и катушки</h1>
 <p class="intro">Выберите элемент и частоту — калькулятор покажет его сопротивление переменному току.</p>
 <section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Реактивное сопротивление конденсатора и катушки</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
 <div class="f" id="f_mode"><label for="mode">Элемент</label><div class="fw"><select id="mode"><option value="c" selected>Конденсатор (Xc)</option><option value="l">Катушка индуктивности (XL)</option></select></div></div><div class="f" id="f_f"><label for="f">Частота f</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 50"><select id="f_u" class="u" aria-label="Единицы"><option value="1" selected>Гц</option><option value="1000.0">кГц</option><option value="1000000.0">МГц</option></select></div></div><div class="f" id="f_c"><label for="c">Ёмкость C</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 100"><select id="c_u" class="u" aria-label="Единицы"><option value="1e-12">пФ</option><option value="1e-09" selected>нФ</option><option value="1e-06">мкФ</option></select></div></div><div class="f" id="f_l"><label for="l">Индуктивность L</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 10"><select id="l_u" class="u" aria-label="Единицы"><option value="1e-06">мкГн</option><option value="0.001" selected>мГн</option><option value="1">Гн</option></select></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
@@ -92,11 +132,8 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <script>
 
 var $=function(id){return document.getElementById(id)};
-function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
-if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
-var n=Number(v);return isFinite(n)?n:NaN;}
-function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
-var u=$(id+'_u');return u?n*N(u.value):n;}
+function P(id){var el=$(id);if(!el)return NaN;var v=String(el.value).trim().replace(',','.').replace(/\s+/g,'');
+if(v==='')return NaN;var n=parseFloat(v);if(isNaN(n))return NaN;var u=$(id+'_u');return u?n*parseFloat(u.value):n;}
 function S(id){var el=$(id);return el?el.value:'';}
 function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
 var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
@@ -109,11 +146,40 @@ return fmt(x/1e-12)+' п'+unit;}
 function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
 function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
 function note(t){return '<div class="rnote">'+t+'</div>';}
-function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');}
-function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');}
+function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';}
+box.innerHTML=h;}
 function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
 document.addEventListener('DOMContentLoaded',function(){
 var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
 var inp=document.querySelectorAll('input');
 for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
 if(typeof init==='function')init();
