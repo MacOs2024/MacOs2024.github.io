@@ -76,6 +76,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 .pdfbtn:hover{background:#e2ece7}
 .pdfbtn.on{display:block}
 #printhead{display:none}
+#printfoot{display:none}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
@@ -96,7 +97,6 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
  .rnote{font-size:10pt;background:#f7f7f7}
  #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
 }
-#printfoot{display:none}
 </style>
 </head>
 <body>
@@ -134,8 +134,11 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <script>
 
 var $=function(id){return document.getElementById(id)};
-function P(id){var el=$(id);if(!el)return NaN;var v=String(el.value).trim().replace(',','.').replace(/\s+/g,'');
-if(v==='')return NaN;var n=parseFloat(v);if(isNaN(n))return NaN;var u=$(id+'_u');return u?n*parseFloat(u.value):n;}
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
 function S(id){var el=$(id);return el?el.value:'';}
 function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
 var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
@@ -172,12 +175,15 @@ for(var i=0;i<fs.length;i++){
   else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
  }else if(sel){val=sel.options[sel.selectedIndex].text;}
  else continue;
- h+='<div>'+name+': <b>'+val+un+'</b></div>';}
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
 var extra=document.querySelectorAll('.rv');
 for(var k=0;k<extra.length;k++){
  var v=String(extra[k].value).trim();
- if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';}
-box.innerHTML=h;}
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
 function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
 document.addEventListener('DOMContentLoaded',function(){
 var b=$('go');if(b)b.addEventListener('click',function(){calc()});
@@ -192,6 +198,7 @@ function init(){$('faza').addEventListener('change',function(){$('u').value=(S('
 function calc(){
 var u=P('u'),i=P('i'),c=P('c');
 if(isNaN(u)||isNaN(i)||isNaN(c))return err('Заполните все поля.');
+if(u<=0||i<0)return err('Напряжение должно быть больше нуля, ток — неотрицательным.');
 if(c<=0||c>1)return err('cos φ должен быть в диапазоне от 0 до 1.');
 var k=(S('faza')==='3')?Math.sqrt(3):1;
 var s=k*u*i, p=s*c, q=Math.sqrt(Math.max(s*s-p*p,0));

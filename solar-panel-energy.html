@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Выбор УЗО онлайн — калькулятор номинального тока и уставки утечки</title>
-<meta name="description" content="Калькулятор подбора УЗО: номинальный ток по автомату линии и ток утечки (10, 30, 100, 300 мА) по назначению. Правила установки и ответы на вопросы.">
+<title>Выработка солнечной панели — онлайн-калькулятор энергии</title>
+<meta name="description" content="Упрощённый расчёт выработки солнечных панелей по мощности массива, пиковым солнечным часам и суммарному коэффициенту системы.">
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -102,13 +102,13 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <body>
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
-<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
-<h1>Выбор УЗО: номинал и ток утечки</h1>
-<p class="intro">Укажите автомат, стоящий на линии, и её назначение — калькулятор предложит параметры УЗО.</p>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Выработка солнечной панели</h1>
+<p class="intro">Пиковые солнечные часы (PSH) зависят от места, сезона, наклона и ориентации. Этот калькулятор не заменяет почасовую модель PVWatts/SAM.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Выбор УЗО: номинал и ток утечки</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Выработка солнечной панели</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_avt"><label for="avt">Номинал автомата на линии</label><div class="fw"><select id="avt"><option value="6">6 А</option><option value="10">10 А</option><option value="16" selected>16 А</option><option value="20">20 А</option><option value="25">25 А</option><option value="32">32 А</option><option value="40">40 А</option><option value="50">50 А</option><option value="63">63 А</option></select></div></div><div class="f" id="f_nz"><label for="nz">Назначение линии</label><div class="fw"><select id="nz"><option value="roz" selected>Розетки, кухня, общие линии</option><option value="van">Ванная, детская, тёплый пол</option><option value="vvod">Вводное УЗО (противопожарное)</option></select></div></div>
+<div class="f" id="f_p"><label for="p">Мощность массива</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">кВтp</span></div></div><div class="f" id="f_psh"><label for="psh">Пиковые солнечные часы в день</label><div class="fw"><input id="psh" type="text" inputmode="decimal" autocomplete="off" value="4" placeholder=""><span class="u">ч</span></div></div><div class="f" id="f_eff"><label for="eff">Суммарный коэффициент системы</label><div class="fw"><input id="eff" type="text" inputmode="decimal" autocomplete="off" value="80" placeholder=""><span class="u">%</span></div><div class="hint">Преобразование, температура, провода, загрязнение и прочие потери</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -117,21 +117,16 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<p>УЗО следит за разностью токов в фазном и нулевом проводах: если часть тока «утекает» мимо (через тело человека или повреждённую изоляцию), устройство отключает линию за доли секунды.</p>
-<ul>
-<li><b>10 мА</b> — влажные помещения и линии, где контакт с водой вероятен: ванная, детская, тёплый пол.</li>
-<li><b>30 мА</b> — защита человека на обычных розеточных линиях; порог выбран ниже тока фибрилляции с запасом.</li>
-<li><b>100–300 мА</b> — вводные противопожарные УЗО: ловят суммарные утечки изоляции по всему дому, от поражения током не защищают.</li>
-</ul>
-<p>Номинальный ток УЗО должен быть не меньше номинала автомата перед ним (обычно на ступень выше), поскольку собственной защиты от перегрузки у УЗО нет.</p>
+<div class="formula">Eдень ≈ Pмассив · PSH · kсистемы</div>
+<p>PSH — эквивалентное число часов стандартной пиковой освещённости. Коэффициент системы объединяет потери на температуру, инвертор, кабели, рассогласование, загрязнение и доступность.</p>
 <h2>Пример расчёта</h2>
-<p>Розеточная линия с автоматом 16 А: УЗО <b>25 А / 30 мА, тип A</b>. Вводное на квартиру с автоматом 40 А: УЗО 63 А / 100 мА (селективное), а поэтажные линии — под своими УЗО 30 мА.</p>
+<p>Массив 1 кВтp, 4 PSH и коэффициент 80%: <b>3,2 кВт·ч/день</b>, около <b>97,4 кВт·ч за средний месяц</b>.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>УЗО или дифавтомат?</h3><p>Дифавтомат — это автомат и УЗО в одном корпусе: экономит место в щите, но дороже и при срабатывании не всегда ясно, что случилось — утечка или перегрузка. Функционально связка «автомат + УЗО» эквивалентна.</p><h3>УЗО срабатывает «само по себе». Почему?</h3><p>Суммарная естественная утечка длинных линий и старой техники может подбираться к уставке (штатное срабатывание — от 0,5·IΔn). Разделите нагрузку на несколько УЗО или найдите прибор-виновник поочерёдным отключением.</p>
+<h3>Где взять PSH?</h3><p>Используйте климатическую базу или PVWatts/SAM для нужной точки, ориентации и угла.</p><h3>Можно вводить КПД панели?</h3><p>Нет: паспортная мощность массива уже учитывает мощность модулей. Здесь нужен суммарный коэффициент потерь всей системы.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Выбор автоматического выключателя по мощности</a></li><li><a href="sechenie-kabelya.html">Сечение кабеля по мощности и току</a></li><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="stoimost-elektroenergii.html">Расход и стоимость электроэнергии</a></li><li><a href="vremya-raboty-akkumulyatora.html">Время работы от аккумулятора</a></li><li><a href="power-bank-runtime.html">Время работы от Power Bank</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
 <script>
@@ -197,20 +192,14 @@ if(typeof init==='function')init();
 });
 
 
-var UR=[16,25,40,63,80];
 function calc(){
-var a=parseInt(S('avt'),10);
-var nom=null;
-for(var k=0;k<UR.length;k++){if(UR[k]>a){nom=UR[k];break;}}
-if(!nom)nom=80;
-var nz=S('nz'),leak,tip;
-if(nz==='van'){leak='10 мА';tip='A';}
-else if(nz==='vvod'){leak='100 или 300 мА';tip='A или AC, селективное (S)';}
-else{leak='30 мА';tip='A';}
-out(row('Номинальный ток УЗО',nom+' А')+
-row('Ток утечки (уставка)',leak)+
-row('Рекомендуемый тип',tip)+
-note('Номинал УЗО берут на ступень выше автомата: УЗО не защищает от перегрузки, и автомат должен отключиться первым. Тип A распознаёт пульсирующие утечки современной техники с импульсными блоками питания.'));
+var p=P('p'),h=P('psh'),eff=P('eff');
+if([p,h,eff].some(isNaN))return err('Заполните все поля.');
+if(p<=0||h<0||h>24||eff<=0||eff>100)return err('Мощность > 0, PSH от 0 до 24, коэффициент от 0 до 100%.');
+var day=p*h*eff/100,month=day*30.4375,year=day*365.25;
+out(row('Средняя выработка в день',fmt(day,6)+' кВт·ч')+row('За средний месяц',fmt(month,6)+' кВт·ч')+
+row('За год при том же среднем PSH',fmt(year,6)+' кВт·ч')+
+note('Годовой итог корректен только если введено среднегодовое PSH. Для сезонного прогноза считайте каждый месяц отдельно.'));
 }
 
 </script>

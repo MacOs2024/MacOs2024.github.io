@@ -76,6 +76,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 .pdfbtn:hover{background:#e2ece7}
 .pdfbtn.on{display:block}
 #printhead{display:none}
+#printfoot{display:none}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
@@ -96,7 +97,6 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
  .rnote{font-size:10pt;background:#f7f7f7}
  #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
 }
-#printfoot{display:none}
 </style>
 </head>
 <body>
@@ -109,9 +109,9 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Параллельное и последовательное соединение резисторов</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
 <div class="f" id="f_mode"><label for="mode">Тип соединения</label><div class="fw"><select id="mode"><option value="par" selected>Параллельное</option><option value="ser">Последовательное</option></select></div></div><div class="f" id="f_runit"><label for="runit">Единицы номиналов</label><div class="fw"><select id="runit"><option value="1" selected>Ом</option><option value="1000">кОм</option><option value="1000000">МОм</option></select></div></div><div id="rlist">
-<div class="f"><label>R1</label><div class="fw"><input type="text" inputmode="decimal" class="rv" placeholder="например, 10"></div></div>
-<div class="f"><label>R2</label><div class="fw"><input type="text" inputmode="decimal" class="rv" placeholder="например, 10"></div></div>
-<div class="f"><label>R3</label><div class="fw"><input type="text" inputmode="decimal" class="rv" placeholder="необязательно"></div></div>
+<div class="f"><label for="rv1">R1</label><div class="fw"><input id="rv1" type="text" inputmode="decimal" class="rv" placeholder="например, 10"></div></div>
+<div class="f"><label for="rv2">R2</label><div class="fw"><input id="rv2" type="text" inputmode="decimal" class="rv" placeholder="например, 10"></div></div>
+<div class="f"><label for="rv3">R3</label><div class="fw"><input id="rv3" type="text" inputmode="decimal" class="rv" placeholder="необязательно"></div></div>
 </div>
 <button type="button" class="btn2" id="addr">+ Добавить резистор</button>
 <button id="go" class="btn" type="button">Рассчитать</button>
@@ -137,8 +137,11 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <script>
 
 var $=function(id){return document.getElementById(id)};
-function P(id){var el=$(id);if(!el)return NaN;var v=String(el.value).trim().replace(',','.').replace(/\s+/g,'');
-if(v==='')return NaN;var n=parseFloat(v);if(isNaN(n))return NaN;var u=$(id+'_u');return u?n*parseFloat(u.value):n;}
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
 function S(id){var el=$(id);return el?el.value:'';}
 function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
 var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
@@ -175,12 +178,15 @@ for(var i=0;i<fs.length;i++){
   else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
  }else if(sel){val=sel.options[sel.selectedIndex].text;}
  else continue;
- h+='<div>'+name+': <b>'+val+un+'</b></div>';}
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
 var extra=document.querySelectorAll('.rv');
 for(var k=0;k<extra.length;k++){
  var v=String(extra[k].value).trim();
- if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';}
-box.innerHTML=h;}
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
 function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
 document.addEventListener('DOMContentLoaded',function(){
 var b=$('go');if(b)b.addEventListener('click',function(){calc()});
@@ -196,7 +202,8 @@ function addR(){
 if(nR>=10)return;
 nR++;
 var d=document.createElement('div');d.className='f';
-d.innerHTML='<label>R'+nR+'</label><div class="fw"><input type="text" inputmode="decimal" class="rv" placeholder="необязательно"></div>';
+var id='rv'+nR;
+d.innerHTML='<label for="'+id+'">R'+nR+'</label><div class="fw"><input id="'+id+'" type="text" inputmode="decimal" class="rv" placeholder="необязательно"></div>';
 $('rlist').appendChild(d);
 d.querySelector('input').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});
 }
@@ -206,16 +213,16 @@ var mul=parseFloat(S('runit'));
 var raw=document.querySelectorAll('.rv');
 var vals=[];
 for(var i=0;i<raw.length;i++){
-var v=String(raw[i].value).trim().replace(',','.');
+var v=String(raw[i].value).trim();
 if(v==='')continue;
-var n=parseFloat(v);
+var n=N(v);
 if(isNaN(n))return err('Проверьте значение R'+(i+1)+' — это не число.');
 vals.push(n);}
 if(vals.length<2)return err('Введите минимум два сопротивления.');
+for(var j=0;j<vals.length;j++)if(vals[j]<=0)return err('Все номиналы должны быть больше нуля.');
 var r;
 if(S('mode')==='ser'){r=vals.reduce(function(a,b){return a+b;},0)*mul;}
 else{
-for(var j=0;j<vals.length;j++)if(vals[j]<=0)return err('Для параллельного соединения все номиналы должны быть больше нуля.');
 r=mul/vals.reduce(function(a,b){return a+1/b;},0);}
 out(row('Общее сопротивление ('+vals.length+' шт.)',si(r,'Ом'))+
 note(S('mode')==='par'?'При параллельном соединении общее сопротивление всегда меньше наименьшего из номиналов.':'При последовательном соединении номиналы просто складываются.'));

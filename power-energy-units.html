@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Выбор УЗО онлайн — калькулятор номинального тока и уставки утечки</title>
-<meta name="description" content="Калькулятор подбора УЗО: номинальный ток по автомату линии и ток утечки (10, 30, 100, 300 мА) по назначению. Правила установки и ответы на вопросы.">
+<title>Перевод кВт в лошадиные силы и единиц энергии онлайн</title>
+<meta name="description" content="Конвертер мощности между Вт, кВт, метрическими и механическими лошадиными силами, а также энергии между Дж и Вт·ч.">
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -102,13 +102,13 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <body>
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
-<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
-<h1>Выбор УЗО: номинал и ток утечки</h1>
-<p class="intro">Укажите автомат, стоящий на линии, и её назначение — калькулятор предложит параметры УЗО.</p>
+<nav class="crumbs"><a href="index.html">Главная</a> › Основы электротехники</nav>
+<h1>Перевод кВт, л.с. и единиц энергии</h1>
+<p class="intro">Выберите режим. Метрическая лошадиная сила и механическая horsepower — разные единицы.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Выбор УЗО: номинал и ток утечки</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Перевод кВт, л.с. и единиц энергии</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_avt"><label for="avt">Номинал автомата на линии</label><div class="fw"><select id="avt"><option value="6">6 А</option><option value="10">10 А</option><option value="16" selected>16 А</option><option value="20">20 А</option><option value="25">25 А</option><option value="32">32 А</option><option value="40">40 А</option><option value="50">50 А</option><option value="63">63 А</option></select></div></div><div class="f" id="f_nz"><label for="nz">Назначение линии</label><div class="fw"><select id="nz"><option value="roz" selected>Розетки, кухня, общие линии</option><option value="van">Ванная, детская, тёплый пол</option><option value="vvod">Вводное УЗО (противопожарное)</option></select></div></div>
+<div class="f" id="f_mode"><label for="mode">Что переводим</label><div class="fw"><select id="mode"><option value="power" selected>Мощность</option><option value="energy">Энергия</option></select></div></div><div class="f" id="f_pv"><label for="pv">Значение мощности</label><div class="fw"><input id="pv" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""></div></div><div class="f" id="f_pu"><label for="pu">Единица мощности</label><div class="fw"><select id="pu"><option value="w">Вт</option><option value="kw" selected>кВт</option><option value="ps">л.с. метрическая</option><option value="hp">hp механическая</option></select></div></div><div class="f" id="f_ev"><label for="ev">Значение энергии</label><div class="fw"><input id="ev" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div></div><div class="f" id="f_eu"><label for="eu">Единица энергии</label><div class="fw"><select id="eu"><option value="j">Дж</option><option value="kj">кДж</option><option value="mj">МДж</option><option value="wh">Вт·ч</option><option value="kwh" selected>кВт·ч</option></select></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -117,21 +117,16 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<p>УЗО следит за разностью токов в фазном и нулевом проводах: если часть тока «утекает» мимо (через тело человека или повреждённую изоляцию), устройство отключает линию за доли секунды.</p>
-<ul>
-<li><b>10 мА</b> — влажные помещения и линии, где контакт с водой вероятен: ванная, детская, тёплый пол.</li>
-<li><b>30 мА</b> — защита человека на обычных розеточных линиях; порог выбран ниже тока фибрилляции с запасом.</li>
-<li><b>100–300 мА</b> — вводные противопожарные УЗО: ловят суммарные утечки изоляции по всему дому, от поражения током не защищают.</li>
-</ul>
-<p>Номинальный ток УЗО должен быть не меньше номинала автомата перед ним (обычно на ступень выше), поскольку собственной защиты от перегрузки у УЗО нет.</p>
+<div class="formula">1 л.с. (метрическая) = 735,49875 Вт&nbsp;&nbsp;&nbsp;1 hp (mechanical) ≈ 745,69987 Вт&nbsp;&nbsp;&nbsp;1 Вт·ч = 3600 Дж</div>
+<p>Киловатт — мощность, киловатт-час — энергия. Их нельзя переводить друг в друга без заданного времени.</p>
 <h2>Пример расчёта</h2>
-<p>Розеточная линия с автоматом 16 А: УЗО <b>25 А / 30 мА, тип A</b>. Вводное на квартиру с автоматом 40 А: УЗО 63 А / 100 мА (селективное), а поэтажные линии — под своими УЗО 30 мА.</p>
+<p>10 кВт = <b>13,596 метрической л.с.</b> или <b>13,410 mechanical hp</b>. 1 кВт·ч = <b>3,6 МДж</b>.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>УЗО или дифавтомат?</h3><p>Дифавтомат — это автомат и УЗО в одном корпусе: экономит место в щите, но дороже и при срабатывании не всегда ясно, что случилось — утечка или перегрузка. Функционально связка «автомат + УЗО» эквивалентна.</p><h3>УЗО срабатывает «само по себе». Почему?</h3><p>Суммарная естественная утечка длинных линий и старой техники может подбираться к уставке (штатное срабатывание — от 0,5·IΔn). Разделите нагрузку на несколько УЗО или найдите прибор-виновник поочерёдным отключением.</p>
+<h3>Какая лошадиная сила используется в России?</h3><p>Обычно метрическая: 735,49875 Вт. В англоязычных источниках может использоваться mechanical horsepower.</p><h3>Почему кВт и кВт·ч не одно и то же?</h3><p>кВт показывает скорость передачи энергии, а кВт·ч — количество энергии за время.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Выбор автоматического выключателя по мощности</a></li><li><a href="sechenie-kabelya.html">Сечение кабеля по мощности и току</a></li><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="moshchnost-toka.html">Мощность электрического тока (одно- и трёхфазная сеть)</a></li><li><a href="stoimost-elektroenergii.html">Расход и стоимость электроэнергии</a></li><li><a href="kva-kvt.html">Перевод кВА в кВт и обратно</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
 <script>
@@ -197,21 +192,20 @@ if(typeof init==='function')init();
 });
 
 
-var UR=[16,25,40,63,80];
+function sync(){var p=S('mode')==='power';hideF('pv',!p);hideF('pu',!p);hideF('ev',p);hideF('eu',p);}
+function init(){$('mode').addEventListener('change',sync);sync();}
 function calc(){
-var a=parseInt(S('avt'),10);
-var nom=null;
-for(var k=0;k<UR.length;k++){if(UR[k]>a){nom=UR[k];break;}}
-if(!nom)nom=80;
-var nz=S('nz'),leak,tip;
-if(nz==='van'){leak='10 мА';tip='A';}
-else if(nz==='vvod'){leak='100 или 300 мА';tip='A или AC, селективное (S)';}
-else{leak='30 мА';tip='A';}
-out(row('Номинальный ток УЗО',nom+' А')+
-row('Ток утечки (уставка)',leak)+
-row('Рекомендуемый тип',tip)+
-note('Номинал УЗО берут на ступень выше автомата: УЗО не защищает от перегрузки, и автомат должен отключиться первым. Тип A распознаёт пульсирующие утечки современной техники с импульсными блоками питания.'));
-}
+if(S('mode')==='power'){
+ var v=P('pv');if(isNaN(v)||v<0)return err('Введите неотрицательную мощность.');
+ var m={w:1,kw:1000,ps:735.49875,hp:745.6998715822702},w=v*m[S('pu')];
+ out(row('Ватты',fmt(w,7)+' Вт')+row('Киловатты',fmt(w/1000,7)+' кВт')+
+ row('Метрические л.с.',fmt(w/735.49875,7)+' л.с.')+row('Механические hp',fmt(w/745.6998715822702,7)+' hp'));
+}else{
+ var v=P('ev');if(isNaN(v)||v<0)return err('Введите неотрицательную энергию.');
+ var m={j:1,kj:1000,mj:1e6,wh:3600,kwh:3.6e6},j=v*m[S('eu')];
+ out(row('Джоули',fmt(j,7)+' Дж')+row('Мегаджоули',fmt(j/1e6,7)+' МДж')+
+ row('Ватт-часы',fmt(j/3600,7)+' Вт·ч')+row('Киловатт-часы',fmt(j/3.6e6,7)+' кВт·ч'));
+}}
 
 </script>
 </body>

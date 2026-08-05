@@ -76,6 +76,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 .pdfbtn:hover{background:#e2ece7}
 .pdfbtn.on{display:block}
 #printhead{display:none}
+#printfoot{display:none}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
@@ -96,7 +97,6 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
  .rnote{font-size:10pt;background:#f7f7f7}
  #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
 }
-#printfoot{display:none}
 </style>
 </head>
 <body>
@@ -108,7 +108,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Расход и стоимость электроэнергии</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_p"><label for="p">Мощность прибора P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 2000"><select id="p_u" class="u" aria-label="Единицы"><option value="1" selected>Вт</option><option value="1000">кВт</option></select></div></div><div class="f" id="f_h"><label for="h">Часов работы в сутки</label><div class="fw"><input id="h" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 3"><span class="u">ч</span></div></div><div class="f" id="f_d"><label for="d">Дней в месяце</label><div class="fw"><input id="d" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""></div></div><div class="f" id="f_t"><label for="t">Тариф</label><div class="fw"><input id="t" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">₽/кВт·ч</span></div><div class="hint">Точное значение — в квитанции или на сайте вашего энергосбыта</div></div>
+<div class="f" id="f_p"><label for="p">Мощность прибора P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 2000"><select id="p_unit" class="u" aria-label="Единицы"><option value="1" selected>Вт</option><option value="1000">кВт</option></select></div></div><div class="f" id="f_h"><label for="h">Часов работы в сутки</label><div class="fw"><input id="h" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 3"><span class="u">ч</span></div></div><div class="f" id="f_d"><label for="d">Дней в месяце</label><div class="fw"><input id="d" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""></div></div><div class="f" id="f_t"><label for="t">Тариф</label><div class="fw"><input id="t" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">₽/кВт·ч</span></div><div class="hint">Точное значение — в квитанции или на сайте вашего энергосбыта</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -132,8 +132,11 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <script>
 
 var $=function(id){return document.getElementById(id)};
-function P(id){var el=$(id);if(!el)return NaN;var v=String(el.value).trim().replace(',','.').replace(/\s+/g,'');
-if(v==='')return NaN;var n=parseFloat(v);if(isNaN(n))return NaN;var u=$(id+'_u');return u?n*parseFloat(u.value):n;}
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
 function S(id){var el=$(id);return el?el.value:'';}
 function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
 var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
@@ -170,12 +173,15 @@ for(var i=0;i<fs.length;i++){
   else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
  }else if(sel){val=sel.options[sel.selectedIndex].text;}
  else continue;
- h+='<div>'+name+': <b>'+val+un+'</b></div>';}
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
 var extra=document.querySelectorAll('.rv');
 for(var k=0;k<extra.length;k++){
  var v=String(extra[k].value).trim();
- if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';}
-box.innerHTML=h;}
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
 function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
 document.addEventListener('DOMContentLoaded',function(){
 var b=$('go');if(b)b.addEventListener('click',function(){calc()});

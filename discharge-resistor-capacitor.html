@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Выбор УЗО онлайн — калькулятор номинального тока и уставки утечки</title>
-<meta name="description" content="Калькулятор подбора УЗО: номинальный ток по автомату линии и ток утечки (10, 30, 100, 300 мА) по назначению. Правила установки и ответы на вопросы.">
+<title>Резистор разряда конденсатора — расчёт времени и мощности</title>
+<meta name="description" content="Расчёт разрядного резистора конденсатора по начальному и безопасному напряжению, ёмкости и времени разряда.">
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -102,13 +102,13 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <body>
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
-<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
-<h1>Выбор УЗО: номинал и ток утечки</h1>
-<p class="intro">Укажите автомат, стоящий на линии, и её назначение — калькулятор предложит параметры УЗО.</p>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Резистор разряда конденсатора</h1>
+<p class="intro">Расчёт для экспоненциального разряда через постоянное сопротивление без других подключённых цепей.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Выбор УЗО: номинал и ток утечки</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Резистор разряда конденсатора</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_avt"><label for="avt">Номинал автомата на линии</label><div class="fw"><select id="avt"><option value="6">6 А</option><option value="10">10 А</option><option value="16" selected>16 А</option><option value="20">20 А</option><option value="25">25 А</option><option value="32">32 А</option><option value="40">40 А</option><option value="50">50 А</option><option value="63">63 А</option></select></div></div><div class="f" id="f_nz"><label for="nz">Назначение линии</label><div class="fw"><select id="nz"><option value="roz" selected>Розетки, кухня, общие линии</option><option value="van">Ванная, детская, тёплый пол</option><option value="vvod">Вводное УЗО (противопожарное)</option></select></div></div>
+<div class="f" id="f_c"><label for="c">Ёмкость C</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="470" placeholder=""><select id="c_unit" class="u" aria-label="Единицы"><option value="1e-06" selected>мкФ</option><option value="0.001">мФ</option><option value="1">Ф</option></select></div></div><div class="f" id="f_v0"><label for="v0">Начальное напряжение V0</label><div class="fw"><input id="v0" type="text" inputmode="decimal" autocomplete="off" value="400" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_vt"><label for="vt">Требуемое напряжение Vt</label><div class="fw"><input id="vt" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_t"><label for="t">Время разряда</label><div class="fw"><input id="t" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><select id="t_unit" class="u" aria-label="Единицы"><option value="1">с</option><option value="60" selected>мин</option></select></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -117,21 +117,16 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<p>УЗО следит за разностью токов в фазном и нулевом проводах: если часть тока «утекает» мимо (через тело человека или повреждённую изоляцию), устройство отключает линию за доли секунды.</p>
-<ul>
-<li><b>10 мА</b> — влажные помещения и линии, где контакт с водой вероятен: ванная, детская, тёплый пол.</li>
-<li><b>30 мА</b> — защита человека на обычных розеточных линиях; порог выбран ниже тока фибрилляции с запасом.</li>
-<li><b>100–300 мА</b> — вводные противопожарные УЗО: ловят суммарные утечки изоляции по всему дому, от поражения током не защищают.</li>
-</ul>
-<p>Номинальный ток УЗО должен быть не меньше номинала автомата перед ним (обычно на ступень выше), поскольку собственной защиты от перегрузки у УЗО нет.</p>
+<div class="formula">V(t) = V0 · e^(−t/RC)&nbsp;&nbsp;&nbsp;R = −t / [C · ln(Vt/V0)]</div>
+<p>Мощность максимальна сразу после отключения и затем экспоненциально уменьшается. В постоянно подключённой схеме резистор также непрерывно рассеивает V²/R.</p>
 <h2>Пример расчёта</h2>
-<p>Розеточная линия с автоматом 16 А: УЗО <b>25 А / 30 мА, тип A</b>. Вводное на квартиру с автоматом 40 А: УЗО 63 А / 100 мА (селективное), а поэтажные линии — под своими УЗО 30 мА.</p>
+<p>470 мкФ нужно разрядить с 400 до 50 В за 60 с: R ≈ <b>61,4 кОм</b>, начальная мощность ≈ <b>2,61 Вт</b>, энергия конденсатора — <b>37,6 Дж</b>.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>УЗО или дифавтомат?</h3><p>Дифавтомат — это автомат и УЗО в одном корпусе: экономит место в щите, но дороже и при срабатывании не всегда ясно, что случилось — утечка или перегрузка. Функционально связка «автомат + УЗО» эквивалентна.</p><h3>УЗО срабатывает «само по себе». Почему?</h3><p>Суммарная естественная утечка длинных линий и старой техники может подбираться к уставке (штатное срабатывание — от 0,5·IΔn). Разделите нагрузку на несколько УЗО или найдите прибор-виновник поочерёдным отключением.</p>
+<h3>Можно взять сопротивление меньше?</h3><p>Да, разряд ускорится, но возрастут начальный ток и непрерывные потери, если резистор остаётся подключённым.</p><h3>Достаточно проверить только мощность?</h3><p>Нет. Для высокого напряжения важны допустимое рабочее напряжение корпуса и импульсная перегрузочная способность.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Выбор автоматического выключателя по мощности</a></li><li><a href="sechenie-kabelya.html">Сечение кабеля по мощности и току</a></li><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="zaryad-kondensatora.html">Время заряда конденсатора через резистор</a></li><li><a href="energiya-kondensatora.html">Энергия и заряд конденсатора</a></li><li><a href="pulsacii-vypryamitelya.html">Пульсации выпрямителя с конденсатором</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
 <script>
@@ -197,20 +192,13 @@ if(typeof init==='function')init();
 });
 
 
-var UR=[16,25,40,63,80];
 function calc(){
-var a=parseInt(S('avt'),10);
-var nom=null;
-for(var k=0;k<UR.length;k++){if(UR[k]>a){nom=UR[k];break;}}
-if(!nom)nom=80;
-var nz=S('nz'),leak,tip;
-if(nz==='van'){leak='10 мА';tip='A';}
-else if(nz==='vvod'){leak='100 или 300 мА';tip='A или AC, селективное (S)';}
-else{leak='30 мА';tip='A';}
-out(row('Номинальный ток УЗО',nom+' А')+
-row('Ток утечки (уставка)',leak)+
-row('Рекомендуемый тип',tip)+
-note('Номинал УЗО берут на ступень выше автомата: УЗО не защищает от перегрузки, и автомат должен отключиться первым. Тип A распознаёт пульсирующие утечки современной техники с импульсными блоками питания.'));
+var c=P('c'),v0=P('v0'),vt=P('vt'),t=P('t');
+if([c,v0,vt,t].some(isNaN))return err('Заполните все поля.');
+if(c<=0||v0<=0||vt<=0||vt>=v0||t<=0)return err('Нужно C > 0, V0 > Vt > 0 и время > 0.');
+var r=-t/(c*Math.log(vt/v0)),i0=v0/r,p0=v0*v0/r,e=.5*c*v0*v0;
+out(row('Сопротивление R',si(r,'Ом'))+row('Начальный ток',si(i0,'А'))+row('Начальная мощность',si(p0,'Вт'))+
+row('Запасённая энергия',si(e,'Дж'))+note('Проверьте рабочее напряжение резистора, импульсную энергию, длительную мощность и требуемый безопасный срок разряда.'));
 }
 
 </script>
