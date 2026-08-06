@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Расчёт ёмкости АКБ для солнечной станции — калькулятор автономии</title>
+<meta name="description" content="Расчёт необходимой ёмкости аккумуляторной батареи для автономной системы по суточному потреблению, числу дней автономии, глубине разряда и КПД инвертора.">
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Ёмкость аккумуляторов для автономной системы</h1>
+<p class="intro">Задача обратная расчёту времени работы: известно суточное потребление — нужно узнать, какой аккумуляторный банк его обеспечит.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Ёмкость аккумуляторов для автономной системы</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_e"><label for="e">Суточное потребление</label><div class="fw"><input id="e" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">кВт·ч</span></div></div><div class="f" id="f_d"><label for="d">Число суток автономии</label><div class="fw"><input id="d" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">сут.</span></div><div class="hint">Для резерва 1 сутки, для полной автономии 3–5 с учётом пасмурных дней</div></div><div class="f" id="f_u"><label for="u">Напряжение системы</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="48" placeholder=""><span class="u">В</span></div><div class="hint">До 1 кВт — 12 В; 1–3 кВт — 24 В; свыше 3 кВт — 48 В</div></div><div class="f" id="f_dod"><label for="dod">Допустимая глубина разряда</label><div class="fw"><input id="dod" type="text" inputmode="decimal" autocomplete="off" value="80" placeholder=""><span class="u">%</span></div><div class="hint">Свинцовые (AGM, гель) 50%; LiFePO₄ 80–90%</div></div><div class="f" id="f_eff"><label for="eff">КПД инвертора</label><div class="fw"><input id="eff" type="text" inputmode="decimal" autocomplete="off" value="90" placeholder=""><span class="u">%</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Как считается</h2>
+<div class="formula">Eбанка = E<sub>сут</sub> · Dсуток / (КПД · DoD)&nbsp;&nbsp;&nbsp;C (А·ч) = Eбанка · 1000 / U</div>
+<p>Расчёт идёт «снизу вверх»: от полезной энергии к полной ёмкости. Сначала суточное потребление умножается на число дней автономии, затем делится на КПД инвертора (часть энергии теряется при преобразовании) и на допустимую глубину разряда (часть ёмкости неприкосновенна).</p>
+<table class="t"><tr><th>Тип батареи</th><th>Допустимый DoD</th><th>Ресурс циклов</th></tr>
+<tr><td>Свинцово-кислотная (AGM, гель)</td><td>50%</td><td>500–1200</td></tr>
+<tr><td>OPzS, OPzV (тяговая)</td><td>60–70%</td><td>1500–3000</td></tr>
+<tr><td>LiFePO₄</td><td>80–90%</td><td>3000–6000</td></tr></table>
+<p>Глубина разряда — ключевой параметр экономики системы. Свинцовый банк приходится брать вдвое большим по номиналу, чем литиевый, при одинаковой полезной энергии, а служит он при этом в разы меньше. С учётом стоимости за цикл литий почти всегда выигрывает, несмотря на более высокую цену покупки.</p>
+<p>Напряжение системы выбирают по мощности: чем она выше, тем выше должно быть напряжение, иначе токи и сечения проводов становятся неразумными.</p>
+<h2>Пример расчёта</h2>
+<p>Дом потребляет 3 кВт·ч в сутки, нужна автономия на 2 суток, система 48 В, батареи LiFePO₄ с DoD 80%, КПД инвертора 90%. Потребуется отдать 6 кВт·ч, с учётом КПД — 6,667 кВт·ч, полная энергоёмкость банка — <b>8,333 кВт·ч</b>, то есть <b>173,6 А·ч</b> при 48 В. Свинцовым батареям с DoD 50% на ту же задачу понадобилось бы уже 277,8 А·ч.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Сколько дней автономии закладывать?</h3><p>Для резервного питания при редких отключениях достаточно суток. Для полностью автономного дома берут 3–5 суток: зимой и в затяжную пасмурную погоду солнечные панели могут неделю выдавать малую долю расчётной выработки.</p><h3>Почему нельзя разряжать батарею полностью?</h3><p>У свинцовых аккумуляторов глубокий разряд вызывает сульфатацию пластин и необратимо снижает ёмкость — после нескольких таких циклов батарея теряет значительную часть ресурса. Литиевые переносят глубокий разряд лучше, но и у них ресурс считают именно при заявленной глубине.</p><h3>Как выбрать напряжение системы?</h3><p>По мощности нагрузки: до 1 кВт хватает 12 В, для 1–3 кВт берут 24 В, свыше 3 кВт — 48 В. Чем выше напряжение, тем меньше ток при той же мощности и тем тоньше может быть силовая проводка.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="vremya-raboty-akkumulyatora.html">Время работы от аккумулятора</a></li><li><a href="solar-panel-energy.html">Выработка солнечной панели</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function calc(){
+var e=P('e'),d=P('d'),u=P('u'),dod=P('dod'),eff=P('eff');
+if([e,d,u,dod,eff].some(isNaN))return err('Заполните все поля.');
+if(e<=0||d<=0||u<=0)return err('Потребление, число суток и напряжение должны быть больше нуля.');
+if(dod<=0||dod>100)return err('Глубина разряда задаётся в процентах от 0 до 100.');
+if(eff<=0||eff>100)return err('КПД задаётся в процентах от 0 до 100.');
+var need=e*d,fromBat=need/(eff/100),ebank=fromBat/(dod/100),c=ebank*1000/u;
+out(row('Потребление за период автономии',fmt(need,5)+' кВт·ч')+
+row('Отдать батареей с учётом КПД',fmt(fromBat,5)+' кВт·ч')+
+row('Полная энергоёмкость банка',fmt(ebank,5)+' кВт·ч')+
+row('Требуемая ёмкость',fmt(c,5)+' А·ч при '+fmt(u,4)+' В')+
+row('Суточный расход из батареи',fmt(fromBat/d*1000/u,5)+' А·ч')+
+note('Ёмкость указана номинальная — именно её пишут на аккумуляторе. Разница между «отдать» и «полная энергоёмкость» и есть та часть заряда, которую трогать нельзя: у свинцовых батарей глубокий разряд необратимо сокращает срок службы.'));
+}
+
+</script>
+</body>
+</html>

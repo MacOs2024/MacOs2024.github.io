@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Расчёт длины антенны онлайн — диполь, четвертьволновый вертикал, рамка</title>
+<meta name="description" content="Расчёт длины полуволнового диполя, четвертьволнового вертикала и полноволновой рамки по рабочей частоте с учётом коэффициента укорочения.">
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Длина антенны: диполь, вертикал, рамка</h1>
+<p class="intro">Расчёт даёт отправную точку. Окончательную длину подбирают настройкой по минимуму КСВ — на неё влияют высота подвеса, окружающие предметы и толщина проводника.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Длина антенны: диполь, вертикал, рамка</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Тип антенны</label><div class="fw"><select id="mode"><option value="dip" selected>Полуволновой диполь (λ/2)</option><option value="gp">Четвертьволновый вертикал (λ/4)</option><option value="loop">Полноволновая рамка (λ)</option></select></div></div><div class="f" id="f_f"><label for="f">Рабочая частота</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="145" placeholder=""><select id="f_unit" class="u" aria-label="Единицы"><option value="0.001">кГц</option><option value="1" selected>МГц</option><option value="1000.0">ГГц</option></select></div></div><div class="f" id="f_k"><label for="k">Коэффициент укорочения</label><div class="fw"><input id="k" type="text" inputmode="decimal" autocomplete="off" value="0,95" placeholder=""></div><div class="hint">Тонкий провод 0,96–0,98; трубка 0,93–0,95</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Как считается</h2>
+<div class="formula">λ = 300 / f(МГц)&nbsp;&nbsp;&nbsp;Диполь: L = λ/2 · k&nbsp;&nbsp;&nbsp;Вертикал: L = λ/4 · k&nbsp;&nbsp;&nbsp;Рамка: P = λ · k</div>
+<p>В расчёте использована точная скорость света, поэтому λ = 299,79 / f, а не округлённые 300 — на высоких частотах разница уже заметна.</p>
+<p>Коэффициент укорочения k учитывает, что волна в проводнике распространяется медленнее, чем в свободном пространстве, а на концах антенны сказывается краевая ёмкость. Чем толще проводник относительно длины волны, тем сильнее укорочение: для тонкого провода k составляет 0,96–0,98, для толстой трубки — 0,93–0,95.</p>
+<table class="t"><tr><th>Антенна</th><th>Размер</th><th>Rвх</th><th>Особенность</th></tr>
+<tr><td>Полуволновой диполь</td><td>λ/2</td><td>≈73 Ом</td><td>Согласуется с кабелем 75 Ом напрямую</td></tr>
+<tr><td>Четвертьволновый вертикал</td><td>λ/4</td><td>≈36 Ом</td><td>Обязательны противовесы</td></tr>
+<tr><td>Полноволновая рамка</td><td>λ (периметр)</td><td>≈110 Ом</td><td>Меньше принимает помех</td></tr></table>
+<h2>Пример расчёта</h2>
+<p>Диапазон 2 метра, частота 145 МГц, провод с коэффициентом укорочения 0,95. Длина волны: 299,79 / 145 = <b>2,068 м</b>. Полуволновой диполь: 2,068 / 2 · 0,95 = <b>0,9821 м</b>, каждое плечо по <b>0,4910 м</b>. Четвертьволновый вертикал на ту же частоту — <b>0,4910 м</b> плюс противовесы такой же длины.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему антенна короче половины длины волны?</h3><p>Из-за краевого эффекта: на концах проводника накапливается ёмкость, и электрическая длина оказывается больше физической. Компенсируют это укорочением на 2–7% в зависимости от толщины проводника.</p><h3>Зачем вертикалу противовесы?</h3><p>Четвертьволновый вертикал — это половина диполя, и вторую половину должна изображать «земля». Без противовесов её роль возьмёт на себя оплётка кабеля: излучение пойдёт вдоль фидера, КСВ станет непредсказуемым, а на корпусе аппаратуры появится высокочастотное напряжение.</p><h3>Можно ли подключить диполь 73 Ом к кабелю 50 Ом?</h3><p>Можно: рассогласование даёт КСВ около 1,5, что приемлемо для большинства трансиверов. Для точного согласования применяют четвертьволновый трансформатор или симметрирующее устройство — оно заодно устраняет ток по оплётке.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="rezonans-lc.html">Резонансная частота LC-контура</a></li><li><a href="reaktivnoe-soprotivlenie.html">Реактивное сопротивление конденсатора и катушки</a></li><li><a href="impedans-rlc.html">Импеданс последовательной RLC-цепи</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function calc(){
+var f=P('f'),k=P('k');
+if([f,k].some(isNaN))return err('Заполните все поля.');
+if(f<=0)return err('Частота должна быть больше нуля.');
+if(k<=0||k>1)return err('Коэффициент укорочения задаётся в диапазоне от 0 до 1.');
+var lam=299.792458/f,m=S('mode'),len,h='';
+if(m==='dip')len=lam/2*k; else if(m==='gp')len=lam/4*k; else len=lam*k;
+h=row('Длина волны λ',fmt(lam,6)+' м')+row('Частота',fmt(f,6)+' МГц');
+if(m==='dip')h+=row('Полная длина диполя',fmt(len,6)+' м')+row('Длина одного плеча',fmt(len/2,6)+' м')+row('Сопротивление в точке питания','около 73 Ом');
+else if(m==='gp')h+=row('Длина излучателя',fmt(len,6)+' м')+row('Длина противовеса (каждого)',fmt(len,6)+' м')+row('Сопротивление в точке питания','около 36 Ом');
+else h+=row('Периметр рамки',fmt(len,6)+' м')+row('Сторона квадрата',fmt(len/4,6)+' м')+row('Сопротивление в точке питания','около 110 Ом');
+out(h+row('Длина без укорочения',fmt(m==='dip'?lam/2:(m==='gp'?lam/4:lam),6)+' м')+
+note('Начинайте с длины на 2–3% больше расчётной и укорачивайте по минимуму КСВ: удлинить уже отрезанный провод сложнее. '+(m==='gp'?'Вертикалу нужны противовесы — минимум три-четыре, иначе роль второй половины антенны возьмёт на себя оплётка кабеля.':'')));
+}
+
+</script>
+</body>
+</html>
