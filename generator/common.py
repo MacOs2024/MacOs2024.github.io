@@ -8,6 +8,16 @@ SITE_NAME = "ВольтКальк"
 TAGLINE = "Онлайн-калькуляторы для электрика и радиолюбителя"
 BASE_URL = "https://macos2024.github.io"
 
+# Файл подтверждения прав в Яндекс.Вебмастере. Отдаётся в корне сайта и не
+# должен пропадать при пересборке — иначе верификация домена слетает.
+YANDEX_VERIFICATION = "yandex_eb993645a776a164.html"
+YANDEX_VERIFICATION_HTML = """<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>Verification: eb993645a776a164</body>
+</html>"""
+
 CATS = [
     ("osnovy", "Основы электротехники"),
     ("provodka", "Проводка и защита"),
@@ -351,9 +361,11 @@ def write_site(calcs, outdir):
         f.write("User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n" % BASE_URL)
     with open(os.path.join(outdir, ".nojekyll"), "w") as f:
         f.write("")
+    with open(os.path.join(outdir, YANDEX_VERIFICATION), "w", encoding="utf-8") as f:
+        f.write(YANDEX_VERIFICATION_HTML)
     with open(os.path.join(outdir, "README.md"), "w", encoding="utf-8") as f:
         f.write(README.replace("@COUNT@", str(len(calcs))))
-    print("OK: %d pages + index + sitemap + robots" % len(calcs))
+    print("OK: %d pages + index + sitemap + robots + подтверждение Яндекса" % len(calcs))
 
 README = """# ВольтКальк — сайт инженерных калькуляторов
 

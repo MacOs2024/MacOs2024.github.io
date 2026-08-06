@@ -53,7 +53,15 @@ async function calculate(file, values, expected) {
   dom.window.close();
 }
 
-const htmlFiles = fs.readdirSync(sourceDir).filter(file => file.endsWith(".html")).sort();
+// Служебные файлы в корне — не страницы сайта: их не проверяем как калькуляторы,
+// но следим, чтобы они не пропали при пересборке.
+const serviceFiles = ["yandex_eb993645a776a164.html"];
+for (const file of serviceFiles) {
+  check(fs.existsSync(path.join(sourceDir, file)), `Отсутствует служебный файл ${file}`);
+}
+
+const htmlFiles = fs.readdirSync(sourceDir)
+  .filter(file => file.endsWith(".html") && !serviceFiles.includes(file)).sort();
 check(htmlFiles.length === 51, `Ожидался 51 HTML-файл, найдено ${htmlFiles.length}`);
 
 for (const file of htmlFiles) {
