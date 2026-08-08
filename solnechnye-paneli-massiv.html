@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Расчёт массива солнечных панелей — напряжение холостого хода и число панелей</title>
+<meta name="description" content="Расчёт напряжения холостого хода солнечного массива с температурной поправкой и проверка допустимого числа панелей в последовательной цепочке для MPPT-контроллера.">
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Массив солнечных панелей: напряжение и контроллер</h1>
+<p class="intro">На морозе напряжение панелей <b>растёт</b>. Массив, безопасный летом, зимним утром может пробить контроллер.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Массив солнечных панелей: напряжение и контроллер</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_voc"><label for="voc">Voc одной панели (STC)</label><div class="fw"><input id="voc" type="text" inputmode="decimal" autocomplete="off" value="41,5" placeholder=""><span class="u">В</span></div><div class="hint">Напряжение холостого хода из паспорта панели</div></div><div class="f" id="f_vmp"><label for="vmp">Vmp одной панели (STC)</label><div class="fw"><input id="vmp" type="text" inputmode="decimal" autocomplete="off" value="34,5" placeholder=""><span class="u">В</span></div><div class="hint">Напряжение в точке максимальной мощности</div></div><div class="f" id="f_beta"><label for="beta">Температурный коэффициент Voc</label><div class="fw"><input id="beta" type="text" inputmode="decimal" autocomplete="off" value="-0,30" placeholder=""><span class="u">%/°C</span></div><div class="hint">Обычно от −0,25 до −0,35 %/°C, значение отрицательное</div></div><div class="f" id="f_tmin"><label for="tmin">Минимальная температура панели</label><div class="fw"><input id="tmin" type="text" inputmode="decimal" autocomplete="off" value="-30" placeholder=""><span class="u">°C</span></div></div><div class="f" id="f_vmax"><label for="vmax">Максимальное входное напряжение контроллера</label><div class="fw"><input id="vmax" type="text" inputmode="decimal" autocomplete="off" value="250" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_n"><label for="n">Панелей в последовательной цепочке</label><div class="fw"><input id="n" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">шт.</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Как считается</h2>
+<div class="formula">Voc(T) = Voc(STC) · [ 1 + βVoc / 100 · (T − 25) ]<br>Vмассива = n · Voc(T)&nbsp;&nbsp;&nbsp;Условие: Vмассива ≤ Vmax контроллера</div>
+<p>Паспортные параметры панелей указаны для стандартных условий STC: температура ячейки 25 °C и освещённость 1000 Вт/м². В реальности температура отличается, и напряжение вместе с ней.</p>
+<p>Ключевой момент, на котором горят контроллеры: у кремниевых панелей температурный коэффициент напряжения <b>отрицательный</b>, около −0,3 %/°C. Это значит, что при нагреве напряжение падает, а при охлаждении — растёт. В морозное ясное утро панель холодная, освещённость высокая, и Voc оказывается процентов на 15–17 выше паспортного.</p>
+<p>Именно поэтому проверку выполняют по <b>минимальной</b> температуре региона, а не по средней и тем более не по летней. Массив, спокойно работающий всё лето, может пробить вход контроллера в первый же морозный день.</p>
+<table class="t"><tr><th>Температура</th><th>Voc панели 41,5 В</th></tr>
+<tr><td>+60 °C (раскалённая крыша)</td><td>37,14 В</td></tr>
+<tr><td>+25 °C (STC)</td><td>41,5 В</td></tr>
+<tr><td>−30 °C</td><td>48,35 В</td></tr></table>
+<p>Разброс между жарой и морозом достигает четверти — это очень много, когда речь о защите дорогого оборудования.</p>
+<h2>Пример расчёта</h2>
+<p>Панели с Voc = 41,5 В и коэффициентом −0,30 %/°C, минимальная температура −30 °C, контроллер с входом до 250 В. Напряжение одной панели на морозе: 41,5 · (1 + 0,165) = <b>48,348 В</b> — на <b>16,5%</b> выше паспортного. Пять панелей последовательно дают <b>241,74 В</b> при пределе 250 В: проходит с запасом 3%. Шестая панель подняла бы напряжение до 290 В и вывела контроллер из строя.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему напряжение растёт именно на холоде?</h3><p>Это свойство p-n перехода: с понижением температуры ширина запрещённой зоны увеличивается, и напряжение холостого хода растёт. Ток при этом почти не меняется, поэтому холодная панель отдаёт даже больше мощности — при условии, что оборудование выдержит напряжение.</p><h3>Можно ли ориентироваться на средние зимние температуры?</h3><p>Нет, только на абсолютный минимум региона. Контроллер выходит из строя от единственного превышения, и статистика тут не помогает. Многие берут ещё пару градусов запаса: панель при ясном небе выхолаживается излучением ниже температуры воздуха.</p><h3>Что если панелей нужно больше, чем помещается в цепочку?</h3><p>Собирают несколько параллельных цепочек по допустимому числу панелей. Напряжение при этом не растёт, увеличивается ток — нужно лишь проверить, что суммарный ток не превышает предел контроллера.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="solar-panel-energy.html">Выработка солнечной панели</a></li><li><a href="raschet-akb-avtonomnoy.html">Ёмкость аккумуляторов для автономной системы</a></li><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function calc(){
+var voc=P('voc'),vmp=P('vmp'),b=P('beta'),tmin=P('tmin'),vmax=P('vmax'),n=P('n');
+if([voc,vmp,b,tmin,vmax,n].some(isNaN))return err('Заполните все поля.');
+if(voc<=0||vmp<=0||vmax<=0)return err('Напряжения должны быть больше нуля.');
+if(n<1||Math.round(n)!==n)return err('Число панелей — целое положительное число.');
+if(b>0)return err('Температурный коэффициент Voc отрицательный — укажите значение со знаком минус.');
+var vocT=voc*(1+b/100*(tmin-25)),arr=n*vocT,arrStc=n*voc,vmpArr=n*vmp;
+var nmax=Math.floor(vmax/vocT);
+var ok=arr<=vmax;
+var zap=100*arr/vmax;
+out(row('Voc одной панели при '+fmt(tmin,4)+' °C',fmt(vocT,5)+' В')+
+row('Прирост от мороза',fmt(100*(vocT/voc-1),4)+' %')+
+row('Voc массива при '+fmt(tmin,4)+' °C',fmt(arr,5)+' В')+
+row('Voc массива при +25 °C',fmt(arrStc,5)+' В')+
+row('Рабочее напряжение Vmp массива',fmt(vmpArr,5)+' В')+
+row('Предел контроллера',fmt(vmax,5)+' В')+
+row('Использовано от предела',fmt(zap,4)+' %')+
+row('Максимум панелей в цепочке',nmax+' шт.')+
+row('Вердикт',ok?'Проходит':'ПРЕВЫШЕНИЕ — контроллер под угрозой')+
+note(ok?'Запас есть. Проверку ведут по самой холодной температуре в вашем регионе: панель на морозе под ярким солнцем может быть даже холоднее воздуха из-за ночного выхолаживания.':'Напряжение массива на морозе превышает предел контроллера — при первом же ясном зимнем утре он выйдет из строя. Уберите панель из цепочки: допустимый максимум составляет '+nmax+' шт.'));
+}
+
+</script>
+</body>
+</html>

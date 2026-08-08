@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Скин-эффект — калькулятор глубины скин-слоя и роста сопротивления</title>
+<meta name="description" content="Расчёт глубины скин-слоя в проводнике по частоте и материалу, оценка роста активного сопротивления круглого провода на переменном токе.">
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Скин-эффект: глубина проникновения тока</h1>
+<p class="intro">На высокой частоте ток вытесняется к поверхности проводника. Середина толстого провода перестаёт работать и становится балластом.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Скин-эффект: глубина проникновения тока</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_f"><label for="f">Частота</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="f_unit" class="u" aria-label="Единицы"><option value="1">Гц</option><option value="1000.0" selected>кГц</option><option value="1000000.0">МГц</option></select></div></div><div class="f" id="f_mat"><label for="mat">Материал</label><div class="fw"><select id="mat"><option value="0.0175" selected>Медь (ρ = 0,0175)</option><option value="0.028">Алюминий (ρ = 0,028)</option><option value="0.016">Серебро (ρ = 0,016)</option><option value="0.13">Сталь (ρ ≈ 0,13)</option></select></div></div><div class="f" id="f_mu"><label for="mu">Относительная магнитная проницаемость μr</label><div class="fw"><input id="mu" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div><div class="hint">Медь, алюминий, серебро — 1; сталь — от 100 до 1000</div></div><div class="f" id="f_d"><label for="d">Диаметр провода</label><div class="fw"><input id="d" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">мм</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Как считается</h2>
+<div class="formula">δ = √[ ρ / (π · f · μ₀ · μr) ]&nbsp;&nbsp;&nbsp;μ₀ = 4π · 10⁻⁷ Гн/м</div>
+<p>Переменный ток создаёт внутри проводника вихревые токи, которые вычитаются из основного в центре и складываются с ним у поверхности. В результате ток вытесняется наружу, и центральная часть провода перестаёт участвовать в проводимости.</p>
+<p>Глубина скин-слоя δ — расстояние от поверхности, на котором плотность тока падает в e ≈ 2,718 раза. Практически считают, что ток течёт в слое толщиной δ, а глубже его почти нет.</p>
+<table class="t"><tr><th>Частота</th><th>δ в меди</th></tr>
+<tr><td>50 Гц</td><td>9,42 мм</td></tr>
+<tr><td>1 кГц</td><td>2,11 мм</td></tr>
+<tr><td>100 кГц</td><td>0,21 мм</td></tr>
+<tr><td>1 МГц</td><td>0,067 мм</td></tr>
+<tr><td>10 МГц</td><td>0,021 мм</td></tr></table>
+<p>Отсюда практические следствия. На промышленной частоте 50 Гц скин-слой в меди составляет почти сантиметр, и для бытовых сечений эффектом можно пренебречь — он проявляется только на шинах и кабелях большого сечения. А вот в импульсных преобразователях на 100 кГц слой уже 0,2 мм: провод диаметром 1 мм работает лишь наполовину, и мотать обмотки толстым проводом бессмысленно.</p>
+<p>Решение — многожильный <b>литцендрат</b>: множество тонких изолированных друг от друга жилок, каждая тоньше скин-слоя. Суммарное сечение сохраняется, но работает всё. По той же причине высокочастотные обмотки иногда мотают медной фольгой.</p>
+<h2>Пример расчёта</h2>
+<p>Медный провод диаметром 1 мм на частоте 100 кГц. Глубина скин-слоя: <b>0,21054 мм</b>, то есть диаметр превышает её почти в 5 раз. Сечение по постоянному току 0,7854 мм², а эффективное — только <b>0,52218 мм²</b>. Сопротивление вырастает примерно в <b>1,504 раза</b>. Оптимальный диаметр для этой частоты — около <b>0,42 мм</b>: более толстый провод добавит меди, но не проводимости.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Влияет ли скин-эффект на бытовую проводку?</h3><p>Практически нет. На 50 Гц скин-слой в меди около 9,4 мм, и провода сечением до 25 мм² работают всем сечением. Эффект начинает считаться на шинах и кабелях от 240 мм² и выше, где его учитывают коэффициентом добавочных потерь.</p><h3>Почему у стали скин-слой такой маленький?</h3><p>Из-за магнитной проницаемости: у стали μr достигает сотен, а δ обратно пропорциональна корню из неё. Уже на 50 Гц скин-слой в стали составляет доли миллиметра — поэтому стальные проводники для переменного тока непригодны, и по той же причине работает индукционный нагрев.</p><h3>Что такое эффект близости?</h3><p>Второе явление, усугубляющее картину: соседние проводники с током искажают распределение друг в друге, дополнительно вытесняя ток. В плотно намотанной многослойной катушке потери из-за эффекта близости могут превышать потери от собственно скин-эффекта.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="diametr-provoda-obmotki.html">Диаметр обмоточного провода по току</a></li><li><a href="induktivnost-katushki.html">Индуктивность однослойной катушки</a></li><li><a href="drossel-impulsnogo.html">Дроссель импульсного преобразователя</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function calc(){
+var f=P('f'),ro=N(S('mat')),mu=P('mu'),d=P('d');
+if([f,mu,d].some(isNaN))return err('Заполните все поля.');
+if(f<=0||mu<=0||d<=0)return err('Частота, проницаемость и диаметр должны быть больше нуля.');
+var rom=ro*1e-6,mu0=4*Math.PI*1e-7;
+var delta=Math.sqrt(rom/(Math.PI*f*mu0*mu)),dmm=delta*1000;
+var adc=Math.PI*d*d/4,aef,ratio,zam;
+if(d>2*dmm){aef=Math.PI*(d*dmm-dmm*dmm);ratio=adc/aef;zam='Провод заметно толще скин-слоя — центральная часть почти не проводит ток.';}
+else{aef=adc;ratio=1;zam='Диаметр сопоставим со скин-слоем: ток течёт по всему сечению, вытеснение практически отсутствует.';}
+out(row('Глубина скин-слоя δ',fmt(dmm,5)+' мм')+
+row('Отношение диаметра к δ',fmt(d/dmm,4))+
+row('Сечение по постоянному току',fmt(adc,5)+' мм²')+
+row('Эффективное сечение на этой частоте',fmt(aef,5)+' мм²')+
+row('Рост сопротивления R(AC)/R(DC)','около '+fmt(ratio,4)+' раз')+
+row('Оптимальный диаметр (≈2δ)',fmt(2*dmm,5)+' мм')+
+note(zam+' Оценка роста сопротивления приближённая: она считает, что ток равномерно течёт в слое толщиной δ у поверхности, тогда как в реальности плотность спадает плавно по экспоненте.'));
+}
+
+</script>
+</body>
+</html>

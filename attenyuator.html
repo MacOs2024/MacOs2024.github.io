@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Расчёт аттенюатора — калькулятор Т и П образных схем онлайн</title>
+<meta name="description" content="Расчёт номиналов резистивного аттенюатора Т-образной и П-образной схемы по требуемому ослаблению в децибелах и волновому сопротивлению тракта.">
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Резистивный аттенюатор (T и П)</h1>
+<p class="intro">Аттенюатор ослабляет сигнал, сохраняя согласование: на входе и выходе остаётся то же волновое сопротивление.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Резистивный аттенюатор (T и П)</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_a"><label for="a">Требуемое ослабление</label><div class="fw"><input id="a" type="text" inputmode="decimal" autocomplete="off" value="6" placeholder=""><span class="u">дБ</span></div></div><div class="f" id="f_z"><label for="z">Волновое сопротивление тракта</label><div class="fw"><select id="z"><option value="50" selected>50 Ом (ВЧ-техника)</option><option value="75">75 Ом (телевидение, видео)</option><option value="600">600 Ом (аудиотракт)</option></select></div></div><div class="f" id="f_p"><label for="p">Мощность на входе</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="p_unit" class="u" aria-label="Единицы"><option value="0.001" selected>мВт</option><option value="1">Вт</option></select></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Как считается</h2>
+<div class="formula">K = 10^(A/20)<br>Т-схема: R1 = R2 = Z₀·(K−1)/(K+1), R3 = 2·Z₀·K/(K²−1)<br>П-схема: R1 = R2 = Z₀·(K+1)/(K−1), R3 = Z₀·(K²−1)/(2K)</div>
+<p>Обычный делитель напряжения на двух резисторах ослабляет сигнал, но нарушает согласование: его входное и выходное сопротивления не равны волновому сопротивлению тракта. В высокочастотных цепях это вызывает отражения и стоячие волны.</p>
+<p>Аттенюатор решает задачу тремя резисторами: он даёт заданное ослабление и одновременно сохраняет Z₀ и со стороны входа, и со стороны выхода. Схема симметрична — её можно включать в любом направлении.</p>
+<table class="t"><tr><th>Ослабление</th><th>По напряжению</th><th>По мощности</th></tr>
+<tr><td>3 дБ</td><td>1,41 раза</td><td>2 раза</td></tr>
+<tr><td>6 дБ</td><td>2 раза</td><td>4 раза</td></tr>
+<tr><td>10 дБ</td><td>3,16 раза</td><td>10 раз</td></tr>
+<tr><td>20 дБ</td><td>10 раз</td><td>100 раз</td></tr></table>
+<p>Практическое применение широкое: защита входа измерительного прибора от перегрузки, развязка каскадов друг от друга, подгонка уровней в тракте, а также улучшение согласования — аттенюатор на 6 дБ, включённый перед плохо согласованной нагрузкой, вдвое уменьшает отражённую волну на каждом проходе.</p>
+<p>Вся ослабляемая мощность превращается в тепло на резисторах, поэтому для мощных трактов их подбирают с соответствующим запасом.</p>
+<h2>Пример расчёта</h2>
+<p>Аттенюатор 6 дБ в тракте 50 Ом. Коэффициент K = 10^0,3 = <b>1,99526</b>, ослабление по мощности почти в 4 раза. Т-схема: последовательные резисторы по <b>16,614 Ом</b> и параллельный <b>66,932 Ом</b>. П-схема: параллельные по <b>150,47 Ом</b> и последовательный <b>37,352 Ом</b>. Из входных 100 мВт на выход пройдёт <b>25,12 мВт</b>, остальные 74,88 мВт рассеются на резисторах.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Чем аттенюатор лучше обычного делителя?</h3><p>Согласованием. Делитель из двух резисторов меняет импеданс, и в ВЧ-тракте это порождает отражения, стоячие волны и искажение частотной характеристики. Аттенюатор сохраняет Z₀ с обеих сторон, поэтому линия остаётся согласованной.</p><h3>Как получить большое ослабление?</h3><p>Каскадированием: две секции по 20 дБ дают 40 дБ. Одну секцию свыше 40–60 дБ делать бессмысленно — паразитная ёмкость и индуктивность монтажа передадут больше сигнала в обход резисторов, чем пройдёт через них.</p><h3>Почему проволочные резисторы не подходят?</h3><p>У них заметная собственная индуктивность, которая на высоких частотах превращает резистор в реактивный элемент. Согласование при этом уходит, а ослабление становится зависящим от частоты. Нужны безындукционные — тонкоплёночные или SMD.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="decibel.html">Децибелы: усиление и ослабление</a></li><li><a href="impedans-rlc.html">Импеданс последовательной RLC-цепи</a></li><li><a href="delitel-napryazheniya.html">Делитель напряжения на резисторах</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function e24(r){
+var e=[1,1.1,1.2,1.3,1.5,1.6,1.8,2,2.2,2.4,2.7,3,3.3,3.6,3.9,4.3,4.7,5.1,5.6,6.2,6.8,7.5,8.2,9.1];
+var d=Math.pow(10,Math.floor(Math.log(r)/Math.LN10)),best=e[0]*d;
+for(var i=0;i<e.length;i++){var v=e[i]*d;if(Math.abs(v-r)<Math.abs(best-r))best=v;}
+return best;}
+function calc(){
+var a=P('a'),z=N(S('z')),p=P('p');
+if([a,p].some(isNaN))return err('Заполните ослабление и мощность.');
+if(a<=0)return err('Ослабление должно быть больше нуля.');
+if(a>60)return err('Свыше 60 дБ одну секцию не делают: паразитные связи в монтаже дадут больше, чем сам аттенюатор. Соедините две секции последовательно.');
+if(p<=0)return err('Мощность должна быть больше нуля.');
+var k=Math.pow(10,a/20);
+var t1=z*(k-1)/(k+1),t3=2*z*k/(k*k-1);
+var p1=z*(k+1)/(k-1),p3=z*(k*k-1)/(2*k);
+var pout=p/(k*k),prass=p-pout;
+out(row('Коэффициент по напряжению K',fmt(k,6))+
+row('Ослабление по мощности',fmt(k*k,6)+' раз')+
+row('Т-схема: последовательные R1 = R2',si(t1,'Ом')+' (Е24: '+si(e24(t1),'Ом')+')')+
+row('Т-схема: параллельный R3',si(t3,'Ом')+' (Е24: '+si(e24(t3),'Ом')+')')+
+row('П-схема: параллельные R1 = R2',si(p1,'Ом')+' (Е24: '+si(e24(p1),'Ом')+')')+
+row('П-схема: последовательный R3',si(p3,'Ом')+' (Е24: '+si(e24(p3),'Ом')+')')+
+row('Мощность на выходе',si(pout,'Вт'))+
+row('Рассеивается в аттенюаторе',si(prass,'Вт'))+
+note('Обе схемы дают одинаковое ослабление и согласование — выбор между ними определяется удобством номиналов. При малом ослаблении удобнее Т-схема, при большом — П-схема. Резисторы должны быть безындукционными: проволочные на высоких частотах разрушат согласование.'));
+}
+
+</script>
+</body>
+</html>

@@ -8,9 +8,10 @@ from data_c import CALCS_C
 from data_d import CALCS_D
 from data_e import CALCS_E
 from data_f import CALCS_F
+from data_g import CALCS_G
 
-CALCS = CALCS_A + CALCS_B + CALCS_C + CALCS_D + CALCS_E + CALCS_F
-COUNT = 80
+CALCS = CALCS_A + CALCS_B + CALCS_C + CALCS_D + CALCS_E + CALCS_F + CALCS_G
+COUNT = 100
 assert len(CALCS) == COUNT, "Ожидалось %d калькуляторов, получено %d" % (COUNT, len(CALCS))
 slugs = [c["slug"] for c in CALCS]
 assert len(set(slugs)) == COUNT, "Дубли slug: %s" % [s for s in slugs if slugs.count(s) > 1]

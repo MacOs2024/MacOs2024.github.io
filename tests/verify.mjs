@@ -62,7 +62,7 @@ for (const file of serviceFiles) {
 
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file)).sort();
-check(htmlFiles.length === 81, `Ожидался 81 HTML-файл, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 101, `Ожидался 101 HTML-файл, найдено ${htmlFiles.length}`);
 
 for (const file of htmlFiles) {
   const dom = await load(file);
@@ -222,6 +222,37 @@ await calculate("soedinenie-kondensatorov.html", { mode: "par", c1: "100", c2: "
 await calculate("buck-boost-duty.html", { mode: "buck", vin: "5", vout: "12", f: "100" }, ["не может дать выход выше входа"]);
 await calculate("zvezda-treugolnik.html", { mode: "star", ul: "380", z: "10", cos: "2" }, ["cos φ должен быть"]);
 
+// Калькуляторы 81–100
+await calculate("preobrazovanie-y-delta.html", { mode: "dy", rab: "10", rbc: "20", rca: "30" }, ["Ra (луч к узлу A)5 Ом", "Rc (луч к узлу C)10 Ом"]);
+await calculate("preobrazovanie-y-delta.html", { mode: "yd", ra: "5", rb: "3,3333", rc: "10" }, ["R(ab) — между A и B10 Ом", "R(bc) — между B и C20 Ом"]);
+await calculate("vnutrennee-soprotivlenie.html", { mode: "xx", e: "12,7", u: "11,8", i: "100" }, ["Внутреннее сопротивление r9 мОм", "Максимальная отдаваемая мощность4,48 кВт"]);
+await calculate("koefficient-transformacii.html", { u1: "220", u2: "12", n1: "1100", i2: "5", eff: "100" }, ["Коэффициент трансформации n18,3333", "Число витков вторичной W₂60 витков"]);
+await calculate("koefficienty-prokladki.html", { it: "27", n: "0.85", dop: "70", norm: "25", t: "35" }, ["Коэффициент на температуру0,88192", "Допустимый ток с поправками20,24 А"]);
+await calculate("raschet-osveshcheniya.html", { e: "150", s: "18", fl: "1200", eta: "0,5", kz: "1,2", z: "1,1" }, ["Требуемый полезный поток3564 лм", "Принять светильников6 шт."]);
+await calculate("emkostnyy-tok-utechki.html", { i: "25", l: "80", uzo: "30" }, ["Суммарный ток утечки10,8 мА", "ВердиктПревышение"]);
+await calculate("tok-v-nule-perekos.html", { ia: "30", ib: "20", ic: "10", u: "220" }, ["Ток в нулевом проводе I(N)17,321 А"]);
+await calculate("tok-v-nule-perekos.html", { ia: "20", ib: "20", ic: "20", u: "220" }, ["Ток в нулевом проводе I(N)0 А"]);
+await calculate("sechenie-pe-provodnika.html", { s: "50", tip: "3", mat: "cu" }, ["Принять PE25 мм²"]);
+await calculate("sechenie-pe-provodnika.html", { s: "25", tip: "3", mat: "cu" }, ["Принять PE16 мм²"]);
+await calculate("prosadka-pri-puske.html", { i: "10", k: "6", l: "30", s: "4", u: "220" }, ["Пусковой ток60 А", "Провал напряжения при пуске15,75 В", "ВердиктПуск обеспечен"]);
+await calculate("molniezashchita.html", { h: "12", nad: "0.99", hx: "6" }, ["Высота конуса защиты h₀9,6 м", "Радиус на высоте 6 м3,6 м"]);
+await calculate("moshchnost-elektrokotla.html", { v: "150", tin: "22", tout: "-25", k: "1.5", faza: "3", tar: "5" }, ["Расчётная тепловая мощность12,297 кВт", "Ток при 380 В21,485 А"]);
+await calculate("raschet-invertora.html", { p: "2000", cos: "0,8", zap: "1,3", ub: "24", eff: "90", l: "2" }, ["Ток по стороне аккумулятора92,593 А", "Принять сечение16 мм²"]);
+await calculate("kpd-transformatora.html", { sn: "100", p0: "330", pk: "2270", b: "0,7", cos: "0,9" }, ["КПД при загрузке 0,797,762 %", "Оптимальная загрузка βопт0,38128"]);
+await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", beta: "-0,30", tmin: "-30", vmax: "250", n: "5" }, ["Voc массива при -30 °C241,74 В", "ВердиктПроходит"]);
+await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", beta: "-0,30", tmin: "-30", vmax: "250", n: "6" }, ["ВердиктПРЕВЫШЕНИЕ"]);
+await calculate("stoimost-osveshcheniya.html", { n: "10", h: "5", years: "5", tar: "5", p1: "10", c1: "200", r1: "30000", p2: "75", c2: "30", r2: "1000" }, ["Вариант A: всего6562,5 ₽", "ВыгоднееВариант A"]);
+await calculate("gasyashchiy-kondensator.html", { uc: "220", un: "12", i: "20", f: "50" }, ["Расчётная ёмкость0,2898 мкФ", "Ближайший стандартный номинал0,33 мкФ"]);
+await calculate("skin-effekt.html", { f: "100", mat: "0.0175", mu: "1", d: "1" }, ["Глубина скин-слоя δ0,21054 мм", "около 1,504 раз"]);
+await calculate("snabber-rc.html", { f0: "20", cadd: "470", v: "400", fsw: "100", k: "4" }, ["Паразитная индуктивность Lпар404,2 нГн", "Резистор снаббера Rs51 Ом", "Мощность на резисторе10,03 Вт"]);
+await calculate("umnozhitel-napryazheniya.html", { u: "220", n: "3", c: "1", f: "50", i: "1", vf: "1" }, ["Идеальное выходное (2n·Uм)1866,76 В", "Реальное выходное напряжение1420,76 В"]);
+await calculate("attenyuator.html", { a: "6", z: "50", p: "100" }, ["Коэффициент по напряжению K1,99526", "Мощность на выходе25,12 мВт"]);
+
+// Обработка ошибок в новых калькуляторах
+await calculate("molniezashchita.html", { h: "12", nad: "0.99", hx: "10" }, ["не защищён"]);
+await calculate("vnutrennee-soprotivlenie.html", { mode: "xx", e: "12", u: "12,5", i: "10" }, ["должно быть меньше напряжения холостого хода"]);
+await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", beta: "0,30", tmin: "-30", vmax: "250", n: "5" }, ["отрицательный"]);
+
 {
   const dom = await load("zakon-oma.html");
   setValues(dom.window.document, { u: "12abc", r: "6" });
@@ -234,7 +265,7 @@ await calculate("zvezda-treugolnik.html", { mode: "star", ul: "380", z: "10", co
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 81, `В sitemap должен быть 81 URL, найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 101, `В sitemap должен быть 101 URL, найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 for (const file of htmlFiles) {

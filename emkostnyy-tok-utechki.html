@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ток утечки сети — расчёт и проверка выбора УЗО по ПУЭ</title>
+<meta name="description" content="Расчёт суммарного тока утечки электроустановки по ПУЭ 7.1.83 и проверка, не приведёт ли он к ложным срабатываниям выбранного УЗО.">
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Ток утечки сети и выбор УЗО</h1>
+<p class="intro">Даже исправная сеть имеет естественную утечку. ПУЭ требует, чтобы она не превышала <b>трети</b> номинального тока УЗО.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Ток утечки сети и выбор УЗО</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_i"><label for="i">Ток нагрузки линии</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="25" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_l"><label for="l">Длина фазного проводника</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="80" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_uzo"><label for="uzo">Номинал УЗО по току утечки</label><div class="fw"><select id="uzo"><option value="10">10 мА (ванные, влажные зоны)</option><option value="30" selected>30 мА (защита людей, розетки)</option><option value="100">100 мА (противопожарное)</option><option value="300">300 мА (вводное противопожарное)</option></select></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Как считается</h2>
+<div class="formula">Iутечки = 0,4 мА · Iнагрузки + 10 мкА · Lфазного&nbsp;&nbsp;&nbsp;Условие: Iутечки ≤ Iуставки / 3</div>
+<p>ПУЭ 7.1.83 задаёт эту оценку прямо: при отсутствии паспортных данных ток утечки электроприёмников принимают из расчёта 0,4 мА на 1 А тока нагрузки, а ток утечки сети — 10 мкА на 1 метр длины фазного проводника. Суммарная утечка не должна превосходить трети номинального отключающего тока УЗО.</p>
+<p>Естественная утечка существует всегда: изоляция не идеальный диэлектрик, а между жилой и землёй есть распределённая ёмкость. Чем длиннее линия и мощнее нагрузка, тем больше суммарный ток.</p>
+<p>Треть номинала — не перестраховка. УЗО гарантированно срабатывает при номинальном токе утечки, но <b>может</b> сработать уже при половине от него: ГОСТ допускает разброс порога в диапазоне от 50% до 100% уставки. Если естественная утечка подобралась к половине номинала, отключения станут случайными.</p>
+<table class="t"><tr><th>Уставка УЗО</th><th>Предел утечки</th><th>Назначение</th></tr>
+<tr><td>10 мА</td><td>3,3 мА</td><td>Ванные, влажные зоны</td></tr>
+<tr><td>30 мА</td><td>10 мА</td><td>Защита людей, розеточные группы</td></tr>
+<tr><td>100 мА</td><td>33 мА</td><td>Противопожарная защита</td></tr>
+<tr><td>300 мА</td><td>100 мА</td><td>Вводное противопожарное</td></tr></table>
+<h2>Пример расчёта</h2>
+<p>Линия с нагрузкой 25 А и длиной 80 м, защищённая УЗО на 30 мА. Утечка приёмников: 0,4 · 25 = 10 мА. Утечка сети: 0,01 · 80 = 0,8 мА. Суммарно <b>10,8 мА</b> при пределе 30/3 = <b>10 мА</b>. Норма превышена — такую линию нужно разделить как минимум на две группы со своими УЗО.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>УЗО выбивает без видимой причины — это оно неисправно?</h3><p>Чаще нет. Первая версия — накопленная естественная утечка: слишком длинная линия или слишком много техники на одном УЗО. Посчитайте по этой формуле; если результат близок к трети номинала, проблема в схеме, а не в приборе.</p><h3>Почему нельзя просто поставить УЗО на 100 мА вместо 30 мА?</h3><p>Потому что 30 мА — порог защиты человека. Ток 100 мА через тело уже смертельно опасен, поэтому УЗО с такой уставкой считается только противопожарным и не защищает от поражения. Правильное решение — разделить нагрузку на группы.</p><h3>Какая техника даёт повышенную утечку?</h3><p>Всё с импульсными блоками питания и ЭМС-фильтрами: компьютеры, серверы, светодиодные драйверы, частотные преобразователи, индукционные плиты. У каждого утечка может достигать 1–3,5 мА, и десяток таких приборов на одном УЗО гарантированно приведёт к отключениям.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-uzo.html">Выбор УЗО: номинал и ток утечки</a></li><li><a href="tok-korotkogo-zamykaniya.html">Ток короткого замыкания и проверка автомата</a></li><li><a href="nagruzka-kvartiry.html">Расчётная нагрузка с коэффициентом спроса</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function calc(){
+var i=P('i'),l=P('l'),uzo=N(S('uzo'));
+if([i,l].some(isNaN))return err('Заполните ток нагрузки и длину линии.');
+if(i<0||l<0)return err('Ток и длина не могут быть отрицательными.');
+var ipr=0.4*i,iset=0.01*l,itot=ipr+iset,lim=uzo/3,zap=100*itot/lim;
+var ok=itot<=lim;
+var n=ok?'Запас достаточен: естественная утечка не должна вызывать ложных срабатываний. Помните, что импульсные блоки питания, частотники и длинные линии с ЭМС-фильтрами добавляют утечку сверх расчётной.':'Расчётная утечка превышает треть номинала УЗО — вероятны ложные срабатывания. Решения: разделить линию на несколько групп со своими УЗО, укоротить линию или, для противопожарной защиты на вводе, взять УЗО большего номинала. Поднимать номинал УЗО, защищающего людей, выше 30 мА нельзя.';
+out(row('Утечка электроприёмников (0,4 мА/А)',fmt(ipr,5)+' мА')+
+row('Утечка сети (10 мкА/м)',fmt(iset,5)+' мА')+
+row('Суммарный ток утечки',fmt(itot,5)+' мА')+
+row('Предел по ПУЭ (⅓ от '+uzo+' мА)',fmt(lim,4)+' мА')+
+row('Использовано от предела',fmt(zap,4)+' %')+
+row('Вердикт',ok?'Проходит':'Превышение — вероятны ложные срабатывания')+
+note(n));
+}
+
+</script>
+</body>
+</html>

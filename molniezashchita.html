@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Расчёт молниезащиты — зона защиты стержневого молниеотвода онлайн</title>
+<meta name="description" content="Расчёт зоны защиты одиночного стержневого молниеотвода по СО 153-34.21.122-2003: высота конуса, радиус у земли и на заданной высоте.">
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Зона защиты стержневого молниеотвода</h1>
+<p class="intro">Расчёт для <b>одиночного</b> стержневого молниеотвода высотой до 100 м. Это предварительная оценка — полноценная молниезащита выполняется проектом.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Зона защиты стержневого молниеотвода</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_h"><label for="h">Полная высота молниеотвода</label><div class="fw"><input id="h" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_nad"><label for="nad">Требуемая надёжность защиты</label><div class="fw"><select id="nad"><option value="0.9">0,9 — обычные объекты</option><option value="0.99" selected>0,99 — повышенные требования</option><option value="0.999">0,999 — особо ответственные</option></select></div></div><div class="f" id="f_hx"><label for="hx">Высота защищаемого объекта</label><div class="fw"><input id="hx" type="text" inputmode="decimal" autocomplete="off" value="6" placeholder=""><span class="u">м</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Как считается</h2>
+<div class="formula">h₀ = kh · h&nbsp;&nbsp;&nbsp;r₀ = kr · h&nbsp;&nbsp;&nbsp;rx = r₀ · (h₀ − hx) / h₀</div>
+<p>Зона защиты одиночного стержневого молниеотвода — это конус, вершина которого находится <b>ниже</b> верхушки самого молниеотвода. Коэффициенты зависят от требуемой надёжности и заданы СО 153-34.21.122-2003 для молниеотводов высотой до 100 м.</p>
+<table class="t"><tr><th>Надёжность</th><th>h₀</th><th>r₀</th><th>Применение</th></tr>
+<tr><td>0,9</td><td>0,85h</td><td>1,2h</td><td>Обычные здания</td></tr>
+<tr><td>0,99</td><td>0,8h</td><td>0,8h</td><td>Повышенные требования</td></tr>
+<tr><td>0,999</td><td>0,7h</td><td>0,6h</td><td>Особо ответственные объекты</td></tr></table>
+<p>Обратите внимание на закономерность: чем выше требуемая надёжность, тем <b>меньше</b> зона. Это не парадокс — при надёжности 0,9 допускается, что один удар из десяти пройдёт мимо молниеотвода, и зону можно считать щедро. Для 0,999 допуск в тысячу раз строже, и конус сжимается почти вдвое по радиусу.</p>
+<p>Надёжность 0,9 означает, что молниеотвод перехватит 90% разрядов, направленных в зону. Оставшиеся 10% — принятый риск, поэтому для объектов с людьми, взрывоопасных и с ценным оборудованием берут 0,99 и выше.</p>
+<h2>Пример расчёта</h2>
+<p>Мачта высотой 12 м, требуемая надёжность 0,99. Высота конуса: 0,8 · 12 = <b>9,6 м</b>, радиус у земли: 0,8 · 12 = <b>9,6 м</b>. Для дома высотой 6 м радиус защиты составит 9,6 · (9,6 − 6) / 9,6 = <b>3,6 м</b>, то есть круг диаметром 7,2 м вокруг мачты. Дом шире этого круга уже не поместится — нужна либо более высокая мачта, либо два молниеотвода.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему при большей надёжности зона получается меньше?</h3><p>Потому что надёжность — это доля перехваченных разрядов. Гарантировать 99,9% можно только для точек, лежащих близко к молниеотводу; чем дальше от него, тем выше шанс, что разряд пойдёт мимо. Строгое требование сужает область, где оно выполняется.</p><h3>Достаточно ли одного молниеотвода для дома?</h3><p>Редко. Одиночный стержень даёт круг небольшого радиуса, и обычный дом в него не помещается. На практике применяют два и более молниеотводов (у них общая зона шире суммы одиночных) или молниеприёмную сетку по кровле.</p><h3>Что ещё входит в молниезащиту кроме приёмника?</h3><p>Токоотводы — не менее двух, по кратчайшему пути вниз, и заземлитель с нормируемым сопротивлением. Плюс внутренняя защита: уравнивание потенциалов и УЗИП на вводе, иначе занос высокого потенциала по проводам выведет из строя технику даже при исправном внешнем контуре.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li><li><a href="sechenie-pe-provodnika.html">Сечение защитного и нулевого проводника</a></li><li><a href="vybor-uzo.html">Выбор УЗО: номинал и ток утечки</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function calc(){
+var h=P('h'),hx=P('hx'),nad=S('nad');
+if([h,hx].some(isNaN))return err('Заполните высоту молниеотвода и объекта.');
+if(h<=0)return err('Высота молниеотвода должна быть больше нуля.');
+if(h>100)return err('Расчёт применим для молниеотводов высотой до 100 м. Для более высоких нужны другие коэффициенты норматива.');
+if(hx<0)return err('Высота объекта не может быть отрицательной.');
+if(hx>=h)return err('Молниеотвод должен быть выше защищаемого объекта.');
+var kh,kr;
+if(nad==='0.9'){kh=0.85;kr=1.2;}
+else if(nad==='0.99'){kh=0.8;kr=0.8;}
+else{kh=0.7;kr=0.6;}
+var h0=kh*h,r0=kr*h;
+if(hx>=h0)return err('Объект высотой '+fmt(hx,4)+' м выше вершины конуса защиты ('+fmt(h0,4)+' м) — при такой надёжности он не защищён. Поднимите молниеотвод.');
+var rx=r0*(h0-hx)/h0,sx=Math.PI*rx*rx;
+out(row('Высота конуса защиты h₀',fmt(h0,5)+' м')+
+row('Радиус зоны у земли r₀',fmt(r0,5)+' м')+
+row('Радиус на высоте '+fmt(hx,4)+' м',fmt(rx,5)+' м')+
+row('Защищаемая площадь на этой высоте',fmt(sx,5)+' м²')+
+row('Диаметр зоны на этой высоте',fmt(2*rx,5)+' м')+
+note('Зона защиты — конус с вершиной на высоте h₀, которая ниже самого молниеотвода. Объект считается защищённым, если целиком помещается внутри конуса. Расчёт не заменяет проект: реальная молниезащита включает ещё токоотводы, заземлитель и уравнивание потенциалов.'));
+}
+
+</script>
+</body>
+</html>
