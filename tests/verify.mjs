@@ -262,6 +262,49 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
   check(!/Радикальное решение — установить УЗО/.test(html), `${page}: УЗО не должно предлагаться как решение проблемы недостаточного тока КЗ`);
   check(/не заменяет измерение петли/.test(html), `${page}: должно быть видимое предупреждение о необходимости измерения`);
 }
+
+// P1-1: сечение PE. Границы таблицы и округление вверх; фиктивных режимов
+// быть не должно, а тексты не должны обещать расчёта N.
+{
+  const fx = JSON.parse(fs.readFileSync(path.join(testDir, "fixtures", "sechenie-pe-provodnika.json"), "utf8"));
+  const page = `${fx.slug}.html`;
+  for (const kase of fx.cases) {
+    const dom = await load(page);
+    const { document } = dom.window;
+    setValues(document, { s: kase.s });
+    document.getElementById("go").click();
+    const result = document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+    for (const fragment of kase.expect) {
+      check(result.includes(fragment), `${page} [${kase.name}]: ожидалось «${fragment}», получено «${result}»`);
+    }
+    for (const fragment of kase.reject ?? []) {
+      check(!result.includes(fragment), `${page} [${kase.name}]: в результате не должно быть «${fragment}»`);
+    }
+    check(!/NaN|Infinity|undefined/.test(result), `${page} [${kase.name}]: NaN/Infinity/undefined в результате`);
+    dom.window.close();
+  }
+  for (const kase of fx.invalid) {
+    const dom = await load(page);
+    const { document } = dom.window;
+    setValues(document, { s: kase.s });
+    document.getElementById("go").click();
+    const result = document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+    check(!/Принять по стандартному ряду/.test(result), `${page} [${kase.name}]: при неверном вводе не должно быть результата`);
+    check(!/NaN|Infinity/.test(result), `${page} [${kase.name}]: NaN/Infinity при неверном вводе`);
+    dom.window.close();
+  }
+  const pageHtml = fs.readFileSync(path.join(sourceDir, page), "utf8");
+  for (const pattern of fx.must_not_contain.patterns) {
+    check(!pageHtml.includes(pattern), `${page}: текст «${pattern}» обещает то, чего расчёт не делает`);
+  }
+  // Каждый режим интерфейса обязан влиять на расчёт: select-полей здесь быть не должно.
+  {
+    const dom = await load(page);
+    check(dom.window.document.querySelectorAll("select").length === 0,
+      `${page}: остались переключатели, хотя расчёт зависит только от сечения фазы`);
+    dom.window.close();
+  }
+}
 await calculate("dlina-kabelya-po-padeniyu.html", { i: "16", s: "2,5", u: "220", dop: "5" }, ["Максимальная длина линии49,107 м"]);
 await calculate("moshchnost-po-schetchiku.html", { k: "3200", n: "10", t: "30", tar: "5" }, ["Мощность нагрузки375 Вт"]);
 await calculate("nagruzka-kvartiry.html", { p: "15", kc: "0,5", u: "220", cos: "1" }, ["Расчётный ток34,091 А", "Вводной автомат40 А"]);
@@ -304,8 +347,6 @@ await calculate("raschet-osveshcheniya.html", { e: "150", s: "18", fl: "1200", e
 await calculate("emkostnyy-tok-utechki.html", { i: "25", l: "80", uzo: "30" }, ["Суммарный ток утечки10,8 мА", "ВердиктПревышение"]);
 await calculate("tok-v-nule-perekos.html", { ia: "30", ib: "20", ic: "10", u: "220" }, ["Ток в нулевом проводе I(N)17,321 А"]);
 await calculate("tok-v-nule-perekos.html", { ia: "20", ib: "20", ic: "20", u: "220" }, ["Ток в нулевом проводе I(N)0 А"]);
-await calculate("sechenie-pe-provodnika.html", { s: "50", tip: "3", mat: "cu" }, ["Принять PE25 мм²"]);
-await calculate("sechenie-pe-provodnika.html", { s: "25", tip: "3", mat: "cu" }, ["Принять PE16 мм²"]);
 await calculate("prosadka-pri-puske.html", { i: "10", k: "6", l: "30", s: "4", u: "220" }, ["Пусковой ток60 А", "Провал напряжения при пуске15,75 В", "ВердиктПуск обеспечен"]);
 await calculate("molniezashchita.html", { h: "12", nad: "0.99", hx: "6" }, ["Высота конуса защиты h₀9,6 м", "Радиус на высоте 6 м3,6 м"]);
 await calculate("moshchnost-elektrokotla.html", { v: "150", tin: "22", tout: "-25", k: "1.5", faza: "3", tar: "5" }, ["Расчётная тепловая мощность12,297 кВт", "Ток при 380 В21,485 А"]);
