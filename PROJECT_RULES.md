@@ -46,6 +46,11 @@
 11. **Обязательны перед PR:** `npm ci`, `npm test`, `python3
     generator/build.py`, `git diff --exit-code`, `npx playwright test`,
     `npm audit`.
+    Если в окружении уже стоит Chromium другой сборки и скачивать браузер
+    нельзя, путь к нему передаётся явно, иначе Playwright ищет свою сборку и
+    падает на `Executable doesn't exist`:
+    `PW_CHROMIUM_PATH=/opt/pw-browsers/chromium-<сборка>/chrome-linux/chrome npx playwright test`.
+    В CI переменная не нужна — там браузер ставится штатно.
 12. **Число тестов — не доказательство корректности формул.** В отчёте
     приводить разбивку: structural / functional / boundary / browser.
     Ожидаемые значения в тестах вычислять независимо от кода страницы, а не
