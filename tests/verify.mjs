@@ -55,10 +55,11 @@ async function calculate(file, values, expected) {
 
 // Служебные файлы в корне — не страницы сайта: их не проверяем как калькуляторы,
 // но следим, чтобы они не пропали при пересборке.
-const serviceFiles = ["yandex_eb993645a776a164.html"];
+const serviceFiles = ["yandex_eb993645a776a164.html", "google42573797fafc16a7.html"];
 for (const file of serviceFiles) {
   check(fs.existsSync(path.join(sourceDir, file)), `Отсутствует служебный файл ${file}`);
 }
+check(fs.existsSync(path.join(sourceDir, "favicon.svg")), "Отсутствует favicon.svg");
 
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file)).sort();
@@ -71,6 +72,7 @@ for (const file of htmlFiles) {
   check(Boolean(document.querySelector("meta[name=viewport]")), `${file}: нет viewport`);
   check(Boolean(document.querySelector("meta[name=description]")?.content.trim()), `${file}: нет meta description`);
   check(Boolean(document.querySelector("h1")), `${file}: нет h1`);
+  check(document.querySelector('link[rel=icon]')?.getAttribute("href") === "favicon.svg", `${file}: не подключён favicon.svg`);
   check(document.querySelector("footer")?.textContent.includes("справочный характер"), `${file}: нет обязательного дисклеймера`);
   const external = [...document.querySelectorAll("script[src],link[rel=stylesheet],img[src]")];
   check(external.every(node => (node.getAttribute("src") || "").startsWith("https://mc.yandex.ru/")), `${file}: найдена неожиданная внешняя зависимость`);

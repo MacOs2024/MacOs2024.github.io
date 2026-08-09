@@ -18,6 +18,18 @@ YANDEX_VERIFICATION_HTML = """<html>
     <body>Verification: eb993645a776a164</body>
 </html>"""
 
+# То же самое для Google Search Console.
+GOOGLE_VERIFICATION = "google42573797fafc16a7.html"
+GOOGLE_VERIFICATION_HTML = "google-site-verification: google42573797fafc16a7.html"
+
+# Фавикон: молния в фирменных цветах сайта (тёмно-зелёный фон, янтарная молния).
+FAVICON = "favicon.svg"
+FAVICON_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<rect width="32" height="32" rx="7" fill="#0f2e2a"/>
+<path d="M17.5 4 8 18h6.2l-1.7 10L24 14h-6.2z" fill="#f5b942"/>
+</svg>
+"""
+
 CATS = [
     ("osnovy", "Основы электротехники"),
     ("provodka", "Проводка и защита"),
@@ -191,6 +203,7 @@ PAGE = """<!DOCTYPE html>
 <title>@TITLE@</title>
 <meta name="description" content="@DESC@">
 <link rel="canonical" href="@CANONICAL@">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 @OG@
 @SCHEMA@
 @METRIKA@
@@ -344,6 +357,7 @@ INDEX = """<!DOCTYPE html>
 <title>@T@</title>
 <meta name="description" content="@D@">
 <link rel="canonical" href="@CANONICAL@">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 @OG@
 @SCHEMA@
 @METRIKA@
@@ -438,9 +452,13 @@ def write_site(calcs, outdir):
         f.write("")
     with open(os.path.join(outdir, YANDEX_VERIFICATION), "w", encoding="utf-8") as f:
         f.write(YANDEX_VERIFICATION_HTML)
+    with open(os.path.join(outdir, GOOGLE_VERIFICATION), "w", encoding="utf-8") as f:
+        f.write(GOOGLE_VERIFICATION_HTML)
+    with open(os.path.join(outdir, FAVICON), "w", encoding="utf-8") as f:
+        f.write(FAVICON_SVG)
     with open(os.path.join(outdir, "README.md"), "w", encoding="utf-8") as f:
         f.write(README.replace("@COUNT@", str(len(calcs))))
-    print("OK: %d pages + index + sitemap + robots + подтверждение Яндекса" % len(calcs))
+    print("OK: %d pages + index + sitemap + robots + верификация Яндекса и Google + favicon" % len(calcs))
 
 README = """# ВольтКальк — сайт инженерных калькуляторов
 
