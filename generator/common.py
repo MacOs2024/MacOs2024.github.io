@@ -92,6 +92,14 @@ table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center
 table.t th{background:#eef1ec}
 .faq h3{font-size:16px;margin:14px 0 4px}
 .related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
@@ -113,7 +121,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
- .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
  .intro{display:none}
@@ -223,6 +231,7 @@ PAGE = """<!DOCTYPE html>
 @ARTICLE@
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+@SOURCES@
 <section class="related"><h2>Смотрите также</h2><ul>@RELATED@</ul></section>
 </main>
 <footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
@@ -248,6 +257,56 @@ def og_tags(title, desc, url):
         '<meta property="og:url" content="%s">' % esc(url),
         '<meta name="twitter:card" content="summary">',
     ])
+
+STATUS_LABEL = {
+    "verified": ("Проверено инженером", "st-verified"),
+    "agent-reviewed": ("Сверено с источником, ожидает инженерной проверки", "st-agent"),
+    "estimate": ("Оценка, не нормативный вердикт", "st-estimate"),
+    "pending": ("Ожидает проверки", "st-pending"),
+}
+
+def sources_html(c):
+    """Карточка источника: на чём основан расчёт и в каком он статусе.
+
+    Поле reviewed_by заполняется только после явного подтверждения
+    владельцем проекта. Агент не вправе записать владельца проверяющим.
+    """
+    st = c.get("review_status")
+    if not st and not c.get("sources"):
+        return ""
+    parts = ['<section class="src"><h2>Основание расчёта']
+    if st:
+        label, cls = STATUS_LABEL.get(st, (st, "st-pending"))
+        parts.append('<span class="st %s">%s</span>' % (cls, esc(label)))
+    parts.append("</h2>")
+    if c.get("sources"):
+        parts.append("<p><b>Источники:</b></p><ul>")
+        for src in c["sources"]:
+            bits = []
+            title = esc(src["title"])
+            if src.get("url"):
+                title = '<a href="%s" rel="nofollow noopener" target="_blank">%s</a>' % (esc(src["url"]), title)
+            bits.append(title)
+            for key, prefix in (("organization", ""), ("edition", "редакция "), ("sections", "раздел ")):
+                v = src.get(key)
+                if not v:
+                    continue
+                if isinstance(v, (list, tuple)):
+                    v = ", ".join(v)
+                bits.append(prefix + esc(str(v)))
+            if src.get("accessed"):
+                bits.append("обращение " + esc(src["accessed"]))
+            parts.append("<li>%s</li>" % " — ".join(bits))
+        parts.append("</ul>")
+    for key, head in (("assumptions", "Допущения"), ("limitations", "Границы применимости")):
+        if c.get(key):
+            parts.append("<p><b>%s:</b></p><ul>%s</ul>"
+                         % (head, "".join("<li>%s</li>" % x for x in c[key])))
+    if c.get("reviewed_by"):
+        parts.append("<p>Проверил: %s, %s</p>"
+                     % (esc(c["reviewed_by"]), esc(c.get("reviewed_at", "дата не указана"))))
+    parts.append("</section>")
+    return "".join(parts)
 
 def ld_json(obj):
     """JSON-LD микроразметка. '<' экранируется, чтобы содержимое не могло закрыть <script>."""
@@ -357,6 +416,7 @@ def page_html(c, all_by_slug):
              .replace("@INTRO@", c["intro"])
              .replace("@CALCBLOCK@", calcblock)
              .replace("@ARTICLE@", article)
+             .replace("@SOURCES@", sources_html(c))
              .replace("@RELATED@", rel)
              .replace("@HELPERS@", HELPERS_JS)
              .replace("@JS@", c.get("js", ""))

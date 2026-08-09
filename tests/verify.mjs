@@ -305,6 +305,30 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
     dom.window.close();
   }
 }
+
+// P1-2: карточка источника на изменённых страницах и реестр проверки.
+{
+  const audited = {
+    "tok-korotkogo-zamykaniya.html": "Ожидает проверки",
+    "sechenie-pe-provodnika.html": "Сверено с источником, ожидает инженерной проверки",
+  };
+  for (const [page, statusLabel] of Object.entries(audited)) {
+    const dom = await load(page);
+    const { document } = dom.window;
+    const card = document.querySelector("section.src");
+    check(Boolean(card), `${page}: нет карточки источника`);
+    check(card?.textContent.includes(statusLabel), `${page}: статус должен быть «${statusLabel}»`);
+    check((card?.querySelectorAll("li").length ?? 0) > 0, `${page}: в карточке нет ни источников, ни ограничений`);
+    check(card?.textContent.includes("Границы применимости"), `${page}: не указаны границы применимости`);
+    // Владельца нельзя записывать проверяющим без его подтверждения.
+    check(!/Проверил:/.test(card?.textContent ?? ""), `${page}: расчёт не подтверждён владельцем, поля «Проверил» быть не должно`);
+    dom.window.close();
+  }
+  const registry = fs.readFileSync(path.join(sourceDir, "ENGINEERING_AUDIT.md"), "utf8");
+  for (const slug of ["tok-korotkogo-zamykaniya", "sechenie-pe-provodnika", "gasyashchiy-kondensator"]) {
+    check(registry.includes(slug), `ENGINEERING_AUDIT.md: нет записи о ${slug}`);
+  }
+}
 await calculate("dlina-kabelya-po-padeniyu.html", { i: "16", s: "2,5", u: "220", dop: "5" }, ["Максимальная длина линии49,107 м"]);
 await calculate("moshchnost-po-schetchiku.html", { k: "3200", n: "10", t: "30", tar: "5" }, ["Мощность нагрузки375 Вт"]);
 await calculate("nagruzka-kvartiry.html", { p: "15", kc: "0,5", u: "220", cos: "1" }, ["Расчётный ток34,091 А", "Вводной автомат40 А"]);
