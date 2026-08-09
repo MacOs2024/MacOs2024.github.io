@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Расчёт NTC-термистора онлайн — сопротивление по температуре и обратно</title>
 <meta name="description" content="Расчёт сопротивления NTC-термистора при заданной температуре по бета-уравнению и обратное определение температуры по измеренному сопротивлению.">
+<link rel="canonical" href="https://macos2024.github.io/ntc-termistor.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Расчёт NTC-термистора онлайн — сопротивление по температуре и обратно">
+<meta property="og:description" content="Расчёт сопротивления NTC-термистора при заданной температуре по бета-уравнению и обратное определение температуры по измеренному сопротивлению.">
+<meta property="og:url" content="https://macos2024.github.io/ntc-termistor.html">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"NTC-термистор: сопротивление и температура","url":"https://macos2024.github.io/ntc-termistor.html","description":"Расчёт сопротивления NTC-термистора при заданной температуре по бета-уравнению и обратное определение температуры по измеренному сопротивлению.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"NTC-термистор: сопротивление и температура","item":"https://macos2024.github.io/ntc-termistor.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Чем бета-уравнение отличается от уравнения Стейнхарта–Харта?","acceptedAnswer":{"@type":"Answer","text":"Бета-уравнение использует два параметра и хорошо работает в узком диапазоне, примерно ±50 °C вокруг точки калибровки. Уравнение Стейнхарта–Харта с тремя коэффициентами описывает характеристику точнее на всём рабочем диапазоне, но требует трёх точек калибровки."}},{"@type":"Question","name":"Как подключить термистор к микроконтроллеру?","acceptedAnswer":{"@type":"Answer","text":"Через делитель с постоянным резистором номиналом около R₂₅, среднюю точку — на вход АЦП. По измеренному напряжению вычисляют сопротивление термистора, а затем температуру по обратной формуле."}},{"@type":"Question","name":"Почему термистор самонагревается?","acceptedAnswer":{"@type":"Answer","text":"Через него течёт измерительный ток, и выделяемая мощность подогревает сам датчик, завышая показания. Ток измерения выбирают минимальным, а в делителе стараются не опускаться ниже нескольких килоом; в импульсном режиме питание подают только на момент замера."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){

@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Расчёт операционного усилителя — коэффициент усиления онлайн</title>
 <meta name="description" content="Расчёт коэффициента усиления операционного усилителя в инвертирующем и неинвертирующем включении по резисторам обратной связи. Усиление в разах и децибелах.">
+<link rel="canonical" href="https://macos2024.github.io/ou-usilenie.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Расчёт операционного усилителя — коэффициент усиления онлайн">
+<meta property="og:description" content="Расчёт коэффициента усиления операционного усилителя в инвертирующем и неинвертирующем включении по резисторам обратной связи. Усиление в разах и децибелах.">
+<meta property="og:url" content="https://macos2024.github.io/ou-usilenie.html">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Операционный усилитель: коэффициент усиления","url":"https://macos2024.github.io/ou-usilenie.html","description":"Расчёт коэффициента усиления операционного усилителя в инвертирующем и неинвертирующем включении по резисторам обратной связи. Усиление в разах и децибелах.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Операционный усилитель: коэффициент усиления","item":"https://macos2024.github.io/ou-usilenie.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему в неинвертирующей схеме к отношению прибавляется единица?","acceptedAnswer":{"@type":"Answer","text":"Потому что входной сигнал попадает на выход напрямую через повторитель, а резисторы лишь добавляют усиление сверх него. Отсюда и невозможность получить коэффициент меньше единицы: при R₂ = 0 схема вырождается в повторитель с K = 1."}},{"@type":"Question","name":"Что ограничивает усиление на высоких частотах?","acceptedAnswer":{"@type":"Answer","text":"Произведение усиления на полосу пропускания (GBW). У популярного LM358 оно около 1 МГц: с усилением 100 полоса сузится примерно до 10 кГц. Нужна большая полоса — берите ОУ с большим GBW."}},{"@type":"Question","name":"Можно ли питать ОУ от одного источника?","acceptedAnswer":{"@type":"Answer","text":"Да, но тогда для работы с двуполярным сигналом нужно создать искусственную среднюю точку — обычно делителем на два одинаковых резистора с конденсатором. Иначе схема будет обрабатывать только положительную полуволну."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){

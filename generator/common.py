@@ -2,7 +2,7 @@
 """Генератор статического сайта «ВольтКальк». Каждая страница самодостаточна
 (стили и скрипт внутри файла) — можно открыть двойным кликом без сервера."""
 
-import os, html
+import os, html, json
 
 SITE_NAME = "ВольтКальк"
 TAGLINE = "Онлайн-калькуляторы для электрика и радиолюбителя"
@@ -190,6 +190,9 @@ PAGE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>@TITLE@</title>
 <meta name="description" content="@DESC@">
+<link rel="canonical" href="@CANONICAL@">
+@OG@
+@SCHEMA@
 @METRIKA@
 <style>@CSS@</style>
 </head>
@@ -233,6 +236,23 @@ PAGE = """<!DOCTYPE html>
 def esc(s):
     return html.escape(s, quote=True)
 
+def og_tags(title, desc, url):
+    """Open Graph: как ссылка выглядит при репосте в мессенджерах и на форумах."""
+    return "\n".join([
+        '<meta property="og:type" content="website">',
+        '<meta property="og:site_name" content="%s">' % esc(SITE_NAME),
+        '<meta property="og:locale" content="ru_RU">',
+        '<meta property="og:title" content="%s">' % esc(title),
+        '<meta property="og:description" content="%s">' % esc(desc),
+        '<meta property="og:url" content="%s">' % esc(url),
+        '<meta name="twitter:card" content="summary">',
+    ])
+
+def ld_json(obj):
+    """JSON-LD микроразметка. '<' экранируется, чтобы содержимое не могло закрыть <script>."""
+    body = json.dumps(obj, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
+    return '<script type="application/ld+json">%s</script>' % body
+
 def field_html(f):
     t = f.get("type", "num")
     fid = f["id"]
@@ -268,8 +288,38 @@ def page_html(c, all_by_slug):
     rel = "".join('<li><a href="%s.html">%s</a></li>' % (s, all_by_slug[s]["name"])
                   for s in c.get("related", []) if s in all_by_slug)
     cat_name = dict(CATS)[c["cat"]]
+    canonical = "%s/%s.html" % (BASE_URL, c["slug"])
+    graph = [{
+        "@type": "WebApplication",
+        "name": c["name"],
+        "url": canonical,
+        "description": c["desc"],
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Требуется JavaScript",
+        "inLanguage": "ru",
+        "isAccessibleForFree": True,
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RUB"},
+        "publisher": {"@type": "Organization", "name": SITE_NAME, "url": BASE_URL + "/"},
+    }, {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": BASE_URL + "/"},
+            {"@type": "ListItem", "position": 2, "name": c["name"], "item": canonical},
+        ],
+    }]
+    if c.get("faqs"):
+        graph.append({
+            "@type": "FAQPage",
+            "mainEntity": [{"@type": "Question", "name": q,
+                            "acceptedAnswer": {"@type": "Answer", "text": a}}
+                           for q, a in c["faqs"]],
+        })
     h = (PAGE.replace("@TITLE@", esc(c["title"]))
              .replace("@DESC@", esc(c["desc"]))
+             .replace("@CANONICAL@", esc(canonical))
+             .replace("@OG@", og_tags(c["title"], c["desc"], canonical))
+             .replace("@SCHEMA@", ld_json({"@context": "https://schema.org", "@graph": graph}))
              .replace("@METRIKA@", METRIKA)
              .replace("@CSS@", CSS)
              .replace("@CAT@", cat_name)
@@ -293,6 +343,9 @@ INDEX = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>@T@</title>
 <meta name="description" content="@D@">
+<link rel="canonical" href="@CANONICAL@">
+@OG@
+@SCHEMA@
 @METRIKA@
 <style>@CSS@</style>
 </head>
@@ -340,7 +393,29 @@ def index_html(calcs):
     t = "%s — %s: %d бесплатных онлайн-расчётов" % (SITE_NAME, TAGLINE.lower(), len(calcs))
     d = ("Бесплатные онлайн-калькуляторы по электрике и электронике: сечение кабеля, выбор автомата и УЗО, "
          "закон Ома, резистор для светодиода, расчёт трансформатора и другие. С формулами и примерами.")
-    return (INDEX.replace("@T@", esc(t)).replace("@D@", esc(d)).replace("@METRIKA@", METRIKA).replace("@CSS@", CSS)
+    home = BASE_URL + "/"
+    graph = [{
+        "@type": "WebSite",
+        "name": SITE_NAME,
+        "alternateName": "VoltCalc",
+        "url": home,
+        "description": d,
+        "inLanguage": "ru",
+    }, {
+        "@type": "ItemList",
+        "name": "Каталог инженерных калькуляторов",
+        "numberOfItems": len(calcs),
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "name": x["name"],
+             "url": "%s/%s.html" % (BASE_URL, x["slug"])}
+            for i, x in enumerate(calcs)
+        ],
+    }]
+    return (INDEX.replace("@T@", esc(t)).replace("@D@", esc(d))
+                 .replace("@CANONICAL@", esc(home))
+                 .replace("@OG@", og_tags(t, d, home))
+                 .replace("@SCHEMA@", ld_json({"@context": "https://schema.org", "@graph": graph}))
+                 .replace("@METRIKA@", METRIKA).replace("@CSS@", CSS)
                  .replace("@SECTIONS@", "".join(secs)).replace("@SITE@", SITE_NAME).replace("@TAG@", TAGLINE))
 
 def write_site(calcs, outdir):

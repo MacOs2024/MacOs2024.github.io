@@ -75,6 +75,26 @@ for (const file of htmlFiles) {
   const external = [...document.querySelectorAll("script[src],link[rel=stylesheet],img[src]")];
   check(external.every(node => (node.getAttribute("src") || "").startsWith("https://mc.yandex.ru/")), `${file}: найдена неожиданная внешняя зависимость`);
   check(typeof dom.window.ym === "function", `${file}: не инициализирована Яндекс.Метрика`);
+
+  const canonical = document.querySelector('link[rel=canonical]')?.getAttribute("href") ?? "";
+  const expected = file === "index.html" ? "https://macos2024.github.io/" : `https://macos2024.github.io/${file}`;
+  check(canonical === expected, `${file}: canonical «${canonical}», ожидался «${expected}»`);
+  check(Boolean(document.querySelector('meta[property="og:title"]')?.content.trim()), `${file}: нет og:title`);
+  check(document.querySelector('meta[property="og:url"]')?.content === expected, `${file}: og:url не совпадает с canonical`);
+  const ld = document.querySelector('script[type="application/ld+json"]')?.textContent ?? "";
+  let ldParsed = null;
+  try { ldParsed = JSON.parse(ld); } catch { /* останется null */ }
+  check(ldParsed !== null, `${file}: микроразметка JSON-LD не разбирается как JSON`);
+  const ldTypes = (ldParsed?.["@graph"] ?? []).map(node => node["@type"]);
+  if (file === "index.html") {
+    check(ldTypes.includes("WebSite") && ldTypes.includes("ItemList"), `${file}: в разметке нет WebSite и ItemList`);
+  } else {
+    check(ldTypes.includes("WebApplication"), `${file}: в разметке нет WebApplication`);
+    check(ldTypes.includes("FAQPage"), `${file}: в разметке нет FAQPage`);
+    const faqCount = (ldParsed?.["@graph"] ?? []).find(n => n["@type"] === "FAQPage")?.mainEntity?.length ?? 0;
+    const visibleFaq = document.querySelectorAll(".faq h3").length;
+    check(faqCount === visibleFaq, `${file}: в разметке ${faqCount} вопросов, на странице ${visibleFaq} — они должны совпадать`);
+  }
   if (file !== "index.html") {
     check(Number.isNaN(dom.window.N("12abc")), `${file}: парсер принимает мусор после числа`);
     check(dom.window.N("1 234,5") === 1234.5, `${file}: парсер не принимает пробелы и запятую`);
