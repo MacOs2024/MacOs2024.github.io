@@ -13,7 +13,11 @@
 <meta property="og:title" content="Диаметр обмоточного провода — калькулятор по плотности тока">
 <meta property="og:description" content="Расчёт сечения и диаметра обмоточного провода по току и допустимой плотности тока, а также обратный расчёт допустимого тока по диаметру провода.">
 <meta property="og:url" content="https://macos2024.github.io/diametr-provoda-obmotki.html">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Диаметр обмоточного провода по току","url":"https://macos2024.github.io/diametr-provoda-obmotki.html","description":"Расчёт сечения и диаметра обмоточного провода по току и допустимой плотности тока, а также обратный расчёт допустимого тока по диаметру провода.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Диаметр обмоточного провода по току","item":"https://macos2024.github.io/diametr-provoda-obmotki.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя взять плотность побольше и сэкономить медь?","acceptedAnswer":{"@type":"Answer","text":"Потери в обмотке равны I²R, а сопротивление обратно пропорционально сечению. Повышение плотности вдвое учетверяет удельные потери на единицу объёма меди — обмотка перегреется, лак изоляции разрушится и произойдёт межвитковое замыкание."}},{"@type":"Question","name":"Можно ли заменить один толстый провод несколькими тонкими?","acceptedAnswer":{"@type":"Answer","text":"Да, это обычная практика: суммарное сечение должно совпадать, а мотать несколько тонких проводов удобнее. На высоких частотах это ещё и полезно — уменьшается влияние скин-эффекта; для таких случаев выпускают многожильный литцендрат."}},{"@type":"Question","name":"Учитывает ли расчёт скин-эффект?","acceptedAnswer":{"@type":"Answer","text":"Нет, формула справедлива для постоянного тока и промышленной частоты 50 Гц. На частотах в десятки килогерц ток вытесняется к поверхности проводника, и толстый провод перестаёт работать всей площадью — там переходят на литцендрат или фольгу."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -23,7 +27,7 @@
         for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
         k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -158,7 +162,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-transformatora.html">Расчёт сетевого трансформатора 50 Гц</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li><li><a href="sechenie-kabelya.html">Сечение кабеля по мощности и току</a></li></ul></section>
 </main>
-<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
 
 var $=function(id){return document.getElementById(id)};

@@ -13,7 +13,11 @@
 <meta property="og:title" content="Расчёт базового резистора транзистора — калькулятор ключевого режима">
 <meta property="og:description" content="Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки, коэффициенту усиления и управляющему напряжению.">
 <meta property="og:url" content="https://macos2024.github.io/bazovyy-rezistor-tranzistora.html">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Базовый резистор транзисторного ключа","url":"https://macos2024.github.io/bazovyy-rezistor-tranzistora.html","description":"Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки, коэффициенту усиления и управляющему напряжению.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Базовый резистор транзисторного ключа","item":"https://macos2024.github.io/bazovyy-rezistor-tranzistora.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему округлять вниз, а не к ближайшему?","acceptedAnswer":{"@type":"Answer","text":"Меньшее сопротивление означает больший ток базы и более глубокое насыщение. Округление вверх снижает базовый ток и может вывести транзистор из насыщения — с ростом нагрева и падения на переходе."}},{"@type":"Question","name":"Нужен ли резистор между базой и эмиттером?","acceptedAnswer":{"@type":"Answer","text":"Желательно: резистор 10 кОм надёжно закрывает транзистор, когда управляющий вывод находится в высокоимпедансном состоянии — например, при сбросе микроконтроллера. Без него наводки могут приоткрыть ключ."}},{"@type":"Question","name":"Когда лучше взять полевой транзистор?","acceptedAnswer":{"@type":"Answer","text":"При токах от нескольких сотен миллиампер: логическому MOSFET ток затвора в статике не нужен вовсе, а сопротивление открытого канала в единицы миллиом даёт потери на порядок меньше. Для управления от 3,3 В берите транзистор с пометкой logic level."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -23,7 +27,7 @@
         for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
         k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -154,7 +158,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="rezistor-svetodioda.html">Резистор для светодиода</a></li><li><a href="zakon-oma.html">Закон Ома: ток, напряжение, сопротивление, мощность</a></li><li><a href="shim-srednee-napryazhenie.html">ШИМ: скважность, среднее напряжение и мощность</a></li></ul></section>
 </main>
-<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
 
 var $=function(id){return document.getElementById(id)};

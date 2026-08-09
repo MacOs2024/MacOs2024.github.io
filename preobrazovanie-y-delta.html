@@ -13,7 +13,11 @@
 <meta property="og:title" content="Преобразование звезда-треугольник — калькулятор пересчёта резисторов">
 <meta property="og:description" content="Пересчёт трёх резисторов из схемы «звезда» в «треугольник» и обратно. Формулы преобразования Y-Δ, пример и проверка.">
 <meta property="og:url" content="https://macos2024.github.io/preobrazovanie-y-delta.html">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Преобразование звезда ↔ треугольник (резисторы)","url":"https://macos2024.github.io/preobrazovanie-y-delta.html","description":"Пересчёт трёх резисторов из схемы «звезда» в «треугольник» и обратно. Формулы преобразования Y-Δ, пример и проверка.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Преобразование звезда ↔ треугольник (резисторы)","item":"https://macos2024.github.io/preobrazovanie-y-delta.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Зачем это нужно на практике?","acceptedAnswer":{"@type":"Answer","text":"Чтобы рассчитать схему, которая не сводится к последовательно-параллельным соединениям. Самый частый случай — мост в разбалансе: заменив треугольник звездой, дальше считают обычными правилами."}},{"@type":"Question","name":"Меняется ли что-то для внешней цепи?","acceptedAnswer":{"@type":"Answer","text":"Нет, в этом весь смысл. Сопротивление между любой парой выводов A, B, C после преобразования остаётся прежним, поэтому токи и напряжения в остальной схеме не изменяются."}},{"@type":"Question","name":"Работает ли преобразование для конденсаторов и катушек?","acceptedAnswer":{"@type":"Answer","text":"Да, но подставлять нужно комплексные сопротивления на рабочей частоте, а не ёмкости и индуктивности напрямую. Формулы при этом сохраняют вид."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -23,7 +27,7 @@
         for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
         k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -158,7 +162,7 @@ Y → Δ:&nbsp;&nbsp;Rab = (Ra·Rb + Rb·Rc + Rc·Ra) / Rc</div>
 
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="soedinenie-rezistorov.html">Параллельное и последовательное соединение резисторов</a></li><li><a href="most-uitstona.html">Мост Уитстона</a></li><li><a href="zvezda-treugolnik.html">Звезда и треугольник: линейные и фазные величины</a></li></ul></section>
 </main>
-<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
 
 var $=function(id){return document.getElementById(id)};

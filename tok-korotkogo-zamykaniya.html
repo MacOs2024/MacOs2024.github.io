@@ -3,17 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Минимальный ток короткого замыкания — оценка по петле фаза-ноль</title>
+<title>Минимальный ток КЗ — оценка по петле фаза-ноль</title>
 <meta name="description" content="Консервативная оценка минимального тока однофазного короткого замыкания по сопротивлению петли фаза-ноль и проверка срабатывания мгновенного расцепителя автомата B, C или D.">
 <link rel="canonical" href="https://macos2024.github.io/tok-korotkogo-zamykaniya.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Минимальный ток короткого замыкания — оценка по петле фаза-ноль">
+<meta property="og:title" content="Минимальный ток КЗ — оценка по петле фаза-ноль">
 <meta property="og:description" content="Консервативная оценка минимального тока однофазного короткого замыкания по сопротивлению петли фаза-ноль и проверка срабатывания мгновенного расцепителя автомата B, C или D.">
 <meta property="og:url" content="https://macos2024.github.io/tok-korotkogo-zamykaniya.html">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Оценка минимального тока КЗ и проверка отсечки автомата","url":"https://macos2024.github.io/tok-korotkogo-zamykaniya.html","description":"Консервативная оценка минимального тока однофазного короткого замыкания по сопротивлению петли фаза-ноль и проверка срабатывания мгновенного расцепителя автомата B, C или D.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Оценка минимального тока КЗ и проверка отсечки автомата","item":"https://macos2024.github.io/tok-korotkogo-zamykaniya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя просто поделить 220 на сопротивление петли?","acceptedAnswer":{"@type":"Answer","text":"Потому что это даёт ток для идеальных условий. В момент замыкания напряжение в точке повреждения проседает, жилы нагреваются и растёт сопротивление контактов — реальный ток оказывается меньше. Проверять защиту по завышенному току опасно: расчёт покажет запас там, где его нет."}},{"@type":"Question","name":"Чем это отличается от выбора автомата по мощности?","acceptedAnswer":{"@type":"Answer","text":"Выбор по мощности защищает кабель от перегрузки. Проверка по току КЗ отвечает на другой вопрос: хватит ли тока, чтобы мгновенный расцепитель сработал при замыкании. Длинная тонкая линия может пройти по нагреву, но провалить проверку на КЗ."}},{"@type":"Question","name":"Заменяет ли УЗО проверку по току КЗ?","acceptedAnswer":{"@type":"Answer","text":"Нет. УЗО реагирует на разность токов и защищает при утечке на землю или PE, но при замыкании фазы на нулевой рабочий проводник разности токов не возникает, и УЗО не сработает. От сверхтока защищает только автоматический выключатель, поэтому проверку по току КЗ обойти нельзя."}},{"@type":"Question","name":"Откуда взять сопротивление петли?","acceptedAnswer":{"@type":"Answer","text":"Достоверное значение даёт только измерение прибором петли фаза-ноль. Расчётная оценка по сечению и длине не учитывает сопротивление источника, температуру жил и переходные сопротивления, поэтому калькулятор в этом режиме не выдаёт нормативный вердикт."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -23,7 +27,7 @@
         for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
         k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -164,7 +168,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <section class="src"><h2>Основание расчёта<span class="st st-pending">Ожидает проверки</span></h2><p><b>Источники:</b></p><ul><li>Правило выбора коэффициента напряжения при расчёте минимального тока КЗ — Требуется подтверждение владельцем проекта — редакция редакция не зафиксирована — раздел коэффициент c — обращение 2026-08-09</li><li>ПУЭ, глава 1.7 — защитные меры и время отключения — ПУЭ, 7-е издание — редакция 7-е издание — раздел 1.7.79 — обращение 2026-08-09</li></ul><p><b>Допущения:</b></p><ul><li>Система TN: замыкание фазы на нулевой рабочий или защитный проводник образует металлический контур.</li><li>Коэффициент c учитывает просадку напряжения, нагрев жил и переходные сопротивления одним множителем.</li><li>Порог мгновенного расцепителя взят по верхней границе диапазона характеристики (худший случай для срабатывания).</li></ul><p><b>Границы применимости:</b></p><ul><li>Выбор коэффициента c НЕ подтверждён первоисточником: при подготовке правки внешние источники были недоступны. По умолчанию взято наиболее строгое из доступных значений (0,8). Требуется инженерное подтверждение методики и редакции норматива.</li><li>Не рассчитывается время отключения: оно определяется времятоковой характеристикой конкретного автомата.</li><li>Не проверяются термическая стойкость кабеля к току КЗ, отключающая способность автомата и селективность.</li><li>При расчётном (не измеренном) Z вердикт не выдаётся принципиально.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Выбор автоматического выключателя по мощности</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li><li><a href="vybor-uzo.html">Выбор УЗО: номинал и ток утечки</a></li></ul></section>
 </main>
-<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
 
 var $=function(id){return document.getElementById(id)};

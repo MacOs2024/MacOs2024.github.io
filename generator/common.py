@@ -37,6 +37,10 @@ CATS = [
     ("elektronika", "Электроника"),
 ]
 
+# Яндекс.Метрика в консервативном режиме. Webvisor (запись сессий) и
+# clickmap отключены: они собирают поведение пользователя детальнее, чем
+# нужно для простой статистики посещаемости, а механизма согласия на сайте
+# нет. Включать их можно только вместе с явным согласием пользователя.
 METRIKA = """<!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -45,7 +49,7 @@ METRIKA = """<!-- Yandex.Metrika counter -->
         for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
         k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->"""
@@ -239,7 +243,7 @@ PAGE = """<!DOCTYPE html>
 @SOURCES@
 <section class="related"><h2>Смотрите также</h2><ul>@RELATED@</ul></section>
 </main>
-<footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
 @HELPERS@
 @JS@
@@ -251,6 +255,10 @@ PAGE = """<!DOCTYPE html>
 def esc(s):
     return html.escape(s, quote=True)
 
+OG_IMAGE = "og-image.png"
+OG_IMAGE_W = 1200
+OG_IMAGE_H = 630
+
 def og_tags(title, desc, url):
     """Open Graph: как ссылка выглядит при репосте в мессенджерах и на форумах."""
     return "\n".join([
@@ -260,7 +268,11 @@ def og_tags(title, desc, url):
         '<meta property="og:title" content="%s">' % esc(title),
         '<meta property="og:description" content="%s">' % esc(desc),
         '<meta property="og:url" content="%s">' % esc(url),
-        '<meta name="twitter:card" content="summary">',
+        '<meta property="og:image" content="%s/%s">' % (BASE_URL, OG_IMAGE),
+        '<meta property="og:image:width" content="%d">' % OG_IMAGE_W,
+        '<meta property="og:image:height" content="%d">' % OG_IMAGE_H,
+        '<meta property="og:image:alt" content="%s — инженерные калькуляторы по электрике">' % esc(SITE_NAME),
+        '<meta name="twitter:card" content="summary_large_image">',
     ])
 
 STATUS_LABEL = {
@@ -454,7 +466,7 @@ INDEX = """<!DOCTYPE html>
 </div>
 @SECTIONS@
 </main>
-<footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом.</footer>
+<footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
 var q=document.getElementById('q'),qclear=document.getElementById('qclear'),empty=document.getElementById('empty');
 // Нормализация: регистр, ё, дефисы и повторные пробелы не должны влиять на поиск.
@@ -511,7 +523,7 @@ def index_html(calcs):
         secs.append('<section class="catsec"><h2 class="cat">%s</h2><div class="grid">%s</div></section>'
                     % (cname, "".join(cards)))
     real = [c for c in calcs if not c.get("notice")]
-    t = "%s — %s: %d бесплатных онлайн-расчётов" % (SITE_NAME, TAGLINE.lower(), len(real))
+    t = "%s — %d бесплатных калькуляторов по электрике" % (SITE_NAME, len(real))
     d = ("Бесплатные онлайн-калькуляторы по электрике и электронике: сечение кабеля, выбор автомата и УЗО, "
          "закон Ома, резистор для светодиода, расчёт трансформатора и другие. С формулами и примерами.")
     home = BASE_URL + "/"
@@ -539,6 +551,60 @@ def index_html(calcs):
                  .replace("@METRIKA@", METRIKA).replace("@CSS@", CSS)
                  .replace("@SECTIONS@", "".join(secs)).replace("@SITE@", SITE_NAME).replace("@TAG@", TAGLINE))
 
+PRIVACY_HTML = """<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Политика конфиденциальности — @SITE@</title>
+<meta name="description" content="Какие данные собирает сайт @SITE@, с какой целью, кто их обрабатывает и как долго они хранятся.">
+<link rel="canonical" href="@BASE@/privacy.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="robots" content="noindex,follow">
+@METRIKA@
+<style>@CSS@</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Политика конфиденциальности</nav>
+<h1>Политика конфиденциальности</h1>
+<p class="intro">Коротко: сайт не просит регистрации, не собирает персональные данные и не сохраняет то, что вы вводите в калькуляторы. Единственное, что собирается, — обезличенная статистика посещаемости.</p>
+<section class="article">
+<h2>Что происходит с данными калькуляторов</h2>
+<p>Все расчёты выполняются <b>в вашем браузере</b>. Введённые значения никуда не передаются и нигде не сохраняются: страница самодостаточна, серверной части у сайта нет. Закрытие вкладки стирает всё введённое.</p>
+<p>Экспорт результата в PDF выполняется средствами браузера через окно печати. Файл создаётся на вашем устройстве, на сайт он не отправляется.</p>
+<h2>Что собирается</h2>
+<p>На сайте установлена Яндекс.Метрика — счётчик обезличенной статистики посещаемости. Она собирает:</p>
+<ul>
+<li>факт и время посещения, какие страницы открывались;</li>
+<li>источник перехода (поисковая система, ссылка с другого сайта);</li>
+<li>обезличенные технические данные: тип устройства, операционная система, браузер, разрешение экрана, примерный регион по IP-адресу;</li>
+<li>файлы cookie, которые Метрика использует, чтобы отличать повторные визиты от новых.</li>
+</ul>
+<p>Запись действий на странице (Вебвизор) и карта кликов <b>отключены</b>. Сайт не записывает движения мыши, нажатия клавиш и содержимое полей ввода.</p>
+<h2>Зачем это нужно</h2>
+<p>Единственная цель — понимать, какими калькуляторами пользуются и какие страницы стоит улучшать. Данные не используются для рекламного профилирования и не продаются.</p>
+<h2>Кто обрабатывает данные</h2>
+<p>Обработчиком статистики выступает ООО «Яндекс» в рамках сервиса Яндекс.Метрика. Условия обработки и сроки хранения определяются <a href="https://yandex.ru/legal/confidential/" rel="nofollow noopener" target="_blank">политикой конфиденциальности Яндекса</a>. Оператор сайта доступа к сырым данным отдельных посетителей не имеет — только к агрегированным отчётам.</p>
+<h2>Как отказаться от сбора статистики</h2>
+<ul>
+<li>включить в браузере режим «Не отслеживать» (Do Not Track) или блокировщик счётчиков;</li>
+<li>запретить или удалить cookie в настройках браузера;</li>
+<li>воспользоваться <a href="https://yandex.ru/support/metrica/general/opt-out.html" rel="nofollow noopener" target="_blank">блокировщиком Яндекс.Метрики</a>.</li>
+</ul>
+<p>Работоспособность калькуляторов при этом не изменится: расчёты не зависят от статистики.</p>
+<h2>Обратная связь</h2>
+<p>Вопросы по обработке данных, а также требования об уточнении или удалении информации направляйте оператору сайта через контакт, указанный в профиле репозитория проекта на GitHub: <a href="https://github.com/MacOs2024/MacOs2024.github.io" rel="nofollow noopener" target="_blank">github.com/MacOs2024/MacOs2024.github.io</a>.</p>
+<h2>Изменения</h2>
+<p>Актуальная редакция всегда доступна по этому адресу. Дата последнего изменения соответствует дате последнего коммита в репозитории проекта.</p>
+</section>
+</main>
+<footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом.<br><a href="index.html">На главную</a></footer>
+</body>
+</html>
+"""
+
 def write_site(calcs, outdir):
     os.makedirs(outdir, exist_ok=True)
     by = {c["slug"]: c for c in calcs}
@@ -564,6 +630,10 @@ def write_site(calcs, outdir):
         f.write(GOOGLE_VERIFICATION_HTML)
     with open(os.path.join(outdir, FAVICON), "w", encoding="utf-8") as f:
         f.write(FAVICON_SVG)
+    with open(os.path.join(outdir, "privacy.html"), "w", encoding="utf-8") as f:
+        f.write(PRIVACY_HTML.replace("@METRIKA@", METRIKA).replace("@CSS@", CSS)
+                            .replace("@SITE@", SITE_NAME).replace("@TAG@", TAGLINE)
+                            .replace("@BASE@", BASE_URL))
     with open(os.path.join(outdir, "README.md"), "w", encoding="utf-8") as f:
         f.write(README.replace("@COUNT@", str(len(calcs))))
     print("OK: %d pages + index + sitemap + robots + верификация Яндекса и Google + favicon" % len(calcs))

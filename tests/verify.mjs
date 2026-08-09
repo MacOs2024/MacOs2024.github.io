@@ -66,15 +66,41 @@ for (const file of serviceFiles) {
   check(fs.existsSync(path.join(sourceDir, file)), `Отсутствует служебный файл ${file}`);
 }
 check(fs.existsSync(path.join(sourceDir, "favicon.svg")), "Отсутствует favicon.svg");
+check(fs.existsSync(path.join(sourceDir, "og-image.png")), "Отсутствует og-image.png для Open Graph");
 
 // Страницы без калькулятора: расчёт снят с публикации, осталось объяснение.
 // Их не проверяем как калькуляторы и не ждём в sitemap, но следим, чтобы на
 // них не вернулась форма расчёта.
 const noticePages = ["gasyashchiy-kondensator.html"];
 
+// Политика конфиденциальности — служебная страница сайта, а не калькулятор:
+// у неё свой набор требований, проверяется отдельным блоком ниже.
+const infoPages = ["privacy.html"];
+
 const htmlFiles = fs.readdirSync(sourceDir)
-  .filter(file => file.endsWith(".html") && !serviceFiles.includes(file)).sort();
+  .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
+  .sort();
 check(htmlFiles.length === 101, `Ожидался 101 HTML-файл, найдено ${htmlFiles.length}`);
+
+// P1-5: приватность. Webvisor и карта кликов не должны стартовать нигде,
+// пока нет механизма согласия.
+{
+  for (const file of [...htmlFiles, ...infoPages]) {
+    const html = fs.readFileSync(path.join(sourceDir, file), "utf8");
+    check(!/webvisor\s*:\s*true/.test(html), `${file}: Webvisor включён, а механизма согласия нет`);
+    check(!/clickmap\s*:\s*true/.test(html), `${file}: карта кликов включена, а механизма согласия нет`);
+  }
+  const privacy = fs.readFileSync(path.join(sourceDir, "privacy.html"), "utf8");
+  for (const required of ["Яндекс.Метрика", "cookie", "Вебвизор", "отказаться", "Обратная связь"]) {
+    check(privacy.includes(required), `privacy.html: не раскрыт обязательный пункт «${required}»`);
+  }
+  check(/noindex/.test(privacy), "privacy.html: служебная страница должна быть закрыта от индексации");
+  // Ссылка на политику должна быть доступна с любой страницы сайта.
+  for (const file of htmlFiles) {
+    const html = fs.readFileSync(path.join(sourceDir, file), "utf8");
+    check(html.includes('href="privacy.html"'), `${file}: нет ссылки на политику конфиденциальности`);
+  }
+}
 
 for (const file of htmlFiles) {
   const dom = await load(file);
@@ -93,6 +119,10 @@ for (const file of htmlFiles) {
   const expected = file === "index.html" ? "https://macos2024.github.io/" : `https://macos2024.github.io/${file}`;
   check(canonical === expected, `${file}: canonical «${canonical}», ожидался «${expected}»`);
   check(Boolean(document.querySelector('meta[property="og:title"]')?.content.trim()), `${file}: нет og:title`);
+  check(document.querySelector('meta[property="og:image"]')?.content === "https://macos2024.github.io/og-image.png", `${file}: нет og:image по абсолютному URL`);
+  check(document.querySelector('meta[name="twitter:card"]')?.content === "summary_large_image", `${file}: twitter:card должен быть summary_large_image`);
+  const titleLen = (document.querySelector("title")?.textContent ?? "").length;
+  check(titleLen > 0 && titleLen <= 70, `${file}: длина title ${titleLen}, допустимо до 70 символов`);
   check(document.querySelector('meta[property="og:url"]')?.content === expected, `${file}: og:url не совпадает с canonical`);
   const ld = document.querySelector('script[type="application/ld+json"]')?.textContent ?? "";
   let ldParsed = null;

@@ -13,7 +13,11 @@
 <meta property="og:title" content="Действующее и амплитудное значение напряжения — калькулятор RMS онлайн">
 <meta property="og:description" content="Пересчёт действующего (RMS), амплитудного, размаха и среднего значения синусоидального напряжения или тока. Коэффициенты формы и амплитуды.">
 <meta property="og:url" content="https://macos2024.github.io/rms-amplituda.html">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Действующее, амплитудное и среднее значение","url":"https://macos2024.github.io/rms-amplituda.html","description":"Пересчёт действующего (RMS), амплитудного, размаха и среднего значения синусоидального напряжения или тока. Коэффициенты формы и амплитуды.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Действующее, амплитудное и среднее значение","item":"https://macos2024.github.io/rms-amplituda.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему конденсатор на 250 В нельзя ставить в сеть 220 В?","acceptedAnswer":{"@type":"Answer","text":"Потому что амплитуда достигает 311 В, а после выпрямления с фильтром конденсатор заряжается именно до амплитудного значения. Запас берут до 400–450 В."}},{"@type":"Question","name":"Что такое True RMS и зачем он нужен?","acceptedAnswer":{"@type":"Answer","text":"Приборы True RMS честно вычисляют среднеквадратичное значение любой формы. Обычные усредняющие мультиметры умножают среднее на 1,111 — на несинусоидальном сигнале (диммер, импульсный блок питания, частотник) это даёт ошибку в десятки процентов."}},{"@type":"Question","name":"Как считать мощность через эти величины?","acceptedAnswer":{"@type":"Answer","text":"Только через действующие: P = Uд · Iд · cos φ. Подстановка амплитудных значений завысит результат вдвое."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -23,7 +27,7 @@
         for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
         k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -156,7 +160,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="zakon-oma.html">Закон Ома: ток, напряжение, сопротивление, мощность</a></li><li><a href="moshchnost-toka.html">Мощность электрического тока (одно- и трёхфазная сеть)</a></li><li><a href="pulsacii-vypryamitelya.html">Пульсации выпрямителя с конденсатором</a></li></ul></section>
 </main>
-<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
 
 var $=function(id){return document.getElementById(id)};
