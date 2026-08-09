@@ -61,6 +61,11 @@ for (const file of serviceFiles) {
 }
 check(fs.existsSync(path.join(sourceDir, "favicon.svg")), "Отсутствует favicon.svg");
 
+// Страницы без калькулятора: расчёт снят с публикации, осталось объяснение.
+// Их не проверяем как калькуляторы и не ждём в sitemap, но следим, чтобы на
+// них не вернулась форма расчёта.
+const noticePages = ["gasyashchiy-kondensator.html"];
+
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file)).sort();
 check(htmlFiles.length === 101, `Ожидался 101 HTML-файл, найдено ${htmlFiles.length}`);
@@ -90,6 +95,13 @@ for (const file of htmlFiles) {
   const ldTypes = (ldParsed?.["@graph"] ?? []).map(node => node["@type"]);
   if (file === "index.html") {
     check(ldTypes.includes("WebSite") && ldTypes.includes("ItemList"), `${file}: в разметке нет WebSite и ItemList`);
+  } else if (noticePages.includes(file)) {
+    check(ldTypes.includes("WebPage"), `${file}: страница без калькулятора должна размечаться как WebPage`);
+    check(!ldTypes.includes("WebApplication"), `${file}: страница без калькулятора не должна объявлять WebApplication`);
+    check(!document.getElementById("go"), `${file}: на странице снятого калькулятора не должно быть кнопки расчёта`);
+    check(!document.getElementById("res"), `${file}: на странице снятого калькулятора не должно быть блока результата`);
+    check(document.querySelectorAll("input").length === 0, `${file}: на странице снятого калькулятора не должно быть полей ввода`);
+    check(Boolean(document.querySelector(".rerr")), `${file}: должно быть видимое объяснение, почему расчёт снят`);
   } else {
     check(ldTypes.includes("WebApplication"), `${file}: в разметке нет WebApplication`);
     check(ldTypes.includes("FAQPage"), `${file}: в разметке нет FAQPage`);
@@ -97,7 +109,7 @@ for (const file of htmlFiles) {
     const visibleFaq = document.querySelectorAll(".faq h3").length;
     check(faqCount === visibleFaq, `${file}: в разметке ${faqCount} вопросов, на странице ${visibleFaq} — они должны совпадать`);
   }
-  if (file !== "index.html") {
+  if (file !== "index.html" && !noticePages.includes(file)) {
     check(Number.isNaN(dom.window.N("12abc")), `${file}: парсер принимает мусор после числа`);
     check(dom.window.N("1 234,5") === 1234.5, `${file}: парсер не принимает пробелы и запятую`);
     check(dom.window.N("1e-3") === 0.001, `${file}: парсер не принимает экспоненциальную запись`);
@@ -211,7 +223,45 @@ await calculate("decibel.html", { kind: "v", mode: "db", v1: "1", v2: "2" }, ["�
 await calculate("decibel.html", { kind: "p", mode: "db", v1: "1", v2: "2" }, ["Уровень3,0103 дБ"]);
 await calculate("most-uitstona.html", { mode: "bal", r1: "1000", r2: "2000", r3: "500" }, ["Неизвестное сопротивление Rx1 кОм"]);
 await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "220" }, ["Полное сопротивление Z30,38 Ом", "Ток I7,241 А"]);
-await calculate("tok-korotkogo-zamykaniya.html", { u: "220", z: "0,5", tip: "10", in: "16" }, ["Ток короткого замыкания Iкз440 А", "ВердиктАвтомат сработает"]);
+// P0-1: расчёт тока КЗ проверяется по фикстурам с эталонами, посчитанными
+// вручную. Обязательный контрпример аудита (220 В / 1,2 Ом / C16) не должен
+// давать положительный вердикт.
+{
+  const fx = JSON.parse(fs.readFileSync(path.join(testDir, "fixtures", "tok-korotkogo-zamykaniya.json"), "utf8"));
+  const page = `${fx.slug}.html`;
+  for (const kase of fx.cases) {
+    const dom = await load(page);
+    const { document } = dom.window;
+    setValues(document, kase.inputs);
+    document.getElementById("go").click();
+    const result = document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+    for (const fragment of kase.expect) {
+      check(result.includes(fragment), `${page} [${kase.name}]: ожидалось «${fragment}», получено «${result}»`);
+    }
+    for (const fragment of kase.reject ?? []) {
+      check(!result.includes(fragment), `${page} [${kase.name}]: в результате не должно быть «${fragment}»`);
+    }
+    check(!/NaN|Infinity|undefined/.test(result), `${page} [${kase.name}]: в результате NaN/Infinity/undefined`);
+    dom.window.close();
+  }
+  for (const kase of fx.invalid) {
+    const dom = await load(page);
+    const { document } = dom.window;
+    setValues(document, kase.inputs);
+    document.getElementById("go").click();
+    const result = document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+    check(!/Статус/.test(result), `${page} [${kase.name}]: при неверном вводе не должно быть статуса, получено «${result}»`);
+    check(!/NaN|Infinity/.test(result), `${page} [${kase.name}]: при неверном вводе NaN/Infinity`);
+    dom.window.close();
+  }
+  // Семантика: страница не должна называть УЗО заменой автомата и не должна
+  // обещать конкретное время отключения.
+  const html = fs.readFileSync(path.join(sourceDir, page), "utf8");
+  check(!/0,1\s*с/.test(html), `${page}: обещание времени отключения «0,1 с» должно быть убрано`);
+  check(/УЗО не сработает|не заменяет|обойти нельзя/.test(html), `${page}: должно быть явно сказано, что УЗО не заменяет защиту от сверхтока`);
+  check(!/Радикальное решение — установить УЗО/.test(html), `${page}: УЗО не должно предлагаться как решение проблемы недостаточного тока КЗ`);
+  check(/не заменяет измерение петли/.test(html), `${page}: должно быть видимое предупреждение о необходимости измерения`);
+}
 await calculate("dlina-kabelya-po-padeniyu.html", { i: "16", s: "2,5", u: "220", dop: "5" }, ["Максимальная длина линии49,107 м"]);
 await calculate("moshchnost-po-schetchiku.html", { k: "3200", n: "10", t: "30", tar: "5" }, ["Мощность нагрузки375 Вт"]);
 await calculate("nagruzka-kvartiry.html", { p: "15", kc: "0,5", u: "220", cos: "1" }, ["Расчётный ток34,091 А", "Вводной автомат40 А"]);
@@ -264,7 +314,6 @@ await calculate("kpd-transformatora.html", { sn: "100", p0: "330", pk: "2270", b
 await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", beta: "-0,30", tmin: "-30", vmax: "250", n: "5" }, ["Voc массива при -30 °C241,74 В", "ВердиктПроходит"]);
 await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", beta: "-0,30", tmin: "-30", vmax: "250", n: "6" }, ["ВердиктПРЕВЫШЕНИЕ"]);
 await calculate("stoimost-osveshcheniya.html", { n: "10", h: "5", years: "5", tar: "5", p1: "10", c1: "200", r1: "30000", p2: "75", c2: "30", r2: "1000" }, ["Вариант A: всего6562,5 ₽", "ВыгоднееВариант A"]);
-await calculate("gasyashchiy-kondensator.html", { uc: "220", un: "12", i: "20", f: "50" }, ["Расчётная ёмкость0,2898 мкФ", "Ближайший стандартный номинал0,33 мкФ"]);
 await calculate("skin-effekt.html", { f: "100", mat: "0.0175", mu: "1", d: "1" }, ["Глубина скин-слоя δ0,21054 мм", "около 1,504 раз"]);
 await calculate("snabber-rc.html", { f0: "20", cadd: "470", v: "400", fsw: "100", k: "4" }, ["Паразитная индуктивность Lпар404,2 нГн", "Резистор снаббера Rs51 Ом", "Мощность на резисторе10,03 Вт"]);
 await calculate("umnozhitel-napryazheniya.html", { u: "220", n: "3", c: "1", f: "50", i: "1", vf: "1" }, ["Идеальное выходное (2n·Uм)1866,76 В", "Реальное выходное напряжение1420,76 В"]);
@@ -287,11 +336,16 @@ await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", bet
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 101, `В sitemap должен быть 101 URL, найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 100, `В sitemap должно быть 100 URL (корень + 99 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 for (const file of htmlFiles) {
-  check(sitemapPages.some(url => url.endsWith(`/${file}`) || (file === "index.html" && /\/$/.test(url))), `В sitemap отсутствует ${file}`);
+  const inSitemap = sitemapPages.some(url => url.endsWith(`/${file}`) || (file === "index.html" && /\/$/.test(url)));
+  if (noticePages.includes(file)) {
+    check(!inSitemap, `Страница снятого калькулятора ${file} не должна быть в sitemap`);
+  } else {
+    check(inSitemap, `В sitemap отсутствует ${file}`);
+  }
 }
 
 console.log(JSON.stringify({ checks, failures: failures.length }, null, 2));

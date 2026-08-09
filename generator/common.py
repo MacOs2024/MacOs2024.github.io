@@ -216,23 +216,11 @@ PAGE = """<!DOCTYPE html>
 <h1>@NAME@</h1>
 <p class="intro">@INTRO@</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — @NAME@</div><div class="pd" id="pdate"></div></div>
-<div id="pvals"></div>
-@FIELDS@
-<button id="go" class="btn" type="button">Рассчитать</button>
-<div id="res" class="result" aria-live="polite"></div>
-<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
-<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+@CALCBLOCK@
 </section>
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
-<h2>Как считается</h2>
-@ABOUT@
-<h2>Пример расчёта</h2>
-@EXAMPLE@
-<div class="faq"><h2>Частые вопросы</h2>
-@FAQS@
-</div>
+@ARTICLE@
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="related"><h2>Смотрите также</h2><ul>@RELATED@</ul></section>
@@ -302,7 +290,35 @@ def page_html(c, all_by_slug):
                   for s in c.get("related", []) if s in all_by_slug)
     cat_name = dict(CATS)[c["cat"]]
     canonical = "%s/%s.html" % (BASE_URL, c["slug"])
-    graph = [{
+    notice = bool(c.get("notice"))
+    # Информационная страница: калькулятора нет, поэтому нет ни формы, ни
+    # кнопок расчёта и PDF. Такая страница остаётся по прежнему URL, если он
+    # уже был проиндексирован, но ничего не вычисляет.
+    if notice:
+        calcblock = ('<div class="rerr">%s</div>' % c["notice"])
+        article = c["about"]
+    else:
+        calcblock = (
+            '<div id="printhead"><div class="pt">⚡ ВольтКальк — %s</div>'
+            '<div class="pd" id="pdate"></div></div>\n'
+            '<div id="pvals"></div>\n%s\n'
+            '<button id="go" class="btn" type="button">Рассчитать</button>\n'
+            '<div id="res" class="result" aria-live="polite"></div>\n'
+            '<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>\n'
+            '<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). '
+            'Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>'
+            % (c["name"], fields))
+        article = ("<h2>Как считается</h2>\n%s\n<h2>Пример расчёта</h2>\n%s\n"
+                   '<div class="faq"><h2>Частые вопросы</h2>\n%s\n</div>'
+                   % (c["about"], c["example"], faqs))
+    main_node = {
+        "@type": "WebPage",
+        "name": c["name"],
+        "url": canonical,
+        "description": c["desc"],
+        "inLanguage": "ru",
+        "publisher": {"@type": "Organization", "name": SITE_NAME, "url": BASE_URL + "/"},
+    } if notice else {
         "@type": "WebApplication",
         "name": c["name"],
         "url": canonical,
@@ -314,7 +330,8 @@ def page_html(c, all_by_slug):
         "isAccessibleForFree": True,
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RUB"},
         "publisher": {"@type": "Organization", "name": SITE_NAME, "url": BASE_URL + "/"},
-    }, {
+    }
+    graph = [main_node, {
         "@type": "BreadcrumbList",
         "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Главная", "item": BASE_URL + "/"},
@@ -338,13 +355,11 @@ def page_html(c, all_by_slug):
              .replace("@CAT@", cat_name)
              .replace("@NAME@", c["name"])
              .replace("@INTRO@", c["intro"])
-             .replace("@FIELDS@", fields)
-             .replace("@ABOUT@", c["about"])
-             .replace("@EXAMPLE@", c["example"])
-             .replace("@FAQS@", faqs)
+             .replace("@CALCBLOCK@", calcblock)
+             .replace("@ARTICLE@", article)
              .replace("@RELATED@", rel)
              .replace("@HELPERS@", HELPERS_JS)
-             .replace("@JS@", c["js"])
+             .replace("@JS@", c.get("js", ""))
              .replace("@SITE@", SITE_NAME)
              .replace("@TAG@", TAGLINE))
     return h
@@ -397,14 +412,15 @@ def index_html(calcs):
     for cid, cname in CATS:
         cards = []
         for c in calcs:
-            if c["cat"] != cid:
+            if c["cat"] != cid or c.get("notice"):
                 continue
             k = (c["name"] + " " + c.get("kw", "")).lower()
             cards.append('<a class="ccard" data-k="%s" href="%s.html"><b>%s</b><span>%s</span></a>'
                          % (esc(k), c["slug"], c["name"], c["short"]))
         secs.append('<section class="catsec"><h2 class="cat">%s</h2><div class="grid">%s</div></section>'
                     % (cname, "".join(cards)))
-    t = "%s — %s: %d бесплатных онлайн-расчётов" % (SITE_NAME, TAGLINE.lower(), len(calcs))
+    real = [c for c in calcs if not c.get("notice")]
+    t = "%s — %s: %d бесплатных онлайн-расчётов" % (SITE_NAME, TAGLINE.lower(), len(real))
     d = ("Бесплатные онлайн-калькуляторы по электрике и электронике: сечение кабеля, выбор автомата и УЗО, "
          "закон Ома, резистор для светодиода, расчёт трансформатора и другие. С формулами и примерами.")
     home = BASE_URL + "/"
@@ -418,11 +434,11 @@ def index_html(calcs):
     }, {
         "@type": "ItemList",
         "name": "Каталог инженерных калькуляторов",
-        "numberOfItems": len(calcs),
+        "numberOfItems": len(real),
         "itemListElement": [
             {"@type": "ListItem", "position": i + 1, "name": x["name"],
              "url": "%s/%s.html" % (BASE_URL, x["slug"])}
-            for i, x in enumerate(calcs)
+            for i, x in enumerate(real)
         ],
     }]
     return (INDEX.replace("@T@", esc(t)).replace("@D@", esc(d))
@@ -440,7 +456,8 @@ def write_site(calcs, outdir):
             f.write(page_html(c, by))
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as f:
         f.write(index_html(calcs))
-    urls = ["%s/" % BASE_URL] + ["%s/%s.html" % (BASE_URL, c["slug"]) for c in calcs]
+    urls = ["%s/" % BASE_URL] + ["%s/%s.html" % (BASE_URL, c["slug"])
+                                 for c in calcs if not c.get("notice")]
     sm = ('<?xml version="1.0" encoding="UTF-8"?>\n'
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           + "".join("<url><loc>%s</loc></url>\n" % u for u in urls) + "</urlset>\n")
