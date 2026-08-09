@@ -1,20 +1,35 @@
-name: CI
+name: CI и публикация
+
+# Единый workflow: публикация возможна только после успешных тестов.
+# Раньше ci.yml и pages.yml слушали push независимо, поэтому Pages мог
+# развернуть коммит параллельно с тестами и даже при их падении.
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  test-and-verify-build:
+  test:
+    name: test
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
+          cache: npm
 
       - uses: actions/setup-python@v5
         with:
@@ -31,11 +46,50 @@ jobs:
 
       - name: Проверка, что сайт пересобран и закоммичен
         run: |
-          if ! git diff --quiet; then
+          if ! git diff --exit-code --stat; then
             echo "::error::Содержимое репозитория расходится с выводом generator/build.py."
             echo "Похоже, HTML правили руками или забыли пересобрать сайт после правки generator/data_*.py."
             echo "Запустите 'python3 generator/build.py' локально и закоммитьте результат."
-            echo
-            git diff --stat
             exit 1
           fi
+
+      - name: Установка браузера для e2e
+        run: npx playwright install --with-deps chromium
+
+      - name: Браузерные тесты (Playwright)
+        run: npx playwright test
+
+      - name: Отчёт Playwright при падении
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  deploy:
+    name: deploy
+    # Публикуем только с main и только после зелёного test.
+    # На pull_request job пропускается: проверки идут, публикация — нет.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
