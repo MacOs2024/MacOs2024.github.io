@@ -104,7 +104,12 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
-.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
 .cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 .ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
@@ -444,24 +449,50 @@ INDEX = """<!DOCTYPE html>
 <div class="hero">
 <h1>Инженерные калькуляторы по электрике</h1>
 <p>Бесплатные расчёты для электриков, радиолюбителей и домашних мастеров: сечение кабеля, автоматы, резисторы, конденсаторы, трансформаторы. Формулы и примеры — под каждым калькулятором.</p>
-<input class="search" id="q" type="text" placeholder="Поиск: например, «сечение», «светодиод», «УЗО»…" aria-label="Поиск по калькуляторам">
+<div class="searchwrap"><input class="search" id="q" type="text" placeholder="Поиск: например, «сечение», «светодиод», «УЗО»…" aria-label="Поиск по калькуляторам"><button id="qclear" type="button" aria-label="Очистить поиск">×</button></div>
+<div id="empty" hidden>Ничего не найдено. Проверьте раскладку или попробуйте другое слово — например, «кабель», «автомат», «резистор».</div>
 </div>
 @SECTIONS@
 </main>
 <footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом.</footer>
 <script>
-var q=document.getElementById('q');
-q.addEventListener('input',function(){
-var v=q.value.trim().toLowerCase();
+var q=document.getElementById('q'),qclear=document.getElementById('qclear'),empty=document.getElementById('empty');
+// Нормализация: регистр, ё, дефисы и повторные пробелы не должны влиять на поиск.
+function norm(s){return String(s).toLowerCase().replace(/ё/g,'е').replace(/[-\u2010-\u2015]/g,' ').replace(/\s+/g,' ').trim();}
+// Ограниченный словарь синонимов: только близкие обозначения одного и того же.
+var SYN={'автомат':['выключатель'],'выключатель':['автомат'],
+'узо':['дифзащита','дифференциальн'],'дифзащита':['узо'],
+'кабель':['провод'],'провод':['кабель']};
 var cards=document.querySelectorAll('.ccard');
-for(var i=0;i<cards.length;i++){
-var k=cards[i].getAttribute('data-k');
-cards[i].style.display=(v===''||k.indexOf(v)>=0)?'':'none';}
-var secs=document.querySelectorAll('.catsec');
-for(var j=0;j<secs.length;j++){
-var vis=secs[j].querySelectorAll('.ccard:not([style*="none"])').length;
-secs[j].style.display=vis?'':'none';}
-});
+for(var i=0;i<cards.length;i++)cards[i].setAttribute('data-n',norm(cards[i].getAttribute('data-k')));
+function hit(text,token){
+ if(text.indexOf(token)>=0)return true;
+ var alt=SYN[token];
+ if(alt)for(var a=0;a<alt.length;a++)if(text.indexOf(alt[a])>=0)return true;
+ return false;
+}
+function apply(){
+ var tokens=norm(q.value).split(' ').filter(function(t){return t.length>0;});
+ var shown=0;
+ for(var i=0;i<cards.length;i++){
+  var text=cards[i].getAttribute('data-n'),ok=true;
+  // Карточка подходит, если содержит ВСЕ токены — порядок слов не важен.
+  for(var t=0;t<tokens.length;t++){if(!hit(text,tokens[t])){ok=false;break;}}
+  cards[i].style.display=ok?'':'none';
+  if(ok)shown++;
+ }
+ var secs=document.querySelectorAll('.catsec');
+ for(var j=0;j<secs.length;j++){
+  var vis=0,inner=secs[j].querySelectorAll('.ccard');
+  for(var k=0;k<inner.length;k++)if(inner[k].style.display!=='none')vis++;
+  secs[j].style.display=vis?'':'none';
+ }
+ if(empty)empty.hidden=!(tokens.length>0&&shown===0);
+ if(qclear)qclear.className=q.value?'on':'';
+}
+q.addEventListener('input',apply);
+if(qclear)qclear.addEventListener('click',function(){q.value='';apply();q.focus();});
+apply();
 </script>
 </body>
 </html>

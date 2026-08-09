@@ -7,9 +7,14 @@ const testDir = path.dirname(fileURLToPath(import.meta.url));
 const sourceDir = path.resolve(testDir, "..");
 const failures = [];
 let checks = 0;
+// Разбивка обязательна: общее число проверок само по себе ничего не говорит
+// о корректности формул — большая их часть структурная.
+const byKind = { structural: 0, functional: 0, boundary: 0 };
+let kind = "structural";
 
 function check(condition, message) {
   checks += 1;
+  byKind[kind] += 1;
   if (!condition) failures.push(message);
 }
 
@@ -40,6 +45,7 @@ function setValues(document, values) {
 }
 
 async function calculate(file, values, expected) {
+  kind = "functional";
   const dom = await load(file);
   const { document } = dom.window;
   setValues(document, values);
@@ -230,6 +236,7 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
   const fx = JSON.parse(fs.readFileSync(path.join(testDir, "fixtures", "tok-korotkogo-zamykaniya.json"), "utf8"));
   const page = `${fx.slug}.html`;
   for (const kase of fx.cases) {
+    kind = /Граница|граница/.test(kase.name) ? "boundary" : "functional";
     const dom = await load(page);
     const { document } = dom.window;
     setValues(document, kase.inputs);
@@ -245,6 +252,7 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
     dom.window.close();
   }
   for (const kase of fx.invalid) {
+    kind = "boundary";
     const dom = await load(page);
     const { document } = dom.window;
     setValues(document, kase.inputs);
@@ -254,6 +262,7 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
     check(!/NaN|Infinity/.test(result), `${page} [${kase.name}]: при неверном вводе NaN/Infinity`);
     dom.window.close();
   }
+  kind = "structural";
   // Семантика: страница не должна называть УЗО заменой автомата и не должна
   // обещать конкретное время отключения.
   const html = fs.readFileSync(path.join(sourceDir, page), "utf8");
@@ -269,6 +278,7 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
   const fx = JSON.parse(fs.readFileSync(path.join(testDir, "fixtures", "sechenie-pe-provodnika.json"), "utf8"));
   const page = `${fx.slug}.html`;
   for (const kase of fx.cases) {
+    kind = /граница|ряд|ловушка/.test(kase.name) ? "boundary" : "functional";
     const dom = await load(page);
     const { document } = dom.window;
     setValues(document, { s: kase.s });
@@ -284,6 +294,7 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
     dom.window.close();
   }
   for (const kase of fx.invalid) {
+    kind = "boundary";
     const dom = await load(page);
     const { document } = dom.window;
     setValues(document, { s: kase.s });
@@ -293,6 +304,7 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
     check(!/NaN|Infinity/.test(result), `${page} [${kase.name}]: NaN/Infinity при неверном вводе`);
     dom.window.close();
   }
+  kind = "structural";
   const pageHtml = fs.readFileSync(path.join(sourceDir, page), "utf8");
   for (const pattern of fx.must_not_contain.patterns) {
     check(!pageHtml.includes(pattern), `${page}: текст «${pattern}» обещает то, чего расчёт не делает`);
@@ -413,7 +425,34 @@ for (const file of htmlFiles) {
   }
 }
 
-console.log(JSON.stringify({ checks, failures: failures.length }, null, 2));
+// Coverage guard: каждый калькулятор обязан иметь хотя бы один
+// функциональный тест. Отсутствие — это провал, а не молчаливый пропуск.
+kind = "structural";
+{
+  const suite = fs.readFileSync(fileURLToPath(import.meta.url), "utf8");
+  const uncovered = [];
+  for (const file of htmlFiles) {
+    if (file === "index.html" || noticePages.includes(file)) continue;
+    const slug = file.replace(/\.html$/, "");
+    const called = suite.includes(`calculate("${file}"`)
+      || suite.includes(`load("${file}")`)
+      || suite.includes(`"${slug}.json"`);
+    if (!called) uncovered.push(slug);
+  }
+  check(uncovered.length === 0,
+    `Без функциональных тестов остались калькуляторы (${uncovered.length}): ${uncovered.join(", ")}`);
+  if (uncovered.length) {
+    console.error(`\nБез функциональных тестов: ${uncovered.length} из ${htmlFiles.length - 1}`);
+  }
+}
+
+console.log(JSON.stringify({
+  checks,
+  structural: byKind.structural,
+  functional: byKind.functional,
+  boundary: byKind.boundary,
+  failures: failures.length,
+}, null, 2));
 if (failures.length) {
   for (const failure of failures) console.error(`FAIL: ${failure}`);
   process.exitCode = 1;
