@@ -110,7 +110,11 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 .ccard:hover{border-color:#0d5c50}
 .ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
 .ccard span{font-size:13px;color:#5c6660}
-@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 .pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
 .pdfbtn:hover{background:#e2ece7}
