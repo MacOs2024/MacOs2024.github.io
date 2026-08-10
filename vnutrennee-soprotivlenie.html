@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Внутреннее сопротивление источника — расчёт по просадке</title>
+<title>Внутреннее сопротивление источника — ВольтКальк</title>
 <meta name="description" content="Расчёт внутреннего сопротивления батарейки, аккумулятора или блока питания по просадке напряжения под нагрузкой. Ток короткого замыкания и максимальная мощность.">
 <link rel="canonical" href="https://macos2024.github.io/vnutrennee-soprotivlenie.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Внутреннее сопротивление источника — расчёт по просадке">
+<meta property="og:title" content="Внутреннее сопротивление источника — ВольтКальк">
 <meta property="og:description" content="Расчёт внутреннего сопротивления батарейки, аккумулятора или блока питания по просадке напряжения под нагрузкой. Ток короткого замыкания и максимальная мощность.">
 <meta property="og:url" content="https://macos2024.github.io/vnutrennee-soprotivlenie.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
@@ -19,18 +19,7 @@
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Внутреннее сопротивление источника","url":"https://macos2024.github.io/vnutrennee-soprotivlenie.html","description":"Расчёт внутреннего сопротивления батарейки, аккумулятора или блока питания по просадке напряжения под нагрузкой. Ток короткого замыкания и максимальная мощность.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Внутреннее сопротивление источника","item":"https://macos2024.github.io/vnutrennee-soprotivlenie.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя измерить внутреннее сопротивление омметром?","acceptedAnswer":{"@type":"Answer","text":"Омметр подаёт свой ток на источник, который сам создаёт напряжение — прибор покажет бессмыслицу или выйдет из строя. Внутреннее сопротивление определяется только косвенно, по просадке под известной нагрузкой."}},{"@type":"Question","name":"Почему максимальная мощность отдаётся при равенстве сопротивлений?","acceptedAnswer":{"@type":"Answer","text":"Это теорема о максимальной мощности: при Rн = r на нагрузку приходится максимум. Но КПД тогда ровно 50%, поэтому в энергетике так никогда не работают — там нагрузка много больше внутреннего сопротивления, и КПД близок к единице."}},{"@type":"Question","name":"Зависит ли внутреннее сопротивление от температуры и заряда?","acceptedAnswer":{"@type":"Answer","text":"Да, сильно. На морозе оно растёт в разы — отсюда трудности с зимним пуском. У разряженного аккумулятора оно тоже выше, поэтому измерять состояние батареи нужно в заряженном виде и при комнатной температуре."}}]}]}</script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}

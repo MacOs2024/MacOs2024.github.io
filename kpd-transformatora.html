@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>КПД трансформатора — расчёт по потерям холостого хода и КЗ</title>
+<title>КПД трансформатора и оптимальная загрузка — ВольтКальк</title>
 <meta name="description" content="Расчёт КПД силового трансформатора по паспортным потерям холостого хода и короткого замыкания при заданной загрузке. Оптимальный коэффициент загрузки.">
 <link rel="canonical" href="https://macos2024.github.io/kpd-transformatora.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="КПД трансформатора — расчёт по потерям холостого хода и КЗ">
+<meta property="og:title" content="КПД трансформатора и оптимальная загрузка — ВольтКальк">
 <meta property="og:description" content="Расчёт КПД силового трансформатора по паспортным потерям холостого хода и короткого замыкания при заданной загрузке. Оптимальный коэффициент загрузки.">
 <meta property="og:url" content="https://macos2024.github.io/kpd-transformatora.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
@@ -19,18 +19,7 @@
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"КПД трансформатора и оптимальная загрузка","url":"https://macos2024.github.io/kpd-transformatora.html","description":"Расчёт КПД силового трансформатора по паспортным потерям холостого хода и короткого замыкания при заданной загрузке. Оптимальный коэффициент загрузки.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"КПД трансформатора и оптимальная загрузка","item":"https://macos2024.github.io/kpd-transformatora.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему трансформатор греется без нагрузки?","acceptedAnswer":{"@type":"Answer","text":"Это потери холостого хода: перемагничивание стали и вихревые токи в сердечнике. Они пропорциональны квадрату напряжения и частоте, но не зависят от нагрузки — поэтому включённый трансформатор без потребителей всё равно потребляет и греется."}},{"@type":"Question","name":"Выгодно ли отключать трансформатор в нерабочее время?","acceptedAnswer":{"@type":"Answer","text":"Для крупных трансформаторов — да. Потери холостого хода 330 Вт за месяц простоя дают почти 240 кВт·ч. На подстанциях с двумя трансформаторами при малой нагрузке один намеренно выводят из работы."}},{"@type":"Question","name":"Что означает загрузка больше единицы?","acceptedAnswer":{"@type":"Answer","text":"Перегрузку. Кратковременно трансформатор её допускает, но потери в обмотках растут квадратично, и изоляция стареет ускоренно. Систематическая перегрузка на 20% сокращает срок службы в разы."}}]}]}</script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}

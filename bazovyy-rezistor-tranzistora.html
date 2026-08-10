@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Расчёт базового резистора транзистора — калькулятор ключевого режима</title>
+<title>Базовый резистор транзисторного ключа — ВольтКальк</title>
 <meta name="description" content="Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки, коэффициенту усиления и управляющему напряжению.">
 <link rel="canonical" href="https://macos2024.github.io/bazovyy-rezistor-tranzistora.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Расчёт базового резистора транзистора — калькулятор ключевого режима">
+<meta property="og:title" content="Базовый резистор транзисторного ключа — ВольтКальк">
 <meta property="og:description" content="Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки, коэффициенту усиления и управляющему напряжению.">
 <meta property="og:url" content="https://macos2024.github.io/bazovyy-rezistor-tranzistora.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
@@ -19,18 +19,7 @@
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Базовый резистор транзисторного ключа","url":"https://macos2024.github.io/bazovyy-rezistor-tranzistora.html","description":"Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки, коэффициенту усиления и управляющему напряжению.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Базовый резистор транзисторного ключа","item":"https://macos2024.github.io/bazovyy-rezistor-tranzistora.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему округлять вниз, а не к ближайшему?","acceptedAnswer":{"@type":"Answer","text":"Меньшее сопротивление означает больший ток базы и более глубокое насыщение. Округление вверх снижает базовый ток и может вывести транзистор из насыщения — с ростом нагрева и падения на переходе."}},{"@type":"Question","name":"Нужен ли резистор между базой и эмиттером?","acceptedAnswer":{"@type":"Answer","text":"Желательно: резистор 10 кОм надёжно закрывает транзистор, когда управляющий вывод находится в высокоимпедансном состоянии — например, при сбросе микроконтроллера. Без него наводки могут приоткрыть ключ."}},{"@type":"Question","name":"Когда лучше взять полевой транзистор?","acceptedAnswer":{"@type":"Answer","text":"При токах от нескольких сотен миллиампер: логическому MOSFET ток затвора в статике не нужен вовсе, а сопротивление открытого канала в единицы миллиом даёт потери на порядок меньше. Для управления от 3,3 В берите транзистор с пометкой logic level."}}]}]}</script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}

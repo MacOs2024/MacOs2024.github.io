@@ -11,6 +11,11 @@ let checks = 0;
 // о корректности формул — большая их часть структурная.
 const byKind = { structural: 0, functional: 0, boundary: 0 };
 let kind = "structural";
+const scenarioCounts = new Map();
+
+function recordScenario(file) {
+  scenarioCounts.set(file, (scenarioCounts.get(file) ?? 0) + 1);
+}
 
 function check(condition, message) {
   checks += 1;
@@ -46,6 +51,7 @@ function setValues(document, values) {
 
 async function calculate(file, values, expected) {
   kind = "functional";
+  recordScenario(file);
   const dom = await load(file);
   const { document } = dom.window;
   setValues(document, values);
@@ -82,16 +88,16 @@ const htmlFiles = fs.readdirSync(sourceDir)
   .sort();
 check(htmlFiles.length === 101, `Ожидался 101 HTML-файл, найдено ${htmlFiles.length}`);
 
-// P1-5: приватность. Webvisor и карта кликов не должны стартовать нигде,
-// пока нет механизма согласия.
+// P1-5: аналитика полностью отключена до принятия юридически достаточного
+// privacy-решения. Никаких запросов к Метрике, cookie счётчика или noscript.
 {
   for (const file of [...htmlFiles, ...infoPages]) {
     const html = fs.readFileSync(path.join(sourceDir, file), "utf8");
-    check(!/webvisor\s*:\s*true/.test(html), `${file}: Webvisor включён, а механизма согласия нет`);
-    check(!/clickmap\s*:\s*true/.test(html), `${file}: карта кликов включена, а механизма согласия нет`);
+    check(!/mc\.yandex\.|metrika\/tag\.js|ym\s*\(/i.test(html), `${file}: Яндекс.Метрика загружается до принятия privacy-решения`);
+    check(!/webvisor\s*:\s*true|clickmap\s*:\s*true/.test(html), `${file}: включён поведенческий трекинг`);
   }
   const privacy = fs.readFileSync(path.join(sourceDir, "privacy.html"), "utf8");
-  for (const required of ["Яндекс.Метрика", "cookie", "Вебвизор", "отказаться", "Обратная связь"]) {
+  for (const required of ["Яндекс.Метрика", "cookie", "Вебвизор", "GitHub Pages", "Обратная связь"]) {
     check(privacy.includes(required), `privacy.html: не раскрыт обязательный пункт «${required}»`);
   }
   check(/noindex/.test(privacy), "privacy.html: служебная страница должна быть закрыта от индексации");
@@ -112,8 +118,8 @@ for (const file of htmlFiles) {
   check(document.querySelector('link[rel=icon]')?.getAttribute("href") === "favicon.svg", `${file}: не подключён favicon.svg`);
   check(document.querySelector("footer")?.textContent.includes("справочный характер"), `${file}: нет обязательного дисклеймера`);
   const external = [...document.querySelectorAll("script[src],link[rel=stylesheet],img[src]")];
-  check(external.every(node => (node.getAttribute("src") || "").startsWith("https://mc.yandex.ru/")), `${file}: найдена неожиданная внешняя зависимость`);
-  check(typeof dom.window.ym === "function", `${file}: не инициализирована Яндекс.Метрика`);
+  check(external.length === 0, `${file}: найдена внешняя исполняемая зависимость или трекер`);
+  check(typeof dom.window.ym === "undefined", `${file}: глобальная функция Яндекс.Метрики не должна создаваться`);
 
   const canonical = document.querySelector('link[rel=canonical]')?.getAttribute("href") ?? "";
   const expected = file === "index.html" ? "https://macos2024.github.io/" : `https://macos2024.github.io/${file}`;
@@ -122,7 +128,7 @@ for (const file of htmlFiles) {
   check(document.querySelector('meta[property="og:image"]')?.content === "https://macos2024.github.io/og-image.png", `${file}: нет og:image по абсолютному URL`);
   check(document.querySelector('meta[name="twitter:card"]')?.content === "summary_large_image", `${file}: twitter:card должен быть summary_large_image`);
   const titleLen = (document.querySelector("title")?.textContent ?? "").length;
-  check(titleLen > 0 && titleLen <= 70, `${file}: длина title ${titleLen}, допустимо до 70 символов`);
+  check(titleLen > 0 && titleLen <= 60, `${file}: длина title ${titleLen}, допустимо до 60 символов`);
   check(document.querySelector('meta[property="og:url"]')?.content === expected, `${file}: og:url не совпадает с canonical`);
   const ld = document.querySelector('script[type="application/ld+json"]')?.textContent ?? "";
   let ldParsed = null;
@@ -165,11 +171,39 @@ for (const file of htmlFiles) {
   dom.window.close();
 }
 
+// P2-2: поиск. Проверяем реальные множества найденных карточек, а не только
+// факт появления хотя бы одного результата.
+{
+  kind = "functional";
+  const dom = await load("index.html");
+  const { document, Event } = dom.window;
+  const q = document.getElementById("q");
+  const search = value => {
+    q.value = value;
+    q.dispatchEvent(new Event("input", { bubbles: true }));
+    return [...document.querySelectorAll(".ccard")]
+      .filter(node => node.style.display !== "none")
+      .map(node => node.getAttribute("href"))
+      .sort();
+  };
+  const cableA = search("кабель сечение");
+  const cableB = search("сечение кабеля");
+  check(cableA.length > 0, "Поиск «кабель сечение» ничего не нашёл");
+  check(JSON.stringify(cableA) === JSON.stringify(cableB), "Порядок слов или форма «кабеля» меняют результаты поиска");
+  const breakerA = search("автоматический выключатель");
+  const breakerB = search("выключатель автоматический");
+  check(breakerA.length > 0, "Поиск «автоматический выключатель» ничего не нашёл");
+  check(JSON.stringify(breakerA) === JSON.stringify(breakerB), "Порядок слов меняет результаты поиска автомата");
+  check(JSON.stringify(search("ТЁПЛЫЙ")) === JSON.stringify(search("теплый")), "Поиск не нормализует регистр или ё/е");
+  dom.window.close();
+}
+
 await calculate("zakon-oma.html", { u: "12", i: "", r: "6", p: "" }, ["Ток I2 А", "Мощность P24 Вт"]);
 await calculate("moshchnost-toka.html", { i: "10" }, ["Активная мощность P2200 Вт", "Реактивная мощность Q0 вар"]);
 await calculate("tok-po-moshchnosti.html", { p: "3500" }, ["Ток I15,9 А"]);
 
 {
+  recordScenario("soedinenie-rezistorov.html");
   const dom = await load("soedinenie-rezistorov.html");
   const inputs = [...dom.window.document.querySelectorAll(".rv")];
   [100, 200, 300].forEach((value, index) => { inputs[index].value = String(value); });
@@ -182,6 +216,7 @@ await calculate("tok-po-moshchnosti.html", { p: "3500" }, ["Ток I15,9 А"]);
 await calculate("delitel-napryazheniya.html", { uin: "12", r1: "1", r2: "2" }, ["Выходное напряжение Uвых8 В"]);
 
 {
+  recordScenario("markirovka-rezistorov.html");
   const dom = await load("markirovka-rezistorov.html");
   setValues(dom.window.document, { nb: 4, b1: 1, b2: 0, bm: 2, bt: 0 });
   dom.window.document.getElementById("go").click();
@@ -266,6 +301,7 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
   const fx = JSON.parse(fs.readFileSync(path.join(testDir, "fixtures", "tok-korotkogo-zamykaniya.json"), "utf8"));
   const page = `${fx.slug}.html`;
   for (const kase of fx.cases) {
+    recordScenario(page);
     kind = /Граница|граница/.test(kase.name) ? "boundary" : "functional";
     const dom = await load(page);
     const { document } = dom.window;
@@ -282,6 +318,7 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
     dom.window.close();
   }
   for (const kase of fx.invalid) {
+    recordScenario(page);
     kind = "boundary";
     const dom = await load(page);
     const { document } = dom.window;
@@ -299,7 +336,12 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
   check(!/0,1\s*с/.test(html), `${page}: обещание времени отключения «0,1 с» должно быть убрано`);
   check(/УЗО не сработает|не заменяет|обойти нельзя/.test(html), `${page}: должно быть явно сказано, что УЗО не заменяет защиту от сверхтока`);
   check(!/Радикальное решение — установить УЗО/.test(html), `${page}: УЗО не должно предлагаться как решение проблемы недостаточного тока КЗ`);
-  check(/не заменяет измерение петли/.test(html), `${page}: должно быть видимое предупреждение о необходимости измерения`);
+  check(/не заменяет расчёт проекта/.test(html), `${page}: должно быть видимое предупреждение об ограничениях онлайн-оценки`);
+  for (const pattern of fx.must_not_contain) {
+    check(!html.includes(pattern), `${page}: запрещённый режим или вердикт «${pattern}» остался на странице`);
+  }
+  check(html.includes("0,8 · Uф / Zпетли"), `${page}: не показана фиксированная формула конвенционального метода`);
+  check(html.includes("максимальной допустимой рабочей температуре"), `${page}: не указано, что температурная поправка должна входить в Z`);
 }
 
 // P1-1: сечение PE. Границы таблицы и округление вверх; фиктивных режимов
@@ -308,10 +350,11 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
   const fx = JSON.parse(fs.readFileSync(path.join(testDir, "fixtures", "sechenie-pe-provodnika.json"), "utf8"));
   const page = `${fx.slug}.html`;
   for (const kase of fx.cases) {
+    recordScenario(page);
     kind = /граница|ряд|ловушка/.test(kase.name) ? "boundary" : "functional";
     const dom = await load(page);
     const { document } = dom.window;
-    setValues(document, { s: kase.s });
+    setValues(document, { s: kase.s, layout: kase.layout ?? "together" });
     document.getElementById("go").click();
     const result = document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
     for (const fragment of kase.expect) {
@@ -324,6 +367,7 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
     dom.window.close();
   }
   for (const kase of fx.invalid) {
+    recordScenario(page);
     kind = "boundary";
     const dom = await load(page);
     const { document } = dom.window;
@@ -339,11 +383,14 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
   for (const pattern of fx.must_not_contain.patterns) {
     check(!pageHtml.includes(pattern), `${page}: текст «${pattern}» обещает то, чего расчёт не делает`);
   }
-  // Каждый режим интерфейса обязан влиять на расчёт: select-полей здесь быть не должно.
+  // Единственный переключатель задаёт способ прокладки и обязан менять минимум.
   {
     const dom = await load(page);
-    check(dom.window.document.querySelectorAll("select").length === 0,
-      `${page}: остались переключатели, хотя расчёт зависит только от сечения фазы`);
+    const selects = [...dom.window.document.querySelectorAll("select")];
+    check(selects.length === 1 && selects[0].id === "layout",
+      `${page}: ожидается только переключатель способа прокладки #layout`);
+    check(selects[0]?.options.length === 3,
+      `${page}: #layout должен содержать совместную прокладку и два режима отдельного PE`);
     dom.window.close();
   }
 }
@@ -351,16 +398,23 @@ await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "
 // P1-2: карточка источника на изменённых страницах и реестр проверки.
 {
   const audited = {
-    "tok-korotkogo-zamykaniya.html": "Ожидает проверки",
-    "sechenie-pe-provodnika.html": "Сверено с источником, ожидает инженерной проверки",
+    "tok-korotkogo-zamykaniya.html": [
+      "Сверено с источником, ожидает инженерной проверки",
+      "https://www.electrical-installation.org/enwiki/Calculation_of_minimum_levels_of_short-circuit_current",
+    ],
+    "sechenie-pe-provodnika.html": [
+      "Сверено с источником, ожидает инженерной проверки",
+      "https://www.electrical-installation.org/enwiki/Sizing_of_protective_earthing_conductor",
+    ],
   };
-  for (const [page, statusLabel] of Object.entries(audited)) {
+  for (const [page, [statusLabel, sourceUrl]] of Object.entries(audited)) {
     const dom = await load(page);
     const { document } = dom.window;
     const card = document.querySelector("section.src");
     check(Boolean(card), `${page}: нет карточки источника`);
     check(card?.textContent.includes(statusLabel), `${page}: статус должен быть «${statusLabel}»`);
     check((card?.querySelectorAll("li").length ?? 0) > 0, `${page}: в карточке нет ни источников, ни ограничений`);
+    check(Boolean(card?.querySelector(`a[href="${sourceUrl}"]`)), `${page}: нет точной ссылки на первоисточник`);
     check(card?.textContent.includes("Границы применимости"), `${page}: не указаны границы применимости`);
     // Владельца нельзя записывать проверяющим без его подтверждения.
     check(!/Проверил:/.test(card?.textContent ?? ""), `${page}: расчёт не подтверждён владельцем, поля «Проверил» быть не должно`);
@@ -455,19 +509,17 @@ for (const file of htmlFiles) {
   }
 }
 
-// Coverage guard: каждый калькулятор обязан иметь хотя бы один
-// функциональный тест. Отсутствие — это провал, а не молчаливый пропуск.
+// Coverage guard считает фактически выполненные сценарии. Простое load()
+// больше не выдаётся за проверку формулы. Минимум один сценарий предотвращает
+// полный пропуск; список калькуляторов с одним сценарием печатается отдельно
+// и остаётся инженерным долгом, а не скрывается за общим числом assertions.
 kind = "structural";
 {
-  const suite = fs.readFileSync(fileURLToPath(import.meta.url), "utf8");
   const uncovered = [];
   for (const file of htmlFiles) {
     if (file === "index.html" || noticePages.includes(file)) continue;
     const slug = file.replace(/\.html$/, "");
-    const called = suite.includes(`calculate("${file}"`)
-      || suite.includes(`load("${file}")`)
-      || suite.includes(`"${slug}.json"`);
-    if (!called) uncovered.push(slug);
+    if ((scenarioCounts.get(file) ?? 0) === 0) uncovered.push(slug);
   }
   check(uncovered.length === 0,
     `Без функциональных тестов остались калькуляторы (${uncovered.length}): ${uncovered.join(", ")}`);
@@ -476,11 +528,18 @@ kind = "structural";
   }
 }
 
+const underTwo = [...scenarioCounts.entries()]
+  .filter(([, count]) => count < 2)
+  .map(([file]) => file.replace(/\.html$/, ""))
+  .sort();
+
 console.log(JSON.stringify({
   checks,
   structural: byKind.structural,
   functional: byKind.functional,
   boundary: byKind.boundary,
+  calculatorsWithOneScenario: underTwo.length,
+  oneScenarioSlugs: underTwo,
   failures: failures.length,
 }, null, 2));
 if (failures.length) {

@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Расчёт RC-снаббера — подавление выбросов и звона онлайн</title>
+<title>RC-снаббер для подавления выбросов — ВольтКальк</title>
 <meta name="description" content="Расчёт номиналов RC-снаббера по измеренной частоте звона методом добавочной ёмкости. Паразитные L и C, сопротивление демпфирования и мощность резистора.">
 <link rel="canonical" href="https://macos2024.github.io/snabber-rc.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Расчёт RC-снаббера — подавление выбросов и звона онлайн">
+<meta property="og:title" content="RC-снаббер для подавления выбросов — ВольтКальк">
 <meta property="og:description" content="Расчёт номиналов RC-снаббера по измеренной частоте звона методом добавочной ёмкости. Паразитные L и C, сопротивление демпфирования и мощность резистора.">
 <meta property="og:url" content="https://macos2024.github.io/snabber-rc.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
@@ -19,18 +19,7 @@
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"RC-снаббер для подавления выбросов","url":"https://macos2024.github.io/snabber-rc.html","description":"Расчёт номиналов RC-снаббера по измеренной частоте звона методом добавочной ёмкости. Паразитные L и C, сопротивление демпфирования и мощность резистора.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"RC-снаббер для подавления выбросов","item":"https://macos2024.github.io/snabber-rc.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему добавочная ёмкость делится именно на три?","acceptedAnswer":{"@type":"Answer","text":"Частота обратно пропорциональна корню из ёмкости. Чтобы она упала вдвое, суммарная ёмкость должна вырасти вчетверо: Cпар + Cдоб = 4·Cпар. Отсюда Cдоб = 3·Cпар, то есть паразитная ёмкость составляет треть добавленной."}},{"@type":"Question","name":"Можно ли обойтись одним конденсатором без резистора?","acceptedAnswer":{"@type":"Answer","text":"Нежелательно. Конденсатор без резистора лишь снизит частоту звона, не гася его, а при включении ключа разрядится через него броском тока. Резистор и вносит то затухание, ради которого снаббер ставится."}},{"@type":"Question","name":"Снаббер увеличивает потери — насколько это критично?","acceptedAnswer":{"@type":"Answer","text":"Он всегда добавляет потери: энергия конденсатора рассеивается каждый такт. Но платой за это становится снижение перенапряжения на ключе и электромагнитных помех. Если потери оказались значимыми, стоит сначала уменьшить саму паразитную индуктивность — укоротить петли тока в разводке."}}]}]}</script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}

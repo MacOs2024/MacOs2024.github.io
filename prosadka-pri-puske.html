@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Просадка напряжения при пуске двигателя — калькулятор провала в линии</title>
+<title>Просадка напряжения при пуске двигателя — ВольтКальк</title>
 <meta name="description" content="Расчёт кратковременного провала напряжения в линии при пуске асинхронного двигателя по пусковому току, сечению и длине кабеля.">
 <link rel="canonical" href="https://macos2024.github.io/prosadka-pri-puske.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Просадка напряжения при пуске двигателя — калькулятор провала в линии">
+<meta property="og:title" content="Просадка напряжения при пуске двигателя — ВольтКальк">
 <meta property="og:description" content="Расчёт кратковременного провала напряжения в линии при пуске асинхронного двигателя по пусковому току, сечению и длине кабеля.">
 <meta property="og:url" content="https://macos2024.github.io/prosadka-pri-puske.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
@@ -19,18 +19,7 @@
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Просадка напряжения при пуске двигателя","url":"https://macos2024.github.io/prosadka-pri-puske.html","description":"Расчёт кратковременного провала напряжения в линии при пуске асинхронного двигателя по пусковому току, сечению и длине кабеля.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Просадка напряжения при пуске двигателя","item":"https://macos2024.github.io/prosadka-pri-puske.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя ориентироваться только на рабочий ток?","acceptedAnswer":{"@type":"Answer","text":"Потому что кабель, проходящий по нагреву и по падению в рабочем режиме, при шестикратном токе даёт вшестеро больший провал. Линия, где рабочее падение составляет приемлемые 3%, при пуске просядет на 18% — двигатель может не запуститься."}},{"@type":"Question","name":"Как уменьшить провал, не меняя кабель?","acceptedAnswer":{"@type":"Answer","text":"Устройством плавного пуска или частотным преобразователем: они ограничивают пусковой ток до 2–3 номиналов, и провал уменьшается соответственно. Для мощных двигателей применяют пуск переключением звезда-треугольник — он снижает пусковой ток втрое."}},{"@type":"Question","name":"Считается ли сопротивление источника?","acceptedAnswer":{"@type":"Answer","text":"В этом расчёте учтена только линия. Если питание идёт от слабого источника — генератора, длинного ввода или трансформатора малой мощности — их внутреннее сопротивление добавит свою долю провала, и результат окажется оптимистичным."}}]}]}</script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}

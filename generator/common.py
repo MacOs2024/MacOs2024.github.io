@@ -37,22 +37,12 @@ CATS = [
     ("elektronika", "Электроника"),
 ]
 
-# Яндекс.Метрика в консервативном режиме. Webvisor (запись сессий) и
-# clickmap отключены: они собирают поведение пользователя детальнее, чем
-# нужно для простой статистики посещаемости, а механизма согласия на сайте
-# нет. Включать их можно только вместе с явным согласием пользователя.
-METRIKA = """<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->"""
+# Аналитика отключена до принятия и реализации юридически достаточного
+# privacy-решения. Даже без Webvisor Яндекс.Метрика обрабатывает cookies,
+# сведения об устройстве и активность посетителя как персональные данные.
+# Не добавлять счётчик обратно без явного решения владельца, корректной
+# политики и, где требуется, предварительного согласия посетителя.
+METRIKA = ""
 
 CSS = """
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
@@ -275,6 +265,27 @@ def og_tags(title, desc, url):
         '<meta name="twitter:card" content="summary_large_image">',
     ])
 
+def seo_title(c):
+    """Короткий title без механического обрезания ключевой фразы.
+
+    Полный редакционный заголовок остаётся в исходных данных и h1. Для title
+    сначала используем имя калькулятора с брендом, затем имя без бренда. Если
+    и оно длиннее 60 символов, обрезаем только по границе слова.
+    """
+    branded = "%s — %s" % (c["name"], SITE_NAME)
+    if len(branded) <= 60:
+        return branded
+    if len(c["name"]) <= 60:
+        return c["name"]
+    words = c["name"].split()
+    result = ""
+    for word in words:
+        candidate = (result + " " + word).strip()
+        if len(candidate) > 57:
+            break
+        result = candidate
+    return (result or c["name"][:57].rstrip()) + "…"
+
 STATUS_LABEL = {
     "verified": ("Проверено инженером", "st-verified"),
     "agent-reviewed": ("Сверено с источником, ожидает инженерной проверки", "st-agent"),
@@ -421,10 +432,11 @@ def page_html(c, all_by_slug):
                             "acceptedAnswer": {"@type": "Answer", "text": a}}
                            for q, a in c["faqs"]],
         })
-    h = (PAGE.replace("@TITLE@", esc(c["title"]))
+    title = seo_title(c)
+    h = (PAGE.replace("@TITLE@", esc(title))
              .replace("@DESC@", esc(c["desc"]))
              .replace("@CANONICAL@", esc(canonical))
-             .replace("@OG@", og_tags(c["title"], c["desc"], canonical))
+             .replace("@OG@", og_tags(title, c["desc"], canonical))
              .replace("@SCHEMA@", ld_json({"@context": "https://schema.org", "@graph": graph}))
              .replace("@METRIKA@", METRIKA)
              .replace("@CSS@", CSS)
@@ -470,8 +482,11 @@ INDEX = """<!DOCTYPE html>
 <script>
 var q=document.getElementById('q'),qclear=document.getElementById('qclear'),empty=document.getElementById('empty');
 // Нормализация: регистр, ё, дефисы и повторные пробелы не должны влиять на поиск.
-function norm(s){return String(s).toLowerCase().replace(/ё/g,'е').replace(/[-\u2010-\u2015]/g,' ').replace(/\s+/g,' ').trim();}
+function norm(s){return String(s).toLowerCase().replace(/ё/g,'е').replace(/[-\u2010-\u2015]/g,' ').replace(/\\s+/g,' ').trim();}
 // Ограниченный словарь синонимов: только близкие обозначения одного и того же.
+var FORMS={'кабеля':'кабель','кабелей':'кабель','кабельный':'кабель','кабельная':'кабель',
+'провода':'провод','проводника':'провод','проводников':'провод',
+'автоматический':'автомат','автоматического':'автомат','автоматические':'автомат'};
 var SYN={'автомат':['выключатель'],'выключатель':['автомат'],
 'узо':['дифзащита','дифференциальн'],'дифзащита':['узо'],
 'кабель':['провод'],'провод':['кабель']};
@@ -484,7 +499,7 @@ function hit(text,token){
  return false;
 }
 function apply(){
- var tokens=norm(q.value).split(' ').filter(function(t){return t.length>0;});
+ var tokens=norm(q.value).split(' ').filter(function(t){return t.length>0;}).map(function(t){return FORMS[t]||t;});
  var shown=0;
  for(var i=0;i<cards.length;i++){
   var text=cards[i].getAttribute('data-n'),ok=true;
@@ -561,7 +576,6 @@ PRIVACY_HTML = """<!DOCTYPE html>
 <link rel="canonical" href="@BASE@/privacy.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta name="robots" content="noindex,follow">
-@METRIKA@
 <style>@CSS@</style>
 </head>
 <body>
@@ -569,31 +583,15 @@ PRIVACY_HTML = """<!DOCTYPE html>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Политика конфиденциальности</nav>
 <h1>Политика конфиденциальности</h1>
-<p class="intro">Коротко: сайт не просит регистрации, не собирает персональные данные и не сохраняет то, что вы вводите в калькуляторы. Единственное, что собирается, — обезличенная статистика посещаемости.</p>
+<p class="intro">Сайт не просит регистрации и не отправляет значения из калькуляторов на сервер. Встроенная аналитика и рекламные трекеры отключены.</p>
 <section class="article">
 <h2>Что происходит с данными калькуляторов</h2>
-<p>Все расчёты выполняются <b>в вашем браузере</b>. Введённые значения никуда не передаются и нигде не сохраняются: страница самодостаточна, серверной части у сайта нет. Закрытие вкладки стирает всё введённое.</p>
+<p>Все расчёты выполняются <b>в вашем браузере</b>. Код сайта не отправляет введённые значения и не сохраняет их в cookie или локальном хранилище. Закрытие или обновление вкладки очищает поля.</p>
 <p>Экспорт результата в PDF выполняется средствами браузера через окно печати. Файл создаётся на вашем устройстве, на сайт он не отправляется.</p>
-<h2>Что собирается</h2>
-<p>На сайте установлена Яндекс.Метрика — счётчик обезличенной статистики посещаемости. Она собирает:</p>
-<ul>
-<li>факт и время посещения, какие страницы открывались;</li>
-<li>источник перехода (поисковая система, ссылка с другого сайта);</li>
-<li>обезличенные технические данные: тип устройства, операционная система, браузер, разрешение экрана, примерный регион по IP-адресу;</li>
-<li>файлы cookie, которые Метрика использует, чтобы отличать повторные визиты от новых.</li>
-</ul>
-<p>Запись действий на странице (Вебвизор) и карта кликов <b>отключены</b>. Сайт не записывает движения мыши, нажатия клавиш и содержимое полей ввода.</p>
-<h2>Зачем это нужно</h2>
-<p>Единственная цель — понимать, какими калькуляторами пользуются и какие страницы стоит улучшать. Данные не используются для рекламного профилирования и не продаются.</p>
-<h2>Кто обрабатывает данные</h2>
-<p>Обработчиком статистики выступает ООО «Яндекс» в рамках сервиса Яндекс.Метрика. Условия обработки и сроки хранения определяются <a href="https://yandex.ru/legal/confidential/" rel="nofollow noopener" target="_blank">политикой конфиденциальности Яндекса</a>. Оператор сайта доступа к сырым данным отдельных посетителей не имеет — только к агрегированным отчётам.</p>
-<h2>Как отказаться от сбора статистики</h2>
-<ul>
-<li>включить в браузере режим «Не отслеживать» (Do Not Track) или блокировщик счётчиков;</li>
-<li>запретить или удалить cookie в настройках браузера;</li>
-<li>воспользоваться <a href="https://yandex.ru/support/metrica/general/opt-out.html" rel="nofollow noopener" target="_blank">блокировщиком Яндекс.Метрики</a>.</li>
-</ul>
-<p>Работоспособность калькуляторов при этом не изменится: расчёты не зависят от статистики.</p>
+<h2>Аналитика и cookie</h2>
+<p>Яндекс.Метрика, Вебвизор, карта кликов и другие аналитические или рекламные счётчики <b>отключены</b>. Код сайта не создаёт собственные cookie. Если аналитика появится в будущем, эта политика и механизм согласия должны быть обновлены до её включения.</p>
+<h2>Технические данные хостинга</h2>
+<p>Страницы размещены на GitHub Pages. При обычной загрузке страницы хостинг-провайдер и сетевые посредники могут технически обрабатывать IP-адрес, время запроса, адрес страницы, браузер и другие данные запроса. Это происходит на стороне инфраструктуры GitHub, а не в калькуляторах. Условия такой обработки описаны в <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="nofollow noopener" target="_blank">заявлении GitHub о конфиденциальности</a>.</p>
 <h2>Обратная связь</h2>
 <p>Вопросы по обработке данных, а также требования об уточнении или удалении информации направляйте оператору сайта через контакт, указанный в профиле репозитория проекта на GitHub: <a href="https://github.com/MacOs2024/MacOs2024.github.io" rel="nofollow noopener" target="_blank">github.com/MacOs2024/MacOs2024.github.io</a>.</p>
 <h2>Изменения</h2>
@@ -631,7 +629,7 @@ def write_site(calcs, outdir):
     with open(os.path.join(outdir, FAVICON), "w", encoding="utf-8") as f:
         f.write(FAVICON_SVG)
     with open(os.path.join(outdir, "privacy.html"), "w", encoding="utf-8") as f:
-        f.write(PRIVACY_HTML.replace("@METRIKA@", METRIKA).replace("@CSS@", CSS)
+        f.write(PRIVACY_HTML.replace("@CSS@", CSS)
                             .replace("@SITE@", SITE_NAME).replace("@TAG@", TAGLINE)
                             .replace("@BASE@", BASE_URL))
     with open(os.path.join(outdir, "README.md"), "w", encoding="utf-8") as f:

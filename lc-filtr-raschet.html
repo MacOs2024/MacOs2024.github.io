@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Расчёт LC-фильтра онлайн — калькулятор индуктивности и ёмкости</title>
+<title>Расчёт LC-фильтра по частоте среза — ВольтКальк</title>
 <meta name="description" content="Расчёт индуктивности и ёмкости LC-фильтра по частоте среза и сопротивлению нагрузки. Фильтр нижних и верхних частот второго порядка.">
 <link rel="canonical" href="https://macos2024.github.io/lc-filtr-raschet.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Расчёт LC-фильтра онлайн — калькулятор индуктивности и ёмкости">
+<meta property="og:title" content="Расчёт LC-фильтра по частоте среза — ВольтКальк">
 <meta property="og:description" content="Расчёт индуктивности и ёмкости LC-фильтра по частоте среза и сопротивлению нагрузки. Фильтр нижних и верхних частот второго порядка.">
 <meta property="og:url" content="https://macos2024.github.io/lc-filtr-raschet.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
@@ -19,18 +19,7 @@
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Расчёт LC-фильтра по частоте среза","url":"https://macos2024.github.io/lc-filtr-raschet.html","description":"Расчёт индуктивности и ёмкости LC-фильтра по частоте среза и сопротивлению нагрузки. Фильтр нижних и верхних частот второго порядка.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Расчёт LC-фильтра по частоте среза","item":"https://macos2024.github.io/lc-filtr-raschet.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Чем LC-фильтр лучше RC-фильтра?","acceptedAnswer":{"@type":"Answer","text":"Крутизной и КПД. Фильтр первого порядка на RC даёт спад 6 дБ на октаву, LC второго порядка — 12 дБ. Кроме того, реактивные элементы не рассеивают мощность: резистор в RC-фильтре грелся бы, теряя часть полезного сигнала."}},{"@type":"Question","name":"Почему важно указывать сопротивление нагрузки?","acceptedAnswer":{"@type":"Answer","text":"Потому что LC-фильтр работает на конкретный импеданс. Если реальная нагрузка отличается от расчётной, характеристика меняется: появляется подъём или провал в районе среза, а частота среза смещается. Импеданс динамика к тому же сам зависит от частоты."}},{"@type":"Question","name":"Можно ли ставить электролитический конденсатор в кроссовер?","acceptedAnswer":{"@type":"Answer","text":"Обычный полярный — нет, через него идёт переменный сигнал обеих полярностей. Применяют неполярные плёночные или специальные биполярные электролитические конденсаторы для акустики."}}]}]}</script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}

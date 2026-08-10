@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Звезда и треугольник — линейные и фазные токи и напряжения</title>
+<title>Звезда и треугольник: линейные и фазные величины</title>
 <meta name="description" content="Расчёт фазного и линейного напряжения, фазного и линейного тока, полной и активной мощности симметричной трёхфазной нагрузки при соединении звездой и треугольником.">
 <link rel="canonical" href="https://macos2024.github.io/zvezda-treugolnik.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Звезда и треугольник — линейные и фазные токи и напряжения">
+<meta property="og:title" content="Звезда и треугольник: линейные и фазные величины">
 <meta property="og:description" content="Расчёт фазного и линейного напряжения, фазного и линейного тока, полной и активной мощности симметричной трёхфазной нагрузки при соединении звездой и треугольником.">
 <meta property="og:url" content="https://macos2024.github.io/zvezda-treugolnik.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
@@ -19,18 +19,7 @@
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Звезда и треугольник: линейные и фазные величины","url":"https://macos2024.github.io/zvezda-treugolnik.html","description":"Расчёт фазного и линейного напряжения, фазного и линейного тока, полной и активной мощности симметричной трёхфазной нагрузки при соединении звездой и треугольником.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Звезда и треугольник: линейные и фазные величины","item":"https://macos2024.github.io/zvezda-treugolnik.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему при пуске «звезда-треугольник» падает пусковой ток?","acceptedAnswer":{"@type":"Answer","text":"В звезде на каждую обмотку приходится в √3 раз меньшее напряжение, поэтому ток обмотки падает в √3 раз, а линейный ток — в 3 раза. После разгона переключение на треугольник даёт полную мощность."}},{"@type":"Question","name":"Можно ли включить двигатель 380 В треугольником в сеть 380 В?","acceptedAnswer":{"@type":"Answer","text":"Только если на его табличке указано 380/660 В со схемой Δ/Y для этих напряжений. Двигатель с маркировкой 220/380 В в сети 380 В соединяют звездой — иначе обмотки окажутся под перенапряжением и сгорят."}},{"@type":"Question","name":"Учитывает ли расчёт перекос фаз?","acceptedAnswer":{"@type":"Answer","text":"Нет, формулы верны для симметричной нагрузки. При неравных фазах в звезде без нулевого провода смещается нейтраль и напряжения на фазах становятся разными — там нужен отдельный расчёт по методу двух узлов."}}]}]}</script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}

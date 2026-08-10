@@ -32,6 +32,31 @@ test.describe('Главная', () => {
     expect(await page.locator('.ccard:visible').count()).toBe(total);
   });
 
+  test('поиск понимает порядок слов, формы слов, регистр и ё/е', async ({ page }) => {
+    await page.goto('/');
+    const hrefs = async () => page.locator('.ccard:visible').evaluateAll(nodes =>
+      nodes.map(node => node.getAttribute('href')).sort());
+
+    await page.fill('#q', 'кабель сечение');
+    const cableA = await hrefs();
+    await page.fill('#q', 'сечение кабеля');
+    const cableB = await hrefs();
+    expect(cableA.length).toBeGreaterThan(0);
+    expect(cableB).toEqual(cableA);
+
+    await page.fill('#q', 'автоматический выключатель');
+    const breakerA = await hrefs();
+    await page.fill('#q', 'выключатель автоматический');
+    const breakerB = await hrefs();
+    expect(breakerA.length).toBeGreaterThan(0);
+    expect(breakerB).toEqual(breakerA);
+
+    await page.fill('#q', 'ТЁПЛЫЙ');
+    const warmA = await hrefs();
+    await page.fill('#q', 'теплый');
+    expect(await hrefs()).toEqual(warmA);
+  });
+
   test('переход по карточке открывает калькулятор', async ({ page }) => {
     await page.goto('/');
     await page.locator('a.ccard[href="zakon-oma.html"]').click();
@@ -94,27 +119,56 @@ test.describe('Калькулятор', () => {
     await page.goto('/tok-korotkogo-zamykaniya.html');
     await page.fill('#u', '220');
     await page.fill('#z', '1,2');
-    await page.selectOption('#src', 'meas');
-    await page.selectOption('#kv', '0.8');
+    await page.selectOption('#zbasis', 'design');
     await page.selectOption('#tip', '10');
     await page.fill('#in', '16');
     await page.click('#go');
-    await expect(page.locator('#res')).toContainText('Не проходит');
+    await expect(page.locator('#res')).toContainText('Условие метода не выполняется');
     await expect(page.locator('#res')).not.toContainText('СтатусПроходит');
+  });
+
+  test('ток КЗ: обычное измерение не получает положительный вывод', async ({ page }) => {
+    await page.goto('/tok-korotkogo-zamykaniya.html');
+    await page.fill('#u', '220');
+    await page.fill('#z', '0,5');
+    await page.selectOption('#zbasis', 'measured');
+    await page.selectOption('#tip', '10');
+    await page.fill('#in', '16');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Недостаточно данных');
+    await expect(page.locator('#res')).not.toContainText('Условие метода выполняется');
+  });
+
+  test('отдельный PE применяет механические минимумы', async ({ page }) => {
+    await page.goto('/sechenie-pe-provodnika.html');
+    await page.fill('#s', '1,5');
+    await page.selectOption('#layout', 'separate-protected');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Расчётное сечение PE2,5 мм²');
+    await page.selectOption('#layout', 'separate-unprotected');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Расчётное сечение PE4 мм²');
   });
 });
 
 test.describe('Вёрстка', () => {
-  const pages = ['/', '/zakon-oma.html', '/tok-korotkogo-zamykaniya.html', '/sechenie-pe-provodnika.html'];
-
-  for (const url of pages) {
-    test(`нет горизонтального скролла: ${url}`, async ({ page }) => {
+  test('весь каталог загружается без JS-ошибок и горизонтального скролла', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('console', message => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
+    await page.goto('/');
+    const urls = await page.locator('.ccard').evaluateAll(nodes =>
+      nodes.map(node => node.getAttribute('href')));
+    for (const url of ['/', ...urls]) {
       await page.goto(url);
       const overflow = await page.evaluate(() =>
         document.documentElement.scrollWidth - document.documentElement.clientWidth);
-      expect(overflow, `страница шире экрана на ${overflow}px`).toBeLessThanOrEqual(0);
-    });
-  }
+      expect(overflow, `${url}: страница шире экрана на ${overflow}px`).toBeLessThanOrEqual(0);
+    }
+    expect(errors).toEqual([]);
+  });
 
   test('нет JS-ошибок при загрузке и расчёте', async ({ page }) => {
     const jsErrors = [];
@@ -124,5 +178,29 @@ test.describe('Вёрстка', () => {
     await page.click('#go');
     await expect(page.locator('#res')).toContainText('25 мм²');
     expect(jsErrors).toEqual([]);
+  });
+
+  test('печатный режим скрывает интерфейс и показывает результат', async ({ page }) => {
+    await page.goto('/zakon-oma.html');
+    await page.fill('#u', '12');
+    await page.fill('#r', '6');
+    await page.click('#go');
+    await page.emulateMedia({ media: 'print' });
+    await expect(page.locator('.top')).toBeHidden();
+    await expect(page.locator('#go')).toBeHidden();
+    await expect(page.locator('#printhead')).toBeVisible();
+    await expect(page.locator('#res')).toBeVisible();
+  });
+
+  test('аналитика не загружается до отдельного privacy-решения', async ({ page }) => {
+    const tracked = [];
+    page.on('request', request => {
+      if (/yandex\.(ru|com)|mc\.yandex/.test(request.url())) tracked.push(request.url());
+    });
+    await page.goto('/');
+    await page.goto('/privacy.html');
+    expect(tracked).toEqual([]);
+    await expect(page.locator('body')).toContainText('Яндекс.Метрика');
+    await expect(page.locator('body')).toContainText('отключены');
   });
 });
