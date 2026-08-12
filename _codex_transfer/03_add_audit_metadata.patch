@@ -1,0 +1,660 @@
+diff --git a/generator/audit_metadata.py b/generator/audit_metadata.py
+new file mode 100644
+index 0000000..beb7756
+--- /dev/null
++++ b/generator/audit_metadata.py
+@@ -0,0 +1,654 @@
++# -*- coding: utf-8 -*-
++"""Проверяемые основания для расчётов второго инженерного прохода.
++
++Метаданные вынесены из отдельных карточек, чтобы одинаковые первоисточники
++не копировались десятки раз. Это не заменяет тесты: статус назначается только
++после добавления независимых эталонов в tests/verify.mjs.
++"""
++
++ACCESSED = "11.08.2026"
++
++
++def source(title, organization, edition, sections, url):
++    return dict(
++        title=title,
++        organization=organization,
++        edition=edition,
++        sections=sections,
++        accessed=ACCESSED,
++        url=url,
++    )
++
++
++OPENSTAX_RESISTANCE = source(
++    "University Physics Volume 2",
++    "OpenStax, Rice University",
++    "онлайн-редакция 2016",
++    ["9.3 Resistivity and Resistance", "9.4 Ohm's Law", "9.5 Electrical Energy and Power"],
++    "https://openstax.org/books/university-physics-volume-2/pages/9-introduction",
++)
++OPENSTAX_DC = source(
++    "University Physics Volume 2",
++    "OpenStax, Rice University",
++    "онлайн-редакция 2016",
++    ["10.2 Resistors in Series and Parallel", "10.3 Kirchhoff's Rules"],
++    "https://openstax.org/books/university-physics-volume-2/pages/10-2-resistors-in-series-and-parallel",
++)
++OPENSTAX_EMF = source(
++    "University Physics Volume 2",
++    "OpenStax, Rice University",
++    "online edition 2016",
++    ["10.1 Electromotive Force — terminal voltage and internal resistance"],
++    "https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force",
++)
++OPENSTAX_CAPACITANCE = source(
++    "University Physics Volume 2",
++    "OpenStax, Rice University",
++    "онлайн-редакция 2016",
++    ["8.2 Capacitors in Series and in Parallel", "8.3 Energy Stored in a Capacitor"],
++    "https://openstax.org/books/university-physics-volume-2/pages/8-3-energy-stored-in-a-capacitor",
++)
++OPENSTAX_RC = source(
++    "University Physics Volume 2",
++    "OpenStax, Rice University",
++    "онлайн-редакция 2016",
++    ["10.5 RC Circuits"],
++    "https://openstax.org/books/university-physics-volume-2/pages/10-5-rc-circuits",
++)
++OPENSTAX_AC = source(
++    "University Physics Volume 2",
++    "OpenStax, Rice University",
++    "онлайн-редакция 2016",
++    ["15.2 Simple AC Circuits", "15.3 RLC Series Circuits with AC", "15.4 Power in an AC Circuit", "15.5 Resonance"],
++    "https://openstax.org/books/university-physics-volume-2/pages/15-summary",
++)
++OPENSTAX_TRANSFORMER = source(
++    "University Physics Volume 2",
++    "OpenStax, Rice University",
++    "онлайн-редакция 2016",
++    ["15.6 Transformers"],
++    "https://openstax.org/books/university-physics-volume-2/pages/15-6-transformers",
++)
++NIST_COPPER = source(
++    "Copper Wire Tables, NBS Handbook 100",
++    "National Bureau of Standards (NIST)",
++    "1966, переизданная цифровая копия",
++    ["standard resistivity at 20 °C", "temperature coefficient", "wire tables"],
++    "https://nvlpubs.nist.gov/nistpubs/Legacy/hb/nbshandbook100.pdf",
++)
++TI_555 = source(
++    "LM555 Timer datasheet",
++    "Texas Instruments",
++    "SNAS548D, revised January 2015",
++    ["7.3.3", "7.4 Monostable and Astable Operation"],
++    "https://www.ti.com/lit/gpn/LM555",
++)
++TI_LDO = source(
++    "Understanding the Terms and Definitions of LDO Voltage Regulators",
++    "Texas Instruments",
++    "SLVA079, October 1999",
++    ["4 Efficiency", "12 Power Dissipation and Junction Temperature"],
++    "https://www.ti.com/lit/pdf/slva079",
++)
++TI_LED = source(
++    "Fundamentals to automotive LED driver circuits",
++    "Texas Instruments",
++    "SLYY163, May 2019",
++    ["Linear LED driving", "Equation 3"],
++    "https://www.ti.com/lit/pdf/slyy163",
++)
++TI_SNUBBER = source(
++    "Minimizing Switch Ringing on TPS53319 and TPS53318 Devices",
++    "Texas Instruments",
++    "SLUA851A, revised November 2018",
++    ["Equations 2–5", "RC snubber selection"],
++    "https://www.ti.com/lit/pdf/slua851",
++)
++ONSEMI_2N3904 = source(
++    "2N3904 NPN General-Purpose Amplifier datasheet",
++    "onsemi",
++    "2N3904/D, Rev. 10, November 2024",
++    ["Electrical Characteristics — VCE(sat) test conditions"],
++    "https://www.onsemi.com/pdf/datasheet/2n3904-d.pdf",
++)
++TI_SWITCHING = source(
++    "Switching regulator fundamentals",
++    "Texas Instruments",
++    "SNVA559C, revised February 2019",
++    ["1 Switching Fundamentals", "2 Switching Converter Topologies"],
++    "https://www.ti.com/lit/snva559",
++)
++TI_LIION = source(
++    "Characteristics of Rechargeable Batteries",
++    "Texas Instruments",
++    "SNVA533, July 2011",
++    ["capacity and C-rate", "Lithium-Ion"],
++    "https://www.ti.com/lit/an/snva533/snva533.pdf",
++)
++TI_JEITA = source(
++    "Li-ion battery-charger solutions for JEITA compliance",
++    "Texas Instruments",
++    "SLYT365, 1Q 2010",
++    ["charge-current and voltage temperature limits"],
++    "https://www.ti.com/lit/pdf/slyt365",
++)
++VISHAY_MARKING = source(
++    "MBA/SMA 0204, MBB/SMA 0207 professional thin film leaded resistors",
++    "Vishay",
++    "revision 2026; marking according to IEC 60062",
++    ["Marking", "five-band color code"],
++    "https://www.vishay.com/doc/?28768=",
++)
++VICTRON_WIRING = source(
++    "Wiring Unlimited",
++    "Victron Energy",
++    "rev. 08, 2024",
++    ["DC wiring", "voltage drop", "battery banks", "fusing"],
++    "https://www.victronenergy.com/upload/documents/The_Wiring_Unlimited_book/43562-Wiring_Unlimited-pdf-en.pdf",
++)
++DOE_MOTORS = source(
++    "Continuous Energy Improvement in Motor Driven Systems",
++    "U.S. Department of Energy",
++    "DOE/GO-102014-4357, 2014",
++    ["motor input power", "power factor", "efficiency", "pump systems"],
++    "https://www.energy.gov/sites/prod/files/2014/04/f15/amo_motors_guidebook_web.pdf",
++)
++DOE_EV = source(
++    "Electric Vehicle Charging Stations",
++    "U.S. Department of Energy, Alternative Fuels Data Center",
++    "онлайн-редакция, актуальная на дату обращения",
++    ["charging power and time"],
++    "https://afdc.energy.gov/fuels/electricity-stations",
++)
++DOE_EV_LOSSES = source(
++    "Energy Put into an Electric Car and Charging Losses",
++    "U.S. Department of Energy",
++    "Fact of the Week #1045, 3 September 2018",
++    ["wall-to-battery charging loss"],
++    "https://www.energy.gov/cmei/vehicles/articles/fotw-1045-september-3-2018-77-82-energy-put-electric-car-used-move-car-down",
++)
++NREL_PV = source(
++    "SAM Photovoltaic Model Technical Reference Update",
++    "National Renewable Energy Laboratory",
++    "NREL/TP-6A20-67399, 2018",
++    ["irradiance", "module and system losses", "energy yield modelling"],
++    "https://www.nrel.gov/docs/fy18osti/67399.pdf",
++)
++ARRL_ANTENNA = source(
++    "Wire Antennas for the Beginner",
++    "American Radio Relay League",
++    "QST, June 1983; ARRL digital reprint",
++    ["half-wave dipoles", "quarter-wave antennas"],
++    "https://www.arrl.org/files/file/Technology/tis/info/pdf/0683033.pdf",
++)
++ARRL_ATTENUATOR = source(
++    "A Step Attenuator You Can Build",
++    "American Radio Relay League",
++    "QST, September 1982; ARRL digital reprint",
++    ["resistive pi-network sections", "attenuation and impedance"],
++    "https://www.arrl.org/files/file/Technology/tis/info/pdf/September1982_Attenuator.pdf",
++)
++SCHNEIDER_POWER = source(
++    "Electrical Installation Guide",
++    "Schneider Electric",
++    "онлайн-редакция, актуальная на дату обращения",
++    ["Power and reactive energy", "three-phase circuits", "motor current"],
++    "https://www.electrical-installation.org/enwiki/Power_and_reactive_energy",
++)
++NFPA_CONDUIT = source(
++    "NFPA 70 National Electrical Code — Chapter 9, Table 1",
++    "National Fire Protection Association",
++    "2020 first-revision report, FR-8326",
++    ["Percent of cross section of conduit and tubing: 53%, 31%, 40%"],
++    "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2020_NEC_P08_FD_FRStatements.pdf",
++)
++SP_LIGHTING = source(
++    "СП 52.13330.2016 Естественное и искусственное освещение",
++    "Минстрой России",
++    "редакция с изменениями, действующая на дату обращения",
++    ["нормируемая освещённость; расчёт по коэффициенту использования"],
++    "https://docs.cntd.ru/document/456054197",
++)
++ENERGY_STAR_LIGHTING = source(
++    "Small Business Action Workbook Appendices",
++    "ENERGY STAR / U.S. EPA",
++    "September 2018",
++    ["Lighting Calculator", "energy and life-cycle cost"],
++    "https://www.energystar.gov/sites/default/files/tools/ENERGYSTAR_Small_Business_AWB_Appendices_508_September_2018.pdf",
++)
++SEW_STEINMETZ = source(
++    "Operating Instructions – AC Motors, Steinmetz circuit",
++    "SEW-EURODRIVE",
++    "edition 06/2023",
++    ["Steinmetz circuit", "motor nameplate connection"],
++    "https://download.sew-eurodrive.com/download/pdf/33090874.pdf",
++)
++JS_STEINMETZ = source(
++    "How is the capacitor calculated in a Steinmetz circuit?",
++    "JS-Technik GmbH",
++    "онлайн-редакция, актуальная на дату обращения",
++    ["C = 2P/(√3·ω·U²)", "230 V delta connection", "limitations of Steinmetz operation"],
++    "https://www.js-technik.co.uk/faq/electric-motors-general/5.-how-is-the-capacitor-calculated-in-a-steinmetz-circuit",
++)
++DANFOSS_FLOOR = source(
++    "Electric heating literature — LX cable installation manuals and guides",
++    "Danfoss",
++    "online technical-documentation index, accessed 11 August 2026",
++    ["LX Cable installation manual", "product-specific installation instructions"],
++    "https://www.danfoss.com/en-us/service-and-support/fix-and-troubleshooting/electric-heating-installer-hub/electric-heating-literature/",
++)
++BIPM_SI = source(
++    "The International System of Units (SI Brochure)",
++    "Bureau International des Poids et Mesures",
++    "9th edition, version 4.01, August 2025",
++    ["5.4.7 Logarithmic ratio quantities", "Table 8 — bel and decibel"],
++    "https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf",
++)
++NIST_UNITS = source(
++    "NIST Guide to the SI, Appendix B.8",
++    "National Institute of Standards and Technology",
++    "SP 811 web edition, current on access date",
++    ["horsepower conversion factors", "watt hour and joule"],
++    "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8",
++)
++NIST_WATER = source(
++    "NIST Chemistry WebBook — Water, liquid heat capacity",
++    "National Institute of Standards and Technology",
++    "SRD 69, current on access date",
++    ["Liquid Phase Heat Capacity (Shomate Equation)"],
++    "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Plot=on&Type=JANAFL",
++)
++TI_LM317 = source(
++    "LM317 3-Terminal Adjustable Regulator datasheet",
++    "Texas Instruments",
++    "current datasheet on access date",
++    ["Typical Application", "adjustable output equation", "IADJ"],
++    "https://www.ti.com/lit/gpn/LM317",
++)
++TI_OPAMP = source(
++    "Understanding Basic Analog — Ideal Op Amps",
++    "Texas Instruments",
++    "SLOA011B, revised March 2021",
++    ["inverting amplifier", "non-inverting amplifier"],
++    "https://www.ti.com/lit/pdf/sloa011",
++)
++TI_OPAMP_SWING = source(
++    "Designing for Output Voltage Swing in Operational Amplifiers",
++    "Texas Instruments",
++    "SBOA583, December 2023",
++    ["output swing versus load and supply"],
++    "https://www.ti.com/lit/pdf/sboa583",
++)
++VISHAY_NTC = source(
++    "NTC Thermistors — General Technical Information",
++    "Vishay",
++    "document 29053, current revision on access date",
++    ["beta value", "R/T characteristic", "self-heating"],
++    "https://www.vishay.com/docs/29053/ntcintro.pdf",
++)
++WHEELER_COIL = source(
++    "Simple Inductance Formulas for Radio Coils",
++    "Harold A. Wheeler, Proceedings of the IRE",
++    "volume 16, issue 10, October 1928",
++    ["single-layer air-core coil formula", "accuracy condition"],
++    "https://doi.org/10.1109/JRPROC.1928.221309",
++)
++MAGNETICS_AL = source(
++    "Powder Core Catalog",
++    "Magnetics",
++    "2013 catalog update",
++    ["L = AL·N²", "AL tolerance", "inductance versus bias"],
++    "https://www.mag-inc.com/Media/Magnetics/File-Library/Product%20Literature/Powder%20Core%20Literature/MagenticsPowderCoreCatalog2013Update.pdf?ext=.pdf",
++)
++SCHNEIDER_PFC = source(
++    "Electrical Installation Guide — Theoretical principles to improve power factor",
++    "Schneider Electric",
++    "online edition, current on access date",
++    ["Qc = P(tan φ − tan φ′)", "capacitor-bank considerations"],
++    "https://www.electrical-installation.org/enwiki/Theoretical_principles_to_improve_power_factor",
++)
++SCHNEIDER_HARMONICS = source(
++    "Electrical Installation Guide — Effects of harmonics",
++    "Schneider Electric",
++    "online edition, current on access date",
++    ["triplen harmonics in the neutral", "neutral conductor loading"],
++    "https://www.electrical-installation.org/enwiki/Effects_of_harmonics_-_Overload_of_equipment",
++)
++VICTRON_MPPT = source(
++    "BlueSolar MPPT 150/35 & 150/45 manual",
++    "Victron Energy",
++    "current manual on access date",
++    ["maximum PV open-circuit voltage", "temperature coefficient requirement"],
++    "https://www.victronenergy.com/upload/documents/Manual_BlueSolar_150-35__150-45/29694-MPPT_solar_charger_manual-pdf-en.pdf",
++)
++CANADIAN_SOLAR = source(
++    "TOPBiHiKu6 CS6.2-66TB-H module datasheet",
++    "Canadian Solar",
++    "v1.1, 2026",
++    ["Voc and Vmp at STC", "temperature coefficient of Voc"],
++    "https://www.canadiansolar.com/wp-content/uploads/sites/3/2026/05/CS-Datasheet-TOPBiHiKu6_CS6.2-66TB-H_v1.1_F68_L3B_TX-DC-Light.pdf",
++)
++QORVO_PCB = source(
++    "PCB Trace Power Handling Calculator",
++    "Qorvo",
++    "online design tool, current on access date",
++    ["curve-fit constants for IPC-2221 graphs", "scope of the approximation"],
++    "https://www.qorvo.com/design-hub/design-tools/interactive/pcb-trace-power-handling-calculator",
++)
++MIT_LINEAR_CIRCUITS = source(
++    "Linear Circuit Analysis",
++    "MIT OpenCourseWare",
++    "6.071J, Spring 2006",
++    ["Thévenin equivalent", "maximum power transfer"],
++    "https://ocw.mit.edu/courses/6-071j-introduction-to-electronics-signals-and-measurement-spring-2006/004de24dd40e3938b0393a6a2bd91788_linear_crct_ana.pdf",
++)
++FIORE_CIRCUITS = source(
++    "DC Electrical Circuit Analysis — A Practical Approach",
++    "James M. Fiore / LibreTexts",
++    "online textbook edition, current on access date",
++    ["Delta-Y conversions"],
++    "https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/DC_Electrical_Circuit_Analysis_-_A_Practical_Approach_%28Fiore%29/06%3A_Analysis_Theorems_and_Techniques/6.7%3A_Delta-Y_Conversions",
++)
++
++
++def meta(status, sources, limitations, assumptions=None):
++    result = dict(review_status=status, sources=sources, limitations=limitations)
++    if assumptions:
++        result["assumptions"] = assumptions
++    return result
++
++
++AUDIT_METADATA = {}
++
++
++def add(slugs, status, sources, limitations, assumptions=None):
++    data = meta(status, sources, limitations, assumptions)
++    for slug in slugs.split():
++        assert slug not in AUDIT_METADATA, "Повтор метаданных аудита: %s" % slug
++        AUDIT_METADATA[slug] = data
++
++
++add(
++    "zakon-oma moshchnost-toka tok-po-moshchnosti soprotivlenie-provoda "
++    "nagrevanie-dzhoulya-lentsa shunt-ampermetra dobavochnyy-rezistor-voltmetra",
++    "agent-reviewed", [OPENSTAX_RESISTANCE],
++    ["Идеальные стационарные цепи; температурные, частотные и переходные эффекты учитываются только там, где введены явно."],
++)
++add(
++    "soedinenie-rezistorov delitel-napryazheniya delitel-toka most-uitstona",
++    "agent-reviewed", [OPENSTAX_DC],
++    ["Идеальные резисторы; измерительный прибор и подключённая нагрузка не должны заметно нагружать расчётную цепь."],
++)
++add(
++    "energiya-kondensatora",
++    "agent-reviewed", [OPENSTAX_CAPACITANCE],
++    ["Не учитываются ESR, утечка, допуск ёмкости и предельно допустимые напряжение, ток и энергия конкретного конденсатора."],
++)
++add(
++    "rc-filtr zaryad-kondensatora discharge-resistor-capacitor",
++    "agent-reviewed", [OPENSTAX_RC],
++    ["Идеальная RC-цепь первого порядка; сопротивление источника, ESR и нагрузка должны быть учтены отдельно."],
++)
++add(
++    "reaktivnoe-soprotivlenie rezonans-lc impedans-rlc rms-amplituda lc-filtr-raschet",
++    "agent-reviewed", [OPENSTAX_AC],
++    ["Синусоидальный установившийся режим и идеальные сосредоточенные элементы; паразитные параметры и нагрузка могут сдвинуть результат."],
++)
++add(
++    "koefficient-transformacii",
++    "agent-reviewed", [OPENSTAX_TRANSFORMER],
++    ["Соотношения относятся к установившемуся синусоидальному режиму; ток холостого хода, регулирование и нагрев не вычисляются."],
++)
++add(
++    "raschet-transformatora diametr-provoda-obmotki",
++    "estimate", [OPENSTAX_TRANSFORMER, NIST_COPPER],
++    ["Эмпирический предварительный расчёт, не заменяющий данные сердечника, проверку индукции, заполнения окна, нагрева и изоляции."],
++    ["Марка стали и точная геометрия сердечника неизвестны; коэффициенты вводит пользователь."],
++)
++add(
++    "temperaturnyy-koefficient",
++    "agent-reviewed", [NIST_COPPER],
++    ["Линейная аппроксимация применима лишь в температурном диапазоне, для которого задан коэффициент материала."],
++)
++add(
++    "markirovka-rezistorov",
++    "agent-reviewed", [VISHAY_MARKING],
++    ["Поддерживается распространённая 4- и 5-полосная маркировка; специальные шестиполосные и высоковольтные коды не распознаются."],
++)
++add(
++    "ne555-astabilnyy",
++    "agent-reviewed", [TI_555],
++    ["Классическая схема без отдельного диода; допуски R/C, ток разряда и частотные ограничения конкретной версии 555 не моделируются."],
++)
++add(
++    "linear-regulator-loss",
++    "agent-reviewed", [TI_LDO],
++    ["Ток покоя и зависимость теплового сопротивления от реальной печатной платы не учитываются; результат нужно сверять с даташитом регулятора."],
++)
++add(
++    "rezistor-svetodioda",
++    "agent-reviewed", [TI_LED],
++    ["Падение напряжения LED зависит от тока и температуры; для мощных светодиодов нужен стабилизированный драйвер тока."],
++)
++add(
++    "snabber-rc",
++    "estimate", [TI_SNUBBER],
++    ["Только стартовые значения по измеренной частоте звона; окончательный RC подбирается осциллографом на реальном монтаже.", "Оценка потерь предполагает полный заряд и разряд конденсатора один раз за период."],
++)
++add(
++    "drossel-impulsnogo shim-srednee-napryazhenie",
++    "estimate", [TI_SWITCHING],
++    ["Идеальный непрерывный режим; не проверяются насыщение, потери сердечника и ключей, ESR, переходные процессы и устойчивость петли."],
++)
++add(
++    "stabilitron-rezistor",
++    "estimate", [TI_LED, TI_LDO],
++    ["Расчёт задаёт начальную точку; токи, напряжения, коэффициент усиления и рассеиваемую мощность нужно проверять по даташиту каждого компонента."],
++)
++add(
++    "bazovyy-rezistor-tranzistora",
++    "agent-reviewed", [ONSEMI_2N3904],
++    ["Принудительный β берётся из той же строки даташита, где нормирован VCE(sat); динамический заряд базы и скорость выключения не рассчитываются."],
++)
++add(
++    "battery-charge-time liion-charge-current",
++    "estimate", [TI_LIION, TI_JEITA],
++    ["Допустимые ток, напряжение и температурный диапазон задаёт производитель конкретной ячейки; калькулятор не выбирает безопасный C-rate."],
++)
++add(
++    "batareya-posledovatelno-parallelno power-bank-runtime "
++    "vremya-raboty-akkumulyatora raschet-akb-avtonomnoy raschet-invertora sechenie-po-dline-12v",
++    "estimate", [VICTRON_WIRING],
++    ["Результат не проверяет паспортный ток батареи, BMS, предохранитель, допустимый нагрев кабеля, качество соединений и старение."],
++)
++add(
++    "tok-elektrodvigatelya moshchnost-nasosa",
++    "estimate", [DOE_MOTORS, SCHNEIDER_POWER],
++    ["Только установившийся симметричный режим; номинальный и пусковой ток следует брать с шильдика и из паспорта конкретного двигателя."],
++)
++add(
++    "kondensator-dvigatelya",
++    "estimate", [SEW_STEINMETZ, JS_STEINMETZ],
++    ["Только предварительная оценка схемы Штейнмеца для двигателя, допускающего соединение Δ на напряжение однофазной сети; окончательная ёмкость определяется по току фаз, моменту и нагреву.", "Работа трёхфазного двигателя от одной фазы снижает доступный момент и не заменяет частотный преобразователь."],
++)
++add(
++    "generator-sizing voltage-stabilizer-size kva-kvt kpd-transformatora",
++    "estimate", [SCHNEIDER_POWER, DOE_MOTORS],
++    ["Предварительная оценка; перегрузочная способность, гармоники, асимметрия фаз и пуск конкретной нагрузки проверяются по паспорту оборудования."],
++)
++add(
++    "solar-panel-energy",
++    "estimate", [NREL_PV],
++    ["Среднесуточная оценка по введённым PSH и потерям; для проекта нужна почасовая модель с координатами, ориентацией, температурой и затенением."],
++)
++add(
++    "zaryadka-elektromobilya",
++    "estimate", [DOE_EV, DOE_EV_LOSSES],
++    ["Мощность ограничивается меньшим из значений EVSE и бортового зарядного устройства; зарядный профиль и терморегулирование меняют время."],
++)
++add(
++    "dlina-antenny",
++    "estimate", [ARRL_ANTENNA],
++    ["Стартовая геометрическая длина; реальную антенну настраивают анализатором с учётом диаметра проводника, высоты, окружения и питания."],
++)
++add(
++    "attenyuator",
++    "agent-reviewed", [ARRL_ATTENUATOR, OPENSTAX_DC],
++    ["Идеальные резистивные симметричные T/П-секции с равными входным и выходным сопротивлениями; на ВЧ важны паразитные параметры и монтаж."],
++)
++add(
++    "pulsacii-vypryamitelya diode-bridge-loss umnozhitel-napryazheniya",
++    "estimate", [OPENSTAX_CAPACITANCE, OPENSTAX_AC],
++    ["Упрощённая оценка идеализированного выпрямителя; не моделируются сопротивление источника, угол проводимости, ESR, восстановление диодов и пусковой ток."],
++)
++add(
++    "moshchnost-po-schetchiku stoimost-elektroenergii stoimost-osveshcheniya",
++    "agent-reviewed", [OPENSTAX_RESISTANCE, ENERGY_STAR_LIGHTING],
++    ["Арифметика энергии и стоимости использует введённые тариф, время и ресурс; реальные тарифные зоны, простой и деградация вводятся отдельно."],
++)
++add(
++    "raschet-osveshcheniya",
++    "estimate", [SP_LIGHTING],
++    ["Метод коэффициента использования требует фотометрии светильника, индекса помещения и коэффициентов отражения; готовые значения в списке — ориентиры."],
++)
++add(
++    "zapolnenie-truby-kabelem",
++    "agent-reviewed", [NFPA_CONDUIT],
++    ["53/31/40% — правило NEC/NFPA 70, а не ПУЭ. Геометрическая проверка не подтверждает допустимый ток, нагрев, радиус изгиба и соответствие российскому проекту."],
++)
++add(
++    "teplyy-pol",
++    "estimate", [OPENSTAX_RESISTANCE, DANFOSS_FLOOR],
++    ["Геометрическая раскладка по введённым паспортным мощности и длине; допустимые шаг, температура, датчик, защита и конструкция пола задаются инструкцией конкретной системы."],
++)
++add(
++    "moshchnost-elektrokotla nagruzka-kvartiry",
++    "estimate", [SCHNEIDER_POWER],
++    ["Коэффициенты теплопотерь/спроса вводятся пользователем и не заменяют расчёт ограждений или ведомость нагрузок.", "Автомат и кабель по одной мощности не выбираются: нужны допустимый ток линии, ток КЗ, способ прокладки и условия защиты."],
++)
++add(
++    "skin-effekt",
++    "estimate", [NIST_COPPER, OPENSTAX_AC],
++    ["Глубина скин-слоя рассчитана для однородного проводника; оценка роста сопротивления по кольцевому слою грубая и не заменяет решение уравнений поля или данные производителя литцендрата."],
++)
++add(
++    "awg-mm2",
++    "agent-reviewed", [NIST_COPPER],
++    ["Геометрия AWG не задаёт допустимый ток, наружный диаметр кабеля или эквивалентный стандартный метрический номинал."],
++)
++add(
++    "decibel",
++    "agent-reviewed", [BIPM_SI],
++    ["20·lg применяется к амплитудным отношениям только там, где соответствующая мощность пропорциональна квадрату величины; при разных импедансах используют мощности."],
++)
++add(
++    "power-energy-units",
++    "agent-reviewed", [NIST_UNITS],
++    ["Конвертер различает механическую и метрическую лошадиную силу; мощность и энергию нельзя связывать без интервала времени."],
++)
++add(
++    "lm317-resistor",
++    "agent-reviewed", [TI_LM317],
++    ["VREF и IADJ введены как номинальные значения; допуски, минимальная нагрузка, dropout, нагрев и устойчивость проверяются по даташиту конкретной версии."],
++)
++add(
++    "ne555-monostabilnyy",
++    "agent-reviewed", [TI_555],
++    ["Номинальная формула 1,1RC; допуски, утечки, порог конкретной версии, температура и повторный запуск не моделируются."],
++)
++add(
++    "ou-usilenie",
++    "agent-reviewed", [TI_OPAMP, TI_OPAMP_SWING],
++    ["Идеальные формулы обратной связи; пользователь должен задать выходные границы по даташиту при фактических питании, нагрузке и температуре.", "GBW, slew rate, входной синфазный диапазон, ток смещения, устойчивость и шум не вычисляются."],
++)
++add(
++    "preobrazovanie-y-delta",
++    "agent-reviewed", [FIORE_CIRCUITS],
++    ["Расчёт для положительных резисторов; для реактивных цепей нужны комплексные импедансы на заданной частоте."],
++)
++add(
++    "soedinenie-kondensatorov",
++    "agent-reviewed", [OPENSTAX_CAPACITANCE],
++    ["Идеальные ёмкости; ESR, утечка, допуски и распределение напряжений проверяются отдельно. Паспортные напряжения последовательных элементов не суммируются автоматически."],
++)
++add(
++    "soedinenie-katushek",
++    "agent-reviewed", [OPENSTAX_AC],
++    ["Катушки считаются магнитно несвязанными; насыщение, сопротивление обмотки, паразитная ёмкость и частотная зависимость не вычисляются."],
++)
++add(
++    "ten-moshchnost-tok",
++    "agent-reviewed", [OPENSTAX_RESISTANCE],
++    ["Однофазный активный элемент; режим измеренного R относится к введённому сопротивлению, которое может заметно меняться с температурой."],
++)
++add(
++    "zvezda-treugolnik",
++    "agent-reviewed", [SCHNEIDER_POWER],
++    ["Три одинаковых линейных импеданса в симметричном синусоидальном режиме; электрическое отношение мощности 3:1 не является моделью механической мощности или разгона двигателя."],
++)
++add(
++    "buck-boost-duty",
++    "estimate", [TI_SWITCHING],
++    ["Идеальный непрерывный режим тока дросселя; допустимые duty-cycle, минимальные времена импульсов, падения напряжения и устойчивость задаёт конкретный контроллер."],
++)
++add(
++    "induktivnost-katushki",
++    "estimate", [WHEELER_COIL],
++    ["Эмпирическая формула для однослойной воздушной катушки; монтаж, шаг, толщина провода, паразитная ёмкость и близкие проводники меняют результат."],
++)
++add(
++    "ntc-termistor",
++    "estimate", [VISHAY_NTC],
++    ["B должен быть взят из даташита вместе с его температурным интервалом; для широкого диапазона точнее таблица R/T или коэффициенты Стейнхарта–Харта.", "Самонагрев от измерительного тока не моделируется."],
++)
++add(
++    "perevod-ah-wh",
++    "estimate", [TI_LIION],
++    ["Произведение А·ч·U — оценка при введённом постоянном, обычно номинальном напряжении; точная энергия зависит от кривой разряда, тока, температуры и порога отключения."],
++)
++add(
++    "power-factor-compensation",
++    "estimate", [SCHNEIDER_PFC, SCHNEIDER_POWER],
++    ["Симметричный синусоидальный режим; ступени, допуски, коммутационные токи, гармоники, перенапряжение и резонанс требуют проектной проверки."],
++)
++add(
++    "shirina-dorozhki-pcb",
++    "estimate", [QORVO_PCB],
++    ["Историческая аппроксимация графиков IPC-2221, не нормативный минимум. Геометрия платы, длина, медные плоскости, vias, температура среды и теплоотвод не моделируются."],
++)
++add(
++    "solnechnye-paneli-massiv",
++    "estimate", [VICTRON_MPPT, CANADIAN_SOLAR, NREL_PV],
++    ["Сравниваются только введённые номиналы; для проекта нужны допуск Voc, абсолютная минимальная температура ячейки, методика производителя и отдельные пределы MPPT по току/напряжению."],
++)
++add(
++    "tok-v-nule-perekos",
++    "estimate", [SCHNEIDER_HARMONICS, SCHNEIDER_POWER],
++    ["Только синусоидальные основные гармоники, сдвинутые на 120°. Тройные гармоники нелинейных нагрузок складываются в нейтрали и могут сделать полный ток выше фазного.", "Результат не предназначен для выбора сечения или аппарата защиты."],
++)
++add(
++    "toroid-turns-al",
++    "estimate", [MAGNETICS_AL],
++    ["Малосигнальная формула по паспортному AL; его допуск и изменение при смещении, частоте, температуре и зазоре требуют проверки. Насыщение и потери не вычисляются."],
++)
++add(
++    "vnutrennee-soprotivlenie",
++    "estimate", [OPENSTAX_EMF, MIT_LINEAR_CIRCUITS],
++    ["Линейная модель Тевенина между введёнными рабочими точками; параметры батарей и ограничиваемых источников зависят от заряда, температуры, времени и режима.", "I при U=0 и Pmax — математические экстраполяции, не допустимые режимы и не инструкция к короткому замыканию."],
++)
++add(
++    "vremya-nagreva-vody",
++    "estimate", [NIST_WATER, OPENSTAX_RESISTANCE],
++    ["Приняты 1 кг/л и постоянная теплоёмкость 4184 Дж/(кг·К); бак, трубопроводы, давление, изменение свойств воды и фазовые переходы не моделируются."],
++)
++
++
++def apply_audit_metadata(calcs):
++    by_slug = {c["slug"]: c for c in calcs}
++    missing = sorted(set(AUDIT_METADATA) - set(by_slug))
++    assert not missing, "Метаданные ссылаются на неизвестные калькуляторы: %s" % missing
++    for slug, data in AUDIT_METADATA.items():
++        calc = by_slug[slug]
++        for key, value in data.items():
++            assert key not in calc, "%s уже содержит поле %s" % (slug, key)
++            calc[key] = value
