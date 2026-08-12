@@ -1,0 +1,7 @@
+diff --git a/.node-version b/.node-version
+new file mode 100644
+index 0000000..ca5c350
+--- /dev/null
++++ b/.node-version
+@@ -0,0 +1 @@
++24.18.0
