@@ -88,18 +88,26 @@ const htmlFiles = fs.readdirSync(sourceDir)
   .sort();
 check(htmlFiles.length === 101, `Ожидался 101 HTML-файл, найдено ${htmlFiles.length}`);
 
-// P1-5: аналитика полностью отключена до принятия юридически достаточного
-// privacy-решения. Никаких запросов к Метрике, cookie счётчика или noscript.
+// P1-5: аналитика включена по решению владельца, но строго в оговоренном
+// политикой объёме. Счётчик обязан быть на каждой странице каталога,
+// поведенческий трекинг обязан оставаться выключенным, а сама страница
+// политики — не считать своего читателя.
 {
-  for (const file of [...htmlFiles, ...infoPages]) {
+  for (const file of htmlFiles) {
     const html = fs.readFileSync(path.join(sourceDir, file), "utf8");
-    check(!/mc\.yandex\.|metrika\/tag\.js|ym\s*\(/i.test(html), `${file}: Яндекс.Метрика загружается до принятия privacy-решения`);
+    check(/mc\.yandex\.ru\/metrika\/tag\.js\?id=111301996/.test(html), `${file}: не подключён счётчик Яндекс.Метрики`);
+    check(/webvisor\s*:\s*false/.test(html), `${file}: Вебвизор должен быть явно выключен`);
+    check(/clickmap\s*:\s*false/.test(html), `${file}: карта кликов должна быть явно выключена`);
     check(!/webvisor\s*:\s*true|clickmap\s*:\s*true/.test(html), `${file}: включён поведенческий трекинг`);
   }
   const privacy = fs.readFileSync(path.join(sourceDir, "privacy.html"), "utf8");
-  for (const required of ["Яндекс.Метрика", "cookie", "Вебвизор", "GitHub Pages", "Обратная связь"]) {
+  check(!/mc\.yandex\./.test(privacy), "privacy.html: на странице политики счётчика быть не должно");
+  for (const required of ["Яндекс.Метрика", "cookie", "Вебвизор", "GitHub Pages", "Обратная связь", "111301996", "Как отказаться"]) {
     check(privacy.includes(required), `privacy.html: не раскрыт обязательный пункт «${required}»`);
   }
+  // Политика обязана описывать ровно то, что делает код: если Вебвизор
+  // когда-нибудь включат, текст «записи не ведутся» станет ложью.
+  check(/не ведутся/.test(privacy), "privacy.html: не сказано, что записи сессий не ведутся");
   check(/noindex/.test(privacy), "privacy.html: служебная страница должна быть закрыта от индексации");
   // Ссылка на политику должна быть доступна с любой страницы сайта.
   for (const file of htmlFiles) {
@@ -117,9 +125,14 @@ for (const file of htmlFiles) {
   check(Boolean(document.querySelector("h1")), `${file}: нет h1`);
   check(document.querySelector('link[rel=icon]')?.getAttribute("href") === "favicon.svg", `${file}: не подключён favicon.svg`);
   check(document.querySelector("footer")?.textContent.includes("справочный характер"), `${file}: нет обязательного дисклеймера`);
-  const external = [...document.querySelectorAll("script[src],link[rel=stylesheet],img[src]")];
-  check(external.length === 0, `${file}: найдена внешняя исполняемая зависимость или трекер`);
-  check(typeof dom.window.ym === "undefined", `${file}: глобальная функция Яндекс.Метрики не должна создаваться`);
+  // Единственная разрешённая внешняя зависимость — счётчик Метрики.
+  // Всё остальное (CDN, шрифты, чужие трекеры) по-прежнему запрещено:
+  // страница обязана считать и печатать без сети.
+  const external = [...document.querySelectorAll("script[src],link[rel=stylesheet],img[src]")]
+    .map(el => el.getAttribute("src") || el.getAttribute("href") || "");
+  const foreign = external.filter(src => !/^https:\/\/mc\.yandex\.ru\//.test(src));
+  check(foreign.length === 0, `${file}: найдена посторонняя внешняя зависимость: ${foreign.join(", ")}`);
+  check(typeof dom.window.ym === "function", `${file}: счётчик Метрики не инициализирован`);
 
   const canonical = document.querySelector('link[rel=canonical]')?.getAttribute("href") ?? "";
   const expected = file === "index.html" ? "https://macos2024.github.io/" : `https://macos2024.github.io/${file}`;

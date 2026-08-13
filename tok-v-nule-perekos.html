@@ -19,7 +19,18 @@
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Ток в нулевом проводе при перекосе фаз","url":"https://macos2024.github.io/tok-v-nule-perekos.html","description":"Расчёт тока в нулевом рабочем проводнике трёхфазной сети при неравномерной нагрузке фаз. Формула, коэффициент несимметрии и опасность обрыва нуля.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Ток в нулевом проводе при перекосе фаз","item":"https://macos2024.github.io/tok-v-nule-perekos.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему ток в нуле меньше разности фазных токов?","acceptedAnswer":{"@type":"Answer","text":"Потому что складываются векторы, а не числа: токи сдвинуты на 120°, и их сумма геометрическая. Арифметическая разность даёт завышенную оценку, хотя как грубый запас она безопасна."}},{"@type":"Question","name":"Чем опасен обрыв нуля?","acceptedAnswer":{"@type":"Answer","text":"Это самая разрушительная авария в трёхфазной сети. Нейтраль перестаёт быть закреплённой, и напряжения перераспределяются обратно пропорционально нагрузке: на малонагруженной фазе оно может достичь 380 В. Защищаются реле контроля напряжения на каждой фазе."}},{"@type":"Question","name":"Можно ли ставить автомат в нулевой проводник?","acceptedAnswer":{"@type":"Answer","text":"В нулевой рабочий проводник (N) — только в составе двухполюсного или четырёхполюсного автомата, который размыкает ноль одновременно с фазами. Отдельный однополюсный автомат или предохранитель в нуле запрещён: его срабатывание создаст ровно ту аварию с обрывом нуля, о которой шла речь выше."}}]}]}</script>
-
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}

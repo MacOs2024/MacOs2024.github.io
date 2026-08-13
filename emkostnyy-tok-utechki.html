@@ -19,7 +19,18 @@
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Ток утечки сети и выбор УЗО","url":"https://macos2024.github.io/emkostnyy-tok-utechki.html","description":"Расчёт суммарного тока утечки электроустановки по ПУЭ 7.1.83 и проверка, не приведёт ли он к ложным срабатываниям выбранного УЗО.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Ток утечки сети и выбор УЗО","item":"https://macos2024.github.io/emkostnyy-tok-utechki.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"УЗО выбивает без видимой причины — это оно неисправно?","acceptedAnswer":{"@type":"Answer","text":"Чаще нет. Первая версия — накопленная естественная утечка: слишком длинная линия или слишком много техники на одном УЗО. Посчитайте по этой формуле; если результат близок к трети номинала, проблема в схеме, а не в приборе."}},{"@type":"Question","name":"Почему нельзя просто поставить УЗО на 100 мА вместо 30 мА?","acceptedAnswer":{"@type":"Answer","text":"Потому что 30 мА — порог защиты человека. Ток 100 мА через тело уже смертельно опасен, поэтому УЗО с такой уставкой считается только противопожарным и не защищает от поражения. Правильное решение — разделить нагрузку на группы."}},{"@type":"Question","name":"Какая техника даёт повышенную утечку?","acceptedAnswer":{"@type":"Answer","text":"Всё с импульсными блоками питания и ЭМС-фильтрами: компьютеры, серверы, светодиодные драйверы, частотные преобразователи, индукционные плиты. У каждого утечка может достигать 1–3,5 мА, и десяток таких приборов на одном УЗО гарантированно приведёт к отключениям."}}]}]}</script>
-
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
