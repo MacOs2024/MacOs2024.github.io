@@ -7,9 +7,19 @@ const testDir = path.dirname(fileURLToPath(import.meta.url));
 const sourceDir = path.resolve(testDir, "..");
 const failures = [];
 let checks = 0;
+// Разбивка обязательна: общее число проверок само по себе ничего не говорит
+// о корректности формул — большая их часть структурная.
+const byKind = { structural: 0, functional: 0, boundary: 0 };
+let kind = "structural";
+const scenarioCounts = new Map();
+
+function recordScenario(file) {
+  scenarioCounts.set(file, (scenarioCounts.get(file) ?? 0) + 1);
+}
 
 function check(condition, message) {
   checks += 1;
+  byKind[kind] += 1;
   if (!condition) failures.push(message);
 }
 
@@ -40,6 +50,8 @@ function setValues(document, values) {
 }
 
 async function calculate(file, values, expected) {
+  kind = "functional";
+  recordScenario(file);
   const dom = await load(file);
   const { document } = dom.window;
   setValues(document, values);
@@ -60,10 +72,41 @@ for (const file of serviceFiles) {
   check(fs.existsSync(path.join(sourceDir, file)), `Отсутствует служебный файл ${file}`);
 }
 check(fs.existsSync(path.join(sourceDir, "favicon.svg")), "Отсутствует favicon.svg");
+check(fs.existsSync(path.join(sourceDir, "og-image.png")), "Отсутствует og-image.png для Open Graph");
+
+// Страницы без калькулятора: расчёт снят с публикации, осталось объяснение.
+// Их не проверяем как калькуляторы и не ждём в sitemap, но следим, чтобы на
+// них не вернулась форма расчёта.
+const noticePages = ["gasyashchiy-kondensator.html"];
+
+// Политика конфиденциальности — служебная страница сайта, а не калькулятор:
+// у неё свой набор требований, проверяется отдельным блоком ниже.
+const infoPages = ["privacy.html"];
 
 const htmlFiles = fs.readdirSync(sourceDir)
-  .filter(file => file.endsWith(".html") && !serviceFiles.includes(file)).sort();
+  .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
+  .sort();
 check(htmlFiles.length === 101, `Ожидался 101 HTML-файл, найдено ${htmlFiles.length}`);
+
+// P1-5: аналитика полностью отключена до принятия юридически достаточного
+// privacy-решения. Никаких запросов к Метрике, cookie счётчика или noscript.
+{
+  for (const file of [...htmlFiles, ...infoPages]) {
+    const html = fs.readFileSync(path.join(sourceDir, file), "utf8");
+    check(!/mc\.yandex\.|metrika\/tag\.js|ym\s*\(/i.test(html), `${file}: Яндекс.Метрика загружается до принятия privacy-решения`);
+    check(!/webvisor\s*:\s*true|clickmap\s*:\s*true/.test(html), `${file}: включён поведенческий трекинг`);
+  }
+  const privacy = fs.readFileSync(path.join(sourceDir, "privacy.html"), "utf8");
+  for (const required of ["Яндекс.Метрика", "cookie", "Вебвизор", "GitHub Pages", "Обратная связь"]) {
+    check(privacy.includes(required), `privacy.html: не раскрыт обязательный пункт «${required}»`);
+  }
+  check(/noindex/.test(privacy), "privacy.html: служебная страница должна быть закрыта от индексации");
+  // Ссылка на политику должна быть доступна с любой страницы сайта.
+  for (const file of htmlFiles) {
+    const html = fs.readFileSync(path.join(sourceDir, file), "utf8");
+    check(html.includes('href="privacy.html"'), `${file}: нет ссылки на политику конфиденциальности`);
+  }
+}
 
 for (const file of htmlFiles) {
   const dom = await load(file);
@@ -75,13 +118,17 @@ for (const file of htmlFiles) {
   check(document.querySelector('link[rel=icon]')?.getAttribute("href") === "favicon.svg", `${file}: не подключён favicon.svg`);
   check(document.querySelector("footer")?.textContent.includes("справочный характер"), `${file}: нет обязательного дисклеймера`);
   const external = [...document.querySelectorAll("script[src],link[rel=stylesheet],img[src]")];
-  check(external.every(node => (node.getAttribute("src") || "").startsWith("https://mc.yandex.ru/")), `${file}: найдена неожиданная внешняя зависимость`);
-  check(typeof dom.window.ym === "function", `${file}: не инициализирована Яндекс.Метрика`);
+  check(external.length === 0, `${file}: найдена внешняя исполняемая зависимость или трекер`);
+  check(typeof dom.window.ym === "undefined", `${file}: глобальная функция Яндекс.Метрики не должна создаваться`);
 
   const canonical = document.querySelector('link[rel=canonical]')?.getAttribute("href") ?? "";
   const expected = file === "index.html" ? "https://macos2024.github.io/" : `https://macos2024.github.io/${file}`;
   check(canonical === expected, `${file}: canonical «${canonical}», ожидался «${expected}»`);
   check(Boolean(document.querySelector('meta[property="og:title"]')?.content.trim()), `${file}: нет og:title`);
+  check(document.querySelector('meta[property="og:image"]')?.content === "https://macos2024.github.io/og-image.png", `${file}: нет og:image по абсолютному URL`);
+  check(document.querySelector('meta[name="twitter:card"]')?.content === "summary_large_image", `${file}: twitter:card должен быть summary_large_image`);
+  const titleLen = (document.querySelector("title")?.textContent ?? "").length;
+  check(titleLen > 0 && titleLen <= 60, `${file}: длина title ${titleLen}, допустимо до 60 символов`);
   check(document.querySelector('meta[property="og:url"]')?.content === expected, `${file}: og:url не совпадает с canonical`);
   const ld = document.querySelector('script[type="application/ld+json"]')?.textContent ?? "";
   let ldParsed = null;
@@ -90,6 +137,13 @@ for (const file of htmlFiles) {
   const ldTypes = (ldParsed?.["@graph"] ?? []).map(node => node["@type"]);
   if (file === "index.html") {
     check(ldTypes.includes("WebSite") && ldTypes.includes("ItemList"), `${file}: в разметке нет WebSite и ItemList`);
+  } else if (noticePages.includes(file)) {
+    check(ldTypes.includes("WebPage"), `${file}: страница без калькулятора должна размечаться как WebPage`);
+    check(!ldTypes.includes("WebApplication"), `${file}: страница без калькулятора не должна объявлять WebApplication`);
+    check(!document.getElementById("go"), `${file}: на странице снятого калькулятора не должно быть кнопки расчёта`);
+    check(!document.getElementById("res"), `${file}: на странице снятого калькулятора не должно быть блока результата`);
+    check(document.querySelectorAll("input").length === 0, `${file}: на странице снятого калькулятора не должно быть полей ввода`);
+    check(Boolean(document.querySelector(".rerr")), `${file}: должно быть видимое объяснение, почему расчёт снят`);
   } else {
     check(ldTypes.includes("WebApplication"), `${file}: в разметке нет WebApplication`);
     check(ldTypes.includes("FAQPage"), `${file}: в разметке нет FAQPage`);
@@ -97,7 +151,7 @@ for (const file of htmlFiles) {
     const visibleFaq = document.querySelectorAll(".faq h3").length;
     check(faqCount === visibleFaq, `${file}: в разметке ${faqCount} вопросов, на странице ${visibleFaq} — они должны совпадать`);
   }
-  if (file !== "index.html") {
+  if (file !== "index.html" && !noticePages.includes(file)) {
     check(Number.isNaN(dom.window.N("12abc")), `${file}: парсер принимает мусор после числа`);
     check(dom.window.N("1 234,5") === 1234.5, `${file}: парсер не принимает пробелы и запятую`);
     check(dom.window.N("1e-3") === 0.001, `${file}: парсер не принимает экспоненциальную запись`);
@@ -117,11 +171,39 @@ for (const file of htmlFiles) {
   dom.window.close();
 }
 
+// P2-2: поиск. Проверяем реальные множества найденных карточек, а не только
+// факт появления хотя бы одного результата.
+{
+  kind = "functional";
+  const dom = await load("index.html");
+  const { document, Event } = dom.window;
+  const q = document.getElementById("q");
+  const search = value => {
+    q.value = value;
+    q.dispatchEvent(new Event("input", { bubbles: true }));
+    return [...document.querySelectorAll(".ccard")]
+      .filter(node => node.style.display !== "none")
+      .map(node => node.getAttribute("href"))
+      .sort();
+  };
+  const cableA = search("кабель сечение");
+  const cableB = search("сечение кабеля");
+  check(cableA.length > 0, "Поиск «кабель сечение» ничего не нашёл");
+  check(JSON.stringify(cableA) === JSON.stringify(cableB), "Порядок слов или форма «кабеля» меняют результаты поиска");
+  const breakerA = search("автоматический выключатель");
+  const breakerB = search("выключатель автоматический");
+  check(breakerA.length > 0, "Поиск «автоматический выключатель» ничего не нашёл");
+  check(JSON.stringify(breakerA) === JSON.stringify(breakerB), "Порядок слов меняет результаты поиска автомата");
+  check(JSON.stringify(search("ТЁПЛЫЙ")) === JSON.stringify(search("теплый")), "Поиск не нормализует регистр или ё/е");
+  dom.window.close();
+}
+
 await calculate("zakon-oma.html", { u: "12", i: "", r: "6", p: "" }, ["Ток I2 А", "Мощность P24 Вт"]);
 await calculate("moshchnost-toka.html", { i: "10" }, ["Активная мощность P2200 Вт", "Реактивная мощность Q0 вар"]);
 await calculate("tok-po-moshchnosti.html", { p: "3500" }, ["Ток I15,9 А"]);
 
 {
+  recordScenario("soedinenie-rezistorov.html");
   const dom = await load("soedinenie-rezistorov.html");
   const inputs = [...dom.window.document.querySelectorAll(".rv")];
   [100, 200, 300].forEach((value, index) => { inputs[index].value = String(value); });
@@ -134,6 +216,7 @@ await calculate("tok-po-moshchnosti.html", { p: "3500" }, ["Ток I15,9 А"]);
 await calculate("delitel-napryazheniya.html", { uin: "12", r1: "1", r2: "2" }, ["Выходное напряжение Uвых8 В"]);
 
 {
+  recordScenario("markirovka-rezistorov.html");
   const dom = await load("markirovka-rezistorov.html");
   setValues(dom.window.document, { nb: 4, b1: 1, b2: 0, bm: 2, bt: 0 });
   dom.window.document.getElementById("go").click();
@@ -211,7 +294,137 @@ await calculate("decibel.html", { kind: "v", mode: "db", v1: "1", v2: "2" }, ["�
 await calculate("decibel.html", { kind: "p", mode: "db", v1: "1", v2: "2" }, ["Уровень3,0103 дБ"]);
 await calculate("most-uitstona.html", { mode: "bal", r1: "1000", r2: "2000", r3: "500" }, ["Неизвестное сопротивление Rx1 кОм"]);
 await calculate("impedans-rlc.html", { r: "10", l: "10", c: "100", f: "50", u: "220" }, ["Полное сопротивление Z30,38 Ом", "Ток I7,241 А"]);
-await calculate("tok-korotkogo-zamykaniya.html", { u: "220", z: "0,5", tip: "10", in: "16" }, ["Ток короткого замыкания Iкз440 А", "ВердиктАвтомат сработает"]);
+// P0-1: расчёт тока КЗ проверяется по фикстурам с эталонами, посчитанными
+// вручную. Обязательный контрпример аудита (220 В / 1,2 Ом / C16) не должен
+// давать положительный вердикт.
+{
+  const fx = JSON.parse(fs.readFileSync(path.join(testDir, "fixtures", "tok-korotkogo-zamykaniya.json"), "utf8"));
+  const page = `${fx.slug}.html`;
+  for (const kase of fx.cases) {
+    recordScenario(page);
+    kind = /Граница|граница/.test(kase.name) ? "boundary" : "functional";
+    const dom = await load(page);
+    const { document } = dom.window;
+    setValues(document, kase.inputs);
+    document.getElementById("go").click();
+    const result = document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+    for (const fragment of kase.expect) {
+      check(result.includes(fragment), `${page} [${kase.name}]: ожидалось «${fragment}», получено «${result}»`);
+    }
+    for (const fragment of kase.reject ?? []) {
+      check(!result.includes(fragment), `${page} [${kase.name}]: в результате не должно быть «${fragment}»`);
+    }
+    check(!/NaN|Infinity|undefined/.test(result), `${page} [${kase.name}]: в результате NaN/Infinity/undefined`);
+    dom.window.close();
+  }
+  for (const kase of fx.invalid) {
+    recordScenario(page);
+    kind = "boundary";
+    const dom = await load(page);
+    const { document } = dom.window;
+    setValues(document, kase.inputs);
+    document.getElementById("go").click();
+    const result = document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+    check(!/Статус/.test(result), `${page} [${kase.name}]: при неверном вводе не должно быть статуса, получено «${result}»`);
+    check(!/NaN|Infinity/.test(result), `${page} [${kase.name}]: при неверном вводе NaN/Infinity`);
+    dom.window.close();
+  }
+  kind = "structural";
+  // Семантика: страница не должна называть УЗО заменой автомата и не должна
+  // обещать конкретное время отключения.
+  const html = fs.readFileSync(path.join(sourceDir, page), "utf8");
+  check(!/0,1\s*с/.test(html), `${page}: обещание времени отключения «0,1 с» должно быть убрано`);
+  check(/УЗО не сработает|не заменяет|обойти нельзя/.test(html), `${page}: должно быть явно сказано, что УЗО не заменяет защиту от сверхтока`);
+  check(!/Радикальное решение — установить УЗО/.test(html), `${page}: УЗО не должно предлагаться как решение проблемы недостаточного тока КЗ`);
+  check(/не заменяет расчёт проекта/.test(html), `${page}: должно быть видимое предупреждение об ограничениях онлайн-оценки`);
+  for (const pattern of fx.must_not_contain) {
+    check(!html.includes(pattern), `${page}: запрещённый режим или вердикт «${pattern}» остался на странице`);
+  }
+  check(html.includes("0,8 · Uф / Zпетли"), `${page}: не показана фиксированная формула конвенционального метода`);
+  check(html.includes("максимальной допустимой рабочей температуре"), `${page}: не указано, что температурная поправка должна входить в Z`);
+}
+
+// P1-1: сечение PE. Границы таблицы и округление вверх; фиктивных режимов
+// быть не должно, а тексты не должны обещать расчёта N.
+{
+  const fx = JSON.parse(fs.readFileSync(path.join(testDir, "fixtures", "sechenie-pe-provodnika.json"), "utf8"));
+  const page = `${fx.slug}.html`;
+  for (const kase of fx.cases) {
+    recordScenario(page);
+    kind = /граница|ряд|ловушка/.test(kase.name) ? "boundary" : "functional";
+    const dom = await load(page);
+    const { document } = dom.window;
+    setValues(document, { s: kase.s, layout: kase.layout ?? "together" });
+    document.getElementById("go").click();
+    const result = document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+    for (const fragment of kase.expect) {
+      check(result.includes(fragment), `${page} [${kase.name}]: ожидалось «${fragment}», получено «${result}»`);
+    }
+    for (const fragment of kase.reject ?? []) {
+      check(!result.includes(fragment), `${page} [${kase.name}]: в результате не должно быть «${fragment}»`);
+    }
+    check(!/NaN|Infinity|undefined/.test(result), `${page} [${kase.name}]: NaN/Infinity/undefined в результате`);
+    dom.window.close();
+  }
+  for (const kase of fx.invalid) {
+    recordScenario(page);
+    kind = "boundary";
+    const dom = await load(page);
+    const { document } = dom.window;
+    setValues(document, { s: kase.s });
+    document.getElementById("go").click();
+    const result = document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+    check(!/Принять по стандартному ряду/.test(result), `${page} [${kase.name}]: при неверном вводе не должно быть результата`);
+    check(!/NaN|Infinity/.test(result), `${page} [${kase.name}]: NaN/Infinity при неверном вводе`);
+    dom.window.close();
+  }
+  kind = "structural";
+  const pageHtml = fs.readFileSync(path.join(sourceDir, page), "utf8");
+  for (const pattern of fx.must_not_contain.patterns) {
+    check(!pageHtml.includes(pattern), `${page}: текст «${pattern}» обещает то, чего расчёт не делает`);
+  }
+  // Единственный переключатель задаёт способ прокладки и обязан менять минимум.
+  {
+    const dom = await load(page);
+    const selects = [...dom.window.document.querySelectorAll("select")];
+    check(selects.length === 1 && selects[0].id === "layout",
+      `${page}: ожидается только переключатель способа прокладки #layout`);
+    check(selects[0]?.options.length === 3,
+      `${page}: #layout должен содержать совместную прокладку и два режима отдельного PE`);
+    dom.window.close();
+  }
+}
+
+// P1-2: карточка источника на изменённых страницах и реестр проверки.
+{
+  const audited = {
+    "tok-korotkogo-zamykaniya.html": [
+      "Сверено с источником, ожидает инженерной проверки",
+      "https://www.electrical-installation.org/enwiki/Calculation_of_minimum_levels_of_short-circuit_current",
+    ],
+    "sechenie-pe-provodnika.html": [
+      "Сверено с источником, ожидает инженерной проверки",
+      "https://www.electrical-installation.org/enwiki/Sizing_of_protective_earthing_conductor",
+    ],
+  };
+  for (const [page, [statusLabel, sourceUrl]] of Object.entries(audited)) {
+    const dom = await load(page);
+    const { document } = dom.window;
+    const card = document.querySelector("section.src");
+    check(Boolean(card), `${page}: нет карточки источника`);
+    check(card?.textContent.includes(statusLabel), `${page}: статус должен быть «${statusLabel}»`);
+    check((card?.querySelectorAll("li").length ?? 0) > 0, `${page}: в карточке нет ни источников, ни ограничений`);
+    check(Boolean(card?.querySelector(`a[href="${sourceUrl}"]`)), `${page}: нет точной ссылки на первоисточник`);
+    check(card?.textContent.includes("Границы применимости"), `${page}: не указаны границы применимости`);
+    // Владельца нельзя записывать проверяющим без его подтверждения.
+    check(!/Проверил:/.test(card?.textContent ?? ""), `${page}: расчёт не подтверждён владельцем, поля «Проверил» быть не должно`);
+    dom.window.close();
+  }
+  const registry = fs.readFileSync(path.join(sourceDir, "ENGINEERING_AUDIT.md"), "utf8");
+  for (const slug of ["tok-korotkogo-zamykaniya", "sechenie-pe-provodnika", "gasyashchiy-kondensator"]) {
+    check(registry.includes(slug), `ENGINEERING_AUDIT.md: нет записи о ${slug}`);
+  }
+}
 await calculate("dlina-kabelya-po-padeniyu.html", { i: "16", s: "2,5", u: "220", dop: "5" }, ["Максимальная длина линии49,107 м"]);
 await calculate("moshchnost-po-schetchiku.html", { k: "3200", n: "10", t: "30", tar: "5" }, ["Мощность нагрузки375 Вт"]);
 await calculate("nagruzka-kvartiry.html", { p: "15", kc: "0,5", u: "220", cos: "1" }, ["Расчётный ток34,091 А", "Вводной автомат40 А"]);
@@ -254,8 +467,6 @@ await calculate("raschet-osveshcheniya.html", { e: "150", s: "18", fl: "1200", e
 await calculate("emkostnyy-tok-utechki.html", { i: "25", l: "80", uzo: "30" }, ["Суммарный ток утечки10,8 мА", "ВердиктПревышение"]);
 await calculate("tok-v-nule-perekos.html", { ia: "30", ib: "20", ic: "10", u: "220" }, ["Ток в нулевом проводе I(N)17,321 А"]);
 await calculate("tok-v-nule-perekos.html", { ia: "20", ib: "20", ic: "20", u: "220" }, ["Ток в нулевом проводе I(N)0 А"]);
-await calculate("sechenie-pe-provodnika.html", { s: "50", tip: "3", mat: "cu" }, ["Принять PE25 мм²"]);
-await calculate("sechenie-pe-provodnika.html", { s: "25", tip: "3", mat: "cu" }, ["Принять PE16 мм²"]);
 await calculate("prosadka-pri-puske.html", { i: "10", k: "6", l: "30", s: "4", u: "220" }, ["Пусковой ток60 А", "Провал напряжения при пуске15,75 В", "ВердиктПуск обеспечен"]);
 await calculate("molniezashchita.html", { h: "12", nad: "0.99", hx: "6" }, ["Высота конуса защиты h₀9,6 м", "Радиус на высоте 6 м3,6 м"]);
 await calculate("moshchnost-elektrokotla.html", { v: "150", tin: "22", tout: "-25", k: "1.5", faza: "3", tar: "5" }, ["Расчётная тепловая мощность12,297 кВт", "Ток при 380 В21,485 А"]);
@@ -264,7 +475,6 @@ await calculate("kpd-transformatora.html", { sn: "100", p0: "330", pk: "2270", b
 await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", beta: "-0,30", tmin: "-30", vmax: "250", n: "5" }, ["Voc массива при -30 °C241,74 В", "ВердиктПроходит"]);
 await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", beta: "-0,30", tmin: "-30", vmax: "250", n: "6" }, ["ВердиктПРЕВЫШЕНИЕ"]);
 await calculate("stoimost-osveshcheniya.html", { n: "10", h: "5", years: "5", tar: "5", p1: "10", c1: "200", r1: "30000", p2: "75", c2: "30", r2: "1000" }, ["Вариант A: всего6562,5 ₽", "ВыгоднееВариант A"]);
-await calculate("gasyashchiy-kondensator.html", { uc: "220", un: "12", i: "20", f: "50" }, ["Расчётная ёмкость0,2898 мкФ", "Ближайший стандартный номинал0,33 мкФ"]);
 await calculate("skin-effekt.html", { f: "100", mat: "0.0175", mu: "1", d: "1" }, ["Глубина скин-слоя δ0,21054 мм", "около 1,504 раз"]);
 await calculate("snabber-rc.html", { f0: "20", cadd: "470", v: "400", fsw: "100", k: "4" }, ["Паразитная индуктивность Lпар404,2 нГн", "Резистор снаббера Rs51 Ом", "Мощность на резисторе10,03 Вт"]);
 await calculate("umnozhitel-napryazheniya.html", { u: "220", n: "3", c: "1", f: "50", i: "1", vf: "1" }, ["Идеальное выходное (2n·Uм)1866,76 В", "Реальное выходное напряжение1420,76 В"]);
@@ -287,14 +497,51 @@ await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", bet
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 101, `В sitemap должен быть 101 URL, найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 100, `В sitemap должно быть 100 URL (корень + 99 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 for (const file of htmlFiles) {
-  check(sitemapPages.some(url => url.endsWith(`/${file}`) || (file === "index.html" && /\/$/.test(url))), `В sitemap отсутствует ${file}`);
+  const inSitemap = sitemapPages.some(url => url.endsWith(`/${file}`) || (file === "index.html" && /\/$/.test(url)));
+  if (noticePages.includes(file)) {
+    check(!inSitemap, `Страница снятого калькулятора ${file} не должна быть в sitemap`);
+  } else {
+    check(inSitemap, `В sitemap отсутствует ${file}`);
+  }
 }
 
-console.log(JSON.stringify({ checks, failures: failures.length }, null, 2));
+// Coverage guard считает фактически выполненные сценарии. Простое load()
+// больше не выдаётся за проверку формулы. Минимум один сценарий предотвращает
+// полный пропуск; список калькуляторов с одним сценарием печатается отдельно
+// и остаётся инженерным долгом, а не скрывается за общим числом assertions.
+kind = "structural";
+{
+  const uncovered = [];
+  for (const file of htmlFiles) {
+    if (file === "index.html" || noticePages.includes(file)) continue;
+    const slug = file.replace(/\.html$/, "");
+    if ((scenarioCounts.get(file) ?? 0) === 0) uncovered.push(slug);
+  }
+  check(uncovered.length === 0,
+    `Без функциональных тестов остались калькуляторы (${uncovered.length}): ${uncovered.join(", ")}`);
+  if (uncovered.length) {
+    console.error(`\nБез функциональных тестов: ${uncovered.length} из ${htmlFiles.length - 1}`);
+  }
+}
+
+const underTwo = [...scenarioCounts.entries()]
+  .filter(([, count]) => count < 2)
+  .map(([file]) => file.replace(/\.html$/, ""))
+  .sort();
+
+console.log(JSON.stringify({
+  checks,
+  structural: byKind.structural,
+  functional: byKind.functional,
+  boundary: byKind.boundary,
+  calculatorsWithOneScenario: underTwo.length,
+  oneScenarioSlugs: underTwo,
+  failures: failures.length,
+}, null, 2));
 if (failures.length) {
   for (const failure of failures) console.error(`FAIL: ${failure}`);
   process.exitCode = 1;

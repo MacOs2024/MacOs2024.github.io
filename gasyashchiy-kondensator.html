@@ -3,30 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Расчёт гасящего конденсатора — бестрансформаторное питание от 220 В</title>
-<meta name="description" content="Расчёт ёмкости балластного конденсатора для питания маломощной нагрузки прямо от сети 220 В. Формула, выбор номинала и обязательные меры безопасности.">
+<title>Гасящий конденсатор: почему расчёт снят — ВольтКальк</title>
+<meta name="description" content="Калькулятор бестрансформаторного питания через гасящий конденсатор снят с публикации. Объяснение риска и безопасные альтернативы: изолированный AC/DC-модуль, трансформатор, сертифицированный источник.">
 <link rel="canonical" href="https://macos2024.github.io/gasyashchiy-kondensator.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Расчёт гасящего конденсатора — бестрансформаторное питание от 220 В">
-<meta property="og:description" content="Расчёт ёмкости балластного конденсатора для питания маломощной нагрузки прямо от сети 220 В. Формула, выбор номинала и обязательные меры безопасности.">
+<meta property="og:title" content="Гасящий конденсатор: почему расчёт снят — ВольтКальк">
+<meta property="og:description" content="Калькулятор бестрансформаторного питания через гасящий конденсатор снят с публикации. Объяснение риска и безопасные альтернативы: изолированный AC/DC-модуль, трансформатор, сертифицированный источник.">
 <meta property="og:url" content="https://macos2024.github.io/gasyashchiy-kondensator.html">
-<meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Гасящий конденсатор для питания от сети","url":"https://macos2024.github.io/gasyashchiy-kondensator.html","description":"Расчёт ёмкости балластного конденсатора для питания маломощной нагрузки прямо от сети 220 В. Формула, выбор номинала и обязательные меры безопасности.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Гасящий конденсатор для питания от сети","item":"https://macos2024.github.io/gasyashchiy-kondensator.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Чем эта схема опасна?","acceptedAnswer":{"@type":"Answer","text":"Отсутствием гальванической развязки. Вся низковольтная часть, включая «минус» и корпус платы, находится под потенциалом сети — прикосновение к ней при включённом устройстве смертельно опасно. Такие блоки допустимы только внутри полностью изолированного корпуса без выходящих наружу проводов и органов управления."}},{"@type":"Question","name":"Почему нельзя поставить обычный конденсатор?","acceptedAnswer":{"@type":"Answer","text":"Нужен плёночный класса X2: он рассчитан на постоянную работу под сетевым напряжением и при пробое разрушается безопасно, не замыкая сеть. Электролитический конденсатор в цепи переменного тока взорвётся, а обычная керамика не рассчитана на такие импульсные перенапряжения."}},{"@type":"Question","name":"Зачем разрядный резистор?","acceptedAnswer":{"@type":"Answer","text":"После отключения от сети конденсатор сохраняет заряд с напряжением до 300 В и может ударить током при касании вилки. Резистор 300–1000 кОм разряжает его за несколько секунд, потребляя при работе ничтожный ток."}}]}]}</script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":"Гасящий конденсатор: почему расчёт снят","url":"https://macos2024.github.io/gasyashchiy-kondensator.html","description":"Калькулятор бестрансформаторного питания через гасящий конденсатор снят с публикации. Объяснение риска и безопасные альтернативы: изолированный AC/DC-модуль, трансформатор, сертифицированный источник.","inLanguage":"ru","publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Гасящий конденсатор: почему расчёт снят","item":"https://macos2024.github.io/gasyashchiy-kondensator.html"}]}]}</script>
+
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -69,18 +62,35 @@ table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center
 table.t th{background:#eef1ec}
 .faq h3{font-size:16px;margin:14px 0 4px}
 .related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
-.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
 .cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 .ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
 .ccard:hover{border-color:#0d5c50}
 .ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
 .ccard span{font-size:13px;color:#5c6660}
-@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 .pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
 .pdfbtn:hover{background:#e2ece7}
@@ -90,7 +100,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
- .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
  .intro{display:none}
@@ -113,39 +123,30 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
-<h1>Гасящий конденсатор для питания от сети</h1>
-<p class="intro">⚠️ Схема <b>не имеет гальванической развязки</b> от сети: вся низковольтная часть находится под сетевым потенциалом и смертельно опасна при касании.</p>
+<h1>Гасящий конденсатор: почему расчёт снят</h1>
+<p class="intro">Здесь раньше был калькулятор ёмкости гасящего конденсатора. Мы убрали его намеренно — ниже объяснение причины и что использовать вместо него.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Гасящий конденсатор для питания от сети</div><div class="pd" id="pdate"></div></div>
-<div id="pvals"></div>
-<div class="f" id="f_uc"><label for="uc">Напряжение сети</label><div class="fw"><input id="uc" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_un"><label for="un">Напряжение на нагрузке</label><div class="fw"><input id="un" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_i"><label for="i">Требуемый ток</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><select id="i_unit" class="u" aria-label="Единицы"><option value="0.001" selected>мА</option><option value="1">А</option></select></div></div><div class="f" id="f_f"><label for="f">Частота сети</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">Гц</span></div></div>
-<button id="go" class="btn" type="button">Рассчитать</button>
-<div id="res" class="result" aria-live="polite"></div>
-<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
-<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+<div class="rerr"><b>Калькулятор снят с публикации по соображениям безопасности.</b> Он выдавал готовые номиналы для бестрансформаторного питания от сети — схемы, в которой вся низковольтная часть находится под потенциалом сети и опасна для жизни при касании.</div>
 </section>
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
-<h2>Как считается</h2>
-<div class="formula">C = I / [ 2πf · √(Uсети² − Uнагрузки²) ]</div>
-<p>Конденсатор в цепи переменного тока ограничивает ток, не рассеивая при этом мощность: его сопротивление реактивное, и энергия не превращается в тепло, а колеблется между источником и полем. На этом и построена схема — она позволяет получить несколько десятков миллиампер от сети без трансформатора, оставаясь холодной.</p>
-<p>Квадратный корень в формуле появляется потому, что напряжения на конденсаторе и на нагрузке сдвинуты по фазе на 90° и складываются векторно. При Uн много меньше Uс разница почти незаметна: для 12 В на выходе от 220 В корень даёт 219,67 В вместо 220.</p>
-<p><b>Область применения ограничена.</b> Схема годится для маломощной нагрузки до 30–50 мА: светодиодных индикаторов, реле, таймеров, датчиков внутри корпуса прибора. При большем токе ёмкость становится непрактично большой и дорогой.</p>
-<table class="t"><tr><th>Элемент</th><th>Требование</th></tr>
-<tr><td>Конденсатор</td><td>Плёночный X2, не ниже 275 В AC</td></tr>
-<tr><td>Разрядный резистор</td><td>300–1000 кОм параллельно</td></tr>
-<tr><td>Ограничительный резистор</td><td>100–500 Ом последовательно</td></tr>
-<tr><td>Предохранитель</td><td>Обязателен на входе</td></tr></table>
-<h2>Пример расчёта</h2>
-<p>Нужно 20 мА при 12 В от сети 220 В, 50 Гц. Напряжение на конденсаторе: √(220² − 12²) = <b>219,67 В</b>. Ёмкость: 0,02 / (314,16 · 219,67) = <b>0,28981 мкФ</b>. Ближайший стандартный номинал — <b>0,33 мкФ</b>, он даст ток <b>22,773 мА</b> — небольшой избыток, который примет на себя стабилитрон.</p>
-<div class="faq"><h2>Частые вопросы</h2>
-<h3>Чем эта схема опасна?</h3><p>Отсутствием гальванической развязки. Вся низковольтная часть, включая «минус» и корпус платы, находится под потенциалом сети — прикосновение к ней при включённом устройстве смертельно опасно. Такие блоки допустимы только внутри полностью изолированного корпуса без выходящих наружу проводов и органов управления.</p><h3>Почему нельзя поставить обычный конденсатор?</h3><p>Нужен плёночный класса X2: он рассчитан на постоянную работу под сетевым напряжением и при пробое разрушается безопасно, не замыкая сеть. Электролитический конденсатор в цепи переменного тока взорвётся, а обычная керамика не рассчитана на такие импульсные перенапряжения.</p><h3>Зачем разрядный резистор?</h3><p>После отключения от сети конденсатор сохраняет заряд с напряжением до 300 В и может ударить током при касании вилки. Резистор 300–1000 кОм разряжает его за несколько секунд, потребляя при работе ничтожный ток.</p>
-</div>
+<h2>Почему расчёт снят</h2>
+<p>Схема с гасящим конденсатором питает нагрузку напрямую от сети, без трансформатора и без гальванической развязки. Это значит, что «минус», общий провод и любая доступная точка низковольтной части находятся <b>под потенциалом сети</b>. Прикосновение к такой схеме при включённом питании смертельно опасно, а измерение осциллографом с заземлённым корпусом приводит к короткому замыканию.</p>
+<p>Калькулятор выдавал готовый практически применимый номинал — то есть рецепт, по которому можно собрать опасное устройство, не понимая всей картины. Одних предупреждений здесь недостаточно: корректное проектирование такой схемы требует расчёта режима холостого хода, мощности ограничивающего и разрядного резисторов, броска тока при включении в худшей фазе, энергии импульсных помех, режима пробоя конденсатора, выбора категории X-конденсатора с учётом допуска и старения, изоляционных расстояний на плате, конструкции корпуса и безопасного порядка обслуживания. Даже полный расчёт не делает эту схему подходящей для массового онлайн-инструмента.</p>
+<h2>Что использовать вместо</h2>
+<table class="t"><tr><th>Решение</th><th>Когда подходит</th></tr>
+<tr><td>Готовый изолированный AC/DC-модуль</td><td>Универсальный вариант: модули на 3–5 Вт с развязкой стоят недорого и имеют сертификацию</td></tr>
+<tr><td>Маломощный трансформатор с выпрямителем</td><td>Когда нужна простая и ремонтопригодная схема с гальванической развязкой</td></tr>
+<tr><td>Сертифицированный блок питания</td><td>Для любого устройства, которое будет эксплуатировать не только автор</td></tr></table>
+<p>Все три варианта дают гальваническую развязку, то есть низковольтная часть не связана с сетью электрически. Именно этого не хватало снятой схеме.</p>
+<h2>Смежные расчёты, которые остались</h2>
+<p>Если вам нужен маломощный стабилизированный источник после уже развязанного питания, посмотрите расчёт балластного резистора для стабилитрона или расчёт линейного стабилизатора — они работают с безопасным низковольтным входом.</p>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="stabilitron-rezistor.html">Балластный резистор для стабилитрона</a></li><li><a href="reaktivnoe-soprotivlenie.html">Реактивное сопротивление конденсатора и катушки</a></li><li><a href="rezistor-svetodioda.html">Резистор для светодиода</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-pending">Ожидает проверки</span></h2><p><b>Границы применимости:</b></p><ul><li>Калькулятор снят с публикации по соображениям безопасности. Страница оставлена как информационная, потому что URL мог быть проиндексирован.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="stabilitron-rezistor.html">Балластный резистор для стабилитрона</a></li><li><a href="linear-regulator-loss.html">Нагрев линейного стабилизатора</a></li><li><a href="raschet-transformatora.html">Расчёт сетевого трансформатора 50 Гц</a></li></ul></section>
 </main>
-<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
 
 var $=function(id){return document.getElementById(id)};
@@ -208,28 +209,6 @@ for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e
 if(typeof init==='function')init();
 });
 
-
-function calc(){
-var uc=P('uc'),un=P('un'),i=P('i'),f=P('f');
-if([uc,un,i,f].some(isNaN))return err('Заполните все поля.');
-if(uc<=0||f<=0||i<=0)return err('Напряжение, частота и ток должны быть больше нуля.');
-if(un<0)return err('Напряжение нагрузки не может быть отрицательным.');
-if(un>=uc)return err('Напряжение нагрузки должно быть меньше сетевого.');
-var ud=Math.sqrt(uc*uc-un*un),w=2*Math.PI*f,c=i/(w*ud);
-var ryad=[0.01,0.015,0.022,0.033,0.047,0.068,0.1,0.15,0.22,0.33,0.47,0.68,1,1.5,2.2,3.3,4.7];
-var cm=c*1e6,st=0;
-for(var j=0;j<ryad.length;j++){if(ryad[j]>=cm){st=ryad[j];break;}}
-var ifact=st?w*st*1e-6*ud:0;
-var q=uc*i,xc=1/(w*c);
-var h=row('Напряжение на конденсаторе',fmt(ud,5)+' В')+
-row('Реактивное сопротивление Xc',si(xc,'Ом'))+
-row('Расчётная ёмкость',fmt(cm,5)+' мкФ')+
-row('Ближайший стандартный номинал',st?fmt(st,4)+' мкФ':'свыше 4,7 мкФ — схема не подходит')+
-row('Фактический ток при нём',st?si(ifact,'А'):'—')+
-row('Реактивная мощность',si(q,'вар'))+
-row('Активные потери на конденсаторе','практически нулевые');
-out(h+note('Конденсатор должен быть плёночным класса X2 на напряжение не ниже 275 В переменного тока — обычный электролит или керамика здесь недопустимы. Обязателен разрядный резистор 300–1000 кОм параллельно конденсатору и токоограничивающий резистор 100–500 Ом последовательно с ним для гашения броска при включении.'));
-}
 
 </script>
 </body>

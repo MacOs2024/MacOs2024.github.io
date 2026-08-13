@@ -37,18 +37,12 @@ CATS = [
     ("elektronika", "Электроника"),
 ]
 
-METRIKA = """<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
-    ym(111301996, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->"""
+# Аналитика отключена до принятия и реализации юридически достаточного
+# privacy-решения. Даже без Webvisor Яндекс.Метрика обрабатывает cookies,
+# сведения об устройстве и активность посетителя как персональные данные.
+# Не добавлять счётчик обратно без явного решения владельца, корректной
+# политики и, где требуется, предварительного согласия посетителя.
+METRIKA = ""
 
 CSS = """
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
@@ -92,18 +86,35 @@ table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center
 table.t th{background:#eef1ec}
 .faq h3{font-size:16px;margin:14px 0 4px}
 .related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
-.search{width:100%;padding:12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;margin:10px 0 4px;background:#fff}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
 .cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 .ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
 .ccard:hover{border-color:#0d5c50}
 .ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
 .ccard span{font-size:13px;color:#5c6660}
-@media(max-width:520px){h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 .pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
 .pdfbtn:hover{background:#e2ece7}
@@ -113,7 +124,7 @@ footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
- .top,footer,.crumbs,.article,.related,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
  .intro{display:none}
@@ -216,28 +227,17 @@ PAGE = """<!DOCTYPE html>
 <h1>@NAME@</h1>
 <p class="intro">@INTRO@</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — @NAME@</div><div class="pd" id="pdate"></div></div>
-<div id="pvals"></div>
-@FIELDS@
-<button id="go" class="btn" type="button">Рассчитать</button>
-<div id="res" class="result" aria-live="polite"></div>
-<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
-<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+@CALCBLOCK@
 </section>
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
-<h2>Как считается</h2>
-@ABOUT@
-<h2>Пример расчёта</h2>
-@EXAMPLE@
-<div class="faq"><h2>Частые вопросы</h2>
-@FAQS@
-</div>
+@ARTICLE@
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+@SOURCES@
 <section class="related"><h2>Смотрите также</h2><ul>@RELATED@</ul></section>
 </main>
-<footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.</footer>
+<footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
 @HELPERS@
 @JS@
@@ -249,6 +249,10 @@ PAGE = """<!DOCTYPE html>
 def esc(s):
     return html.escape(s, quote=True)
 
+OG_IMAGE = "og-image.png"
+OG_IMAGE_W = 1200
+OG_IMAGE_H = 630
+
 def og_tags(title, desc, url):
     """Open Graph: как ссылка выглядит при репосте в мессенджерах и на форумах."""
     return "\n".join([
@@ -258,8 +262,83 @@ def og_tags(title, desc, url):
         '<meta property="og:title" content="%s">' % esc(title),
         '<meta property="og:description" content="%s">' % esc(desc),
         '<meta property="og:url" content="%s">' % esc(url),
-        '<meta name="twitter:card" content="summary">',
+        '<meta property="og:image" content="%s/%s">' % (BASE_URL, OG_IMAGE),
+        '<meta property="og:image:width" content="%d">' % OG_IMAGE_W,
+        '<meta property="og:image:height" content="%d">' % OG_IMAGE_H,
+        '<meta property="og:image:alt" content="%s — инженерные калькуляторы по электрике">' % esc(SITE_NAME),
+        '<meta name="twitter:card" content="summary_large_image">',
     ])
+
+def seo_title(c):
+    """Короткий title без механического обрезания ключевой фразы.
+
+    Полный редакционный заголовок остаётся в исходных данных и h1. Для title
+    сначала используем имя калькулятора с брендом, затем имя без бренда. Если
+    и оно длиннее 60 символов, обрезаем только по границе слова.
+    """
+    branded = "%s — %s" % (c["name"], SITE_NAME)
+    if len(branded) <= 60:
+        return branded
+    if len(c["name"]) <= 60:
+        return c["name"]
+    words = c["name"].split()
+    result = ""
+    for word in words:
+        candidate = (result + " " + word).strip()
+        if len(candidate) > 57:
+            break
+        result = candidate
+    return (result or c["name"][:57].rstrip()) + "…"
+
+STATUS_LABEL = {
+    "verified": ("Проверено инженером", "st-verified"),
+    "agent-reviewed": ("Сверено с источником, ожидает инженерной проверки", "st-agent"),
+    "estimate": ("Оценка, не нормативный вердикт", "st-estimate"),
+    "pending": ("Ожидает проверки", "st-pending"),
+}
+
+def sources_html(c):
+    """Карточка источника: на чём основан расчёт и в каком он статусе.
+
+    Поле reviewed_by заполняется только после явного подтверждения
+    владельцем проекта. Агент не вправе записать владельца проверяющим.
+    """
+    st = c.get("review_status")
+    if not st and not c.get("sources"):
+        return ""
+    parts = ['<section class="src"><h2>Основание расчёта']
+    if st:
+        label, cls = STATUS_LABEL.get(st, (st, "st-pending"))
+        parts.append('<span class="st %s">%s</span>' % (cls, esc(label)))
+    parts.append("</h2>")
+    if c.get("sources"):
+        parts.append("<p><b>Источники:</b></p><ul>")
+        for src in c["sources"]:
+            bits = []
+            title = esc(src["title"])
+            if src.get("url"):
+                title = '<a href="%s" rel="nofollow noopener" target="_blank">%s</a>' % (esc(src["url"]), title)
+            bits.append(title)
+            for key, prefix in (("organization", ""), ("edition", "редакция "), ("sections", "раздел ")):
+                v = src.get(key)
+                if not v:
+                    continue
+                if isinstance(v, (list, tuple)):
+                    v = ", ".join(v)
+                bits.append(prefix + esc(str(v)))
+            if src.get("accessed"):
+                bits.append("обращение " + esc(src["accessed"]))
+            parts.append("<li>%s</li>" % " — ".join(bits))
+        parts.append("</ul>")
+    for key, head in (("assumptions", "Допущения"), ("limitations", "Границы применимости")):
+        if c.get(key):
+            parts.append("<p><b>%s:</b></p><ul>%s</ul>"
+                         % (head, "".join("<li>%s</li>" % x for x in c[key])))
+    if c.get("reviewed_by"):
+        parts.append("<p>Проверил: %s, %s</p>"
+                     % (esc(c["reviewed_by"]), esc(c.get("reviewed_at", "дата не указана"))))
+    parts.append("</section>")
+    return "".join(parts)
 
 def ld_json(obj):
     """JSON-LD микроразметка. '<' экранируется, чтобы содержимое не могло закрыть <script>."""
@@ -302,7 +381,35 @@ def page_html(c, all_by_slug):
                   for s in c.get("related", []) if s in all_by_slug)
     cat_name = dict(CATS)[c["cat"]]
     canonical = "%s/%s.html" % (BASE_URL, c["slug"])
-    graph = [{
+    notice = bool(c.get("notice"))
+    # Информационная страница: калькулятора нет, поэтому нет ни формы, ни
+    # кнопок расчёта и PDF. Такая страница остаётся по прежнему URL, если он
+    # уже был проиндексирован, но ничего не вычисляет.
+    if notice:
+        calcblock = ('<div class="rerr">%s</div>' % c["notice"])
+        article = c["about"]
+    else:
+        calcblock = (
+            '<div id="printhead"><div class="pt">⚡ ВольтКальк — %s</div>'
+            '<div class="pd" id="pdate"></div></div>\n'
+            '<div id="pvals"></div>\n%s\n'
+            '<button id="go" class="btn" type="button">Рассчитать</button>\n'
+            '<div id="res" class="result" aria-live="polite"></div>\n'
+            '<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>\n'
+            '<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). '
+            'Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>'
+            % (c["name"], fields))
+        article = ("<h2>Как считается</h2>\n%s\n<h2>Пример расчёта</h2>\n%s\n"
+                   '<div class="faq"><h2>Частые вопросы</h2>\n%s\n</div>'
+                   % (c["about"], c["example"], faqs))
+    main_node = {
+        "@type": "WebPage",
+        "name": c["name"],
+        "url": canonical,
+        "description": c["desc"],
+        "inLanguage": "ru",
+        "publisher": {"@type": "Organization", "name": SITE_NAME, "url": BASE_URL + "/"},
+    } if notice else {
         "@type": "WebApplication",
         "name": c["name"],
         "url": canonical,
@@ -314,7 +421,8 @@ def page_html(c, all_by_slug):
         "isAccessibleForFree": True,
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RUB"},
         "publisher": {"@type": "Organization", "name": SITE_NAME, "url": BASE_URL + "/"},
-    }, {
+    }
+    graph = [main_node, {
         "@type": "BreadcrumbList",
         "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Главная", "item": BASE_URL + "/"},
@@ -328,23 +436,23 @@ def page_html(c, all_by_slug):
                             "acceptedAnswer": {"@type": "Answer", "text": a}}
                            for q, a in c["faqs"]],
         })
-    h = (PAGE.replace("@TITLE@", esc(c["title"]))
+    title = seo_title(c)
+    h = (PAGE.replace("@TITLE@", esc(title))
              .replace("@DESC@", esc(c["desc"]))
              .replace("@CANONICAL@", esc(canonical))
-             .replace("@OG@", og_tags(c["title"], c["desc"], canonical))
+             .replace("@OG@", og_tags(title, c["desc"], canonical))
              .replace("@SCHEMA@", ld_json({"@context": "https://schema.org", "@graph": graph}))
              .replace("@METRIKA@", METRIKA)
              .replace("@CSS@", CSS)
              .replace("@CAT@", cat_name)
              .replace("@NAME@", c["name"])
              .replace("@INTRO@", c["intro"])
-             .replace("@FIELDS@", fields)
-             .replace("@ABOUT@", c["about"])
-             .replace("@EXAMPLE@", c["example"])
-             .replace("@FAQS@", faqs)
+             .replace("@CALCBLOCK@", calcblock)
+             .replace("@ARTICLE@", article)
+             .replace("@SOURCES@", sources_html(c))
              .replace("@RELATED@", rel)
              .replace("@HELPERS@", HELPERS_JS)
-             .replace("@JS@", c["js"])
+             .replace("@JS@", c.get("js", ""))
              .replace("@SITE@", SITE_NAME)
              .replace("@TAG@", TAGLINE))
     return h
@@ -369,24 +477,53 @@ INDEX = """<!DOCTYPE html>
 <div class="hero">
 <h1>Инженерные калькуляторы по электрике</h1>
 <p>Бесплатные расчёты для электриков, радиолюбителей и домашних мастеров: сечение кабеля, автоматы, резисторы, конденсаторы, трансформаторы. Формулы и примеры — под каждым калькулятором.</p>
-<input class="search" id="q" type="text" placeholder="Поиск: например, «сечение», «светодиод», «УЗО»…" aria-label="Поиск по калькуляторам">
+<div class="searchwrap"><input class="search" id="q" type="text" placeholder="Поиск: например, «сечение», «светодиод», «УЗО»…" aria-label="Поиск по калькуляторам"><button id="qclear" type="button" aria-label="Очистить поиск">×</button></div>
+<div id="empty" hidden>Ничего не найдено. Проверьте раскладку или попробуйте другое слово — например, «кабель», «автомат», «резистор».</div>
 </div>
 @SECTIONS@
 </main>
-<footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом.</footer>
+<footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
-var q=document.getElementById('q');
-q.addEventListener('input',function(){
-var v=q.value.trim().toLowerCase();
+var q=document.getElementById('q'),qclear=document.getElementById('qclear'),empty=document.getElementById('empty');
+// Нормализация: регистр, ё, дефисы и повторные пробелы не должны влиять на поиск.
+function norm(s){return String(s).toLowerCase().replace(/ё/g,'е').replace(/[-\u2010-\u2015]/g,' ').replace(/\\s+/g,' ').trim();}
+// Ограниченный словарь синонимов: только близкие обозначения одного и того же.
+var FORMS={'кабеля':'кабель','кабелей':'кабель','кабельный':'кабель','кабельная':'кабель',
+'провода':'провод','проводника':'провод','проводников':'провод',
+'автоматический':'автомат','автоматического':'автомат','автоматические':'автомат'};
+var SYN={'автомат':['выключатель'],'выключатель':['автомат'],
+'узо':['дифзащита','дифференциальн'],'дифзащита':['узо'],
+'кабель':['провод'],'провод':['кабель']};
 var cards=document.querySelectorAll('.ccard');
-for(var i=0;i<cards.length;i++){
-var k=cards[i].getAttribute('data-k');
-cards[i].style.display=(v===''||k.indexOf(v)>=0)?'':'none';}
-var secs=document.querySelectorAll('.catsec');
-for(var j=0;j<secs.length;j++){
-var vis=secs[j].querySelectorAll('.ccard:not([style*="none"])').length;
-secs[j].style.display=vis?'':'none';}
-});
+for(var i=0;i<cards.length;i++)cards[i].setAttribute('data-n',norm(cards[i].getAttribute('data-k')));
+function hit(text,token){
+ if(text.indexOf(token)>=0)return true;
+ var alt=SYN[token];
+ if(alt)for(var a=0;a<alt.length;a++)if(text.indexOf(alt[a])>=0)return true;
+ return false;
+}
+function apply(){
+ var tokens=norm(q.value).split(' ').filter(function(t){return t.length>0;}).map(function(t){return FORMS[t]||t;});
+ var shown=0;
+ for(var i=0;i<cards.length;i++){
+  var text=cards[i].getAttribute('data-n'),ok=true;
+  // Карточка подходит, если содержит ВСЕ токены — порядок слов не важен.
+  for(var t=0;t<tokens.length;t++){if(!hit(text,tokens[t])){ok=false;break;}}
+  cards[i].style.display=ok?'':'none';
+  if(ok)shown++;
+ }
+ var secs=document.querySelectorAll('.catsec');
+ for(var j=0;j<secs.length;j++){
+  var vis=0,inner=secs[j].querySelectorAll('.ccard');
+  for(var k=0;k<inner.length;k++)if(inner[k].style.display!=='none')vis++;
+  secs[j].style.display=vis?'':'none';
+ }
+ if(empty)empty.hidden=!(tokens.length>0&&shown===0);
+ if(qclear)qclear.className=q.value?'on':'';
+}
+q.addEventListener('input',apply);
+if(qclear)qclear.addEventListener('click',function(){q.value='';apply();q.focus();});
+apply();
 </script>
 </body>
 </html>
@@ -397,14 +534,15 @@ def index_html(calcs):
     for cid, cname in CATS:
         cards = []
         for c in calcs:
-            if c["cat"] != cid:
+            if c["cat"] != cid or c.get("notice"):
                 continue
             k = (c["name"] + " " + c.get("kw", "")).lower()
             cards.append('<a class="ccard" data-k="%s" href="%s.html"><b>%s</b><span>%s</span></a>'
                          % (esc(k), c["slug"], c["name"], c["short"]))
         secs.append('<section class="catsec"><h2 class="cat">%s</h2><div class="grid">%s</div></section>'
                     % (cname, "".join(cards)))
-    t = "%s — %s: %d бесплатных онлайн-расчётов" % (SITE_NAME, TAGLINE.lower(), len(calcs))
+    real = [c for c in calcs if not c.get("notice")]
+    t = "%s — %d бесплатных калькуляторов по электрике" % (SITE_NAME, len(real))
     d = ("Бесплатные онлайн-калькуляторы по электрике и электронике: сечение кабеля, выбор автомата и УЗО, "
          "закон Ома, резистор для светодиода, расчёт трансформатора и другие. С формулами и примерами.")
     home = BASE_URL + "/"
@@ -418,11 +556,11 @@ def index_html(calcs):
     }, {
         "@type": "ItemList",
         "name": "Каталог инженерных калькуляторов",
-        "numberOfItems": len(calcs),
+        "numberOfItems": len(real),
         "itemListElement": [
             {"@type": "ListItem", "position": i + 1, "name": x["name"],
              "url": "%s/%s.html" % (BASE_URL, x["slug"])}
-            for i, x in enumerate(calcs)
+            for i, x in enumerate(real)
         ],
     }]
     return (INDEX.replace("@T@", esc(t)).replace("@D@", esc(d))
@@ -432,6 +570,43 @@ def index_html(calcs):
                  .replace("@METRIKA@", METRIKA).replace("@CSS@", CSS)
                  .replace("@SECTIONS@", "".join(secs)).replace("@SITE@", SITE_NAME).replace("@TAG@", TAGLINE))
 
+PRIVACY_HTML = """<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Политика конфиденциальности — @SITE@</title>
+<meta name="description" content="Какие данные собирает сайт @SITE@, с какой целью, кто их обрабатывает и как долго они хранятся.">
+<link rel="canonical" href="@BASE@/privacy.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="robots" content="noindex,follow">
+<style>@CSS@</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Политика конфиденциальности</nav>
+<h1>Политика конфиденциальности</h1>
+<p class="intro">Сайт не просит регистрации и не отправляет значения из калькуляторов на сервер. Встроенная аналитика и рекламные трекеры отключены.</p>
+<section class="article">
+<h2>Что происходит с данными калькуляторов</h2>
+<p>Все расчёты выполняются <b>в вашем браузере</b>. Код сайта не отправляет введённые значения и не сохраняет их в cookie или локальном хранилище. Закрытие или обновление вкладки очищает поля.</p>
+<p>Экспорт результата в PDF выполняется средствами браузера через окно печати. Файл создаётся на вашем устройстве, на сайт он не отправляется.</p>
+<h2>Аналитика и cookie</h2>
+<p>Яндекс.Метрика, Вебвизор, карта кликов и другие аналитические или рекламные счётчики <b>отключены</b>. Код сайта не создаёт собственные cookie. Если аналитика появится в будущем, эта политика и механизм согласия должны быть обновлены до её включения.</p>
+<h2>Технические данные хостинга</h2>
+<p>Страницы размещены на GitHub Pages. При обычной загрузке страницы хостинг-провайдер и сетевые посредники могут технически обрабатывать IP-адрес, время запроса, адрес страницы, браузер и другие данные запроса. Это происходит на стороне инфраструктуры GitHub, а не в калькуляторах. Условия такой обработки описаны в <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="nofollow noopener" target="_blank">заявлении GitHub о конфиденциальности</a>.</p>
+<h2>Обратная связь</h2>
+<p>Вопросы по обработке данных, а также требования об уточнении или удалении информации направляйте оператору сайта через контакт, указанный в профиле репозитория проекта на GitHub: <a href="https://github.com/MacOs2024/MacOs2024.github.io" rel="nofollow noopener" target="_blank">github.com/MacOs2024/MacOs2024.github.io</a>.</p>
+<h2>Изменения</h2>
+<p>Актуальная редакция всегда доступна по этому адресу. Дата последнего изменения соответствует дате последнего коммита в репозитории проекта.</p>
+</section>
+</main>
+<footer>© @SITE@ — @TAG@.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом.<br><a href="index.html">На главную</a></footer>
+</body>
+</html>
+"""
+
 def write_site(calcs, outdir):
     os.makedirs(outdir, exist_ok=True)
     by = {c["slug"]: c for c in calcs}
@@ -440,7 +615,8 @@ def write_site(calcs, outdir):
             f.write(page_html(c, by))
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as f:
         f.write(index_html(calcs))
-    urls = ["%s/" % BASE_URL] + ["%s/%s.html" % (BASE_URL, c["slug"]) for c in calcs]
+    urls = ["%s/" % BASE_URL] + ["%s/%s.html" % (BASE_URL, c["slug"])
+                                 for c in calcs if not c.get("notice")]
     sm = ('<?xml version="1.0" encoding="UTF-8"?>\n'
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           + "".join("<url><loc>%s</loc></url>\n" % u for u in urls) + "</urlset>\n")
@@ -456,6 +632,10 @@ def write_site(calcs, outdir):
         f.write(GOOGLE_VERIFICATION_HTML)
     with open(os.path.join(outdir, FAVICON), "w", encoding="utf-8") as f:
         f.write(FAVICON_SVG)
+    with open(os.path.join(outdir, "privacy.html"), "w", encoding="utf-8") as f:
+        f.write(PRIVACY_HTML.replace("@CSS@", CSS)
+                            .replace("@SITE@", SITE_NAME).replace("@TAG@", TAGLINE)
+                            .replace("@BASE@", BASE_URL))
     with open(os.path.join(outdir, "README.md"), "w", encoding="utf-8") as f:
         f.write(README.replace("@COUNT@", str(len(calcs))))
     print("OK: %d pages + index + sitemap + robots + верификация Яндекса и Google + favicon" % len(calcs))
