@@ -156,13 +156,22 @@ test.describe('Вёрстка', () => {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     page.on('console', message => {
-      if (message.type() === 'error') errors.push(message.text());
+      if (message.type() !== 'error') return;
+      // Недоступность стороннего счётчика — не дефект наших страниц: расчёт и
+      // вёрстка обязаны работать без сети. Отсеиваем строго по источнику
+      // сообщения, а не по тексту, иначе вместе с Метрикой замолчали бы и
+      // настоящие битые ресурсы сайта.
+      const from = message.location()?.url ?? '';
+      if (/^https:\/\/mc\.yandex\.ru\//.test(from)) return;
+      errors.push(`${message.text()} @ ${from}`);
     });
     await page.goto('/');
     const urls = await page.locator('.ccard').evaluateAll(nodes =>
       nodes.map(node => node.getAttribute('href')));
     for (const url of ['/', ...urls]) {
-      await page.goto(url);
+      // domcontentloaded, а не load: ждать внешний счётчик на каждой из ста
+      // страниц незачем — проверяются вёрстка и ошибки JS, а не сеть Яндекса.
+      await page.goto(url, { waitUntil: 'domcontentloaded' });
       const overflow = await page.evaluate(() =>
         document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow, `${url}: страница шире экрана на ${overflow}px`).toBeLessThanOrEqual(0);
@@ -192,15 +201,29 @@ test.describe('Вёрстка', () => {
     await expect(page.locator('#res')).toBeVisible();
   });
 
-  test('аналитика не загружается до отдельного privacy-решения', async ({ page }) => {
+  test('аналитика работает в оговоренном политикой объёме', async ({ page }) => {
     const tracked = [];
     page.on('request', request => {
       if (/yandex\.(ru|com)|mc\.yandex/.test(request.url())) tracked.push(request.url());
     });
+
+    // На странице каталога счётчик обязан сработать.
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    expect(tracked.some(u => /metrika\/tag\.js\?id=111301996/.test(u)),
+      `запросов к Метрике не было: ${tracked.join(', ')}`).toBe(true);
+    expect(await page.evaluate(() => typeof window.ym)).toBe('function');
+
+    // Вебвизор не должен подгружать свой модуль записи сессий.
+    expect(tracked.filter(u => /webvisor/i.test(u))).toEqual([]);
+
+    // Страница политики себя не считает и раскрывает обязательные пункты.
+    tracked.length = 0;
     await page.goto('/privacy.html');
-    expect(tracked).toEqual([]);
+    await page.waitForLoadState('networkidle');
+    expect(tracked, `политика не должна дёргать Метрику: ${tracked.join(', ')}`).toEqual([]);
     await expect(page.locator('body')).toContainText('Яндекс.Метрика');
-    await expect(page.locator('body')).toContainText('отключены');
+    await expect(page.locator('body')).toContainText('111301996');
+    await expect(page.locator('body')).toContainText('Как отказаться');
   });
 });

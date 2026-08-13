@@ -19,7 +19,18 @@
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Резистивный аттенюатор (T и П)","url":"https://macos2024.github.io/attenyuator.html","description":"Расчёт номиналов резистивного аттенюатора Т-образной и П-образной схемы по требуемому ослаблению в децибелах и волновому сопротивлению тракта.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Резистивный аттенюатор (T и П)","item":"https://macos2024.github.io/attenyuator.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Чем аттенюатор лучше обычного делителя?","acceptedAnswer":{"@type":"Answer","text":"Согласованием. Делитель из двух резисторов меняет импеданс, и в ВЧ-тракте это порождает отражения, стоячие волны и искажение частотной характеристики. Аттенюатор сохраняет Z₀ с обеих сторон, поэтому линия остаётся согласованной."}},{"@type":"Question","name":"Как получить большое ослабление?","acceptedAnswer":{"@type":"Answer","text":"Каскадированием: две секции по 20 дБ дают 40 дБ. Одну секцию свыше 40–60 дБ делать бессмысленно — паразитная ёмкость и индуктивность монтажа передадут больше сигнала в обход резисторов, чем пройдёт через них."}},{"@type":"Question","name":"Почему проволочные резисторы не подходят?","acceptedAnswer":{"@type":"Answer","text":"У них заметная собственная индуктивность, которая на высоких частотах превращает резистор в реактивный элемент. Согласование при этом уходит, а ослабление становится зависящим от частоты. Нужны безындукционные — тонкоплёночные или SMD."}}]}]}</script>
-
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
