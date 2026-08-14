@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -149,15 +149,15 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="article">
 <h2>Как считается</h2>
 <div class="formula">I = k · ΔT^0,44 · A^0,725&nbsp;&nbsp;&nbsp;A = (I/(k·ΔT^0,44))^(1/0,725)</div>
-<p>A — площадь сечения дорожки в mil²; k = 0,048 для наружного и 0,024 для внутреннего слоя. Ширина получается делением A на толщину меди в mil. Это широко используемая старая оценка IPC‑2221; более современный подход IPC‑2152 учитывает конструкцию платы значительно подробнее.</p>
+<p>A — площадь сечения дорожки в mil²; k = 0,048 для наружного и 0,024 для внутреннего слоя. Ширина получается делением A на толщину меди в mil. Это распространённая аппроксимация исторических графиков IPC‑2221. Она не является буквальной формулой стандарта и не задаёт коэффициент запаса; IPC‑2152 учитывает конструкцию платы значительно подробнее.</p>
 <h2>Пример расчёта</h2>
-<p>1 А, наружный слой, медь 35 мкм, допустимый нагрев 10 °C: расчётная ширина ≈ <b>0,300 мм</b>; с простым запасом 25% — <b>0,375 мм</b>.</p>
+<p>1 А, наружный слой, медь 35 мкм, допустимый нагрев 10 °C: ширина по исторической аппроксимации ≈ <b>0,300 мм</b>. Проектную ширину выбирают после проверки всей геометрии и тепловых условий платы.</p>
 <div class="faq"><h2>Частые вопросы</h2>
 <h3>Почему онлайн-калькуляторы дают разные результаты?</h3><p>Одни используют старую формулу IPC‑2221, другие графики IPC‑2152 или собственную тепловую модель. Также отличаются принятые толщина меди, температура и коэффициент запаса.</p><h3>Можно ли так считать короткую перемычку или полигон?</h3><p>Только как консервативную отправную точку. Короткие проводники и полигоны отводят тепло иначе; узкие места, термобарьеры и переходные отверстия нужно проверять отдельно.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.qorvo.com/design-hub/design-tools/interactive/pcb-trace-power-handling-calculator" rel="nofollow noopener" target="_blank">PCB Trace Power Handling Calculator</a> — Qorvo — Редакция online design tool, current on access date — раздел curve-fit constants for IPC-2221 graphs, scope of the approximation — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Историческая аппроксимация графиков IPC-2221, не нормативный минимум. Геометрия платы, длина, медные плоскости, vias, температура среды и теплоотвод не моделируются.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="nagrevanie-dzhoulya-lentsa.html">Нагрев по закону Джоуля–Ленца</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li><li><a href="raschet-radiatora.html">Расчёт радиатора для транзистора и микросхемы</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -231,9 +231,9 @@ if(i<=0||dt<=0||th<=0)return err('Ток, нагрев и толщина дол�
 if(dt>100)return err('Историческая формула применяется только как грубая оценка; задайте подъём температуры не более 100 °C.');
 var k=S('layer')==='ext'?0.048:0.024;
 var area=Math.pow(i/(k*Math.pow(dt,0.44)),1/0.725),thMil=th/25.4,wMil=area/thMil,w=wMil*0.0254;
-out(row('Расчётная ширина',fmt(w,5)+' мм')+row('С запасом 25%',fmt(w*1.25,5)+' мм')+
+out(row('Ширина по аппроксимации',fmt(w,5)+' мм')+
 row('Площадь поперечного сечения',fmt(area,5)+' mil²')+
-note('Формула IPC‑2221 — историческая эмпирическая оценка. Она не учитывает длину, медные полигоны, соседние слои, переходные отверстия, температуру среды и реальную теплоотдачу платы.'));
+note('Формула — историческая аппроксимация графиков IPC‑2221, а не нормативный минимум и не готовый коэффициент запаса. Она не учитывает длину, полигоны, соседние слои, переходные отверстия, температуру среды и реальную теплоотдачу платы.'));
 }
 
 </script>

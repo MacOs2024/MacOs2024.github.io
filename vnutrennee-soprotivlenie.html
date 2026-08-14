@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Внутреннее сопротивление источника — ВольтКальк</title>
-<meta name="description" content="Расчёт внутреннего сопротивления батарейки, аккумулятора или блока питания по просадке напряжения под нагрузкой. Ток короткого замыкания и максимальная мощность.">
+<meta name="description" content="Оценка параметров линейной модели Тевенина по просадке напряжения под одной или двумя известными безопасными нагрузками.">
 <link rel="canonical" href="https://macos2024.github.io/vnutrennee-soprotivlenie.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Внутреннее сопротивление источника — ВольтКальк">
-<meta property="og:description" content="Расчёт внутреннего сопротивления батарейки, аккумулятора или блока питания по просадке напряжения под нагрузкой. Ток короткого замыкания и максимальная мощность.">
+<meta property="og:description" content="Оценка параметров линейной модели Тевенина по просадке напряжения под одной или двумя известными безопасными нагрузками.">
 <meta property="og:url" content="https://macos2024.github.io/vnutrennee-soprotivlenie.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Внутреннее сопротивление источника","url":"https://macos2024.github.io/vnutrennee-soprotivlenie.html","description":"Расчёт внутреннего сопротивления батарейки, аккумулятора или блока питания по просадке напряжения под нагрузкой. Ток короткого замыкания и максимальная мощность.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Внутреннее сопротивление источника","item":"https://macos2024.github.io/vnutrennee-soprotivlenie.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя измерить внутреннее сопротивление омметром?","acceptedAnswer":{"@type":"Answer","text":"Омметр подаёт свой ток на источник, который сам создаёт напряжение — прибор покажет бессмыслицу или выйдет из строя. Внутреннее сопротивление определяется только косвенно, по просадке под известной нагрузкой."}},{"@type":"Question","name":"Почему максимальная мощность отдаётся при равенстве сопротивлений?","acceptedAnswer":{"@type":"Answer","text":"Это теорема о максимальной мощности: при Rн = r на нагрузку приходится максимум. Но КПД тогда ровно 50%, поэтому в энергетике так никогда не работают — там нагрузка много больше внутреннего сопротивления, и КПД близок к единице."}},{"@type":"Question","name":"Зависит ли внутреннее сопротивление от температуры и заряда?","acceptedAnswer":{"@type":"Answer","text":"Да, сильно. На морозе оно растёт в разы — отсюда трудности с зимним пуском. У разряженного аккумулятора оно тоже выше, поэтому измерять состояние батареи нужно в заряженном виде и при комнатной температуре."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Внутреннее сопротивление источника","url":"https://macos2024.github.io/vnutrennee-soprotivlenie.html","description":"Оценка параметров линейной модели Тевенина по просадке напряжения под одной или двумя известными безопасными нагрузками.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Внутреннее сопротивление источника","item":"https://macos2024.github.io/vnutrennee-soprotivlenie.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя измерить внутреннее сопротивление омметром?","acceptedAnswer":{"@type":"Answer","text":"Омметр подаёт свой ток на источник, который сам создаёт напряжение — прибор покажет бессмыслицу или выйдет из строя. Внутреннее сопротивление определяется только косвенно, по просадке под известной нагрузкой."}},{"@type":"Question","name":"Почему максимальная мощность отдаётся при равенстве сопротивлений?","acceptedAnswer":{"@type":"Answer","text":"Таков максимум только для постоянной линейной модели Тевенина: при Rн = r её КПД равен 50%. Реальная батарея или ограничиваемый источник может не сохранять эту модель и не должен нагружаться до расчётного Pmax без паспортного разрешения."}},{"@type":"Question","name":"Зависит ли внутреннее сопротивление от температуры и заряда?","acceptedAnswer":{"@type":"Answer","text":"Да, сильно. На морозе оно растёт в разы — отсюда трудности с зимним пуском. У разряженного аккумулятора оно тоже выше, поэтому измерять состояние батареи нужно в заряженном виде и при комнатной температуре."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -135,7 +135,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Основы электротехники</nav>
 <h1>Внутреннее сопротивление источника</h1>
-<p class="intro">Измерьте напряжение без нагрузки и под нагрузкой с известным током — этого достаточно, чтобы оценить состояние источника.</p>
+<p class="intro">Измеряйте только на заведомо допустимой нагрузке. Экстраполяция линейной модели не является допустимым током источника и не заменяет паспортный импедансный тест.</p>
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Внутреннее сопротивление источника</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
@@ -148,23 +148,18 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<div class="formula">r = (E − U) / I&nbsp;&nbsp;&nbsp;по двум точкам: r = (U₁ − U₂) / (I₂ − I₁)<br>Iкз = E / r&nbsp;&nbsp;&nbsp;Pmax = E² / (4r)</div>
+<div class="formula">r = (E − U) / I&nbsp;&nbsp;&nbsp;по двум точкам: r = (U₁ − U₂) / (I₂ − I₁)<br>I(U=0) = E / r&nbsp;&nbsp;&nbsp;Pmax,model = E² / (4r)</div>
 <p>Любой реальный источник имеет внутреннее сопротивление: часть ЭДС теряется внутри него, и на клеммах остаётся меньше. Чем больше ток, тем сильнее просадка — по ней сопротивление и вычисляют.</p>
-<p>Это самый практичный способ проверить состояние аккумулятора. У исправной автомобильной батареи внутреннее сопротивление составляет единицы миллиом; рост до десятков миллиом означает сульфатацию и потерю пусковых свойств, даже если напряжение без нагрузки выглядит нормальным.</p>
-<table class="t"><tr><th>Источник</th><th>Типичное r</th></tr>
-<tr><td>Автомобильный аккумулятор</td><td>3–10 мОм</td></tr>
-<tr><td>Литиевая ячейка 18650</td><td>30–80 мОм</td></tr>
-<tr><td>Щелочная батарейка AA</td><td>150–300 мОм</td></tr>
-<tr><td>Лабораторный блок питания</td><td>единицы мОм</td></tr></table>
+<p>Полученное r — наклон между введёнными рабочими точками. Для батареи оно зависит от заряда, температуры, длительности импульса, частоты метода и истории; для блока питания могут сработать контуры стабилизации и ограничения тока. Сравнивайте результат только с методикой и пределами производителя конкретного изделия.</p>
 <p>Способ «по двум нагрузкам» точнее, когда напряжение холостого хода измерить трудно или оно плавает: разность двух рабочих точек исключает влияние медленного восстановления напряжения.</p>
 <h2>Пример расчёта</h2>
-<p>Аккумулятор показывает 12,7 В без нагрузки и 11,8 В под нагрузкой 100 А. Внутреннее сопротивление: (12,7 − 11,8) / 100 = <b>9 мОм</b>. Расчётный ток короткого замыкания — <b>1,411 кА</b>, максимальная отдаваемая мощность — <b>4,48 кВт</b>. Для стартерной батареи 9 мОм — уже повышенное значение, у свежей оно ближе к 4–5 мОм.</p>
+<p>Источник показывает 12,7 В без нагрузки и 11,8 В на заранее допустимой нагрузке 100 А. Наклон линейной модели: (12,7 − 11,8) / 100 = <b>9 мОм</b>. Экстраполяции I при U=0 и Pmax нужны только для анализа модели и не разрешают короткое замыкание или такую нагрузку.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Почему нельзя измерить внутреннее сопротивление омметром?</h3><p>Омметр подаёт свой ток на источник, который сам создаёт напряжение — прибор покажет бессмыслицу или выйдет из строя. Внутреннее сопротивление определяется только косвенно, по просадке под известной нагрузкой.</p><h3>Почему максимальная мощность отдаётся при равенстве сопротивлений?</h3><p>Это теорема о максимальной мощности: при Rн = r на нагрузку приходится максимум. Но КПД тогда ровно 50%, поэтому в энергетике так никогда не работают — там нагрузка много больше внутреннего сопротивления, и КПД близок к единице.</p><h3>Зависит ли внутреннее сопротивление от температуры и заряда?</h3><p>Да, сильно. На морозе оно растёт в разы — отсюда трудности с зимним пуском. У разряженного аккумулятора оно тоже выше, поэтому измерять состояние батареи нужно в заряженном виде и при комнатной температуре.</p>
+<h3>Почему нельзя измерить внутреннее сопротивление омметром?</h3><p>Омметр подаёт свой ток на источник, который сам создаёт напряжение — прибор покажет бессмыслицу или выйдет из строя. Внутреннее сопротивление определяется только косвенно, по просадке под известной нагрузкой.</p><h3>Почему максимальная мощность отдаётся при равенстве сопротивлений?</h3><p>Таков максимум только для постоянной линейной модели Тевенина: при Rн = r её КПД равен 50%. Реальная батарея или ограничиваемый источник может не сохранять эту модель и не должен нагружаться до расчётного Pmax без паспортного разрешения.</p><h3>Зависит ли внутреннее сопротивление от температуры и заряда?</h3><p>Да, сильно. На морозе оно растёт в разы — отсюда трудности с зимним пуском. У разряженного аккумулятора оно тоже выше, поэтому измерять состояние батареи нужно в заряженном виде и при комнатной температуре.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция online edition 2016 — раздел 10.1 Electromotive Force — terminal voltage and internal resistance — обращение 11.08.2026</li><li><a href="https://ocw.mit.edu/courses/6-071j-introduction-to-electronics-signals-and-measurement-spring-2006/004de24dd40e3938b0393a6a2bd91788_linear_crct_ana.pdf" rel="nofollow noopener" target="_blank">Linear Circuit Analysis</a> — MIT OpenCourseWare — Редакция 6.071J, Spring 2006 — раздел Thévenin equivalent, maximum power transfer — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Линейная модель Тевенина между введёнными рабочими точками; параметры батарей и ограничиваемых источников зависят от заряда, температуры, времени и режима.</li><li>I при U=0 и Pmax — математические экстраполяции, не допустимые режимы и не инструкция к короткому замыканию.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="zakon-oma.html">Закон Ома: ток, напряжение, сопротивление, мощность</a></li><li><a href="vremya-raboty-akkumulyatora.html">Время работы от аккумулятора</a></li><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -253,10 +248,10 @@ if(S('mode')==='xx'){
 var ik=e/r,pmax=e*e/(4*r);
 out(row('Внутреннее сопротивление r',si(r,'Ом'))+
 row('ЭДС источника',fmt(e,5)+' В')+
-row('Ток короткого замыкания',si(ik,'А'))+
-row('Максимальная отдаваемая мощность',si(pmax,'Вт'))+
-row('Сопротивление нагрузки при Pmax',si(r,'Ом'))+
-note('Максимальная мощность отдаётся, когда сопротивление нагрузки равно внутреннему, но КПД при этом всего 50% — половина мощности греет сам источник. Ток короткого замыкания расчётный: реальный источник может его не выдержать.'));
+row('Экстраполяция I при U=0',si(ik,'А'))+
+row('Pmax линейной модели',si(pmax,'Вт'))+
+row('R нагрузки в модели при Pmax',si(r,'Ом'))+
+note('I при U=0 и Pmax — только математические экстраполяции постоянной модели Тевенина. Не замыкайте источник накоротко и не используйте эти числа как допустимые: батарея, BMS и блок питания нелинейны, нагреваются и могут ограничивать ток.'));
 }
 
 </script>

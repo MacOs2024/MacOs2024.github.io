@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -135,7 +135,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
 <h1>Зона защиты стержневого молниеотвода</h1>
-<p class="intro">Расчёт для <b>одиночного</b> стержневого молниеотвода высотой до 100 м. Это предварительная оценка — полноценная молниезащита выполняется проектом.</p>
+<p class="intro">Расчёт для <b>одиночного</b> стержневого молниеотвода высотой до 150 м по таблице 3.4 СО 153-34.21.122-2003. Полноценная молниезащита выполняется проектом.</p>
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Зона защиты стержневого молниеотвода</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
@@ -149,11 +149,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="article">
 <h2>Как считается</h2>
 <div class="formula">h₀ = kh · h&nbsp;&nbsp;&nbsp;r₀ = kr · h&nbsp;&nbsp;&nbsp;rx = r₀ · (h₀ − hx) / h₀</div>
-<p>Зона защиты одиночного стержневого молниеотвода — это конус, вершина которого находится <b>ниже</b> верхушки самого молниеотвода. Коэффициенты зависят от требуемой надёжности и заданы СО 153-34.21.122-2003 для молниеотводов высотой до 100 м.</p>
-<table class="t"><tr><th>Надёжность</th><th>h₀</th><th>r₀</th><th>Применение</th></tr>
-<tr><td>0,9</td><td>0,85h</td><td>1,2h</td><td>Обычные здания</td></tr>
-<tr><td>0,99</td><td>0,8h</td><td>0,8h</td><td>Повышенные требования</td></tr>
-<tr><td>0,999</td><td>0,7h</td><td>0,6h</td><td>Особо ответственные объекты</td></tr></table>
+<p>Зона защиты одиночного стержневого молниеотвода — конус с вершиной ниже верхушки молниеотвода. Таблица 3.4 задаёт кусочные зависимости h₀ и r₀ для диапазонов 0–30, 30–100 и 100–150 м. Простые постоянные коэффициенты 0,8/0,8 и 0,7/0,6 допустимы только до 30 м для надёжностей 0,99 и 0,999 соответственно.</p>
 <p>Обратите внимание на закономерность: чем выше требуемая надёжность, тем <b>меньше</b> зона. Это не парадокс — при надёжности 0,9 допускается, что один удар из десяти пройдёт мимо молниеотвода, и зону можно считать щедро. Для 0,999 допуск в тысячу раз строже, и конус сжимается почти вдвое по радиусу.</p>
 <p>Надёжность 0,9 означает, что молниеотвод перехватит 90% разрядов, направленных в зону. Оставшиеся 10% — принятый риск, поэтому для объектов с людьми, взрывоопасных и с ценным оборудованием берут 0,99 и выше.</p>
 <h2>Пример расчёта</h2>
@@ -163,8 +159,8 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li><li><a href="sechenie-pe-provodnika.html">Сечение защитного проводника PE</a></li><li><a href="vybor-uzo.html">Выбор УЗО: номинал и ток утечки</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://meganorm.ru/Data2/1/4294815/4294815349.htm" rel="nofollow noopener" target="_blank">СО 153-34.21.122-2003. Инструкция по устройству молниезащиты зданий, сооружений и промышленных коммуникаций</a> — Минэнерго России — Редакция утверждена приказом от 30.06.2003 № 280 — раздел 3.3.2.1, таблица 3.4, формула 3.1 — обращение 11.08.2026</li><li><a href="https://www.dehn-international.com/sites/default/files/media/files/dehnsupport-toolbox-ds709-e.pdf" rel="nofollow noopener" target="_blank">Design of Lightning Protection Systems — DEHNsupport Toolbox</a> — DEHN SE — Редакция DS709/E/0917 — раздел protective angle method, rolling sphere method, protected volume by LPS class — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Только одиночный стержневой молниеотвод высотой не более 150 м.</li><li>Проверяется круговое горизонтальное сечение; геометрия всего объекта и другие молниеотводы не учитываются.</li><li>Не рассчитываются токоотводы, заземлитель, разделительные расстояния и внутренняя защита от импульсных перенапряжений.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li><li><a href="sechenie-pe-provodnika.html">Сечение защитного проводника PE</a></li><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -234,14 +230,22 @@ function calc(){
 var h=P('h'),hx=P('hx'),nad=S('nad');
 if([h,hx].some(isNaN))return err('Заполните высоту молниеотвода и объекта.');
 if(h<=0)return err('Высота молниеотвода должна быть больше нуля.');
-if(h>100)return err('Расчёт применим для молниеотводов высотой до 100 м. Для более высоких нужны другие коэффициенты норматива.');
+if(h>150)return err('Формулы таблицы 3.4 применимы для молниеотводов высотой до 150 м. Для более высоких нужна специальная методика.');
 if(hx<0)return err('Высота объекта не может быть отрицательной.');
 if(hx>=h)return err('Молниеотвод должен быть выше защищаемого объекта.');
-var kh,kr;
-if(nad==='0.9'){kh=0.85;kr=1.2;}
-else if(nad==='0.99'){kh=0.8;kr=0.8;}
-else{kh=0.7;kr=0.6;}
-var h0=kh*h,r0=kr*h;
+var h0,r0;
+if(nad==='0.9'){
+ h0=0.85*h;
+ r0=(h<=100?1.2:(1.2-0.001*(h-100)))*h;
+}else if(nad==='0.99'){
+ if(h<=30){h0=0.8*h;r0=0.8*h;}
+ else if(h<=100){h0=0.8*h;r0=(0.8-0.00143*(h-30))*h;}
+ else{h0=(0.8-0.001*(h-100))*h;r0=0.7*h;}
+}else{
+ if(h<=30){h0=0.7*h;r0=0.6*h;}
+ else if(h<=100){h0=(0.7-0.000714*(h-30))*h;r0=(0.6-0.00143*(h-30))*h;}
+ else{h0=(0.65-0.001*(h-100))*h;r0=(0.5-0.002*(h-100))*h;}
+}
 if(hx>=h0)return err('Объект высотой '+fmt(hx,4)+' м выше вершины конуса защиты ('+fmt(h0,4)+' м) — при такой надёжности он не защищён. Поднимите молниеотвод.');
 var rx=r0*(h0-hx)/h0,sx=Math.PI*rx*rx;
 out(row('Высота конуса защиты h₀',fmt(h0,5)+' м')+

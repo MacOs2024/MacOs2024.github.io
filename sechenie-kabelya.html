@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Сечение кабеля по мощности и току — ВольтКальк</title>
-<meta name="description" content="Калькулятор сечения кабеля по мощности или току для 220 В и 380 В: медь и алюминий, открытая и скрытая прокладка. Таблицы допустимых токов по ПУЭ.">
+<title>Предварительный выбор сечения провода по току — ВольтКальк</title>
+<meta name="description" content="Справочный подбор сечения изолированного провода по таблицам ПУЭ 1.3.4 и 1.3.5 для двух точных способов прокладки с пользовательскими поправочными коэффициентами.">
 <link rel="canonical" href="https://macos2024.github.io/sechenie-kabelya.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Сечение кабеля по мощности и току — ВольтКальк">
-<meta property="og:description" content="Калькулятор сечения кабеля по мощности или току для 220 В и 380 В: медь и алюминий, открытая и скрытая прокладка. Таблицы допустимых токов по ПУЭ.">
+<meta property="og:title" content="Предварительный выбор сечения провода по току — ВольтКальк">
+<meta property="og:description" content="Справочный подбор сечения изолированного провода по таблицам ПУЭ 1.3.4 и 1.3.5 для двух точных способов прокладки с пользовательскими поправочными коэффициентами.">
 <meta property="og:url" content="https://macos2024.github.io/sechenie-kabelya.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Сечение кабеля по мощности и току","url":"https://macos2024.github.io/sechenie-kabelya.html","description":"Калькулятор сечения кабеля по мощности или току для 220 В и 380 В: медь и алюминий, открытая и скрытая прокладка. Таблицы допустимых токов по ПУЭ.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Сечение кабеля по мощности и току","item":"https://macos2024.github.io/sechenie-kabelya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Медь или алюминий?","acceptedAnswer":{"@type":"Answer","text":"В новой жилой проводке — медь: при том же токе нужно меньшее сечение, жилы не ломаются на изгибах, контакты стабильнее. Алюминий встречается в старом фонде и на вводах большого сечения."}},{"@type":"Question","name":"Можно ли розетки на 1,5 мм²?","acceptedAnswer":{"@type":"Answer","text":"Формально 19 А проходит, но розеточную линию защищают автоматом 16 А, а любой обогреватель загрузит её надолго. Стандарт де-факто — 2,5 мм² на розетки."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Предварительный выбор сечения провода по току","url":"https://macos2024.github.io/sechenie-kabelya.html","description":"Справочный подбор сечения изолированного провода по таблицам ПУЭ 1.3.4 и 1.3.5 для двух точных способов прокладки с пользовательскими поправочными коэффициентами.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Предварительный выбор сечения провода по току","item":"https://macos2024.github.io/sechenie-kabelya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Медь или алюминий?","acceptedAnswer":{"@type":"Answer","text":"В новой жилой проводке — медь: при том же токе нужно меньшее сечение, жилы не ломаются на изгибах, контакты стабильнее. Алюминий встречается в старом фонде и на вводах большого сечения."}},{"@type":"Question","name":"Можно ли розетки на 1,5 мм²?","acceptedAnswer":{"@type":"Answer","text":"Формально 19 А проходит, но розеточную линию защищают автоматом 16 А, а любой обогреватель загрузит её надолго. Стандарт де-факто — 2,5 мм² на розетки."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -134,12 +134,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
-<h1>Сечение кабеля по мощности и току</h1>
-<p class="intro">Укажите нагрузку — калькулятор подберёт минимальное сечение жилы по таблицам длительно допустимых токов и подскажет, когда стоит взять запас.</p>
+<h1>Предварительный выбор сечения провода по току</h1>
+<p class="intro">Выберите только тот способ прокладки, который точно соответствует колонке таблицы. Для кабеля другой конструкции или способа прокладки используйте его паспортную таблицу.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Сечение кабеля по мощности и току</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Предварительный выбор сечения провода по току</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_znaju"><label for="znaju">Что известно</label><div class="fw"><select id="znaju"><option value="p" selected>Мощность нагрузки</option><option value="i">Ток нагрузки</option></select></div></div><div class="f" id="f_p"><label for="p">Мощность P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 5"><select id="p_unit" class="u" aria-label="Единицы"><option value="1">Вт</option><option value="1000" selected>кВт</option></select></div></div><div class="f" id="f_i"><label for="i">Ток I</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 25"><span class="u">А</span></div></div><div class="f" id="f_faza"><label for="faza">Сеть</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная (220 В)</option><option value="3">Трёхфазная (380 В)</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_c"><label for="c">cos φ</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div></div><div class="f" id="f_mat"><label for="mat">Материал жилы</label><div class="fw"><select id="mat"><option value="cu" selected>Медь</option><option value="al">Алюминий</option></select></div></div><div class="f" id="f_pr"><label for="pr">Способ прокладки</label><div class="fw"><select id="pr"><option value="closed" selected>Скрыто: в стене, трубе, гофре</option><option value="open">Открыто: по воздуху</option></select></div></div>
+<div class="f" id="f_znaju"><label for="znaju">Что известно</label><div class="fw"><select id="znaju"><option value="p" selected>Мощность нагрузки</option><option value="i">Ток нагрузки</option></select></div></div><div class="f" id="f_p"><label for="p">Мощность P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 5"><select id="p_unit" class="u" aria-label="Единицы"><option value="1">Вт</option><option value="1000" selected>кВт</option></select></div></div><div class="f" id="f_i"><label for="i">Ток I</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 25"><span class="u">А</span></div></div><div class="f" id="f_faza"><label for="faza">Сеть</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная (220 В)</option><option value="3">Трёхфазная (380 В)</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_c"><label for="c">cos φ</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div></div><div class="f" id="f_mat"><label for="mat">Материал жилы</label><div class="fw"><select id="mat"><option value="cu" selected>Медь</option><option value="al">Алюминий</option></select></div></div><div class="f" id="f_pr"><label for="pr">Колонка таблицы ПУЭ</label><div class="fw"><select id="pr"><option value="closed" selected>Два одножильных провода в одной трубе</option><option value="open">Один одножильный провод открыто</option></select></div></div><div class="f" id="f_kt"><label for="kt">Поправка на температуру Kt</label><div class="fw"><input id="kt" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div><div class="hint">Возьмите из применимого норматива; 1 только при табличных условиях</div></div><div class="f" id="f_kg"><label for="kg">Поправка на группировку Kg</label><div class="fw"><input id="kg" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div><div class="hint">Возьмите из применимого норматива; 1 только для одиночной цепи без снижения</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -148,7 +148,8 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<p>Сечение подбирают по длительно допустимому току: жила не должна перегреваться при непрерывной работе. Расчёт основан на таблицах 1.3.4 (медь) и 1.3.5 (алюминий) ПУЭ для проводов с ПВХ/резиновой изоляцией; «скрытая прокладка» соответствует колонке «два одножильных провода в одной трубе».</p>
+<p>Сечение подбирают по длительно допустимому току. Расчёт использует таблицы 1.3.4 (медь) и 1.3.5 (алюминий) ПУЭ для проводов с резиновой или ПВХ-изоляцией и только две явно названные колонки: один одножильный провод открыто либо два одножильных провода в одной трубе.</p>
+<div class="formula">Iz = Iтабл · Kt · Kg&nbsp;&nbsp;&nbsp;условие: IB ≤ Iz</div>
 <table class="t"><tr><th>Сечение, мм²</th><th>Медь скрыто, А</th><th>Медь открыто, А</th><th>Алюминий скрыто, А</th></tr>
 <tr><td>1,5</td><td>19</td><td>23</td><td>—</td></tr>
 <tr><td>2,5</td><td>27</td><td>30</td><td>20</td></tr>
@@ -158,16 +159,16 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <tr><td>16</td><td>85</td><td>100</td><td>60</td></tr>
 <tr><td>25</td><td>115</td><td>140</td><td>85</td></tr>
 <tr><td>35</td><td>135</td><td>170</td><td>100</td></tr></table>
-<p>Типовые решения для квартиры (медь): освещение — 1,5 мм² с автоматом 10 А; розетки — 2,5 мм² с автоматом 16 А; варочная панель — 6 мм² с автоматом 32 А. При пучковой прокладке нескольких линий и высокой температуре среды допустимый ток снижается поправочными коэффициентами.</p>
+<p>Температура, группировка, число нагруженных жил, конструкция кабеля и реальный способ прокладки влияют на Iz. Если объект не соответствует колонке, табличное значение применять нельзя.</p>
 <h2>Пример расчёта</h2>
-<p>Нагрузка 5 кВт, 220 В: I = 5000/220 ≈ 22,7 А. Таблица даёт 2,5 мм² (27 А), но запас всего 19% при непрерывной работе — для водонагревателя или духовки практичнее <b>4 мм²</b> с автоматом 25 А.</p>
+<p>Нагрузка 5 кВт, 220 В: IB = 22,73 А. Для двух медных одножильных проводов в трубе таблица даёт 27 А для 2,5 мм². При Kt = 0,94 и Kg = 0,9 получится Iz = 22,84 А — кандидат формально выше нагрузки, но почти без запаса и требует проверки защиты и падения напряжения.</p>
 <div class="faq"><h2>Частые вопросы</h2>
 <h3>Медь или алюминий?</h3><p>В новой жилой проводке — медь: при том же токе нужно меньшее сечение, жилы не ломаются на изгибах, контакты стабильнее. Алюминий встречается в старом фонде и на вводах большого сечения.</p><h3>Можно ли розетки на 1,5 мм²?</h3><p>Формально 19 А проходит, но розеточную линию защищают автоматом 16 А, а любой обогреватель загрузит её надолго. Стандарт де-факто — 2,5 мм² на розетки.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Выбор автоматического выключателя по мощности</a></li><li><a href="padenie-napryazheniya.html">Падение напряжения в кабеле</a></li><li><a href="tok-po-moshchnosti.html">Расчёт тока по мощности (220 В и 380 В)</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://docs.cntd.ru/document/1200001616/titles/7DE0K8" rel="nofollow noopener" target="_blank">ПУЭ. Глава 1.3. Выбор проводников по нагреву</a> — Минэнерго СССР / нормативная база Техэксперт — Редакция ПУЭ, 6-е издание с актуальными главами 7-го издания — раздел 1.3.10, таблица 1.3.4, таблица 1.3.5 — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/General_method_for_cable_sizing" rel="nofollow noopener" target="_blank">General method for cable sizing</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция, актуальная на 11.08.2026 — раздел Ambient temperature, Grouping of conductors or cables — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Таблица относится к изолированным проводам и двум указанным способам прокладки; это не универсальная таблица для любого кабеля.</li><li>Коэффициенты Kt и Kg пользователь берёт из применимого норматива или данных изготовителя.</li><li>Не проверяет минимальное сечение по механической прочности, падение напряжения и термическую стойкость при КЗ.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li><li><a href="padenie-napryazheniya.html">Падение напряжения в кабеле</a></li><li><a href="tok-po-moshchnosti.html">Расчёт тока по мощности (220 В и 380 В)</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -243,7 +244,8 @@ $('znaju').addEventListener('change',sync);
 $('faza').addEventListener('change',function(){$('u').value=(S('faza')==='3')?'380':'220';});
 sync();}
 function calc(){
-var i;
+var i,kt=P('kt'),kg=P('kg');
+if(isNaN(kt)||isNaN(kg)||kt<=0||kt>1||kg<=0||kg>1)return err('Поправочные коэффициенты должны быть больше 0 и не больше 1.');
 if(S('znaju')==='p'){
 var p=P('p'),u=P('u'),c=P('c');
 if(isNaN(p)||isNaN(u))return err('Введите мощность и напряжение.');
@@ -254,12 +256,15 @@ else{i=P('i');if(isNaN(i))return err('Введите ток.');}
 if(i<=0)return err('Ток должен быть больше нуля.');
 var T=(S('mat')==='cu'?CU:AL)[S('pr')];
 var pick=null,next=null;
-for(var k=0;k<T.length;k++){if(T[k][1]>=i){pick=T[k];next=T[k+1]||null;break;}}
+for(var k=0;k<T.length;k++){if(T[k][1]*kt*kg>=i){pick=T[k];next=T[k+1]||null;break;}}
 if(!pick)return err('Ток '+fmt(i,3)+' А выходит за пределы бытовой таблицы (до 35 мм²) — нужен проектный расчёт.');
+var iz=pick[1]*kt*kg;
 var h=row('Расчётный ток',fmt(i,3)+' А')+
-row('Минимальное сечение',String(pick[0]).replace('.',',')+' мм² (длительно допустимо '+pick[1]+' А)');
-if(next&&pick[1]<i*1.15)h+=note('Запас меньше 15% — надёжнее следующее сечение: <b>'+String(next[0]).replace('.',',')+' мм²</b> ('+next[1]+' А).');
-h+=note('Связка с защитой: номинал автомата на этой линии не должен превышать допустимый ток кабеля. Проверьте в калькуляторе «Выбор автомата».');
+row('Предварительный кандидат',String(pick[0]).replace('.',',')+' мм²')+
+row('Скорректированный допустимый ток Iz',fmt(iz,4)+' А ('+pick[1]+' · '+fmt(kt,3)+' · '+fmt(kg,3)+')')+
+row('Статус','Только для выбранной колонки таблицы');
+if(next&&iz<i*1.15)h+=note('Запас меньше 15%. Это предупреждение, а не норматив: проверьте следующее сечение и падение напряжения.');
+h+=note('Результат не распространяется автоматически на многожильные кабели, теплоизоляцию, землю, лоток, пучок или гофру. Автомат должен удовлетворять IB ≤ In ≤ Iz; отдельно проверяются падение напряжения и КЗ.');
 out(h);}
 
 </script>

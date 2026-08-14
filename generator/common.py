@@ -53,8 +53,7 @@ METRIKA = """<!-- Yandex.Metrika counter -->
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->"""
+<!-- /Yandex.Metrika -->"""
 
 CSS = """
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
@@ -107,6 +106,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -303,8 +303,8 @@ def seo_title(c):
     return (result or c["name"][:57].rstrip()) + "…"
 
 STATUS_LABEL = {
-    "verified": ("Проверено инженером", "st-verified"),
-    "agent-reviewed": ("Сверено с источником, ожидает инженерной проверки", "st-agent"),
+    "verified": ("Независимо проверено", "st-verified"),
+    "agent-reviewed": ("Сверено с источником и тестами", "st-agent"),
     "estimate": ("Оценка, не нормативный вердикт", "st-estimate"),
     "pending": ("Ожидает проверки", "st-pending"),
 }
@@ -312,8 +312,8 @@ STATUS_LABEL = {
 def sources_html(c):
     """Карточка источника: на чём основан расчёт и в каком он статусе.
 
-    Поле reviewed_by заполняется только после явного подтверждения
-    владельцем проекта. Агент не вправе записать владельца проверяющим.
+    Поле reviewed_by отражает фактическую проверку. Имя владельца нельзя
+    указывать без его реального инженерного просмотра.
     """
     st = c.get("review_status")
     if not st and not c.get("sources"):
@@ -331,7 +331,7 @@ def sources_html(c):
             if src.get("url"):
                 title = '<a href="%s" rel="nofollow noopener" target="_blank">%s</a>' % (esc(src["url"]), title)
             bits.append(title)
-            for key, prefix in (("organization", ""), ("edition", "редакция "), ("sections", "раздел ")):
+            for key, prefix in (("organization", ""), ("edition", "Редакция "), ("sections", "раздел ")):
                 v = src.get(key)
                 if not v:
                     continue
@@ -676,15 +676,16 @@ npm ci
 npm test
 ```
 
-Сайт не использует внешние зависимости при работе. `jsdom` нужен только разработчику
-для локального запуска автоматических тестов и не загружается посетителями.
+Сайт не использует внешние библиотеки для расчётов. После отдельного согласия
+посетителя загружается только Яндекс.Метрика; `jsdom` нужен разработчику для
+локального запуска автоматических тестов и не загружается посетителями.
 
 ## Как продолжить работу с Claude в новом чате
 1. Прикрепите PDF «План проекта» и/или дайте ссылку на этот репозиторий.
 2. Напишите: «Продолжаем проект ВольтКальк, я на Этапе N. Следующий шаг?»
 
 ## Правила проекта
-- Формулы проверяет Максим (инженер). Claude не публикует непроверенное.
+- Для нормативных выводов нужны первоисточник, независимая проверка и тесты.
 - Никаких внешних библиотек и шрифтов — сайт должен открываться мгновенно.
 - Запятая в полях ввода принимается как десятичный разделитель.
 - Дисклеймер в подвале обязателен на каждой странице.

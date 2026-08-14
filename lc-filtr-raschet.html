@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Расчёт LC-фильтра по частоте среза — ВольтКальк</title>
-<meta name="description" content="Расчёт индуктивности и ёмкости LC-фильтра по частоте среза и сопротивлению нагрузки. Фильтр нижних и верхних частот второго порядка.">
+<title>Пассивный LC-фильтр Баттерворта — ВольтКальк</title>
+<meta name="description" content="Расчёт последовательной катушки и параллельного конденсатора пассивного ФНЧ Баттерворта второго порядка для резистивной нагрузки и источника с малым сопротивлением.">
 <link rel="canonical" href="https://macos2024.github.io/lc-filtr-raschet.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Расчёт LC-фильтра по частоте среза — ВольтКальк">
-<meta property="og:description" content="Расчёт индуктивности и ёмкости LC-фильтра по частоте среза и сопротивлению нагрузки. Фильтр нижних и верхних частот второго порядка.">
+<meta property="og:title" content="Пассивный LC-фильтр Баттерворта — ВольтКальк">
+<meta property="og:description" content="Расчёт последовательной катушки и параллельного конденсатора пассивного ФНЧ Баттерворта второго порядка для резистивной нагрузки и источника с малым сопротивлением.">
 <meta property="og:url" content="https://macos2024.github.io/lc-filtr-raschet.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Расчёт LC-фильтра по частоте среза","url":"https://macos2024.github.io/lc-filtr-raschet.html","description":"Расчёт индуктивности и ёмкости LC-фильтра по частоте среза и сопротивлению нагрузки. Фильтр нижних и верхних частот второго порядка.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Расчёт LC-фильтра по частоте среза","item":"https://macos2024.github.io/lc-filtr-raschet.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Чем LC-фильтр лучше RC-фильтра?","acceptedAnswer":{"@type":"Answer","text":"Крутизной и КПД. Фильтр первого порядка на RC даёт спад 6 дБ на октаву, LC второго порядка — 12 дБ. Кроме того, реактивные элементы не рассеивают мощность: резистор в RC-фильтре грелся бы, теряя часть полезного сигнала."}},{"@type":"Question","name":"Почему важно указывать сопротивление нагрузки?","acceptedAnswer":{"@type":"Answer","text":"Потому что LC-фильтр работает на конкретный импеданс. Если реальная нагрузка отличается от расчётной, характеристика меняется: появляется подъём или провал в районе среза, а частота среза смещается. Импеданс динамика к тому же сам зависит от частоты."}},{"@type":"Question","name":"Можно ли ставить электролитический конденсатор в кроссовер?","acceptedAnswer":{"@type":"Answer","text":"Обычный полярный — нет, через него идёт переменный сигнал обеих полярностей. Применяют неполярные плёночные или специальные биполярные электролитические конденсаторы для акустики."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Пассивный LC-фильтр Баттерворта","url":"https://macos2024.github.io/lc-filtr-raschet.html","description":"Расчёт последовательной катушки и параллельного конденсатора пассивного ФНЧ Баттерворта второго порядка для резистивной нагрузки и источника с малым сопротивлением.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Пассивный LC-фильтр Баттерворта","item":"https://macos2024.github.io/lc-filtr-raschet.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Чем LC-фильтр лучше RC-фильтра?","acceptedAnswer":{"@type":"Answer","text":"Крутизной и КПД. Фильтр первого порядка на RC даёт спад 6 дБ на октаву, LC второго порядка — 12 дБ. Кроме того, реактивные элементы не рассеивают мощность: резистор в RC-фильтре грелся бы, теряя часть полезного сигнала."}},{"@type":"Question","name":"Почему важно указывать сопротивление нагрузки?","acceptedAnswer":{"@type":"Answer","text":"Потому что LC-фильтр работает на конкретный импеданс. Если реальная нагрузка отличается от расчётной, характеристика меняется: появляется подъём или провал в районе среза, а частота среза смещается. Импеданс динамика к тому же сам зависит от частоты."}},{"@type":"Question","name":"Можно ли ставить электролитический конденсатор в кроссовер?","acceptedAnswer":{"@type":"Answer","text":"Обычный полярный — нет, через него идёт переменный сигнал обеих полярностей. Применяют неполярные плёночные или специальные биполярные электролитические конденсаторы для акустики."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -134,10 +134,10 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
-<h1>Расчёт LC-фильтра по частоте среза</h1>
-<p class="intro">Задача обратная расчёту резонанса: известны частота среза и сопротивление нагрузки — нужно найти номиналы L и C.</p>
+<h1>Пассивный LC-фильтр Баттерворта</h1>
+<p class="intro">Топология фиксирована: идеальный источник с малым сопротивлением → последовательная L → нагрузка R, параллельно которой включена C.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Расчёт LC-фильтра по частоте среза</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Пассивный LC-фильтр Баттерворта</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
 <div class="f" id="f_fc"><label for="fc">Частота среза</label><div class="fw"><input id="fc" type="text" inputmode="decimal" autocomplete="off" value="1000" placeholder=""><select id="fc_unit" class="u" aria-label="Единицы"><option value="1" selected>Гц</option><option value="1000.0">кГц</option><option value="1000000.0">МГц</option></select></div></div><div class="f" id="f_r"><label for="r">Сопротивление нагрузки</label><div class="fw"><input id="r" type="text" inputmode="decimal" autocomplete="off" value="8" placeholder=""><span class="u">Ом</span></div><div class="hint">Динамик 4 или 8 Ом; ВЧ-тракт обычно 50 или 75 Ом</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
@@ -148,18 +148,17 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<div class="formula">L = R / (2π · fс)&nbsp;&nbsp;&nbsp;C = 1 / (2π · fс · R)<br>Проверка: fс = 1 / (2π · √(LC))&nbsp;&nbsp;&nbsp;ρ = √(L / C) = R</div>
-<p>LC-фильтр второго порядка строится из катушки и конденсатора, согласованных с сопротивлением нагрузки. В фильтре нижних частот катушка включается последовательно с нагрузкой, а конденсатор — параллельно ей; в фильтре верхних частот наоборот.</p>
-<p>Обе формулы вытекают из одного условия: на частоте среза реактивное сопротивление каждого элемента должно равняться сопротивлению нагрузки. Отсюда сразу следует, что характеристическое сопротивление фильтра √(L/C) совпадает с R, а подстановка номиналов в формулу Томсона возвращает исходную частоту среза.</p>
-<p>Главное преимущество LC-фильтра перед RC — крутизна: 12 дБ на октаву вместо 6, и при этом без потерь мощности на резисторе. Именно поэтому его применяют в акустических кроссоверах, где рассеивать мощность на резисторе недопустимо, и на выходе импульсных преобразователей.</p>
+<div class="formula">ωc = 2πfc&nbsp;&nbsp;&nbsp;L = √2·R/ωc&nbsp;&nbsp;&nbsp;C = 1/(√2·R·ωc)<br>H(s) = 1 / [LC·s² + (L/R)·s + 1]&nbsp;&nbsp;&nbsp;Q = R·√(C/L) = 1/√2</div>
+<p>Для последовательной L и параллельной C с резистивной нагрузкой R знаменатель передаточной функции содержит затухание L/R. Условие Баттерворта Q = 1/√2 даёт коэффициенты √2 в формулах. Прежнее условие XL = Xc = R соответствовало Q = 1 и создавало подъём АЧХ, поэтому не могло честно называться точкой −3 дБ.</p>
+<p>Расчёт справедлив при малом выходном сопротивлении источника. Для динамика его импеданс зависит от частоты, а для силового фильтра нужно учитывать DCR, ESR, ток насыщения и устойчивость преобразователя.</p>
 <h2>Пример расчёта</h2>
-<p>Кроссовер для динамика 8 Ом с частотой раздела 1000 Гц. Индуктивность: 8 / (2π · 1000) = <b>1,273 мГн</b>, ёмкость: 1 / (2π · 1000 · 8) = <b>19,89 мкФ</b>. На частоте среза XL и Xc равны по 8 Ом — ровно сопротивлению динамика.</p>
+<p>Для R = 8 Ом и fc = 1000 Гц: L = √2·8/(2π·1000) = <b>1,801 мГн</b>, C = 1/(√2·2π·1000·8) = <b>14,07 мкФ</b>. Идеальная амплитуда на fc составляет −3,01 дБ.</p>
 <div class="faq"><h2>Частые вопросы</h2>
 <h3>Чем LC-фильтр лучше RC-фильтра?</h3><p>Крутизной и КПД. Фильтр первого порядка на RC даёт спад 6 дБ на октаву, LC второго порядка — 12 дБ. Кроме того, реактивные элементы не рассеивают мощность: резистор в RC-фильтре грелся бы, теряя часть полезного сигнала.</p><h3>Почему важно указывать сопротивление нагрузки?</h3><p>Потому что LC-фильтр работает на конкретный импеданс. Если реальная нагрузка отличается от расчётной, характеристика меняется: появляется подъём или провал в районе среза, а частота среза смещается. Импеданс динамика к тому же сам зависит от частоты.</p><h3>Можно ли ставить электролитический конденсатор в кроссовер?</h3><p>Обычный полярный — нет, через него идёт переменный сигнал обеих полярностей. Применяют неполярные плёночные или специальные биполярные электролитические конденсаторы для акустики.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/15-summary" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 15.2 Simple AC Circuits, 15.3 RLC Series Circuits with AC, 15.4 Power in an AC Circuit, 15.5 Resonance — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Синусоидальный установившийся режим и идеальные сосредоточенные элементы; паразитные параметры и нагрузка могут сдвинуть результат.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="rc-filtr.html">RC-фильтр: частота среза</a></li><li><a href="rezonans-lc.html">Резонансная частота LC-контура</a></li><li><a href="impedans-rlc.html">Импеданс последовательной RLC-цепи</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -230,15 +229,15 @@ function calc(){
 var fc=P('fc'),r=P('r');
 if([fc,r].some(isNaN))return err('Заполните все поля.');
 if(fc<=0||r<=0)return err('Частота и сопротивление должны быть больше нуля.');
-var w=2*Math.PI*fc,l=r/w,c=1/(w*r);
-var fchk=1/(2*Math.PI*Math.sqrt(l*c)),ro=Math.sqrt(l/c);
+var w=2*Math.PI*fc,q=1/Math.sqrt(2),l=Math.sqrt(2)*r/w,c=1/(Math.sqrt(2)*w*r);
+var fchk=1/(2*Math.PI*Math.sqrt(l*c));
 out(row('Индуктивность L',si(l,'Гн'))+
 row('Ёмкость C',si(c,'Ф'))+
 row('Реактивное XL на частоте среза',si(w*l,'Ом'))+
 row('Реактивное Xc на частоте среза',si(1/(w*c),'Ом'))+
-row('Характеристическое сопротивление',si(ro,'Ом'))+
+row('Добротность Q',fmt(q,6))+
 row('Проверка: 1/(2π√(LC))',si(fchk,'Гц'))+
-note('На частоте среза оба реактивных сопротивления равны сопротивлению нагрузки — это и есть условие согласования. Крутизна спада фильтра второго порядка составляет 12 дБ на октаву, то есть при удвоении частоты за срезом сигнал ослабляется вчетверо по напряжению.'));
+note('При идеальных элементах амплитуда на fc равна −3,01 дБ, Q = 1/√2 и АЧХ не имеет резонансного подъёма. Сопротивление источника, DCR катушки и реальный импеданс нагрузки изменяют результат.'));
 }
 
 </script>

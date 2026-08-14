@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -154,7 +154,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <tr><td>Фазное напряжение</td><td>Uл/√3</td><td>Uл</td></tr>
 <tr><td>Линейный ток</td><td>Iф</td><td>√3·Iф</td></tr>
 <tr><td>Мощность при том же Z</td><td>P</td><td>3P</td></tr></table>
-<p>Отсюда практическое следствие: переключение обмоток двигателя со звезды на треугольник увеличивает мощность втрое — на этом основан пуск «звезда-треугольник», снижающий пусковой ток.</p>
+<p>Отношение мощности 3:1 справедливо для трёх одинаковых линейных импедансов, которые не меняются между схемами. Для двигателя оно описывает только электрическую модель при фиксированном скольжении и не означает, что механическая выходная мощность при переключении всегда изменяется ровно втрое. Пуск «звезда‑треугольник» применяют только при совместимой паспортной схеме обмоток.</p>
 <h2>Пример расчёта</h2>
 <p>Три сопротивления по 10 Ом в сети 380 В, cos φ = 1. Звезда: Uф = 380/√3 = 219,4 В, ток 21,94 А, мощность <b>14,44 кВт</b>. Треугольник: Uф = 380 В, фазный ток 38 А, линейный 65,82 А, мощность <b>43,32 кВт</b> — ровно втрое больше.</p>
 <div class="faq"><h2>Частые вопросы</h2>
@@ -162,8 +162,8 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="moshchnost-toka.html">Мощность электрического тока (одно- и трёхфазная сеть)</a></li><li><a href="tok-elektrodvigatelya.html">Ток электродвигателя по мощности</a></li><li><a href="kva-kvt.html">Перевод кВА в кВт и обратно</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Power_and_reactive_energy" rel="nofollow noopener" target="_blank">Electrical Installation Guide</a> — Schneider Electric — Редакция онлайн-редакция, актуальная на дату обращения — раздел Power and reactive energy, three-phase circuits, motor current — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Три одинаковых линейных импеданса в симметричном синусоидальном режиме; электрическое отношение мощности 3:1 не является моделью механической мощности или разгона двигателя.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="moshchnost-toka.html">Мощность электрического тока (одно- и трёхфазная сеть)</a></li><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li><li><a href="kva-kvt.html">Перевод кВА в кВт и обратно</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -242,7 +242,7 @@ var sfull=3*uph*iph,p=sfull*c,q=sfull*Math.sin(Math.acos(c));
 out(row('Фазное напряжение Uф',fmt(uph,5)+' В')+row('Линейное напряжение Uл',fmt(ul,5)+' В')+
 row('Фазный ток Iф',fmt(iph,5)+' А')+row('Линейный ток Iл',fmt(il,5)+' А')+
 row('Полная мощность S',si(sfull,'В·А'))+row('Активная мощность P',si(p,'Вт'))+row('Реактивная мощность Q',si(q,'вар'))+
-note(star?'В звезде фазное напряжение меньше линейного в √3 раз, а фазный ток равен линейному.':'В треугольнике фазное напряжение равно линейному, а линейный ток больше фазного в √3 раз. Те же сопротивления в треугольнике дают втрое большую мощность, чем в звезде.'));
+note(star?'В звезде фазное напряжение меньше линейного в √3 раз, а фазный ток равен линейному.':'Для трёх одинаковых неизменных импедансов в треугольнике фазное напряжение равно линейному, линейный ток больше фазного в √3 раз, а мощность втрое выше, чем в звезде. Это не модель разгона двигателя.'));
 }
 
 </script>

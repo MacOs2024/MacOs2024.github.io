@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Расчётная нагрузка с коэффициентом спроса — ВольтКальк</title>
-<meta name="description" content="Расчёт нагрузки ввода по установленной мощности и коэффициенту спроса, определение тока и подбор вводного автомата для одно- и трёхфазной сети.">
+<meta name="description" content="Расчёт нагрузки ввода по установленной мощности и заданному коэффициенту спроса для одно- и трёхфазной сети.">
 <link rel="canonical" href="https://macos2024.github.io/nagruzka-kvartiry.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Расчётная нагрузка с коэффициентом спроса — ВольтКальк">
-<meta property="og:description" content="Расчёт нагрузки ввода по установленной мощности и коэффициенту спроса, определение тока и подбор вводного автомата для одно- и трёхфазной сети.">
+<meta property="og:description" content="Расчёт нагрузки ввода по установленной мощности и заданному коэффициенту спроса для одно- и трёхфазной сети.">
 <meta property="og:url" content="https://macos2024.github.io/nagruzka-kvartiry.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Расчётная нагрузка с коэффициентом спроса","url":"https://macos2024.github.io/nagruzka-kvartiry.html","description":"Расчёт нагрузки ввода по установленной мощности и коэффициенту спроса, определение тока и подбор вводного автомата для одно- и трёхфазной сети.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Расчётная нагрузка с коэффициентом спроса","item":"https://macos2024.github.io/nagruzka-kvartiry.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя ставить автомат на полную установленную мощность?","acceptedAnswer":{"@type":"Answer","text":"Он окажется завышенным и перестанет защищать кабель: при устойчивой перегрузке на 20–30% проводка будет греться, а автомат не отключится. Защита должна соответствовать реальной расчётной нагрузке и сечению кабеля, а не сумме шильдиков."}},{"@type":"Question","name":"Что если выделенной мощности не хватает?","acceptedAnswer":{"@type":"Answer","text":"Номинал вводного автомата ограничен договором с энергоснабжающей организацией — самовольно поднять его нельзя. Легальный путь — увеличение выделенной мощности, а практический — разнести мощные потребители по времени."}},{"@type":"Question","name":"Как считать при трёхфазном вводе?","acceptedAnswer":{"@type":"Answer","text":"Мощность делится на три фазы, поэтому ток на фазу заметно меньше. Но выигрыш реализуется только при равномерном распределении групп: перекос сводит преимущество на нет."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Расчётная нагрузка с коэффициентом спроса","url":"https://macos2024.github.io/nagruzka-kvartiry.html","description":"Расчёт нагрузки ввода по установленной мощности и заданному коэффициенту спроса для одно- и трёхфазной сети.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Расчётная нагрузка с коэффициентом спроса","item":"https://macos2024.github.io/nagruzka-kvartiry.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему калькулятор больше не выбирает автомат?","acceptedAnswer":{"@type":"Answer","text":"Один расчётный ток недостаточен: защита должна быть согласована с допустимым током кабеля, током КЗ, пуском нагрузки, отключающей способностью и селективностью."}},{"@type":"Question","name":"Что если выделенной мощности не хватает?","acceptedAnswer":{"@type":"Answer","text":"Номинал вводного автомата ограничен договором с энергоснабжающей организацией — самовольно поднять его нельзя. Легальный путь — увеличение выделенной мощности, а практический — разнести мощные потребители по времени."}},{"@type":"Question","name":"Как считать при трёхфазном вводе?","acceptedAnswer":{"@type":"Answer","text":"Мощность делится на три фазы, поэтому ток на фазу заметно меньше. Но выигрыш реализуется только при равномерном распределении групп: перекос сводит преимущество на нет."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -139,7 +139,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Расчётная нагрузка с коэффициентом спроса</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_p"><label for="p">Установленная мощность всех приборов</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="15" placeholder=""><span class="u">кВт</span></div></div><div class="f" id="f_kc"><label for="kc">Коэффициент спроса Kс</label><div class="fw"><input id="kc" type="text" inputmode="decimal" autocomplete="off" value="0,5" placeholder=""></div><div class="hint">Квартира до 5 кВт — 0,8; 5–15 кВт — 0,5–0,6; дом свыше 20 кВт — 0,4–0,5</div></div><div class="f" id="f_u"><label for="u">Напряжение сети</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_cos"><label for="cos">Коэффициент мощности cos φ</label><div class="fw"><input id="cos" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div><div class="hint">Для бытовой нагрузки принимают 0,95–1</div></div><div class="f" id="f_faza"><label for="faza">Ввод</label><div class="fw"><select id="faza"><option value="1" selected>Однофазный (220 В)</option><option value="3">Трёхфазный (380 В)</option></select></div></div>
+<div class="f" id="f_p"><label for="p">Установленная мощность всех приборов</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="15" placeholder=""><span class="u">кВт</span></div></div><div class="f" id="f_kc"><label for="kc">Коэффициент спроса Kс</label><div class="fw"><input id="kc" type="text" inputmode="decimal" autocomplete="off" value="0,5" placeholder=""></div><div class="hint">Введите из применимой строки действующего СП или проекта; калькулятор его не угадывает</div></div><div class="f" id="f_u"><label for="u">Напряжение сети</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_cos"><label for="cos">Коэффициент мощности cos φ</label><div class="fw"><input id="cos" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div><div class="hint">Для бытовой нагрузки принимают 0,95–1</div></div><div class="f" id="f_faza"><label for="faza">Ввод</label><div class="fw"><select id="faza"><option value="1" selected>Однофазный (220 В)</option><option value="3">Трёхфазный (380 В)</option></select></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -150,20 +150,16 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h2>Как считается</h2>
 <div class="formula">Pрасч = Pуст · Kс&nbsp;&nbsp;&nbsp;I = Pрасч / (U · cos φ)&nbsp;&nbsp;&nbsp;Iтрёхфазн = Pрасч / (√3 · U · cos φ)</div>
 <p>Если сложить мощности всех розеток, светильников и техники в квартире, получится внушительная цифра — но одновременно всё это не включается никогда. Коэффициент спроса Kс отражает статистику реального одновременного использования.</p>
-<table class="t"><tr><th>Объект</th><th>Установленная мощность</th><th>Kс</th></tr>
-<tr><td>Квартира без электроплиты</td><td>до 5 кВт</td><td>0,8</td></tr>
-<tr><td>Квартира с электроплитой</td><td>5–15 кВт</td><td>0,5–0,6</td></tr>
-<tr><td>Частный дом</td><td>свыше 20 кВт</td><td>0,4–0,5</td></tr></table>
-<p>Закономерность общая: чем больше приборов, тем ниже коэффициент — вероятность их одновременной работы падает. Нормативная база — СП 256.1325800.2016 и СП 31-110-2003.</p>
+<p>Значение Kс нельзя выбирать только по сумме киловатт: в СП оно зависит от назначения здания, состава электроприёмников, числа квартир и других условий. Поэтому калькулятор принимает уже обоснованный коэффициент и не подставляет универсальную таблицу.</p>
 <h2>Пример расчёта</h2>
-<p>Суммарная мощность техники в квартире — 15 кВт, коэффициент спроса 0,5. Расчётная мощность: 15 · 0,5 = <b>7,5 кВт</b>, ток при 220 В — <b>34,09 А</b>. Вводной автомат — <b>40 А</b>, вводной кабель под этот ток — медь 10 мм².</p>
+<p>Установленная мощность — 15 кВт, применимый проектный Kс = 0,5. Расчётная мощность: 7,5 кВт, ток при 220 В и cos φ = 1 — <b>34,09 А</b>. Этого недостаточно для автоматического выбора автомата: ещё нужны параметры кабеля и петли КЗ.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Почему нельзя ставить автомат на полную установленную мощность?</h3><p>Он окажется завышенным и перестанет защищать кабель: при устойчивой перегрузке на 20–30% проводка будет греться, а автомат не отключится. Защита должна соответствовать реальной расчётной нагрузке и сечению кабеля, а не сумме шильдиков.</p><h3>Что если выделенной мощности не хватает?</h3><p>Номинал вводного автомата ограничен договором с энергоснабжающей организацией — самовольно поднять его нельзя. Легальный путь — увеличение выделенной мощности, а практический — разнести мощные потребители по времени.</p><h3>Как считать при трёхфазном вводе?</h3><p>Мощность делится на три фазы, поэтому ток на фазу заметно меньше. Но выигрыш реализуется только при равномерном распределении групп: перекос сводит преимущество на нет.</p>
+<h3>Почему калькулятор больше не выбирает автомат?</h3><p>Один расчётный ток недостаточен: защита должна быть согласована с допустимым током кабеля, током КЗ, пуском нагрузки, отключающей способностью и селективностью.</p><h3>Что если выделенной мощности не хватает?</h3><p>Номинал вводного автомата ограничен договором с энергоснабжающей организацией — самовольно поднять его нельзя. Легальный путь — увеличение выделенной мощности, а практический — разнести мощные потребители по времени.</p><h3>Как считать при трёхфазном вводе?</h3><p>Мощность делится на три фазы, поэтому ток на фазу заметно меньше. Но выигрыш реализуется только при равномерном распределении групп: перекос сводит преимущество на нет.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Выбор автоматического выключателя по мощности</a></li><li><a href="sechenie-kabelya.html">Сечение кабеля по мощности и току</a></li><li><a href="tok-po-moshchnosti.html">Расчёт тока по мощности (220 В и 380 В)</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Power_and_reactive_energy" rel="nofollow noopener" target="_blank">Electrical Installation Guide</a> — Schneider Electric — Редакция онлайн-редакция, актуальная на дату обращения — раздел Power and reactive energy, three-phase circuits, motor current — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Коэффициенты теплопотерь/спроса вводятся пользователем и не заменяют расчёт ограждений или ведомость нагрузок.</li><li>Автомат и кабель по одной мощности не выбираются: нужны допустимый ток линии, ток КЗ, способ прокладки и условия защиты.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li><li><a href="sechenie-kabelya.html">Предварительный выбор сечения провода по току</a></li><li><a href="tok-po-moshchnosti.html">Расчёт тока по мощности (220 В и 380 В)</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -237,13 +233,11 @@ if(kc<=0||kc>1)return err('Коэффициент спроса задаётся 
 if(c<=0||c>1)return err('cos φ должен быть в диапазоне от 0 до 1.');
 var pc=p*kc,tri=S('faza')==='3';
 var i=tri?pc*1000/(Math.sqrt(3)*u*c):pc*1000/(u*c);
-var ryad=[6,10,16,20,25,32,40,50,63,80,100,125,160];
-var av=0;for(var j=0;j<ryad.length;j++){if(ryad[j]>=i){av=ryad[j];break;}}
 out(row('Установленная мощность',fmt(p,5)+' кВт')+
 row('Расчётная мощность',fmt(pc,5)+' кВт')+
 row('Расчётный ток',fmt(i,5)+' А')+
-row('Вводной автомат',av?av+' А':'свыше 160 А — нужен индивидуальный расчёт')+
-note(tri?'Трёхфазный ввод: ток указан на фазу при равномерном распределении нагрузки. Перекос фаз увеличит ток самой загруженной фазы — распределяйте группы равномерно.':'Однофазный ввод. Сечение вводного кабеля подбирайте по расчётному току, а не по номиналу автомата.'));
+row('Статус выбора защиты','Недостаточно данных')+
+note((tri?'Ток указан на фазу только при равномерном распределении нагрузки. ':'')+'Для выбора автомата дополнительно нужны допустимый ток кабеля, ток КЗ, пусковые токи, договорная мощность и условия селективности.'));
 }
 
 </script>

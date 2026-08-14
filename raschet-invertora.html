@@ -18,7 +18,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Подбор инвертора и кабеля от аккумулятора","url":"https://macos2024.github.io/raschet-invertora.html","description":"Подбор мощности инвертора по нагрузке с учётом пусковых токов, расчёт тока по стороне аккумулятора и сечения силового кабеля АКБ-инвертор.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Подбор инвертора и кабеля от аккумулятора","item":"https://macos2024.github.io/raschet-invertora.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя взять инвертор ровно по мощности нагрузки?","acceptedAnswer":{"@type":"Answer","text":"Из-за реактивной составляющей и пусковых токов. Инвертор ограничен по полной мощности в вольт-амперах, а не по активной, и любой двигатель в момент пуска мгновенно превышает номинал в несколько раз."}},{"@type":"Question","name":"Чем чистый синус лучше модифицированного?","acceptedAnswer":{"@type":"Answer","text":"Модифицированный синус — ступенчатая аппроксимация, и часть техники с ней работает плохо: двигатели греются и гудят, импульсные блоки питания и зарядные устройства могут отказать, аудиотехника фонит. Для холодильника, насоса и компьютера нужен чистый синус."}},{"@type":"Question","name":"Обязателен ли предохранитель между батареей и инвертором?","acceptedAnswer":{"@type":"Answer","text":"Обязателен, и ставить его нужно вплотную к батарее. Аккумулятор при коротком замыкании отдаёт тысячи ампер, и кабель без защиты вспыхнет за секунды. Номинал берут примерно в 1,25 раза выше максимального рабочего тока."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Подбор инвертора и кабеля от аккумулятора","url":"https://macos2024.github.io/raschet-invertora.html","description":"Подбор мощности инвертора по нагрузке с учётом пусковых токов, расчёт тока по стороне аккумулятора и сечения силового кабеля АКБ-инвертор.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Подбор инвертора и кабеля от аккумулятора","item":"https://macos2024.github.io/raschet-invertora.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя взять инвертор ровно по мощности нагрузки?","acceptedAnswer":{"@type":"Answer","text":"Из-за реактивной составляющей и пусковых токов. Инвертор ограничен по полной мощности в вольт-амперах, а не по активной, и любой двигатель в момент пуска мгновенно превышает номинал в несколько раз."}},{"@type":"Question","name":"Чем чистый синус лучше модифицированного?","acceptedAnswer":{"@type":"Answer","text":"Модифицированный синус — ступенчатая аппроксимация, и часть техники с ней работает плохо: двигатели греются и гудят, импульсные блоки питания и зарядные устройства могут отказать, аудиотехника фонит. Для холодильника, насоса и компьютера нужен чистый синус."}},{"@type":"Question","name":"Как выбрать предохранитель между батареей и инвертором?","acceptedAnswer":{"@type":"Answer","text":"Его размещение, тип, номинал и отключающую способность выбирают по паспорту инвертора и батареи, допустимому току кабеля и расчётному току КЗ. Универсального множителя от рабочего тока для всех систем нет."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -139,7 +139,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Подбор инвертора и кабеля от аккумулятора</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_p"><label for="p">Мощность нагрузки</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="2000" placeholder=""><span class="u">Вт</span></div></div><div class="f" id="f_cos"><label for="cos">Коэффициент мощности cos φ</label><div class="fw"><input id="cos" type="text" inputmode="decimal" autocomplete="off" value="0,8" placeholder=""></div><div class="hint">Резистивная нагрузка 1; холодильники и насосы 0,6–0,8</div></div><div class="f" id="f_zap"><label for="zap">Запас на пусковые токи</label><div class="fw"><input id="zap" type="text" inputmode="decimal" autocomplete="off" value="1,3" placeholder=""></div><div class="hint">Только электроника 1,2; есть двигатели 1,5–3</div></div><div class="f" id="f_ub"><label for="ub">Напряжение аккумуляторной батареи</label><div class="fw"><input id="ub" type="text" inputmode="decimal" autocomplete="off" value="24" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_eff"><label for="eff">КПД инвертора</label><div class="fw"><input id="eff" type="text" inputmode="decimal" autocomplete="off" value="90" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_l"><label for="l">Длина кабеля АКБ-инвертор</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">м</span></div></div>
+<div class="f" id="f_p"><label for="p">Мощность нагрузки</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="2000" placeholder=""><span class="u">Вт</span></div></div><div class="f" id="f_cos"><label for="cos">Коэффициент мощности cos φ</label><div class="fw"><input id="cos" type="text" inputmode="decimal" autocomplete="off" value="0,8" placeholder=""></div><div class="hint">Резистивная нагрузка 1; холодильники и насосы 0,6–0,8</div></div><div class="f" id="f_zap"><label for="zap">Запас на пусковые токи</label><div class="fw"><input id="zap" type="text" inputmode="decimal" autocomplete="off" value="1,3" placeholder=""></div><div class="hint">Введите по паспортной пусковой мощности нагрузки и перегрузочной кривой инвертора</div></div><div class="f" id="f_ub"><label for="ub">Напряжение аккумуляторной батареи</label><div class="fw"><input id="ub" type="text" inputmode="decimal" autocomplete="off" value="24" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_eff"><label for="eff">КПД инвертора</label><div class="fw"><input id="eff" type="text" inputmode="decimal" autocomplete="off" value="90" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_l"><label for="l">Длина кабеля АКБ-инвертор в одну сторону</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_drop"><label for="drop">Допустимое падение в кабеле</label><div class="fw"><input id="drop" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">%</span></div><div class="hint">Проектный предел; задайте по паспорту инвертора и батареи</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -150,17 +150,17 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h2>Как считается</h2>
 <div class="formula">S = P / cos φ&nbsp;&nbsp;&nbsp;Sинв = S · запас<br>Iбат = P / (КПД · Uбат)&nbsp;&nbsp;&nbsp;Sкабеля = 2 · ρ · L · Iбат / ΔU</div>
 <p>Инвертор подбирают по <b>полной</b> мощности в вольт-амперах, а не по активной в ваттах. Нагрузка с cos φ = 0,8 при 2000 Вт активной мощности требует от инвертора 2500 В·А — на 25% больше.</p>
-<p>Запас на пусковые токи зависит от характера нагрузки. Электроника и освещение стартуют почти без броска, и хватает 1,2. Холодильник, насос или компрессор в момент пуска берут в 3–7 раз больше номинала, и инвертор без соответствующего запаса уйдёт в защиту. Многие модели допускают кратковременную перегрузку вдвое — это стоит уточнить в паспорте.</p>
+<p>Запас на пуск задаёт пользователь по паспортной пусковой мощности и длительности переходного процесса конкретной нагрузки. Допустимую кратковременную перегрузку инвертора сверяют с его паспортной кривой; универсальный множитель калькулятор не выбирает.</p>
 <p>Но главное в автономной системе — <b>ток со стороны батареи</b>. Нагрузка 2000 Вт на выходе 220 В берёт около 9 А, а от батареи 24 В тот же инвертор потребляет уже за 90 А. При батарее 12 В ток удваивается до 185 А. Кабель на такие токи должен быть коротким и очень толстым, иначе потери и нагрев станут неприемлемыми.</p>
-<p>Расчёт сечения ведётся по допустимому падению 2% — критерий здесь жёстче, чем нагрев: при низком напряжении даже небольшая потеря вольт означает заметную долю от питания.</p>
+<p>Допустимое падение вводится как проектный предел: при низком напряжении даже небольшая потеря вольт означает заметную долю питания. После округления сечения вверх калькулятор отдельно показывает фактическое, меньшее падение.</p>
 <h2>Пример расчёта</h2>
-<p>Нагрузка 2000 Вт с cos φ = 0,8, батарея 24 В, КПД инвертора 90%, кабель 2 м. Полная мощность — <b>2,5 кВ·А</b>, инвертор с запасом 1,3 — <b>3,25 кВ·А</b>. Ток от батареи: 2000 / (0,9 · 24) = <b>92,593 А</b>. При допустимом падении 0,48 В сечение кабеля составит 13,5 мм², принимаем <b>16 мм²</b>. Потери в кабеле — около 44,44 Вт.</p>
+<p>Нагрузка 2000 Вт с cos φ = 0,8, батарея 24 В, КПД инвертора 90%, кабель 2 м и предел 2%. Полная мощность — <b>2,5 кВ·А</b>, ток батареи — <b>92,593 А</b>. Расчётное сечение 13,5 мм², принимаем <b>16 мм²</b>; фактическое падение около 0,405 В (1,69%).</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Почему нельзя взять инвертор ровно по мощности нагрузки?</h3><p>Из-за реактивной составляющей и пусковых токов. Инвертор ограничен по полной мощности в вольт-амперах, а не по активной, и любой двигатель в момент пуска мгновенно превышает номинал в несколько раз.</p><h3>Чем чистый синус лучше модифицированного?</h3><p>Модифицированный синус — ступенчатая аппроксимация, и часть техники с ней работает плохо: двигатели греются и гудят, импульсные блоки питания и зарядные устройства могут отказать, аудиотехника фонит. Для холодильника, насоса и компьютера нужен чистый синус.</p><h3>Обязателен ли предохранитель между батареей и инвертором?</h3><p>Обязателен, и ставить его нужно вплотную к батарее. Аккумулятор при коротком замыкании отдаёт тысячи ампер, и кабель без защиты вспыхнет за секунды. Номинал берут примерно в 1,25 раза выше максимального рабочего тока.</p>
+<h3>Почему нельзя взять инвертор ровно по мощности нагрузки?</h3><p>Из-за реактивной составляющей и пусковых токов. Инвертор ограничен по полной мощности в вольт-амперах, а не по активной, и любой двигатель в момент пуска мгновенно превышает номинал в несколько раз.</p><h3>Чем чистый синус лучше модифицированного?</h3><p>Модифицированный синус — ступенчатая аппроксимация, и часть техники с ней работает плохо: двигатели греются и гудят, импульсные блоки питания и зарядные устройства могут отказать, аудиотехника фонит. Для холодильника, насоса и компьютера нужен чистый синус.</p><h3>Как выбрать предохранитель между батареей и инвертором?</h3><p>Его размещение, тип, номинал и отключающую способность выбирают по паспорту инвертора и батареи, допустимому току кабеля и расчётному току КЗ. Универсального множителя от рабочего тока для всех систем нет.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.victronenergy.com/upload/documents/The_Wiring_Unlimited_book/43562-Wiring_Unlimited-pdf-en.pdf" rel="nofollow noopener" target="_blank">Wiring Unlimited</a> — Victron Energy — Редакция rev. 08, 2024 — раздел DC wiring, voltage drop, battery banks, fusing — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Результат не проверяет паспортный ток батареи, BMS, предохранитель, допустимый нагрев кабеля, качество соединений и старение.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-akb-avtonomnoy.html">Ёмкость аккумуляторов для автономной системы</a></li><li><a href="sechenie-po-dline-12v.html">Сечение провода для 12, 24 и 48 В</a></li><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -228,25 +228,27 @@ if(typeof init==='function')init();
 
 
 function calc(){
-var p=P('p'),c=P('cos'),z=P('zap'),ub=P('ub'),eff=P('eff'),l=P('l');
-if([p,c,z,ub,eff,l].some(isNaN))return err('Заполните все поля.');
+var p=P('p'),c=P('cos'),z=P('zap'),ub=P('ub'),eff=P('eff'),l=P('l'),drop=P('drop');
+if([p,c,z,ub,eff,l,drop].some(isNaN))return err('Заполните все поля.');
 if(p<=0||ub<=0||l<=0)return err('Мощность, напряжение и длина должны быть больше нуля.');
 if(c<=0||c>1)return err('cos φ должен быть в диапазоне от 0 до 1.');
 if(z<1)return err('Запас не может быть меньше единицы.');
 if(eff<=0||eff>100)return err('КПД задаётся в процентах от 0 до 100.');
+if(drop<=0||drop>=100)return err('Допустимое падение задаётся в процентах от 0 до 100.');
 var e=eff/100,s=p/c,sinv=s*z,idc=p/(e*ub);
-var du=ub*0.02,sec=2*0.0175*l*idc/du;
+var du=ub*drop/100,sec=2*0.0175*l*idc/du;
 var ryad=[4,6,10,16,25,35,50,70,95,120,150,185,240];
 var st=0;for(var j=0;j<ryad.length;j++){if(ryad[j]>=sec){st=ryad[j];break;}}
-var pred=0.02*ub*idc;
+var used=st||sec,duReal=2*0.0175*l*idc/used,pred=duReal*idc;
 out(row('Полная мощность нагрузки',si(s,'В·А'))+
 row('Инвертор с запасом ×'+fmt(z,3),si(sinv,'В·А'))+
 row('Ток по стороне аккумулятора',fmt(idc,5)+' А')+
-row('Расчётное сечение кабеля',fmt(sec,4)+' мм²')+
-row('Принять сечение',st?fmt(st,4)+' мм²':'свыше 240 мм² — поднимите напряжение батареи')+
-row('Допустимое падение (2%)',fmt(du,4)+' В')+
-row('Потери в кабеле',si(pred,'Вт'))+
-note('Ток по стороне батареи в '+fmt(idc/(p/220),3)+' раз больше, чем на выходе 220 В — именно поэтому кабель до инвертора делают коротким и толстым, а сам инвертор ставят вплотную к аккумуляторам. Не забудьте предохранитель на плюсовом проводе рядом с батареей: при коротком замыкании она отдаст тысячи ампер.'));
+row('Минимум только по падению напряжения',fmt(sec,4)+' мм²')+
+row('Следующее сечение для проверки',st?fmt(st,4)+' мм²':'свыше 240 мм² — поднимите напряжение батареи')+
+row('Допустимое падение ('+fmt(drop,4)+'%)',fmt(du,4)+' В')+
+row('Фактическое падение с принятым сечением',fmt(duReal,4)+' В ('+fmt(100*duReal/ub,4)+' %)')+
+row('Фактические потери в кабеле',si(pred,'Вт'))+
+note('Это сечение проверено только по падению напряжения. Отдельно обязательны допустимый ток и нагрев по способу прокладки, температура, клеммы, паспорт инвертора и предохранитель у батареи.'));
 }
 
 </script>

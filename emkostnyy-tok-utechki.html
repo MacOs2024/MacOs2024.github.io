@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ток утечки сети и выбор УЗО — ВольтКальк</title>
+<title>Оценка тока утечки по ПУЭ 7.1.83 — ВольтКальк</title>
 <meta name="description" content="Расчёт суммарного тока утечки электроустановки по ПУЭ 7.1.83 и проверка, не приведёт ли он к ложным срабатываниям выбранного УЗО.">
 <link rel="canonical" href="https://macos2024.github.io/emkostnyy-tok-utechki.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Ток утечки сети и выбор УЗО — ВольтКальк">
+<meta property="og:title" content="Оценка тока утечки по ПУЭ 7.1.83 — ВольтКальк">
 <meta property="og:description" content="Расчёт суммарного тока утечки электроустановки по ПУЭ 7.1.83 и проверка, не приведёт ли он к ложным срабатываниям выбранного УЗО.">
 <meta property="og:url" content="https://macos2024.github.io/emkostnyy-tok-utechki.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
@@ -18,7 +18,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Ток утечки сети и выбор УЗО","url":"https://macos2024.github.io/emkostnyy-tok-utechki.html","description":"Расчёт суммарного тока утечки электроустановки по ПУЭ 7.1.83 и проверка, не приведёт ли он к ложным срабатываниям выбранного УЗО.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Ток утечки сети и выбор УЗО","item":"https://macos2024.github.io/emkostnyy-tok-utechki.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"УЗО выбивает без видимой причины — это оно неисправно?","acceptedAnswer":{"@type":"Answer","text":"Чаще нет. Первая версия — накопленная естественная утечка: слишком длинная линия или слишком много техники на одном УЗО. Посчитайте по этой формуле; если результат близок к трети номинала, проблема в схеме, а не в приборе."}},{"@type":"Question","name":"Почему нельзя просто поставить УЗО на 100 мА вместо 30 мА?","acceptedAnswer":{"@type":"Answer","text":"Потому что 30 мА — порог защиты человека. Ток 100 мА через тело уже смертельно опасен, поэтому УЗО с такой уставкой считается только противопожарным и не защищает от поражения. Правильное решение — разделить нагрузку на группы."}},{"@type":"Question","name":"Какая техника даёт повышенную утечку?","acceptedAnswer":{"@type":"Answer","text":"Всё с импульсными блоками питания и ЭМС-фильтрами: компьютеры, серверы, светодиодные драйверы, частотные преобразователи, индукционные плиты. У каждого утечка может достигать 1–3,5 мА, и десяток таких приборов на одном УЗО гарантированно приведёт к отключениям."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Оценка тока утечки по ПУЭ 7.1.83","url":"https://macos2024.github.io/emkostnyy-tok-utechki.html","description":"Расчёт суммарного тока утечки электроустановки по ПУЭ 7.1.83 и проверка, не приведёт ли он к ложным срабатываниям выбранного УЗО.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Оценка тока утечки по ПУЭ 7.1.83","item":"https://macos2024.github.io/emkostnyy-tok-utechki.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"УЗО выбивает без видимой причины — это оно неисправно?","acceptedAnswer":{"@type":"Answer","text":"Чаще нет. Первая версия — накопленная естественная утечка: слишком длинная линия или слишком много техники на одном УЗО. Посчитайте по этой формуле; если результат близок к трети номинала, проблема в схеме, а не в приборе."}},{"@type":"Question","name":"Почему нельзя просто поставить УЗО на 100 мА вместо 30 мА?","acceptedAnswer":{"@type":"Answer","text":"Потому что 30 мА — порог защиты человека. Ток 100 мА через тело уже смертельно опасен, поэтому УЗО с такой уставкой считается только противопожарным и не защищает от поражения. Правильное решение — разделить нагрузку на группы."}},{"@type":"Question","name":"Какая техника даёт повышенную утечку?","acceptedAnswer":{"@type":"Answer","text":"Всё с импульсными блоками питания и ЭМС-фильтрами: компьютеры, серверы, светодиодные драйверы, частотные преобразователи, индукционные плиты. У каждого утечка может достигать 1–3,5 мА, и десяток таких приборов на одном УЗО гарантированно приведёт к отключениям."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -134,10 +134,10 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
-<h1>Ток утечки сети и выбор УЗО</h1>
-<p class="intro">Даже исправная сеть имеет естественную утечку. ПУЭ требует, чтобы она не превышала <b>трети</b> номинального тока УЗО.</p>
+<h1>Оценка тока утечки по ПУЭ 7.1.83</h1>
+<p class="intro">Если паспортных или измеренных данных нет, ПУЭ 7.1.83 разрешает оценить ток утечки по току нагрузки и суммарной длине фазных проводников.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Ток утечки сети и выбор УЗО</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Оценка тока утечки по ПУЭ 7.1.83</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
 <div class="f" id="f_i"><label for="i">Ток нагрузки линии</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="25" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_l"><label for="l">Длина фазного проводника</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="80" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_uzo"><label for="uzo">Номинал УЗО по току утечки</label><div class="fw"><select id="uzo"><option value="10">10 мА (ванные, влажные зоны)</option><option value="30" selected>30 мА (защита людей, розетки)</option><option value="100">100 мА (противопожарное)</option><option value="300">300 мА (вводное противопожарное)</option></select></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
@@ -150,7 +150,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h2>Как считается</h2>
 <div class="formula">Iутечки = 0,4 мА · Iнагрузки + 10 мкА · Lфазного&nbsp;&nbsp;&nbsp;Условие: Iутечки ≤ Iуставки / 3</div>
 <p>ПУЭ 7.1.83 задаёт эту оценку прямо: при отсутствии паспортных данных ток утечки электроприёмников принимают из расчёта 0,4 мА на 1 А тока нагрузки, а ток утечки сети — 10 мкА на 1 метр длины фазного проводника. Суммарная утечка не должна превосходить трети номинального отключающего тока УЗО.</p>
-<p>Естественная утечка существует всегда: изоляция не идеальный диэлектрик, а между жилой и землёй есть распределённая ёмкость. Чем длиннее линия и мощнее нагрузка, тем больше суммарный ток.</p>
+<p>Это нормативная оценка на случай отсутствия данных, а не физическая модель конкретной установки. Современная электроника, ЭМС-фильтры и преобразователи могут иметь другую величину и форму остаточного тока.</p>
 <p>Треть номинала — не перестраховка. УЗО гарантированно срабатывает при номинальном токе утечки, но <b>может</b> сработать уже при половине от него: ГОСТ допускает разброс порога в диапазоне от 50% до 100% уставки. Если естественная утечка подобралась к половине номинала, отключения станут случайными.</p>
 <table class="t"><tr><th>Уставка УЗО</th><th>Предел утечки</th><th>Назначение</th></tr>
 <tr><td>10 мА</td><td>3,3 мА</td><td>Ванные, влажные зоны</td></tr>
@@ -164,8 +164,8 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-uzo.html">Выбор УЗО: номинал и ток утечки</a></li><li><a href="tok-korotkogo-zamykaniya.html">Минимальный ток КЗ по конвенциональному методу</a></li><li><a href="nagruzka-kvartiry.html">Расчётная нагрузка с коэффициентом спроса</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://docs.cntd.ru/document/1200001642" rel="nofollow noopener" target="_blank">ПУЭ. Глава 7.1. Электроустановки жилых, общественных, административных и бытовых зданий</a> — Минэнерго России / нормативная база Техэксперт — Редакция 7-е издание — раздел 7.1.83, 7.1.84, 7.1.85 — обращение 11.08.2026</li></ul><p><b>Допущения:</b></p><ul><li>Формула применяется только при отсутствии паспортных или измеренных токов утечки.</li><li>L — суммарная длина всех фазных проводников за данным УЗО, а не геометрическая длина трассы одной фазы.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не учитывает форму остаточного тока и требования к типу AC/A/F/B.</li><li>Не гарантирует отсутствие ложных срабатываний; фактический ток проверяется измерением.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="tok-korotkogo-zamykaniya.html">Минимальный ток КЗ по конвенциональному методу</a></li><li><a href="nagruzka-kvartiry.html">Расчётная нагрузка с коэффициентом спроса</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -237,13 +237,14 @@ if([i,l].some(isNaN))return err('Заполните ток нагрузки и �
 if(i<0||l<0)return err('Ток и длина не могут быть отрицательными.');
 var ipr=0.4*i,iset=0.01*l,itot=ipr+iset,lim=uzo/3,zap=100*itot/lim;
 var ok=itot<=lim;
-var n=ok?'Запас достаточен: естественная утечка не должна вызывать ложных срабатываний. Помните, что импульсные блоки питания, частотники и длинные линии с ЭМС-фильтрами добавляют утечку сверх расчётной.':'Расчётная утечка превышает треть номинала УЗО — вероятны ложные срабатывания. Решения: разделить линию на несколько групп со своими УЗО, укоротить линию или, для противопожарной защиты на вводе, взять УЗО большего номинала. Поднимать номинал УЗО, защищающего людей, выше 30 мА нельзя.';
+var n=ok?'Оценка удовлетворяет условию пункта 7.1.83. Это не гарантирует отсутствие срабатываний: фактические утечки и форма тока определяются измерением и данными оборудования.':'Оценка превышает треть IΔn по пункту 7.1.83. Следует получить реальные данные и пересмотреть распределение цепей; нельзя повышать IΔn, если УЗО требуется для дополнительной защиты людей.';
 out(row('Утечка электроприёмников (0,4 мА/А)',fmt(ipr,5)+' мА')+
 row('Утечка сети (10 мкА/м)',fmt(iset,5)+' мА')+
 row('Суммарный ток утечки',fmt(itot,5)+' мА')+
 row('Предел по ПУЭ (⅓ от '+uzo+' мА)',fmt(lim,4)+' мА')+
 row('Использовано от предела',fmt(zap,4)+' %')+
-row('Вердикт',ok?'Проходит':'Превышение — вероятны ложные срабатывания')+
+row('Условие ПУЭ 7.1.83',ok?'Выполняется по оценке':'Не выполняется по оценке')+
+row('Статус','Оценка при отсутствии фактических данных')+
 note(n));
 }
 

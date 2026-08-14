@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -135,7 +135,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Основы электротехники</nav>
 <h1>Децибелы: усиление и ослабление</h1>
-<p class="intro">Выберите, по какой величине считать: для мощности множитель 10, для напряжения и тока — 20.</p>
+<p class="intro">Для мощности используют 10·lg. Для напряжения или тока 20·lg допустимо, когда мощность пропорциональна квадрату сравниваемой величины — в частности, при одинаковом импедансе.</p>
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Децибелы: усиление и ослабление</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
@@ -149,7 +149,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="article">
 <h2>Как считается</h2>
 <div class="formula">По мощности: L = 10 · lg(P₂ / P₁)<br>По напряжению или току: L = 20 · lg(U₂ / U₁)<br>Обратно: отношение = 10^(L / 10) или 10^(L / 20)</div>
-<p>Децибел — логарифмическая мера отношения, а не абсолютная величина. Множитель 20 для напряжения появляется потому, что мощность пропорциональна квадрату напряжения, а логарифм квадрата даёт двойку перед логарифмом.</p>
+<p>Децибел — логарифмическая мера отношения, а не абсолютная величина. Множитель 20 для напряжения или тока появляется из квадратной зависимости мощности. Поэтому он применим при одинаковом импедансе либо в другой системе, где мощность пропорциональна квадрату сравниваемой амплитуды. При разных импедансах сначала находят мощности и используют 10·lg(P₂/P₁).</p>
 <table class="t"><tr><th>дБ</th><th>По мощности</th><th>По напряжению</th></tr>
 <tr><td>3 дБ</td><td>×2</td><td>×1,41</td></tr>
 <tr><td>6 дБ</td><td>×4</td><td>×2</td></tr>
@@ -164,7 +164,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf" rel="nofollow noopener" target="_blank">The International System of Units (SI Brochure)</a> — Bureau International des Poids et Mesures — Редакция 9th edition, version 4.01, August 2025 — раздел 5.4.7 Logarithmic ratio quantities, Table 8 — bel and decibel — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>20·lg применяется к амплитудным отношениям только там, где соответствующая мощность пропорциональна квадрату величины; при разных импедансах используют мощности.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="rc-filtr.html">RC-фильтр: частота среза</a></li><li><a href="rms-amplituda.html">Действующее, амплитудное и среднее значение</a></li><li><a href="power-energy-units.html">Перевод кВт, л.с. и единиц энергии</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -241,14 +241,14 @@ if(S('mode')==='db'){
  if(a<=0||b<=0)return err('Значения должны быть больше нуля.');
  var db=k*Math.log(b/a)/Math.LN10,r=b/a;
  out(row('Отношение',fmt(r,6)+' раз')+row('Уровень',fmt(db,5)+' дБ')+
- note(db>=0?'Положительное число — усиление.':'Отрицательное число — ослабление (затухание).'));
+ note((db>=0?'Положительное число — усиление. ':'Отрицательное число — ослабление (затухание). ')+(k===20?'Множитель 20 предполагает одинаковую зависимость мощности от квадрата сравниваемой величины; при разных импедансах считайте отношение мощностей.':'')));
 }else{
  var db=P('db');
  if(isNaN(db))return err('Введите уровень в децибелах.');
  var r=Math.pow(10,db/k);
  out(row('Уровень',fmt(db,5)+' дБ')+row('Отношение',fmt(r,6)+' раз')+
  row('Обратное отношение',fmt(1/r,6)+' раз')+
- note('Множитель '+k+' выбран для '+(k===10?'мощности':'напряжения или тока')+'. Один и тот же физический эффект в «мощностных» децибелах даёт вдвое меньшее число, чем в «напряжённых».'));
+ note('Множитель '+k+' выбран для '+(k===10?'мощности':'амплитудной величины')+'. Для напряжения или тока множитель 20 применим только при условиях, где мощность пропорциональна квадрату сравниваемой величины.'));
 }
 }
 

@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Выбор УЗО: номинал и ток утечки — ВольтКальк</title>
-<meta name="description" content="Калькулятор подбора УЗО: номинальный ток по автомату линии и ток утечки (10, 30, 100, 300 мА) по назначению. Правила установки и ответы на вопросы.">
+<title>Предварительный выбор УЗО: ток, чувствительность и тип</title>
+<meta name="description" content="Предварительный подбор УЗО по номинальному току, назначению защиты и форме остаточного тока: типы AC, A, F и B, чувствительность 30 или 300 мА.">
 <link rel="canonical" href="https://macos2024.github.io/vybor-uzo.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Выбор УЗО: номинал и ток утечки — ВольтКальк">
-<meta property="og:description" content="Калькулятор подбора УЗО: номинальный ток по автомату линии и ток утечки (10, 30, 100, 300 мА) по назначению. Правила установки и ответы на вопросы.">
+<meta property="og:title" content="Предварительный выбор УЗО: ток, чувствительность и тип">
+<meta property="og:description" content="Предварительный подбор УЗО по номинальному току, назначению защиты и форме остаточного тока: типы AC, A, F и B, чувствительность 30 или 300 мА.">
 <meta property="og:url" content="https://macos2024.github.io/vybor-uzo.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Выбор УЗО: номинал и ток утечки","url":"https://macos2024.github.io/vybor-uzo.html","description":"Калькулятор подбора УЗО: номинальный ток по автомату линии и ток утечки (10, 30, 100, 300 мА) по назначению. Правила установки и ответы на вопросы.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Выбор УЗО: номинал и ток утечки","item":"https://macos2024.github.io/vybor-uzo.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"УЗО или дифавтомат?","acceptedAnswer":{"@type":"Answer","text":"Дифавтомат — это автомат и УЗО в одном корпусе: экономит место в щите, но дороже и при срабатывании не всегда ясно, что случилось — утечка или перегрузка. Функционально связка «автомат + УЗО» эквивалентна."}},{"@type":"Question","name":"УЗО срабатывает «само по себе». Почему?","acceptedAnswer":{"@type":"Answer","text":"Суммарная естественная утечка длинных линий и старой техники может подбираться к уставке (штатное срабатывание — от 0,5·IΔn). Разделите нагрузку на несколько УЗО или найдите прибор-виновник поочерёдным отключением."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Предварительный выбор УЗО: ток, чувствительность и тип","url":"https://macos2024.github.io/vybor-uzo.html","description":"Предварительный подбор УЗО по номинальному току, назначению защиты и форме остаточного тока: типы AC, A, F и B, чувствительность 30 или 300 мА.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Предварительный выбор УЗО: ток, чувствительность и тип","item":"https://macos2024.github.io/vybor-uzo.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"УЗО или дифавтомат?","acceptedAnswer":{"@type":"Answer","text":"Дифавтомат объединяет защиту от сверхтока и остаточного тока. Эквивалентность связке «автомат + УЗО» возможна только при совпадающих характеристиках и правильной координации."}},{"@type":"Question","name":"УЗО срабатывает «само по себе». Почему?","acceptedAnswer":{"@type":"Answer","text":"Суммарная естественная утечка длинных линий и старой техники может подбираться к уставке (штатное срабатывание — от 0,5·IΔn). Разделите нагрузку на несколько УЗО или найдите прибор-виновник поочерёдным отключением."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -134,12 +134,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
-<h1>Выбор УЗО: номинал и ток утечки</h1>
-<p class="intro">Укажите автомат, стоящий на линии, и её назначение — калькулятор предложит параметры УЗО.</p>
+<h1>Предварительный выбор УЗО: ток, чувствительность и тип</h1>
+<p class="intro">Укажите автомат, цель защиты и тип нагрузки. Калькулятор даст минимальные исходные параметры, но не заменит проверку схемы заземления и селективности.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Выбор УЗО: номинал и ток утечки</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Предварительный выбор УЗО: ток, чувствительность и тип</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_avt"><label for="avt">Номинал автомата на линии</label><div class="fw"><select id="avt"><option value="6">6 А</option><option value="10">10 А</option><option value="16" selected>16 А</option><option value="20">20 А</option><option value="25">25 А</option><option value="32">32 А</option><option value="40">40 А</option><option value="50">50 А</option><option value="63">63 А</option></select></div></div><div class="f" id="f_nz"><label for="nz">Назначение линии</label><div class="fw"><select id="nz"><option value="roz" selected>Розетки, кухня, общие линии</option><option value="van">Ванная, детская, тёплый пол</option><option value="vvod">Вводное УЗО (противопожарное)</option></select></div></div>
+<div class="f" id="f_avt"><label for="avt">Номинал автомата на линии</label><div class="fw"><select id="avt"><option value="6">6 А</option><option value="10">10 А</option><option value="16" selected>16 А</option><option value="20">20 А</option><option value="25">25 А</option><option value="32">32 А</option><option value="40">40 А</option><option value="50">50 А</option><option value="63">63 А</option></select></div></div><div class="f" id="f_nz"><label for="nz">Назначение защиты</label><div class="fw"><select id="nz"><option value="person" selected>Дополнительная защита людей (≤ 30 мА)</option><option value="fire">Защита от пожара (≤ 300 мА)</option></select></div></div><div class="f" id="f_load"><label for="load">Характер нагрузки</label><div class="fw"><select id="load"><option value="ac">Только синусоидальный переменный ток</option><option value="a" selected>Однофазная электроника / выпрямители</option><option value="f">Однофазный частотно-регулируемый привод</option><option value="b">Трёхфазный привод, PV-инвертор или EV</option></select></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -148,22 +148,18 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<p>УЗО следит за разностью токов в фазном и нулевом проводах: если часть тока «утекает» мимо (через тело человека или повреждённую изоляцию), устройство отключает линию за доли секунды.</p>
-<ul>
-<li><b>10 мА</b> — влажные помещения и линии, где контакт с водой вероятен: ванная, детская, тёплый пол.</li>
-<li><b>30 мА</b> — защита человека на обычных розеточных линиях; порог выбран ниже тока фибрилляции с запасом.</li>
-<li><b>100–300 мА</b> — вводные противопожарные УЗО: ловят суммарные утечки изоляции по всему дому, от поражения током не защищают.</li>
-</ul>
-<p>Номинальный ток УЗО должен быть не меньше номинала автомата перед ним (обычно на ступень выше), поскольку собственной защиты от перегрузки у УЗО нет.</p>
+<p>УЗО сравнивает токи в активных проводниках и отключает цепь при остаточном токе. Для дополнительной защиты людей применяют высокочувствительные УЗО с IΔn не более 30 мА; для защиты от пожара из-за токов утечки — не более 300 мА в предусмотренных стандартом случаях.</p>
+<p>Тип выбирают по форме остаточного тока: AC — синусоидальный переменный; A дополнительно видит пульсирующий постоянный; F предназначен для однофазных частотно-регулируемых приводов; B также видит сглаженный постоянный ток и нужен для ряда трёхфазных приводов, PV и EV.</p>
+<div class="formula">In(УЗО) ≥ In(координирующей защиты)&nbsp;&nbsp;&nbsp;IΔn ≤ 30 мА — дополнительная защита</div>
 <h2>Пример расчёта</h2>
-<p>Розеточная линия с автоматом 16 А: УЗО <b>25 А / 30 мА, тип A</b>. Вводное на квартиру с автоматом 40 А: УЗО 63 А / 100 мА (селективное), а поэтажные линии — под своими УЗО 30 мА.</p>
+<p>Для линии с автоматом 16 А и однофазной электронной нагрузкой исходный кандидат — УЗО <b>16 А или выше, не более 30 мА, тип A</b>. Если по каталогу выбран аппарат 25 А, это допустимо, но не является обязательной «следующей ступенью».</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>УЗО или дифавтомат?</h3><p>Дифавтомат — это автомат и УЗО в одном корпусе: экономит место в щите, но дороже и при срабатывании не всегда ясно, что случилось — утечка или перегрузка. Функционально связка «автомат + УЗО» эквивалентна.</p><h3>УЗО срабатывает «само по себе». Почему?</h3><p>Суммарная естественная утечка длинных линий и старой техники может подбираться к уставке (штатное срабатывание — от 0,5·IΔn). Разделите нагрузку на несколько УЗО или найдите прибор-виновник поочерёдным отключением.</p>
+<h3>УЗО или дифавтомат?</h3><p>Дифавтомат объединяет защиту от сверхтока и остаточного тока. Эквивалентность связке «автомат + УЗО» возможна только при совпадающих характеристиках и правильной координации.</p><h3>УЗО срабатывает «само по себе». Почему?</h3><p>Суммарная естественная утечка длинных линий и старой техники может подбираться к уставке (штатное срабатывание — от 0,5·IΔn). Разделите нагрузку на несколько УЗО или найдите прибор-виновник поочерёдным отключением.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Выбор автоматического выключателя по мощности</a></li><li><a href="sechenie-kabelya.html">Сечение кабеля по мощности и току</a></li><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Additional_protection%3A_High_sensitivity_RCDs" rel="nofollow noopener" target="_blank">Additional protection: High sensitivity RCDs</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция от 05.08.2026 — раздел High sensitivity RCDs, IEC 60364-4-41 applications — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Types_of_RCDs" rel="nofollow noopener" target="_blank">Types of RCDs</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция, актуальная на 11.08.2026 — раздел Type AC, Type A, Type F, Type B — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Protection_against_fire_due_to_insulation_failure" rel="nofollow noopener" target="_blank">Protection against fire due to insulation failure</a> — Schneider Electric Electrical Installation Guide — Редакция IEC 60364-4-42:2024 summary — раздел Protection with RCDs — обращение 11.08.2026</li><li><a href="https://library.e.abb.com/public/a5861200ea7c59fec1256dc50039e0ed/1SDC010001D0201.pdf" rel="nofollow noopener" target="_blank">Electrical Installation Handbook, Volume 2 — Electrical devices</a> — ABB SACE — Редакция 1SDC010001D0201, first edition, July 2003 — раздел 5.7 Residual current devices, RCCB versus RCBO, type B residual currents — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Не рассчитывает защиту от косвенного прикосновения для конкретной системы TT/TN/IT.</li><li>Не проверяет естественные токи утечки, временную и токовую селективность каскада.</li><li>Для EV, PV и приводов нужно выполнять требования изготовителя и профильной части IEC 60364.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li><li><a href="sechenie-kabelya.html">Предварительный выбор сечения провода по току</a></li><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -233,16 +229,15 @@ var UR=[16,25,40,63,80];
 function calc(){
 var a=parseInt(S('avt'),10);
 var nom=null;
-for(var k=0;k<UR.length;k++){if(UR[k]>a){nom=UR[k];break;}}
+for(var k=0;k<UR.length;k++){if(UR[k]>=a){nom=UR[k];break;}}
 if(!nom)nom=80;
-var nz=S('nz'),leak,tip;
-if(nz==='van'){leak='10 мА';tip='A';}
-else if(nz==='vvod'){leak='100 или 300 мА';tip='A или AC, селективное (S)';}
-else{leak='30 мА';tip='A';}
+var nz=S('nz'),leak=nz==='person'?'не более 30 мА':'не более 300 мА';
+var types={ac:'AC',a:'A',f:'F',b:'B'},tip=types[S('load')]||'A';
 out(row('Номинальный ток УЗО',nom+' А')+
-row('Ток утечки (уставка)',leak)+
-row('Рекомендуемый тип',tip)+
-note('Номинал УЗО берут на ступень выше автомата: УЗО не защищает от перегрузки, и автомат должен отключиться первым. Тип A распознаёт пульсирующие утечки современной техники с импульсными блоками питания.'));
+row('Чувствительность IΔn',leak)+
+row('Минимальный тип по форме тока',tip)+
+row('Статус','Предварительные параметры')+
+note('Номинальный ток УЗО должен быть не меньше тока координирующего аппарата; обязательной «ступени выше» нет. Для окончательного выбора нужны система заземления, ожидаемые утечки, селективность и требования изготовителя нагрузки. Для EV тип A допустим только при отдельном обнаружении постоянной утечки 6 мА, иначе требуется тип B.'));
 }
 
 </script>

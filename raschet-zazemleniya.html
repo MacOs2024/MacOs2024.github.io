@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Расчёт заземления: контур из вертикальных электродов</title>
-<meta name="description" content="Калькулятор заземления для частного дома: сопротивление одиночного вертикального электрода и число стержней для достижения нормы (30 Ом). Формула и пример.">
+<meta name="description" content="Оценочный расчёт сопротивления вертикальных заземляющих стержней в однородном грунте при расстоянии между ними больше четырёх длин стержня.">
 <link rel="canonical" href="https://macos2024.github.io/raschet-zazemleniya.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Расчёт заземления: контур из вертикальных электродов">
-<meta property="og:description" content="Калькулятор заземления для частного дома: сопротивление одиночного вертикального электрода и число стержней для достижения нормы (30 Ом). Формула и пример.">
+<meta property="og:description" content="Оценочный расчёт сопротивления вертикальных заземляющих стержней в однородном грунте при расстоянии между ними больше четырёх длин стержня.">
 <meta property="og:url" content="https://macos2024.github.io/raschet-zazemleniya.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Расчёт заземления: контур из вертикальных электродов","url":"https://macos2024.github.io/raschet-zazemleniya.html","description":"Калькулятор заземления для частного дома: сопротивление одиночного вертикального электрода и число стержней для достижения нормы (30 Ом). Формула и пример.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Расчёт заземления: контур из вертикальных электродов","item":"https://macos2024.github.io/raschet-zazemleniya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему замер весной хороший, а летом сопротивление выросло?","acceptedAnswer":{"@type":"Answer","text":"ρ грунта сильно зависит от влажности и промерзания — сезонный ход в разы. Поэтому норму нужно обеспечивать в наихудший сезон: закладывайте запас или заглубляйте электроды ниже уровня промерзания и пересыхания."}},{"@type":"Question","name":"Можно ли использовать арматуру и трубы отопления?","acceptedAnswer":{"@type":"Answer","text":"Трубопроводы и арматуру в бетоне использовать как заземлитель нельзя. Для электродов подходят сталь (стержень ∅16+, уголок 50×50, труба со стенкой от 3,5 мм), оцинковка или омеднённые стержни."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Расчёт заземления: контур из вертикальных электродов","url":"https://macos2024.github.io/raschet-zazemleniya.html","description":"Оценочный расчёт сопротивления вертикальных заземляющих стержней в однородном грунте при расстоянии между ними больше четырёх длин стержня.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Расчёт заземления: контур из вертикальных электродов","item":"https://macos2024.github.io/raschet-zazemleniya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему замер весной хороший, а летом сопротивление выросло?","acceptedAnswer":{"@type":"Answer","text":"ρ грунта сильно зависит от влажности и промерзания; Schneider указывает возможное изменение сопротивления в 1–3 раза уже на глубине около метра."}},{"@type":"Question","name":"Можно ли использовать арматуру и трубы отопления?","acceptedAnswer":{"@type":"Answer","text":"Материал, размеры, коррозионную стойкость и соединения выбирают по действующим нормам и условиям грунта. Калькулятор этого не проверяет."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -135,11 +135,11 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
 <h1>Расчёт заземления: контур из вертикальных электродов</h1>
-<p class="intro">Оценочный инженерный расчёт для контура из вертикальных стержней, соединённых полосой. Финальную проверку делают измерением прибором после монтажа.</p>
+<p class="intro">Введите удельное сопротивление грунта, длину, число и шаг стержней. Формула применима только для хорошо разнесённых электродов; результат обязательно подтверждают измерением.</p>
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Расчёт заземления: контур из вертикальных электродов</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_grunt"><label for="grunt">Грунт (типовое ρ)</label><div class="fw"><select id="grunt"><option value="25">Торф (≈25 Ом·м)</option><option value="50">Чернозём (≈50 Ом·м)</option><option value="60">Глина (≈60 Ом·м)</option><option value="100" selected>Суглинок (≈100 Ом·м)</option><option value="300">Супесь (≈300 Ом·м)</option><option value="500">Песок влажный (≈500 Ом·м)</option><option value="1000">Песок сухой (≈1000 Ом·м)</option></select></div></div><div class="f" id="f_rho"><label for="rho">Удельное сопротивление грунта ρ</label><div class="fw"><input id="rho" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">Ом·м</span></div><div class="hint">Можно вписать своё значение по данным изысканий</div></div><div class="f" id="f_l"><label for="l">Длина электрода L</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="2.5" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_dm"><label for="dm">Диаметр электрода d</label><div class="fw"><input id="dm" type="text" inputmode="decimal" autocomplete="off" value="16" placeholder=""><span class="u">мм</span></div><div class="hint">Для уголка 50×50 введите эквивалент ≈ 48 мм</div></div><div class="f" id="f_t"><label for="t">Заглубление верха электрода</label><div class="fw"><input id="t" type="text" inputmode="decimal" autocomplete="off" value="0.7" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_rt"><label for="rt">Целевое сопротивление</label><div class="fw"><input id="rt" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">Ом</span></div><div class="hint">Частный дом — 30 Ом; повторное заземление ВЛ и спецобъекты — по проекту</div></div>
+<div class="f" id="f_grunt"><label for="grunt">Ориентир по грунту</label><div class="fw"><select id="grunt"><option value="50" selected>Плодородный влажный грунт (≈50 Ом·м)</option><option value="500">Сухой грунт / гравий (≈500 Ом·м)</option><option value="3000">Каменистый грунт / сухой песок (≈3000 Ом·м)</option></select></div></div><div class="f" id="f_rho"><label for="rho">Удельное сопротивление грунта ρ</label><div class="fw"><input id="rho" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">Ом·м</span></div><div class="hint">Можно вписать своё значение по данным изысканий</div></div><div class="f" id="f_l"><label for="l">Длина электрода L</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="2.5" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_n"><label for="n">Количество стержней n</label><div class="fw"><input id="n" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">шт</span></div></div><div class="f" id="f_a"><label for="a">Расстояние между стержнями</label><div class="fw"><input id="a" type="text" inputmode="decimal" autocomplete="off" value="10.1" placeholder=""><span class="u">м</span></div><div class="hint">Для формулы должно быть больше 4·L</div></div><div class="f" id="f_rt"><label for="rt">Заданная проектом цель</label><div class="fw"><input id="rt" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">Ом</span></div><div class="hint">Это не универсальная норма: значение задаётся проектом по системе заземления и защите</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -148,18 +148,18 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<p>Сопротивление растеканию одиночного вертикального электрода считается по классической формуле:</p>
-<div class="formula">R1 = ρ/(2πL) · [ln(2L/d) + ½·ln((4T+L)/(4T−L))]</div>
-<p>где T — глубина середины электрода (заглубление верха + L/2). Соседние стержни «мешают» друг другу растекать ток, поэтому контур из N электродов даёт не R1/N, а R1/(N·η), где η — коэффициент использования (0,6–0,85 для типовых расстояний). Главный фактор результата — грунт: между сухим песком и суглинком разница на порядок, поэтому ρ лучше уточнить измерением.</p>
+<p>Schneider Electric приводит для вертикальных стержней в однородном грунте приближённую зависимость:</p>
+<div class="formula">R ≈ ρ / (n · L), если расстояние между стержнями &gt; 4L</div>
+<p>ρ — удельное сопротивление грунта, L — длина одного стержня, n — число стержней. При меньшем расстоянии простое деление на n недопустимо из-за взаимного влияния полей растекания.</p>
 <h2>Пример расчёта</h2>
-<p>Суглинок (ρ = 100 Ом·м), стержень 2,5 м ∅16 мм, заглубление 0,7 м: R1 ≈ 38,7 Ом. Два стержня с шагом 2,5 м: 38,7/(2·0,85) ≈ <b>22,8 Ом</b> — норма 30 Ом достигнута.</p>
+<p>При ρ = 100 Ом·м, двух стержнях длиной 2,5 м и расстоянии 10,1 м: R ≈ 100/(2·2,5) = <b>20 Ом</b>. Это предварительная оценка; соответствие проектному требованию подтверждают измерением.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Почему замер весной хороший, а летом сопротивление выросло?</h3><p>ρ грунта сильно зависит от влажности и промерзания — сезонный ход в разы. Поэтому норму нужно обеспечивать в наихудший сезон: закладывайте запас или заглубляйте электроды ниже уровня промерзания и пересыхания.</p><h3>Можно ли использовать арматуру и трубы отопления?</h3><p>Трубопроводы и арматуру в бетоне использовать как заземлитель нельзя. Для электродов подходят сталь (стержень ∅16+, уголок 50×50, труба со стенкой от 3,5 мм), оцинковка или омеднённые стержни.</p>
+<h3>Почему замер весной хороший, а летом сопротивление выросло?</h3><p>ρ грунта сильно зависит от влажности и промерзания; Schneider указывает возможное изменение сопротивления в 1–3 раза уже на глубине около метра.</p><h3>Можно ли использовать арматуру и трубы отопления?</h3><p>Материал, размеры, коррозионную стойкость и соединения выбирают по действующим нормам и условиям грунта. Калькулятор этого не проверяет.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-uzo.html">Выбор УЗО: номинал и ток утечки</a></li><li><a href="sechenie-kabelya.html">Сечение кабеля по мощности и току</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Installation_and_measurements_of_earth_electrodes" rel="nofollow noopener" target="_blank">Installation and measurements of earth electrodes</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция, актуальная на 11.08.2026 — раздел Earthing rods, Influence of the type of soil, Measurement of the earth-electrode resistance — обращение 11.08.2026</li></ul><p><b>Допущения:</b></p><ul><li>Грунт однородный, значение ρ обосновано измерением или изысканиями.</li><li>При нескольких стержнях расстояние между ними больше четырёх длин стержня.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не определяет нормативно требуемое сопротивление: оно зависит от системы заземления, напряжения прикосновения и защитных устройств.</li><li>Не учитывает слоистость грунта, промерзание, высыхание, коррозию и сопротивление соединений.</li><li>Результат не заменяет измерение готового заземлителя.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="sechenie-kabelya.html">Предварительный выбор сечения провода по току</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -225,28 +225,20 @@ if(typeof init==='function')init();
 });
 
 
-var ETA=[0,1,0.85,0.78,0.74,0.70,0.66,0.64,0.62,0.60,0.58];
 function init(){$('grunt').addEventListener('change',function(){$('rho').value=S('grunt');});}
 function calc(){
-var rho=P('rho'),L=P('l'),dm=P('dm'),t=P('t'),rt=P('rt');
-if([rho,L,dm,t,rt].some(isNaN))return err('Заполните все поля.');
-if(rho<=0||L<=0||dm<=0||t<0||rt<=0)return err('Значения должны быть больше нуля.');
-var d=dm/1000, T=t+L/2;
-if(4*T<=L)return err('Слишком малое заглубление для такой длины электрода.');
-var r1=rho/(2*Math.PI*L)*(Math.log(2*L/d)+0.5*Math.log((4*T+L)/(4*T-L)));
-var h=row('Один электрод R1',fmt(r1,3)+' Ом');
-var need=null, tab='<table class="t"><tr><th>Стержней</th><th>R контура, Ом</th></tr>';
-for(var n=1;n<=10;n++){
-var rn=r1/(n*ETA[n]);
-tab+='<tr><td>'+n+'</td><td>'+fmt(rn,3)+'</td></tr>';
-if(need===null&&rn<=rt)need=n;}
-tab+='</table>';
-if(need!==null){
-h+=row('Достаточно электродов',need+' шт. (R ≈ '+fmt(r1/(need*ETA[need]),3)+' Ом ≤ '+fmt(rt,3)+' Ом)');
-}else{
-h+=note('Даже 10 электродов не дают '+fmt(rt,3)+' Ом в таком грунте. Варианты: более длинные (глубинные) электроды, больше стержней, электролитическое заземление.');}
-h+=tab+note('Расстояние между стержнями — не меньше их длины (коэффициент использования в расчёте взят для ряда с шагом ≈ L). Соединение — стальной полосой 40×4 мм на сварке. После монтажа сопротивление обязательно измеряют.');
-out(h);}
+var rho=P('rho'),L=P('l'),n=P('n'),a=P('a'),rt=P('rt');
+if([rho,L,n,a,rt].some(isNaN))return err('Заполните все поля.');
+if(rho<=0||L<=0||n<1||a<=0||rt<=0)return err('Значения должны быть больше нуля, число стержней — не меньше одного.');
+if(Math.floor(n)!==n)return err('Количество стержней должно быть целым числом.');
+if(n>1&&a<=4*L)return out(row('Статус','Недостаточно данных')+
+ note('Формула R ≈ ρ/(n·L) применима при расстоянии между стержнями больше 4·L. Для указанного шага взаимное влияние электродов нужно учитывать проектным методом и подтвердить измерением.'));
+var r=rho/(n*L),cmp=r<=rt?'ниже или равно заданной цели':'выше заданной цели';
+out(row('Оценочное сопротивление R',fmt(r,4)+' Ом')+
+row('Сравнение с целью',fmt(r,4)+' Ом — '+cmp)+
+row('Статус','Оценка, требуется измерение')+
+note('Формула предполагает однородный грунт и хорошо разнесённые стержни. Влажность, промерзание, слои грунта, соединения и взаимное влияние могут существенно изменить результат.'));
+}
 
 </script>
 </body>
