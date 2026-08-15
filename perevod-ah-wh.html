@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -149,7 +149,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="article">
 <h2>Как считается</h2>
 <div class="formula">Вт·ч = А·ч · U&nbsp;&nbsp;&nbsp;А·ч = Вт·ч / U&nbsp;&nbsp;&nbsp;мА·ч = А·ч · 1000</div>
-<p>Ампер-час показывает, какой заряд способна отдать батарея, но не энергию: тот же заряд при вдвое большем напряжении несёт вдвое больше энергии. Поэтому маркировка «20000 мА·ч» на повербанке сама по себе бессмысленна, пока не указано напряжение.</p>
+<p>Ампер-час показывает электрический заряд, но не энергию: для оценки Вт·ч нужно также напряжение. Простое произведение А·ч·U использует введённое постоянное, обычно номинальное напряжение; точная энергия меняется по кривой разряда и определяется интегрированием мощности.</p>
 <p>С повербанками на этом построена типичная путаница. Заявленные 20000 мА·ч относятся к внутренним банкам с напряжением 3,7 В, то есть к 74 Вт·ч. На выходе USB напряжение 5 В, и даже без потерь это дало бы лишь около 14800 мА·ч — а с учётом КПД преобразователя реально отдаётся ещё меньше.</p>
 <table class="t"><tr><th>Батарея</th><th>Напряжение</th><th>Ёмкость</th><th>Энергия</th></tr>
 <tr><td>Автомобильная</td><td>12 В</td><td>60 А·ч</td><td>720 Вт·ч</td></tr>
@@ -162,7 +162,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.ti.com/lit/an/snva533/snva533.pdf" rel="nofollow noopener" target="_blank">Characteristics of Rechargeable Batteries</a> — Texas Instruments — Редакция SNVA533, July 2011 — раздел capacity and C-rate, Lithium-Ion — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Произведение А·ч·U — оценка при введённом постоянном, обычно номинальном напряжении; точная энергия зависит от кривой разряда, тока, температуры и порога отключения.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="vremya-raboty-akkumulyatora.html">Время работы от аккумулятора</a></li><li><a href="power-bank-runtime.html">Время работы от Power Bank</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -240,14 +240,14 @@ if(S('mode')==='wh'){
  var wh=ah*u;
  out(row('Ёмкость',fmt(ah,6)+' А·ч ('+fmt(ah*1000,6)+' мА·ч)')+
  row('Энергия',fmt(wh,6)+' Вт·ч')+row('Энергия',fmt(wh/1000,5)+' кВт·ч')+
- note('Ватт-часы — честная мера запаса энергии. Батарея 100 А·ч на 12 В и батарея 50 А·ч на 24 В хранят одинаковые 1200 Вт·ч, хотя в ампер-часах различаются вдвое.'));
+ note('Это оценка энергии при введённом постоянном напряжении. Для батареи используйте паспортное номинальное или среднее напряжение; точная отдаваемая энергия равна интегралу U(t)·I(t) и зависит от режима разряда.'));
 }else{
  var wh=P('wh');
  if(isNaN(wh)||wh<=0)return err('Энергия должна быть больше нуля.');
  var ah=wh/u;
  out(row('Энергия',fmt(wh,6)+' Вт·ч')+
  row('Ёмкость',fmt(ah,6)+' А·ч ('+fmt(ah*1000,6)+' мА·ч)')+
- note('Одна и та же энергия при более высоком напряжении требует меньше ампер-часов — и, соответственно, более тонкого провода при той же мощности.'));
+ note('Обратный пересчёт также предполагает постоянное заданное напряжение. Паспортные А·ч, напряжение и доступная энергия зависят от химии, тока, температуры и конечного напряжения разряда.'));
 }
 }
 

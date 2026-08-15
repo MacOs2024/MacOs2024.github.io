@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -135,11 +135,11 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
 <h1>Падение напряжения в кабеле</h1>
-<p class="intro">Актуально для длинных линий: гараж, скважина, участок. Длина указывается в одну сторону — путь тока туда и обратно калькулятор учтёт сам.</p>
+<p class="intro">Длина указывается в одну сторону. Задайте лимит падения, выделенный проектом именно этому участку; 5% — типовой предел для всей силовой цепи от начала установки до нагрузки, а не автоматическая норма каждого кабеля.</p>
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Падение напряжения в кабеле</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_i"><label for="i">Ток нагрузки I</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 16"><span class="u">А</span></div></div><div class="f" id="f_l"><label for="l">Длина линии (в одну сторону)</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 30"><span class="u">м</span></div></div><div class="f" id="f_s"><label for="s">Сечение жилы S</label><div class="fw"><input id="s" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 2,5"><span class="u">мм²</span></div></div><div class="f" id="f_mat"><label for="mat">Материал жилы</label><div class="fw"><select id="mat"><option value="cu" selected>Медь (ρ = 0,0175)</option><option value="al">Алюминий (ρ = 0,028)</option></select></div></div><div class="f" id="f_faza"><label for="faza">Линия</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная / постоянный ток</option><option value="3">Трёхфазная (симметричная)</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение сети U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div>
+<div class="f" id="f_i"><label for="i">Ток нагрузки I</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 16"><span class="u">А</span></div></div><div class="f" id="f_l"><label for="l">Длина линии (в одну сторону)</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 30"><span class="u">м</span></div></div><div class="f" id="f_s"><label for="s">Сечение жилы S</label><div class="fw"><input id="s" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 2,5"><span class="u">мм²</span></div></div><div class="f" id="f_mat"><label for="mat">Материал жилы</label><div class="fw"><select id="mat"><option value="cu" selected>Медь (ρ = 0,0175)</option><option value="al">Алюминий (ρ = 0,028)</option></select></div></div><div class="f" id="f_faza"><label for="faza">Линия</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная / постоянный ток</option><option value="3">Трёхфазная (симметричная)</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение сети U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_dop"><label for="dop">Лимит падения для участка</label><div class="fw"><input id="dop" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">%</span></div><div class="hint">Задаётся проектом с учётом падения на вышестоящих участках</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -150,7 +150,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h2>Как считается</h2>
 <p>Провод — тоже сопротивление, и на длинной линии на нём теряются вольты. Расчёт по активному сопротивлению жилы:</p>
 <div class="formula">Однофазная линия: ΔU = 2 · I · ρ · L / S<br>Трёхфазная линия: ΔU = √3 · I · ρ · L / S</div>
-<p>ρ — удельное сопротивление (медь 0,0175, алюминий 0,028 Ом·мм²/м), L — длина в одну сторону, S — сечение. Множитель 2 учитывает путь тока по двум проводам. ГОСТ 32144 допускает отклонение напряжения у потребителя ±10%, проектная практика для линии — не более 5%. Индуктивным сопротивлением для сечений до 25 мм² обычно пренебрегают.</p>
+<p>ρ — удельное сопротивление при 20 °C, L — длина в одну сторону, S — сечение. IEC 60364-5-52 приводит типовые пределы от начала установки до точки нагрузки: 3% для освещения и 5% для остальных нагрузок при питании от публичной низковольтной сети. Этот бюджет распределяется между всеми участками.</p>
 <h2>Пример расчёта</h2>
 <p>Насос 16 А, кабель 2,5 мм² (медь), 30 м до скважины: ΔU = 2·16·0,0175·30/2,5 = <b>6,7 В</b> (3,1% от 220 В) — в норме. Тот же кабель на 100 м дал бы 22,4 В (10%) — уже нужно 10 мм² либо другое решение.</p>
 <div class="faq"><h2>Частые вопросы</h2>
@@ -158,8 +158,8 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="sechenie-kabelya.html">Сечение кабеля по мощности и току</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li><li><a href="vybor-avtomata.html">Выбор автоматического выключателя по мощности</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Maximum_voltage_drop_limit" rel="nofollow noopener" target="_blank">Maximum voltage drop limit</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция от 05.08.2026 — раздел IEC 60364-5-52 table G.52.1, Circuits supplying motors — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Calculation_of_voltage_drop_in_steady_load_conditions" rel="nofollow noopener" target="_blank">Calculation of voltage drop in steady load conditions</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция от 05.08.2026 — раздел Formulae for voltage-drop in a balanced three-phase system — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Используется только активное сопротивление при 20 °C; реактивность и рабочий нагрев не учитываются.</li><li>Лимит относится к введённому участку и должен быть выделен проектом из общего бюджета падения напряжения.</li><li>Пусковые режимы двигателей проверяются отдельно.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="sechenie-kabelya.html">Предварительный выбор сечения провода по току</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -228,20 +228,21 @@ if(typeof init==='function')init();
 var STD=[1.5,2.5,4,6,10,16,25,35,50];
 function init(){$('faza').addEventListener('change',function(){$('u').value=(S('faza')==='3')?'380':'220';});}
 function calc(){
-var i=P('i'),l=P('l'),s=P('s'),u=P('u');
-if([i,l,s,u].some(isNaN))return err('Заполните все поля.');
-if(i<=0||l<=0||s<=0||u<=0)return err('Все значения должны быть больше нуля.');
+var i=P('i'),l=P('l'),s=P('s'),u=P('u'),dop=P('dop');
+if([i,l,s,u,dop].some(isNaN))return err('Заполните все поля.');
+if(i<=0||l<=0||s<=0||u<=0||dop<=0||dop>=100)return err('Все значения должны быть больше нуля; лимит падения — меньше 100%.');
 var rho=(S('mat')==='cu')?0.0175:0.028;
 var k=(S('faza')==='3')?Math.sqrt(3):2;
 var du=k*i*rho*l/s, pct=du/u*100, ul=u-du;
 var h=row('Падение напряжения ΔU',fmt(du,3)+' В')+
 row('В процентах',fmt(pct,3)+' %')+
 row('Напряжение на нагрузке',fmt(ul,4)+' В');
-if(pct<=5){h+=note('В норме: проектная практика — не более 5% потерь в линии.');}
+if(pct<=dop){h+=row('Сравнение с лимитом','Укладывается в '+fmt(dop,3)+' %');}
 else{
-var sn=k*i*rho*l/(0.05*u),rec=null;
+var sn=k*i*rho*l/((dop/100)*u),rec=null;
 for(var m=0;m<STD.length;m++){if(STD[m]>=sn){rec=STD[m];break;}}
-h+=note('Потери выше 5%. '+(rec?('Чтобы уложиться в норму, нужно сечение не менее '+fmt(sn,3)+' мм² — ближайшее стандартное <b>'+String(rec).replace('.',',')+' мм²</b>.'):'Требуется сечение более 50 мм² — пересмотрите схему питания (выше напряжение, ближе источник).'));}
+h+=row('Сравнение с лимитом','Превышает '+fmt(dop,3)+' %')+note(rec?('По активному сопротивлению для этого лимита нужно не менее '+fmt(sn,3)+' мм² — ближайшее значение ряда <b>'+String(rec).replace('.',',')+' мм²</b>.'):'По этой модели требуется сечение более 50 мм² — пересмотрите схему питания.');}
+h+=note('Расчёт использует удельное сопротивление при 20 °C и пренебрегает реактивной составляющей. Для нагретой жилы и больших сечений фактическое падение будет выше.');
 out(h);}
 
 </script>

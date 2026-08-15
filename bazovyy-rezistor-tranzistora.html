@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Базовый резистор транзисторного ключа — ВольтКальк</title>
-<meta name="description" content="Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки, коэффициенту усиления и управляющему напряжению.">
+<meta name="description" content="Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки и принудительному коэффициенту β из условий VCE(sat) даташита.">
 <link rel="canonical" href="https://macos2024.github.io/bazovyy-rezistor-tranzistora.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Базовый резистор транзисторного ключа — ВольтКальк">
-<meta property="og:description" content="Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки, коэффициенту усиления и управляющему напряжению.">
+<meta property="og:description" content="Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки и принудительному коэффициенту β из условий VCE(sat) даташита.">
 <meta property="og:url" content="https://macos2024.github.io/bazovyy-rezistor-tranzistora.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Базовый резистор транзисторного ключа","url":"https://macos2024.github.io/bazovyy-rezistor-tranzistora.html","description":"Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки, коэффициенту усиления и управляющему напряжению.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Базовый резистор транзисторного ключа","item":"https://macos2024.github.io/bazovyy-rezistor-tranzistora.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему округлять вниз, а не к ближайшему?","acceptedAnswer":{"@type":"Answer","text":"Меньшее сопротивление означает больший ток базы и более глубокое насыщение. Округление вверх снижает базовый ток и может вывести транзистор из насыщения — с ростом нагрева и падения на переходе."}},{"@type":"Question","name":"Нужен ли резистор между базой и эмиттером?","acceptedAnswer":{"@type":"Answer","text":"Желательно: резистор 10 кОм надёжно закрывает транзистор, когда управляющий вывод находится в высокоимпедансном состоянии — например, при сбросе микроконтроллера. Без него наводки могут приоткрыть ключ."}},{"@type":"Question","name":"Когда лучше взять полевой транзистор?","acceptedAnswer":{"@type":"Answer","text":"При токах от нескольких сотен миллиампер: логическому MOSFET ток затвора в статике не нужен вовсе, а сопротивление открытого канала в единицы миллиом даёт потери на порядок меньше. Для управления от 3,3 В берите транзистор с пометкой logic level."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Базовый резистор транзисторного ключа","url":"https://macos2024.github.io/bazovyy-rezistor-tranzistora.html","description":"Расчёт сопротивления базового резистора биполярного транзистора в ключевом режиме по току нагрузки и принудительному коэффициенту β из условий VCE(sat) даташита.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Базовый резистор транзисторного ключа","item":"https://macos2024.github.io/bazovyy-rezistor-tranzistora.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему округлять вниз, а не к ближайшему?","acceptedAnswer":{"@type":"Answer","text":"Меньшее сопротивление означает больший ток базы. Это сохраняет условие принудительного β, но ток вывода и предельный ток базы всё равно должны оставаться в допустимом диапазоне."}},{"@type":"Question","name":"Нужен ли резистор между базой и эмиттером?","acceptedAnswer":{"@type":"Answer","text":"Желательно: резистор 10 кОм надёжно закрывает транзистор, когда управляющий вывод находится в высокоимпедансном состоянии — например, при сбросе микроконтроллера. Без него наводки могут приоткрыть ключ."}},{"@type":"Question","name":"Когда лучше взять полевой транзистор?","acceptedAnswer":{"@type":"Answer","text":"При токах от нескольких сотен миллиампер: логическому MOSFET ток затвора в статике не нужен вовсе, а сопротивление открытого канала в единицы миллиом даёт потери на порядок меньше. Для управления от 3,3 В берите транзистор с пометкой logic level."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -135,11 +135,11 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
 <h1>Базовый резистор транзисторного ключа</h1>
-<p class="intro">Ключевой режим требует <b>насыщения</b>: базовый ток берут с запасом в 2–5 раз против минимально достаточного, иначе транзистор будет греться.</p>
+<p class="intro">Для насыщения используйте не обычный hFE, а <b>принудительный β = Ic/Ib</b> из той же строки даташита, где нормировано VCE(sat).</p>
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Базовый резистор транзисторного ключа</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_vc"><label for="vc">Управляющее напряжение</label><div class="fw"><input id="vc" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">В</span></div><div class="hint">Выход микроконтроллера: 3,3 или 5 В</div></div><div class="f" id="f_vbe"><label for="vbe">Напряжение база-эмиттер Uбэ</label><div class="fw"><input id="vbe" type="text" inputmode="decimal" autocomplete="off" value="0,7" placeholder=""><span class="u">В</span></div><div class="hint">Кремниевый транзистор в насыщении: 0,7–1,0 В</div></div><div class="f" id="f_ic"><label for="ic">Ток нагрузки (ток коллектора)</label><div class="fw"><input id="ic" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="ic_unit" class="u" aria-label="Единицы"><option value="0.001" selected>мА</option><option value="1">А</option></select></div></div><div class="f" id="f_hfe"><label for="hfe">Коэффициент усиления h21э (hFE)</label><div class="fw"><input id="hfe" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""></div><div class="hint">Берите минимальное значение из даташита, не типовое</div></div><div class="f" id="f_k"><label for="k">Коэффициент насыщения</label><div class="fw"><input id="k" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""></div><div class="hint">Запас по базовому току: 2–5</div></div>
+<div class="f" id="f_vc"><label for="vc">Управляющее напряжение</label><div class="fw"><input id="vc" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">В</span></div><div class="hint">Выход микроконтроллера: 3,3 или 5 В</div></div><div class="f" id="f_vbe"><label for="vbe">Напряжение база-эмиттер Uбэ</label><div class="fw"><input id="vbe" type="text" inputmode="decimal" autocomplete="off" value="0,7" placeholder=""><span class="u">В</span></div><div class="hint">Кремниевый транзистор в насыщении: 0,7–1,0 В</div></div><div class="f" id="f_ic"><label for="ic">Ток нагрузки (ток коллектора)</label><div class="fw"><input id="ic" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="ic_unit" class="u" aria-label="Единицы"><option value="0.001" selected>мА</option><option value="1">А</option></select></div></div><div class="f" id="f_beta"><label for="beta">Принудительный β = Ic/Ib</label><div class="fw"><input id="beta" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""></div><div class="hint">Берите из условия VCE(sat) даташита; часто 10, но не универсально</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -148,18 +148,17 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<div class="formula">Iб(min) = Iк / h21э&nbsp;&nbsp;&nbsp;Iб = k · Iб(min)&nbsp;&nbsp;&nbsp;Rб = (Uупр − Uбэ) / Iб</div>
-<p>В усилительном режиме транзистору хватает тока базы Iк/h21э. В ключевом этого мало: на границе насыщения падение на переходе коллектор-эмиттер остаётся большим, транзистор рассеивает лишнее тепло и может выйти из строя. Поэтому базовый ток умножают на коэффициент насыщения 2–5.</p>
-<p>Второй важный момент — какое h21э подставлять. В даташите приводят разброс, часто от 100 до 800 для одного и того же типа. Брать нужно <b>минимальное</b> гарантированное значение: схема должна работать с любым экземпляром из партии.</p>
-<p>В насыщении падение коллектор-эмиттер составляет 0,1–0,3 В, и потери равны Uкэ(нас) · Iк. Для тока 100 мА это около 20–30 мВт — транзистор остаётся холодным. При недостаточном базовом токе падение вырастет до вольта и более, а рассеиваемая мощность — в разы.</p>
+<div class="formula">βforced = Iк / Iб&nbsp;&nbsp;&nbsp;Iб = Iк / βforced&nbsp;&nbsp;&nbsp;Rб = (Uупр − Uбэ) / Iб</div>
+<p>Обычный hFE характеризует активный режим и не доказывает насыщение. Для ключа берут пару Ic/Ib непосредственно из условия измерения VCE(sat) в даташите. Например, запись VCE(sat) при Ic = 10 мА и Ib = 1 мА соответствует принудительному β = 10.</p>
+<p>Если ток коллектора или требуемое VCE(sat) отличаются от паспортной строки, нужна интерполяция по графикам либо другой транзистор/драйвер. Формула резистора задаёт ток базы, но не заменяет проверку допустимого тока GPIO и рассеиваемой мощности транзистора.</p>
 <h2>Пример расчёта</h2>
-<p>Реле с током 100 мА, транзистор с минимальным h21э = 100, управление от вывода микроконтроллера 5 В, коэффициент насыщения 3. Минимальный ток базы 1 мА, с запасом — <b>3 мА</b>. Резистор: (5 − 0,7) / 0,003 = <b>1433 Ом</b>, ближайший из ряда Е24 вниз — <b>1,3 кОм</b>. Фактический ток базы при нём составит 3,308 мА, что вполне по силам выводу микроконтроллера.</p>
+<p>Нагрузка 100 мА, в даташите VCE(sat) подтверждено при βforced = 10, управление 5 В и Uбэ = 0,8 В. Требуемый ток базы — <b>10 мА</b>, Rб = 4,2/0,01 = <b>420 Ом</b>. Ближайший E24 вниз — <b>390 Ом</b>, фактический ток ≈ 10,77 мА.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Почему округлять вниз, а не к ближайшему?</h3><p>Меньшее сопротивление означает больший ток базы и более глубокое насыщение. Округление вверх снижает базовый ток и может вывести транзистор из насыщения — с ростом нагрева и падения на переходе.</p><h3>Нужен ли резистор между базой и эмиттером?</h3><p>Желательно: резистор 10 кОм надёжно закрывает транзистор, когда управляющий вывод находится в высокоимпедансном состоянии — например, при сбросе микроконтроллера. Без него наводки могут приоткрыть ключ.</p><h3>Когда лучше взять полевой транзистор?</h3><p>При токах от нескольких сотен миллиампер: логическому MOSFET ток затвора в статике не нужен вовсе, а сопротивление открытого канала в единицы миллиом даёт потери на порядок меньше. Для управления от 3,3 В берите транзистор с пометкой logic level.</p>
+<h3>Почему округлять вниз, а не к ближайшему?</h3><p>Меньшее сопротивление означает больший ток базы. Это сохраняет условие принудительного β, но ток вывода и предельный ток базы всё равно должны оставаться в допустимом диапазоне.</p><h3>Нужен ли резистор между базой и эмиттером?</h3><p>Желательно: резистор 10 кОм надёжно закрывает транзистор, когда управляющий вывод находится в высокоимпедансном состоянии — например, при сбросе микроконтроллера. Без него наводки могут приоткрыть ключ.</p><h3>Когда лучше взять полевой транзистор?</h3><p>При токах от нескольких сотен миллиампер: логическому MOSFET ток затвора в статике не нужен вовсе, а сопротивление открытого канала в единицы миллиом даёт потери на порядок меньше. Для управления от 3,3 В берите транзистор с пометкой logic level.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.onsemi.com/pdf/datasheet/2n3904-d.pdf" rel="nofollow noopener" target="_blank">2N3904 NPN General-Purpose Amplifier datasheet</a> — onsemi — Редакция 2N3904/D, Rev. 10, November 2024 — раздел Electrical Characteristics — VCE(sat) test conditions — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Принудительный β берётся из той же строки даташита, где нормирован VCE(sat); динамический заряд базы и скорость выключения не рассчитываются.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="rezistor-svetodioda.html">Резистор для светодиода</a></li><li><a href="zakon-oma.html">Закон Ома: ток, напряжение, сопротивление, мощность</a></li><li><a href="shim-srednee-napryazhenie.html">ШИМ: скважность, среднее напряжение и мощность</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -232,19 +231,20 @@ var d=Math.pow(10,Math.floor(Math.log(r)/Math.LN10)),best=e[0]*d;
 for(var i=0;i<e.length;i++){var v=e[i]*d;if(v<=r)best=v;}
 return best;}
 function calc(){
-var vc=P('vc'),vbe=P('vbe'),ic=P('ic'),hfe=P('hfe'),k=P('k');
-if([vc,vbe,ic,hfe,k].some(isNaN))return err('Заполните все поля.');
+var vc=P('vc'),vbe=P('vbe'),ic=P('ic'),beta=P('beta');
+if([vc,vbe,ic,beta].some(isNaN))return err('Заполните все поля.');
 if(vc<=vbe)return err('Управляющее напряжение должно быть больше напряжения база-эмиттер.');
-if(ic<=0||hfe<=0||k<=0)return err('Ток, h21э и коэффициент насыщения должны быть больше нуля.');
-var ibmin=ic/hfe,ib=k*ibmin,rb=(vc-vbe)/ib,rstd=e24down(rb),ibr=(vc-vbe)/rstd;
+if(ic<=0||beta<=0)return err('Ток и принудительный β должны быть больше нуля.');
+var ib=ic/beta,rb=(vc-vbe)/ib,rstd=e24down(rb),ibr=(vc-vbe)/rstd;
 var pb=(vc-vbe)*ibr;
-out(row('Минимальный ток базы',si(ibmin,'А'))+
-row('Ток базы с запасом ×'+fmt(k,3),si(ib,'А'))+
+out(row('Заданный принудительный β',fmt(beta,4))+
+row('Требуемый ток базы',si(ib,'А'))+
 row('Расчётный резистор Rб',si(rb,'Ом'))+
 row('Ближайший из ряда Е24 (вниз)',si(rstd,'Ом'))+
 row('Фактический ток базы',si(ibr,'А'))+
+row('Фактический принудительный β',fmt(ic/ibr,4))+
 row('Мощность на резисторе',si(pb,'Вт'))+
-note('Номинал округляют <b>вниз</b>: меньший резистор даёт больший ток базы и гарантирует насыщение. Проверьте, что выход микроконтроллера выдержит '+si(ibr,'А')+' — у большинства предел составляет 20–40 мА на вывод.'));
+note('Округление вниз сохраняет ток базы не ниже расчётного, но само по себе не гарантирует насыщение: VCE(sat) подтверждается только для условий даташита. Проверьте допустимый ток вывода управляющей микросхемы.'));
 }
 
 </script>

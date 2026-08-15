@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Выбор автоматического выключателя по мощности — ВольтКальк</title>
-<meta name="description" content="Калькулятор выбора автоматического выключателя по мощности нагрузки для 220 В и 380 В: расчётный ток, номинал автомата и минимальное сечение медного кабеля.">
+<title>Предварительный выбор автоматического выключателя</title>
+<meta name="description" content="Предварительная проверка автоматического выключателя по току нагрузки, допустимому току кабеля и отключающей способности. Характеристика B/C/D отдельно не назначается.">
 <link rel="canonical" href="https://macos2024.github.io/vybor-avtomata.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Выбор автоматического выключателя по мощности — ВольтКальк">
-<meta property="og:description" content="Калькулятор выбора автоматического выключателя по мощности нагрузки для 220 В и 380 В: расчётный ток, номинал автомата и минимальное сечение медного кабеля.">
+<meta property="og:title" content="Предварительный выбор автоматического выключателя">
+<meta property="og:description" content="Предварительная проверка автоматического выключателя по току нагрузки, допустимому току кабеля и отключающей способности. Характеристика B/C/D отдельно не назначается.">
 <meta property="og:url" content="https://macos2024.github.io/vybor-avtomata.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Выбор автоматического выключателя по мощности","url":"https://macos2024.github.io/vybor-avtomata.html","description":"Калькулятор выбора автоматического выключателя по мощности нагрузки для 220 В и 380 В: расчётный ток, номинал автомата и минимальное сечение медного кабеля.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Выбор автоматического выключателя по мощности","item":"https://macos2024.github.io/vybor-avtomata.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Что означают буквы B, C, D на автомате?","acceptedAnswer":{"@type":"Answer","text":"Это кратность тока мгновенного (электромагнитного) расцепления: B — 3–5·Iном, C — 5–10, D — 10–20. Для жилья стандарт — C; B ставят на длинные линии и освещение, D — на двигатели с тяжёлым пуском."}},{"@type":"Question","name":"Автомат выбивает при исправной проводке. Ставить больше?","acceptedAnswer":{"@type":"Answer","text":"Только если и кабель рассчитан на больший номинал. Иначе разделите нагрузку на две линии — увеличенный автомат на тонком кабеле означает, что при перегрузке первым «расцепится» провод в стене."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Предварительный выбор автоматического выключателя","url":"https://macos2024.github.io/vybor-avtomata.html","description":"Предварительная проверка автоматического выключателя по току нагрузки, допустимому току кабеля и отключающей способности. Характеристика B/C/D отдельно не назначается.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Предварительный выбор автоматического выключателя","item":"https://macos2024.github.io/vybor-avtomata.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Что означают буквы B, C, D на автомате?","acceptedAnswer":{"@type":"Answer","text":"Это диапазон мгновенного расцепления: B — 3–5·In, C — 5–10·In, D — 10–20·In. Нельзя назначать C только по слову «бытовая»: нужно одновременно пропустить нормальные пусковые токи и обеспечить отключение при минимальном КЗ."}},{"@type":"Question","name":"Автомат выбивает при исправной проводке. Ставить больше?","acceptedAnswer":{"@type":"Answer","text":"Только если и кабель рассчитан на больший номинал. Иначе разделите нагрузку на две линии — увеличенный автомат на тонком кабеле означает, что при перегрузке первым «расцепится» провод в стене."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -134,12 +134,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
-<h1>Выбор автоматического выключателя по мощности</h1>
-<p class="intro">Введите мощность линии — калькулятор посчитает ток, подберёт стандартный номинал автомата и сечение кабеля, которое этот автомат сможет защитить.</p>
+<h1>Предварительный выбор автоматического выключателя</h1>
+<p class="intro">Введите нагрузку, допустимый ток уже выбранного кабеля и ожидаемый ток КЗ. Калькулятор проверит базовые условия, но не будет угадывать характеристику B/C/D.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Выбор автоматического выключателя по мощности</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Предварительный выбор автоматического выключателя</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_faza"><label for="faza">Сеть</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная (220 В)</option><option value="3">Трёхфазная (380 В)</option></select></div></div><div class="f" id="f_p"><label for="p">Мощность нагрузки P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 4"><select id="p_unit" class="u" aria-label="Единицы"><option value="1">Вт</option><option value="1000" selected>кВт</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_c"><label for="c">cos φ</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div></div>
+<div class="f" id="f_faza"><label for="faza">Сеть</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная (220 В)</option><option value="3">Трёхфазная (380 В)</option></select></div></div><div class="f" id="f_p"><label for="p">Мощность нагрузки P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 4"><select id="p_unit" class="u" aria-label="Единицы"><option value="1">Вт</option><option value="1000" selected>кВт</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_c"><label for="c">cos φ</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div></div><div class="f" id="f_iz"><label for="iz">Допустимый ток кабеля Iz</label><div class="fw"><input id="iz" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="после всех поправок"><span class="u">А</span></div><div class="hint">Берётся из таблицы для конкретного кабеля, способа прокладки, температуры и группировки</div></div><div class="f" id="f_isc"><label for="isc">Ожидаемый ток КЗ в точке установки</label><div class="fw"><input id="isc" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 1,5"><span class="u">кА</span></div><div class="hint">Из расчёта сети или измерения; без него нельзя проверить отключающую способность</div></div><div class="f" id="f_icn"><label for="icn">Отключающая способность автомата</label><div class="fw"><select id="icn"><option value="4.5">4,5 кА</option><option value="6" selected>6 кА</option><option value="10">10 кА</option></select></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -148,18 +148,19 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<p>Порядок выбора: считаем ток нагрузки, берём ближайший стандартный номинал автомата не ниже этого тока, затем подбираем кабель, длительно допустимый ток которого не меньше номинала автомата.</p>
+<p>Для защиты кабеля должны одновременно выполняться базовые условия:</p>
 <div class="formula">I = P / (U · cos φ) — однофазная&nbsp;&nbsp;&nbsp;I = P / (√3 · U · cos φ) — трёхфазная</div>
-<p>Стандартный ряд номиналов: 6, 10, 16, 20, 25, 32, 40, 50, 63 А. Тепловой расцепитель автомата допускает длительную работу при токе до 1,13·Iном и обязан отключиться при 1,45·Iном — именно поэтому кабель «впритык к нагрузке, но тоньше автомата» недопустим.</p>
+<div class="formula">IB ≤ In ≤ Iz&nbsp;&nbsp;&nbsp;Icn ≥ Isc</div>
+<p>IB — расчётный ток нагрузки, In — номинал автомата, Iz — допустимый длительный ток кабеля после всех поправок, Icn — отключающая способность автомата, Isc — ожидаемый ток КЗ. Характеристика B/C/D не определяется одной мощностью: она зависит от пускового тока и условия быстрого отключения при минимальном КЗ.</p>
 <h2>Пример расчёта</h2>
-<p>Линия 4 кВт, 220 В: I = 4000/220 ≈ 18,2 А → автомат <b>20 А</b> → медь <b>2,5 мм²</b> (27 А ≥ 20 А). Ставить автомат 25 А «с запасом» на тот же кабель нельзя.</p>
+<p>Линия 4 кВт, 220 В: IB = 18,18 А. Кандидат 20 А при Iz = 27 А и Isc = 1,5 кА с Icn = 6 кА проходит две базовые проверки: 18,18 ≤ 20 ≤ 27 и 6 ≥ 1,5. Характеристику расцепления всё равно проверяют отдельно.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Что означают буквы B, C, D на автомате?</h3><p>Это кратность тока мгновенного (электромагнитного) расцепления: B — 3–5·Iном, C — 5–10, D — 10–20. Для жилья стандарт — C; B ставят на длинные линии и освещение, D — на двигатели с тяжёлым пуском.</p><h3>Автомат выбивает при исправной проводке. Ставить больше?</h3><p>Только если и кабель рассчитан на больший номинал. Иначе разделите нагрузку на две линии — увеличенный автомат на тонком кабеле означает, что при перегрузке первым «расцепится» провод в стене.</p>
+<h3>Что означают буквы B, C, D на автомате?</h3><p>Это диапазон мгновенного расцепления: B — 3–5·In, C — 5–10·In, D — 10–20·In. Нельзя назначать C только по слову «бытовая»: нужно одновременно пропустить нормальные пусковые токи и обеспечить отключение при минимальном КЗ.</p><h3>Автомат выбивает при исправной проводке. Ставить больше?</h3><p>Только если и кабель рассчитан на больший номинал. Иначе разделите нагрузку на две линии — увеличенный автомат на тонком кабеле означает, что при перегрузке первым «расцепится» провод в стене.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="sechenie-kabelya.html">Сечение кабеля по мощности и току</a></li><li><a href="vybor-uzo.html">Выбор УЗО: номинал и ток утечки</a></li><li><a href="tok-po-moshchnosti.html">Расчёт тока по мощности (220 В и 380 В)</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Practical_values_for_a_protective_scheme" rel="nofollow noopener" target="_blank">Practical values for a protective scheme</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция от 22.06.2022 — раздел General rules, Protection by circuit-breaker — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Fundamental_characteristics_of_a_circuit-breaker" rel="nofollow noopener" target="_blank">Fundamental characteristics of a circuit-breaker</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция, актуальная на 11.08.2026 — раздел Rated current, Short-circuit relay trip-current setting, Rated short-circuit breaking capacity — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Не выбирает характеристику B/C/D и не проверяет время отключения.</li><li>Iz должен быть заранее определён для конкретного кабеля с учётом прокладки, температуры и группировки.</li><li>Isc должен быть получен расчётом сети или измерением, а не принят по умолчанию.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="sechenie-kabelya.html">Предварительный выбор сечения провода по току</a></li><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="tok-po-moshchnosti.html">Расчёт тока по мощности (220 В и 380 В)</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -226,23 +227,29 @@ if(typeof init==='function')init();
 
 
 var RAT=[6,10,16,20,25,32,40,50,63];
-var SCU=[[1.5,19],[2.5,27],[4,38],[6,46],[10,70],[16,85],[25,115],[35,135]];
 function init(){$('faza').addEventListener('change',function(){$('u').value=(S('faza')==='3')?'380':'220';});}
 function calc(){
-var p=P('p'),u=P('u'),c=P('c');
-if(isNaN(p)||isNaN(u)||isNaN(c))return err('Заполните все поля.');
+var p=P('p'),u=P('u'),c=P('c'),iz=P('iz'),isc=P('isc'),icn=N(S('icn'));
+if(isNaN(p)||isNaN(u)||isNaN(c))return err('Введите мощность, напряжение и cos φ.');
 if(u<=0||p<=0)return err('Мощность и напряжение должны быть больше нуля.');
 if(c<=0||c>1)return err('cos φ должен быть в диапазоне от 0 до 1.');
 var i=p/(((S('faza')==='3')?Math.sqrt(3):1)*u*c);
 var nom=null;
 for(var k=0;k<RAT.length;k++){if(RAT[k]>=i){nom=RAT[k];break;}}
 if(!nom)return err('Ток '+fmt(i,3)+' А больше 63 А — это уровень вводного щита, нужен проектный расчёт.');
-var sec=null;
-for(var m=0;m<SCU.length;m++){if(SCU[m][1]>=nom){sec=SCU[m];break;}}
-out(row('Расчётный ток',fmt(i,3)+' А')+
-row('Автомат',nom+' А (характеристика C)')+
-row('Кабель (медь, скрытая прокладка)','не менее '+String(sec[0]).replace('.',',')+' мм² ('+sec[1]+' А)')+
-note('Главное правило: автомат защищает кабель, а не прибор. Сечение выбирается под номинал автомата, чтобы линия выдержала ток, при котором защита ещё не отключилась.'));
+var h=row('Расчётный ток IB',fmt(i,3)+' А')+row('Кандидат по номиналу In',nom+' А');
+if(isNaN(iz)||isNaN(isc)){
+ h+=row('Статус','Недостаточно данных')+
+ note('Укажите Iz и ток КЗ. Без них нельзя проверить защиту кабеля и отключающую способность. Характеристика B/C/D также выбирается отдельно по пусковым токам и минимальному току КЗ.');
+ return out(h);
+}
+if(iz<=0||isc<0)return err('Iz должен быть больше нуля, ток КЗ — неотрицательным.');
+var cableOk=nom<=iz, breakOk=icn>=isc;
+h+=row('Условие IB ≤ In ≤ Iz',fmt(i,3)+' ≤ '+nom+' ≤ '+fmt(iz,3)+' А — '+(cableOk?'выполняется':'НЕ выполняется'))+
+row('Условие Icn ≥ Isc',fmt(icn,3)+' ≥ '+fmt(isc,3)+' кА — '+(breakOk?'выполняется':'НЕ выполняется'))+
+row('Статус',(cableOk&&breakOk)?'Базовые условия выполняются':'Кандидат не подходит')+
+note('Это предварительная проверка. Она не выбирает B/C/D и не подтверждает время автоматического отключения: нужны пусковые токи, минимальный ток КЗ, система заземления и характеристика конкретного аппарата.');
+out(h);
 }
 
 </script>

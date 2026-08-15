@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ток в нулевом проводе при перекосе фаз — ВольтКальк</title>
-<meta name="description" content="Расчёт тока в нулевом рабочем проводнике трёхфазной сети при неравномерной нагрузке фаз. Формула, коэффициент несимметрии и опасность обрыва нуля.">
+<meta name="description" content="Расчёт векторной суммы синусоидальных токов основной частоты в четырёхпроводной трёхфазной сети. Гармоники и подбор сечения не рассчитываются.">
 <link rel="canonical" href="https://macos2024.github.io/tok-v-nule-perekos.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Ток в нулевом проводе при перекосе фаз — ВольтКальк">
-<meta property="og:description" content="Расчёт тока в нулевом рабочем проводнике трёхфазной сети при неравномерной нагрузке фаз. Формула, коэффициент несимметрии и опасность обрыва нуля.">
+<meta property="og:description" content="Расчёт векторной суммы синусоидальных токов основной частоты в четырёхпроводной трёхфазной сети. Гармоники и подбор сечения не рассчитываются.">
 <meta property="og:url" content="https://macos2024.github.io/tok-v-nule-perekos.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Ток в нулевом проводе при перекосе фаз","url":"https://macos2024.github.io/tok-v-nule-perekos.html","description":"Расчёт тока в нулевом рабочем проводнике трёхфазной сети при неравномерной нагрузке фаз. Формула, коэффициент несимметрии и опасность обрыва нуля.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Ток в нулевом проводе при перекосе фаз","item":"https://macos2024.github.io/tok-v-nule-perekos.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему ток в нуле меньше разности фазных токов?","acceptedAnswer":{"@type":"Answer","text":"Потому что складываются векторы, а не числа: токи сдвинуты на 120°, и их сумма геометрическая. Арифметическая разность даёт завышенную оценку, хотя как грубый запас она безопасна."}},{"@type":"Question","name":"Чем опасен обрыв нуля?","acceptedAnswer":{"@type":"Answer","text":"Это самая разрушительная авария в трёхфазной сети. Нейтраль перестаёт быть закреплённой, и напряжения перераспределяются обратно пропорционально нагрузке: на малонагруженной фазе оно может достичь 380 В. Защищаются реле контроля напряжения на каждой фазе."}},{"@type":"Question","name":"Можно ли ставить автомат в нулевой проводник?","acceptedAnswer":{"@type":"Answer","text":"В нулевой рабочий проводник (N) — только в составе двухполюсного или четырёхполюсного автомата, который размыкает ноль одновременно с фазами. Отдельный однополюсный автомат или предохранитель в нуле запрещён: его срабатывание создаст ровно ту аварию с обрывом нуля, о которой шла речь выше."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Ток в нулевом проводе при перекосе фаз","url":"https://macos2024.github.io/tok-v-nule-perekos.html","description":"Расчёт векторной суммы синусоидальных токов основной частоты в четырёхпроводной трёхфазной сети. Гармоники и подбор сечения не рассчитываются.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Ток в нулевом проводе при перекосе фаз","item":"https://macos2024.github.io/tok-v-nule-perekos.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему ток в нуле меньше разности фазных токов?","acceptedAnswer":{"@type":"Answer","text":"Потому что складываются векторы, а не числа: токи сдвинуты на 120°, и их сумма геометрическая. Арифметическая разность даёт завышенную оценку, хотя как грубый запас она безопасна."}},{"@type":"Question","name":"Чем опасен обрыв нуля?","acceptedAnswer":{"@type":"Answer","text":"Это самая разрушительная авария в трёхфазной сети. Нейтраль перестаёт быть закреплённой, и напряжения перераспределяются обратно пропорционально нагрузке: на малонагруженной фазе оно может достичь 380 В. Защищаются реле контроля напряжения на каждой фазе."}},{"@type":"Question","name":"Можно ли ставить автомат в нулевой проводник?","acceptedAnswer":{"@type":"Answer","text":"В нулевой рабочий проводник (N) — только в составе двухполюсного или четырёхполюсного автомата, который размыкает ноль одновременно с фазами. Отдельный однополюсный автомат или предохранитель в нуле запрещён: его срабатывание создаст ровно ту аварию с обрывом нуля, о которой шла речь выше."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -135,7 +135,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
 <h1>Ток в нулевом проводе при перекосе фаз</h1>
-<p class="intro">При идеально равномерной нагрузке ток в нуле равен нулю. Любой перекос сразу нагружает нулевой проводник.</p>
+<p class="intro">Формула предполагает синусоидальные токи одной частоты, сдвинутые ровно на 120°. Для нелинейных нагрузок ток нуля может быть больше фазного из-за суммирования тройных гармоник.</p>
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Ток в нулевом проводе при перекосе фаз</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
@@ -151,20 +151,20 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <div class="formula">I(N) = √( Ia² + Ib² + Ic² − Ia·Ib − Ib·Ic − Ic·Ia )</div>
 <p>Формула получается векторным сложением трёх фазных токов, сдвинутых на 120° друг относительно друга. Когда все три равны, векторы складываются в ноль — по нулевому проводу не течёт ничего. Как только равенство нарушается, появляется остаток, и он идёт по нулю.</p>
 <p>Отсюда неочевидное следствие: ток в нуле <b>не равен</b> разности между наибольшей и наименьшей фазой. При токах 30, 20 и 10 А разброс составляет 20 А, а по нулю течёт лишь 17,32 А — векторное сложение даёт меньше арифметического.</p>
-<p>Практических выводов два. Первый: нулевой проводник в сетях с бытовой однофазной нагрузкой нельзя делать тоньше фазного — перекос там обычное дело. Второй, и более важный, касается <b>обрыва нуля</b>. Пока ноль цел, он удерживает нейтраль, и на каждой фазе ровно 220 В. Если он оборвётся при перекосе, нейтраль «поплывёт»: на слабо нагруженной фазе напряжение подскочит почти до линейных 380 В, и вся техника на ней выйдет из строя одновременно.</p>
+<p>Результат относится только к основной гармонике. У однофазной электронной техники третья и кратные трём гармоники во всех фазах совпадают по фазе и складываются в нейтрали, поэтому полный RMS‑ток нуля может превысить фазный даже при равных основных гармониках. Сечение и защиту выбирают по полному спектру, способу прокладки и применимому стандарту. При обрыве нуля несимметричная нагрузка также вызывает опасное перераспределение фазных напряжений.</p>
 <table class="t"><tr><th>Токи фаз, А</th><th>Ток в нуле, А</th></tr>
 <tr><td>20 / 20 / 20</td><td>0</td></tr>
 <tr><td>30 / 20 / 10</td><td>17,32</td></tr>
 <tr><td>30 / 0 / 0</td><td>30</td></tr></table>
 <p>Последняя строка показывает предельный случай: если нагружена одна фаза, весь её ток возвращается по нулю — сеть работает как обычная однофазная.</p>
 <h2>Пример расчёта</h2>
-<p>Фазы нагружены токами 30, 20 и 10 А при 220 В. Ток в нулевом проводе: √(900 + 400 + 100 − 600 − 200 − 300) = √300 = <b>17,321 А</b>. Перекос относительно среднего — <b>50%</b>, мощности по фазам 6,6 / 4,4 / 2,2 кВт. Нулевой проводник здесь работает почти как фазный и должен иметь такое же сечение.</p>
+<p>При синусоидальных фазных токах 30, 20 и 10 А ток основной гармоники в нуле равен √300 = <b>17,321 А</b>. Это не итог для кабеля: гармонический спектр нагрузок может увеличить RMS‑ток нуля.</p>
 <div class="faq"><h2>Частые вопросы</h2>
 <h3>Почему ток в нуле меньше разности фазных токов?</h3><p>Потому что складываются векторы, а не числа: токи сдвинуты на 120°, и их сумма геометрическая. Арифметическая разность даёт завышенную оценку, хотя как грубый запас она безопасна.</p><h3>Чем опасен обрыв нуля?</h3><p>Это самая разрушительная авария в трёхфазной сети. Нейтраль перестаёт быть закреплённой, и напряжения перераспределяются обратно пропорционально нагрузке: на малонагруженной фазе оно может достичь 380 В. Защищаются реле контроля напряжения на каждой фазе.</p><h3>Можно ли ставить автомат в нулевой проводник?</h3><p>В нулевой рабочий проводник (N) — только в составе двухполюсного или четырёхполюсного автомата, который размыкает ноль одновременно с фазами. Отдельный однополюсный автомат или предохранитель в нуле запрещён: его срабатывание создаст ровно ту аварию с обрывом нуля, о которой шла речь выше.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Effects_of_harmonics_-_Overload_of_equipment" rel="nofollow noopener" target="_blank">Electrical Installation Guide — Effects of harmonics</a> — Schneider Electric — Редакция online edition, current on access date — раздел triplen harmonics in the neutral, neutral conductor loading — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Power_and_reactive_energy" rel="nofollow noopener" target="_blank">Electrical Installation Guide</a> — Schneider Electric — Редакция онлайн-редакция, актуальная на дату обращения — раздел Power and reactive energy, three-phase circuits, motor current — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Только синусоидальные основные гармоники, сдвинутые на 120°. Тройные гармоники нелинейных нагрузок складываются в нейтрали и могут сделать полный ток выше фазного.</li><li>Результат не предназначен для выбора сечения или аппарата защиты.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="zvezda-treugolnik.html">Звезда и треугольник: линейные и фазные величины</a></li><li><a href="nagruzka-kvartiry.html">Расчётная нагрузка с коэффициентом спроса</a></li><li><a href="sechenie-pe-provodnika.html">Сечение защитного проводника PE</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -242,8 +242,8 @@ var inn=Math.sqrt(q);
 var avg=(a+b+c)/3,mx=Math.max(a,b,c),mn=Math.min(a,b,c);
 var perekos=avg>0?100*(mx-avg)/avg:0;
 var pa=u*a,pb=u*b,pc=u*c,tot=pa+pb+pc;
-var n=inn<0.05*mx?'Нагрузка распределена почти равномерно — нулевой проводник практически разгружен.':'Нулевой проводник несёт заметный ток. Его сечение должно быть рассчитано на эту величину, а обрыв нуля при таком перекосе крайне опасен: напряжения на фазах разойдутся, и на наименее нагруженной фазе может оказаться до 380 В.';
-out(row('Ток в нулевом проводе I(N)',fmt(inn,5)+' А')+
+var n=inn<0.05*mx?'Основная гармоника почти уравновешена. Это не доказывает малый полный ток нуля: тройные гармоники нелинейных нагрузок здесь не вычисляются.':'Основная гармоника нулевого тока заметна. Формула не предназначена для выбора сечения: добавьте спектр гармоник и применимые нормативные условия; обрыв нуля при перекосе опасен перенапряжением.';
+out(row('Ток основной гармоники I(N)',fmt(inn,5)+' А')+
 row('Средний ток фазы',fmt(avg,5)+' А')+
 row('Максимальный перекос',fmt(perekos,4)+' %')+
 row('Разброс токов',fmt(mx-mn,5)+' А')+

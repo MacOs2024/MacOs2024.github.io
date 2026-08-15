@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Массив солнечных панелей: напряжение и контроллер</title>
-<meta name="description" content="Расчёт напряжения холостого хода солнечного массива с температурной поправкой и проверка допустимого числа панелей в последовательной цепочке для MPPT-контроллера.">
+<title>Массив солнечных панелей: оценка Voc на холоде — ВольтКальк</title>
+<meta name="description" content="Математическая оценка напряжения холостого хода массива по введённому коэффициенту Voc и сравнение с введённым абсолютным пределом контроллера.">
 <link rel="canonical" href="https://macos2024.github.io/solnechnye-paneli-massiv.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Массив солнечных панелей: напряжение и контроллер">
-<meta property="og:description" content="Расчёт напряжения холостого хода солнечного массива с температурной поправкой и проверка допустимого числа панелей в последовательной цепочке для MPPT-контроллера.">
+<meta property="og:title" content="Массив солнечных панелей: оценка Voc на холоде — ВольтКальк">
+<meta property="og:description" content="Математическая оценка напряжения холостого хода массива по введённому коэффициенту Voc и сравнение с введённым абсолютным пределом контроллера.">
 <meta property="og:url" content="https://macos2024.github.io/solnechnye-paneli-massiv.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Массив солнечных панелей: напряжение и контроллер","url":"https://macos2024.github.io/solnechnye-paneli-massiv.html","description":"Расчёт напряжения холостого хода солнечного массива с температурной поправкой и проверка допустимого числа панелей в последовательной цепочке для MPPT-контроллера.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Массив солнечных панелей: напряжение и контроллер","item":"https://macos2024.github.io/solnechnye-paneli-massiv.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему напряжение растёт именно на холоде?","acceptedAnswer":{"@type":"Answer","text":"Это свойство p-n перехода: с понижением температуры ширина запрещённой зоны увеличивается, и напряжение холостого хода растёт. Ток при этом почти не меняется, поэтому холодная панель отдаёт даже больше мощности — при условии, что оборудование выдержит напряжение."}},{"@type":"Question","name":"Можно ли ориентироваться на средние зимние температуры?","acceptedAnswer":{"@type":"Answer","text":"Нет, только на абсолютный минимум региона. Контроллер выходит из строя от единственного превышения, и статистика тут не помогает. Многие берут ещё пару градусов запаса: панель при ясном небе выхолаживается излучением ниже температуры воздуха."}},{"@type":"Question","name":"Что если панелей нужно больше, чем помещается в цепочку?","acceptedAnswer":{"@type":"Answer","text":"Собирают несколько параллельных цепочек по допустимому числу панелей. Напряжение при этом не растёт, увеличивается ток — нужно лишь проверить, что суммарный ток не превышает предел контроллера."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Массив солнечных панелей: оценка Voc на холоде","url":"https://macos2024.github.io/solnechnye-paneli-massiv.html","description":"Математическая оценка напряжения холостого хода массива по введённому коэффициенту Voc и сравнение с введённым абсолютным пределом контроллера.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Массив солнечных панелей: оценка Voc на холоде","item":"https://macos2024.github.io/solnechnye-paneli-massiv.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему напряжение растёт именно на холоде?","acceptedAnswer":{"@type":"Answer","text":"Это свойство p-n перехода: с понижением температуры ширина запрещённой зоны увеличивается, и напряжение холостого хода растёт. Ток при этом почти не меняется, поэтому холодная панель отдаёт даже больше мощности — при условии, что оборудование выдержит напряжение."}},{"@type":"Question","name":"Можно ли ориентироваться на средние зимние температуры?","acceptedAnswer":{"@type":"Answer","text":"Нет. Используйте расчётную минимальную температуру ячейки и методику производителя оборудования, включая допуски и требуемый запас. Средняя температура не описывает крайний режим входного напряжения."}},{"@type":"Question","name":"Что если панелей нужно больше, чем помещается в цепочку?","acceptedAnswer":{"@type":"Answer","text":"Собирают несколько параллельных цепочек по допустимому числу панелей. Напряжение при этом не растёт, увеличивается ток — нужно лишь проверить, что суммарный ток не превышает предел контроллера."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -134,10 +134,10 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
-<h1>Массив солнечных панелей: напряжение и контроллер</h1>
-<p class="intro">На морозе напряжение панелей <b>растёт</b>. Массив, безопасный летом, зимним утром может пробить контроллер.</p>
+<h1>Массив солнечных панелей: оценка Voc на холоде</h1>
+<p class="intro">На холоде Voc кремниевого модуля обычно растёт. Для проектного решения используйте точный даташит модуля и контроллера, абсолютную минимальную температуру ячейки, допуски и требуемый запас.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Массив солнечных панелей: напряжение и контроллер</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Массив солнечных панелей: оценка Voc на холоде</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
 <div class="f" id="f_voc"><label for="voc">Voc одной панели (STC)</label><div class="fw"><input id="voc" type="text" inputmode="decimal" autocomplete="off" value="41,5" placeholder=""><span class="u">В</span></div><div class="hint">Напряжение холостого хода из паспорта панели</div></div><div class="f" id="f_vmp"><label for="vmp">Vmp одной панели (STC)</label><div class="fw"><input id="vmp" type="text" inputmode="decimal" autocomplete="off" value="34,5" placeholder=""><span class="u">В</span></div><div class="hint">Напряжение в точке максимальной мощности</div></div><div class="f" id="f_beta"><label for="beta">Температурный коэффициент Voc</label><div class="fw"><input id="beta" type="text" inputmode="decimal" autocomplete="off" value="-0,30" placeholder=""><span class="u">%/°C</span></div><div class="hint">Обычно от −0,25 до −0,35 %/°C, значение отрицательное</div></div><div class="f" id="f_tmin"><label for="tmin">Минимальная температура панели</label><div class="fw"><input id="tmin" type="text" inputmode="decimal" autocomplete="off" value="-30" placeholder=""><span class="u">°C</span></div></div><div class="f" id="f_vmax"><label for="vmax">Максимальное входное напряжение контроллера</label><div class="fw"><input id="vmax" type="text" inputmode="decimal" autocomplete="off" value="250" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_n"><label for="n">Панелей в последовательной цепочке</label><div class="fw"><input id="n" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">шт.</span></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
@@ -158,13 +158,13 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <tr><td>−30 °C</td><td>48,35 В</td></tr></table>
 <p>Разброс между жарой и морозом достигает четверти — это очень много, когда речь о защите дорогого оборудования.</p>
 <h2>Пример расчёта</h2>
-<p>Панели с Voc = 41,5 В и коэффициентом −0,30 %/°C, минимальная температура −30 °C, контроллер с входом до 250 В. Напряжение одной панели на морозе: 41,5 · (1 + 0,165) = <b>48,348 В</b> — на <b>16,5%</b> выше паспортного. Пять панелей последовательно дают <b>241,74 В</b> при пределе 250 В: проходит с запасом 3%. Шестая панель подняла бы напряжение до 290 В и вывела контроллер из строя.</p>
+<p>Панели с Voc = 41,5 В и коэффициентом −0,30 %/°C при введённых −30 °C дают оценку <b>48,348 В</b> на модуль. Пять модулей дают <b>241,74 В</b> при введённом пределе 250 В. Разность менее 4% сама по себе не доказывает допустимый проектный запас: нужно добавить допуски и применить методику производителя.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Почему напряжение растёт именно на холоде?</h3><p>Это свойство p-n перехода: с понижением температуры ширина запрещённой зоны увеличивается, и напряжение холостого хода растёт. Ток при этом почти не меняется, поэтому холодная панель отдаёт даже больше мощности — при условии, что оборудование выдержит напряжение.</p><h3>Можно ли ориентироваться на средние зимние температуры?</h3><p>Нет, только на абсолютный минимум региона. Контроллер выходит из строя от единственного превышения, и статистика тут не помогает. Многие берут ещё пару градусов запаса: панель при ясном небе выхолаживается излучением ниже температуры воздуха.</p><h3>Что если панелей нужно больше, чем помещается в цепочку?</h3><p>Собирают несколько параллельных цепочек по допустимому числу панелей. Напряжение при этом не растёт, увеличивается ток — нужно лишь проверить, что суммарный ток не превышает предел контроллера.</p>
+<h3>Почему напряжение растёт именно на холоде?</h3><p>Это свойство p-n перехода: с понижением температуры ширина запрещённой зоны увеличивается, и напряжение холостого хода растёт. Ток при этом почти не меняется, поэтому холодная панель отдаёт даже больше мощности — при условии, что оборудование выдержит напряжение.</p><h3>Можно ли ориентироваться на средние зимние температуры?</h3><p>Нет. Используйте расчётную минимальную температуру ячейки и методику производителя оборудования, включая допуски и требуемый запас. Средняя температура не описывает крайний режим входного напряжения.</p><h3>Что если панелей нужно больше, чем помещается в цепочку?</h3><p>Собирают несколько параллельных цепочек по допустимому числу панелей. Напряжение при этом не растёт, увеличивается ток — нужно лишь проверить, что суммарный ток не превышает предел контроллера.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.victronenergy.com/upload/documents/Manual_BlueSolar_150-35__150-45/29694-MPPT_solar_charger_manual-pdf-en.pdf" rel="nofollow noopener" target="_blank">BlueSolar MPPT 150/35 &amp; 150/45 manual</a> — Victron Energy — Редакция current manual on access date — раздел maximum PV open-circuit voltage, temperature coefficient requirement — обращение 11.08.2026</li><li><a href="https://www.canadiansolar.com/wp-content/uploads/sites/3/2026/05/CS-Datasheet-TOPBiHiKu6_CS6.2-66TB-H_v1.1_F68_L3B_TX-DC-Light.pdf" rel="nofollow noopener" target="_blank">TOPBiHiKu6 CS6.2-66TB-H module datasheet</a> — Canadian Solar — Редакция v1.1, 2026 — раздел Voc and Vmp at STC, temperature coefficient of Voc — обращение 11.08.2026</li><li><a href="https://www.nrel.gov/docs/fy18osti/67399.pdf" rel="nofollow noopener" target="_blank">SAM Photovoltaic Model Technical Reference Update</a> — National Renewable Energy Laboratory — Редакция NREL/TP-6A20-67399, 2018 — раздел irradiance, module and system losses, energy yield modelling — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Сравниваются только введённые номиналы; для проекта нужны допуск Voc, абсолютная минимальная температура ячейки, методика производителя и отдельные пределы MPPT по току/напряжению.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="solar-panel-energy.html">Выработка солнечной панели</a></li><li><a href="raschet-akb-avtonomnoy.html">Ёмкость аккумуляторов для автономной системы</a></li><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -236,7 +236,7 @@ var voc=P('voc'),vmp=P('vmp'),b=P('beta'),tmin=P('tmin'),vmax=P('vmax'),n=P('n')
 if([voc,vmp,b,tmin,vmax,n].some(isNaN))return err('Заполните все поля.');
 if(voc<=0||vmp<=0||vmax<=0)return err('Напряжения должны быть больше нуля.');
 if(n<1||Math.round(n)!==n)return err('Число панелей — целое положительное число.');
-if(b>0)return err('Температурный коэффициент Voc отрицательный — укажите значение со знаком минус.');
+if(b>=0)return err('Для этого расчёта температурный коэффициент Voc должен быть отрицательным и указан со знаком минус.');
 var vocT=voc*(1+b/100*(tmin-25)),arr=n*vocT,arrStc=n*voc,vmpArr=n*vmp;
 var nmax=Math.floor(vmax/vocT);
 var ok=arr<=vmax;
@@ -245,12 +245,12 @@ out(row('Voc одной панели при '+fmt(tmin,4)+' °C',fmt(vocT,5)+' �
 row('Прирост от мороза',fmt(100*(vocT/voc-1),4)+' %')+
 row('Voc массива при '+fmt(tmin,4)+' °C',fmt(arr,5)+' В')+
 row('Voc массива при +25 °C',fmt(arrStc,5)+' В')+
-row('Рабочее напряжение Vmp массива',fmt(vmpArr,5)+' В')+
+row('Vmp массива при STC',fmt(vmpArr,5)+' В')+
 row('Предел контроллера',fmt(vmax,5)+' В')+
 row('Использовано от предела',fmt(zap,4)+' %')+
 row('Максимум панелей в цепочке',nmax+' шт.')+
-row('Вердикт',ok?'Проходит':'ПРЕВЫШЕНИЕ — контроллер под угрозой')+
-note(ok?'Запас есть. Проверку ведут по самой холодной температуре в вашем регионе: панель на морозе под ярким солнцем может быть даже холоднее воздуха из-за ночного выхолаживания.':'Напряжение массива на морозе превышает предел контроллера — при первом же ясном зимнем утре он выйдет из строя. Уберите панель из цепочки: допустимый максимум составляет '+nmax+' шт.'));
+row('Сравнение введённых значений',ok?'Ниже введённого предела':'Превышает введённый предел')+
+note(ok?'По введённым номиналам превышения нет, но это не подтверждение проектного запаса. Учтите допуск Voc, точную минимальную температуру ячейки, требования производителя и пределы MPPT по напряжению и току.':'Введённые значения уже дают превышение. Уменьшите число модулей и повторите проверку по паспортной методике производителя контроллера; математический максимум по этим номиналам — '+nmax+' шт.'));
 }
 
 </script>

@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -139,7 +139,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Операционный усилитель: коэффициент усиления</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_mode"><label for="mode">Схема включения</label><div class="fw"><select id="mode"><option value="inv" selected>Инвертирующее</option><option value="non">Неинвертирующее</option></select></div></div><div class="f" id="f_rin"><label for="rin">Входной резистор R₁</label><div class="fw"><input id="rin" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><select id="rin_unit" class="u" aria-label="Единицы"><option value="1">Ом</option><option value="1000.0" selected>кОм</option><option value="1000000.0">МОм</option></select></div></div><div class="f" id="f_rf"><label for="rf">Резистор обратной связи R₂</label><div class="fw"><input id="rf" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="rf_unit" class="u" aria-label="Единицы"><option value="1">Ом</option><option value="1000.0" selected>кОм</option><option value="1000000.0">МОм</option></select></div></div><div class="f" id="f_vin"><label for="vin">Входное напряжение</label><div class="fw"><input id="vin" type="text" inputmode="decimal" autocomplete="off" value="0,1" placeholder=""><select id="vin_unit" class="u" aria-label="Единицы"><option value="0.001">мВ</option><option value="1" selected>В</option></select></div></div><div class="f" id="f_vcc"><label for="vcc">Напряжение питания (однополярное)</label><div class="fw"><input id="vcc" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">В</span></div><div class="hint">Для двуполярного питания ±12 В укажите 12</div></div>
+<div class="f" id="f_mode"><label for="mode">Схема включения</label><div class="fw"><select id="mode"><option value="inv" selected>Инвертирующее</option><option value="non">Неинвертирующее</option></select></div></div><div class="f" id="f_rin"><label for="rin">Входной резистор R₁</label><div class="fw"><input id="rin" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><select id="rin_unit" class="u" aria-label="Единицы"><option value="1">Ом</option><option value="1000.0" selected>кОм</option><option value="1000000.0">МОм</option></select></div></div><div class="f" id="f_rf"><label for="rf">Резистор обратной связи R₂</label><div class="fw"><input id="rf" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="rf_unit" class="u" aria-label="Единицы"><option value="1">Ом</option><option value="1000.0" selected>кОм</option><option value="1000000.0">МОм</option></select></div></div><div class="f" id="f_vin"><label for="vin">Входное напряжение</label><div class="fw"><input id="vin" type="text" inputmode="decimal" autocomplete="off" value="0,1" placeholder=""><select id="vin_unit" class="u" aria-label="Единицы"><option value="0.001">мВ</option><option value="1" selected>В</option></select></div></div><div class="f" id="f_vmin"><label for="vmin">Нижняя допустимая граница выхода</label><div class="fw"><input id="vmin" type="text" inputmode="decimal" autocomplete="off" value="-12" placeholder=""><span class="u">В</span></div><div class="hint">Берите из даташита ОУ при вашей нагрузке и питании</div></div><div class="f" id="f_vmax"><label for="vmax">Верхняя допустимая граница выхода</label><div class="fw"><input id="vmax" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">В</span></div><div class="hint">Не обязательно совпадает с положительной шиной питания</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -149,7 +149,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="article">
 <h2>Как считается</h2>
 <div class="formula">Инвертирующее: K = − R₂ / R₁<br>Неинвертирующее: K = 1 + R₂ / R₁<br>Uвых = K · Uвх&nbsp;&nbsp;&nbsp;K(дБ) = 20 · lg |K|</div>
-<p>Обе формулы выводятся из двух правил идеального ОУ: входы не потребляют ток, а отрицательная обратная связь удерживает разность напряжений между входами равной нулю. Дальше остаётся закон Ома для делителя обратной связи.</p>
+<p>Обе формулы выводятся из двух правил идеального ОУ: входы не потребляют ток, а отрицательная обратная связь удерживает разность напряжений между входами равной нулю. Дальше остаётся закон Ома для делителя обратной связи. Введённые нижняя и верхняя границы — допустимый выходной диапазон по даташиту при конкретных питании и нагрузке, а не автоматически сами шины.</p>
 <table class="t"><tr><th>Параметр</th><th>Инвертирующее</th><th>Неинвертирующее</th></tr>
 <tr><td>Знак сигнала</td><td>Переворачивает</td><td>Сохраняет</td></tr>
 <tr><td>Минимальное усиление</td><td>Любое, в том числе &lt;1</td><td>Не меньше 1</td></tr>
@@ -162,7 +162,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.ti.com/lit/pdf/sloa011" rel="nofollow noopener" target="_blank">Understanding Basic Analog — Ideal Op Amps</a> — Texas Instruments — Редакция SLOA011B, revised March 2021 — раздел inverting amplifier, non-inverting amplifier — обращение 11.08.2026</li><li><a href="https://www.ti.com/lit/pdf/sboa583" rel="nofollow noopener" target="_blank">Designing for Output Voltage Swing in Operational Amplifiers</a> — Texas Instruments — Редакция SBOA583, December 2023 — раздел output swing versus load and supply — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Идеальные формулы обратной связи; пользователь должен задать выходные границы по даташиту при фактических питании, нагрузке и температуре.</li><li>GBW, slew rate, входной синфазный диапазон, ток смещения, устойчивость и шум не вычисляются.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="delitel-napryazheniya.html">Делитель напряжения на резисторах</a></li><li><a href="decibel.html">Децибелы: усиление и ослабление</a></li><li><a href="rc-filtr.html">RC-фильтр: частота среза</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -230,14 +230,14 @@ if(typeof init==='function')init();
 
 
 function calc(){
-var r1=P('rin'),r2=P('rf'),vin=P('vin'),vcc=P('vcc');
-if([r1,r2,vin,vcc].some(isNaN))return err('Заполните все поля.');
+var r1=P('rin'),r2=P('rf'),vin=P('vin'),vmin=P('vmin'),vmax=P('vmax');
+if([r1,r2,vin,vmin,vmax].some(isNaN))return err('Заполните все поля.');
 if(r1<=0||r2<=0)return err('Сопротивления должны быть больше нуля.');
-if(vcc<=0)return err('Напряжение питания должно быть больше нуля.');
+if(vmin>=vmax)return err('Нижняя граница выхода должна быть меньше верхней.');
 var inv=S('mode')==='inv',av=inv?-r2/r1:1+r2/r1;
 var vout=av*vin,db=20*Math.log(Math.abs(av))/Math.LN10;
 var n=inv?'Входное сопротивление инвертирующей схемы равно R₁ — источник сигнала нагружается. Неинвертирующая схема почти не нагружает источник.':'Неинвертирующая схема имеет очень высокое входное сопротивление и не может дать усиление меньше единицы.';
-if(Math.abs(vout)>vcc)n='Выход упирается в питание: расчётные '+fmt(vout,4)+' В превышают '+fmt(vcc,4)+' В. Сигнал будет ограничен (клиппинг) — уменьшите усиление или поднимите питание. Обычный ОУ к тому же не доходит до шин питания на 1–2 В; rail-to-rail подходит ближе.';
+if(vout<vmin||vout>vmax)n='Расчётный выход '+fmt(vout,4)+' В вне введённого допустимого диапазона '+fmt(vmin,4)+'…'+fmt(vmax,4)+' В. Сигнал будет ограничен; уточните выходной размах по даташиту при вашей нагрузке и питании.';
 out(row('Коэффициент усиления',fmt(av,6))+
 row('Модуль усиления',fmt(Math.abs(av),6)+' раз')+
 row('Усиление в децибелах',fmt(db,4)+' дБ')+

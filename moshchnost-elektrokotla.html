@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Мощность электрокотла по теплопотерям — ВольтКальк</title>
-<meta name="description" content="Расчёт мощности электрического котла по объёму дома, перепаду температур и качеству утепления. Ток, номинал автомата и стоимость отопления.">
+<meta name="description" content="Оценка мощности электрического котла по объёму, перепаду температур и пользовательскому коэффициенту теплопотерь. Ток и ориентировочная стоимость.">
 <link rel="canonical" href="https://macos2024.github.io/moshchnost-elektrokotla.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Мощность электрокотла по теплопотерям — ВольтКальк">
-<meta property="og:description" content="Расчёт мощности электрического котла по объёму дома, перепаду температур и качеству утепления. Ток, номинал автомата и стоимость отопления.">
+<meta property="og:description" content="Оценка мощности электрического котла по объёму, перепаду температур и пользовательскому коэффициенту теплопотерь. Ток и ориентировочная стоимость.">
 <meta property="og:url" content="https://macos2024.github.io/moshchnost-elektrokotla.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Мощность электрокотла по теплопотерям","url":"https://macos2024.github.io/moshchnost-elektrokotla.html","description":"Расчёт мощности электрического котла по объёму дома, перепаду температур и качеству утепления. Ток, номинал автомата и стоимость отопления.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Мощность электрокотла по теплопотерям","item":"https://macos2024.github.io/moshchnost-elektrokotla.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему считают по объёму, а не по площади?","acceptedAnswer":{"@type":"Answer","text":"Правило «100 Вт на квадратный метр» работает только при стандартных потолках 2,5–2,7 м. В доме с потолком 3,5 м объём на треть больше, и расчёт по площади занизит мощность. Объём учитывает это автоматически."}},{"@type":"Question","name":"Электрокотёл — это дорого?","acceptedAnswer":{"@type":"Answer","text":"Дороже газа в разы, но дешевле в монтаже и не требует согласований. Основной способ снизить счета — двухтарифный счётчик с теплоаккумулятором: котёл греет воду ночью по низкому тарифу, а днём дом отапливается запасённым теплом."}},{"@type":"Question","name":"Хватит ли однофазного ввода?","acceptedAnswer":{"@type":"Answer","text":"До 7 кВт обычно да, выше — почти наверняка нет: ток превысит 30 А, а типичная выделенная мощность на однофазный ввод составляет 5–7 кВт. Для мощных котлов нужен трёхфазный ввод, он же позволяет распределить нагрузку по фазам."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Мощность электрокотла по теплопотерям","url":"https://macos2024.github.io/moshchnost-elektrokotla.html","description":"Оценка мощности электрического котла по объёму, перепаду температур и пользовательскому коэффициенту теплопотерь. Ток и ориентировочная стоимость.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Мощность электрокотла по теплопотерям","item":"https://macos2024.github.io/moshchnost-elektrokotla.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему считают по объёму, а не по площади?","acceptedAnswer":{"@type":"Answer","text":"Правило «100 Вт на квадратный метр» работает только при стандартных потолках 2,5–2,7 м. В доме с потолком 3,5 м объём на треть больше, и расчёт по площади занизит мощность. Объём учитывает это автоматически."}},{"@type":"Question","name":"Электрокотёл — это дорого?","acceptedAnswer":{"@type":"Answer","text":"Дороже газа в разы, но дешевле в монтаже и не требует согласований. Основной способ снизить счета — двухтарифный счётчик с теплоаккумулятором: котёл греет воду ночью по низкому тарифу, а днём дом отапливается запасённым теплом."}},{"@type":"Question","name":"Хватит ли однофазного ввода?","acceptedAnswer":{"@type":"Answer","text":"Это определяют выделенная договорная мощность, параметры существующей линии и условия присоединения. Сравните расчётный ток с проектом и техническими условиями; калькулятор не назначает число фаз и номинал защиты."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -135,11 +135,11 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
 <h1>Мощность электрокотла по теплопотерям</h1>
-<p class="intro">Расчёт по объёму и коэффициенту теплопотерь — стандартная инженерная оценка. Точный расчёт делается по площади ограждающих конструкций.</p>
+<p class="intro">Это грубая оценка по объёму. Для выбора котла нужен расчёт теплопотерь через ограждения, вентиляцию и инфильтрацию; автомат и кабель здесь не выбираются.</p>
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Мощность электрокотла по теплопотерям</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_v"><label for="v">Отапливаемый объём</label><div class="fw"><input id="v" type="text" inputmode="decimal" autocomplete="off" value="150" placeholder=""><span class="u">м³</span></div><div class="hint">Площадь умножить на высоту потолка</div></div><div class="f" id="f_tin"><label for="tin">Температура внутри</label><div class="fw"><input id="tin" type="text" inputmode="decimal" autocomplete="off" value="22" placeholder=""><span class="u">°C</span></div></div><div class="f" id="f_tout"><label for="tout">Расчётная температура снаружи</label><div class="fw"><input id="tout" type="text" inputmode="decimal" autocomplete="off" value="-25" placeholder=""><span class="u">°C</span></div><div class="hint">Самая холодная пятидневка вашего региона</div></div><div class="f" id="f_k"><label for="k">Утепление здания</label><div class="fw"><select id="k"><option value="0.8">Современное с хорошим утеплением (0,6–0,9)</option><option value="1.5" selected>Кирпич, двойные окна (1,0–1,9)</option><option value="2.5">Слабое утепление (2,0–2,9)</option><option value="3.5">Без утепления, щитовой (3,0–4,0)</option></select></div></div><div class="f" id="f_faza"><label for="faza">Подключение</label><div class="fw"><select id="faza"><option value="1">Однофазное 220 В</option><option value="3" selected>Трёхфазное 380 В</option></select></div></div><div class="f" id="f_tar"><label for="tar">Тариф</label><div class="fw"><input id="tar" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">₽/кВт·ч</span></div></div>
+<div class="f" id="f_v"><label for="v">Отапливаемый объём</label><div class="fw"><input id="v" type="text" inputmode="decimal" autocomplete="off" value="150" placeholder=""><span class="u">м³</span></div><div class="hint">Площадь умножить на высоту потолка</div></div><div class="f" id="f_tin"><label for="tin">Температура внутри</label><div class="fw"><input id="tin" type="text" inputmode="decimal" autocomplete="off" value="22" placeholder=""><span class="u">°C</span></div></div><div class="f" id="f_tout"><label for="tout">Расчётная температура снаружи</label><div class="fw"><input id="tout" type="text" inputmode="decimal" autocomplete="off" value="-25" placeholder=""><span class="u">°C</span></div><div class="hint">Самая холодная пятидневка вашего региона</div></div><div class="f" id="f_k"><label for="k">Утепление здания</label><div class="fw"><select id="k"><option value="0.8">Современное с хорошим утеплением (0,6–0,9)</option><option value="1.5" selected>Кирпич, двойные окна (1,0–1,9)</option><option value="2.5">Слабое утепление (2,0–2,9)</option><option value="3.5">Без утепления, щитовой (3,0–4,0)</option></select></div></div><div class="f" id="f_faza"><label for="faza">Подключение</label><div class="fw"><select id="faza"><option value="1">Однофазное 220 В</option><option value="3" selected>Трёхфазное 380 В</option></select></div></div><div class="f" id="f_duty"><label for="duty">Средняя загрузка котла</label><div class="fw"><input id="duty" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">%</span></div><div class="hint">Пользовательское допущение для оценки расхода, не характеристика котла</div></div><div class="f" id="f_tar"><label for="tar">Тариф</label><div class="fw"><input id="tar" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">₽/кВт·ч</span></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -159,14 +159,14 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <p>Наружную температуру берут не среднезимнюю, а расчётную — температуру самой холодной пятидневки региона. Котёл должен справляться в пик, а не в среднем.</p>
 <p>К расчётной мощности добавляют 10–20% запаса: на прогрев после понижения температуры, на горячее водоснабжение, если оно от того же котла, и на нештатно холодную зиму. Больший запас брать невыгодно — котёл будет работать короткими циклами с частыми включениями.</p>
 <h2>Пример расчёта</h2>
-<p>Дом 60 м² с потолками 2,5 м — объём 150 м³. Внутри 22 °C, расчётная наружная −25 °C, перепад 47 °C. Кирпичное здание с двойными окнами, k = 1,5. Тепловая мощность: 150 · 47 · 1,5 / 860 = <b>12,297 кВт</b>, с запасом 15% — <b>14,141 кВт</b>. При трёхфазном подключении ток составит <b>21,485 А</b>, автомат — <b>32 А</b>.</p>
+<p>Объём 150 м³, внутри 22 °C, снаружи −25 °C, k = 1,5: оценка теплопотерь <b>12,297 кВт</b>, с запасом 15% — <b>14,141 кВт</b>. При трёхфазном подключении расчётный ток составит <b>21,485 А</b>; автомат по одному этому току не выбирают.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Почему считают по объёму, а не по площади?</h3><p>Правило «100 Вт на квадратный метр» работает только при стандартных потолках 2,5–2,7 м. В доме с потолком 3,5 м объём на треть больше, и расчёт по площади занизит мощность. Объём учитывает это автоматически.</p><h3>Электрокотёл — это дорого?</h3><p>Дороже газа в разы, но дешевле в монтаже и не требует согласований. Основной способ снизить счета — двухтарифный счётчик с теплоаккумулятором: котёл греет воду ночью по низкому тарифу, а днём дом отапливается запасённым теплом.</p><h3>Хватит ли однофазного ввода?</h3><p>До 7 кВт обычно да, выше — почти наверняка нет: ток превысит 30 А, а типичная выделенная мощность на однофазный ввод составляет 5–7 кВт. Для мощных котлов нужен трёхфазный ввод, он же позволяет распределить нагрузку по фазам.</p>
+<h3>Почему считают по объёму, а не по площади?</h3><p>Правило «100 Вт на квадратный метр» работает только при стандартных потолках 2,5–2,7 м. В доме с потолком 3,5 м объём на треть больше, и расчёт по площади занизит мощность. Объём учитывает это автоматически.</p><h3>Электрокотёл — это дорого?</h3><p>Дороже газа в разы, но дешевле в монтаже и не требует согласований. Основной способ снизить счета — двухтарифный счётчик с теплоаккумулятором: котёл греет воду ночью по низкому тарифу, а днём дом отапливается запасённым теплом.</p><h3>Хватит ли однофазного ввода?</h3><p>Это определяют выделенная договорная мощность, параметры существующей линии и условия присоединения. Сравните расчётный ток с проектом и техническими условиями; калькулятор не назначает число фаз и номинал защиты.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="ten-moshchnost-tok.html">Мощность и ток ТЭНа</a></li><li><a href="stoimost-elektroenergii.html">Расход и стоимость электроэнергии</a></li><li><a href="vybor-avtomata.html">Выбор автоматического выключателя по мощности</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Power_and_reactive_energy" rel="nofollow noopener" target="_blank">Electrical Installation Guide</a> — Schneider Electric — Редакция онлайн-редакция, актуальная на дату обращения — раздел Power and reactive energy, three-phase circuits, motor current — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Коэффициенты теплопотерь/спроса вводятся пользователем и не заменяют расчёт ограждений или ведомость нагрузок.</li><li>Автомат и кабель по одной мощности не выбираются: нужны допустимый ток линии, ток КЗ, способ прокладки и условия защиты.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="ten-moshchnost-tok.html">Мощность и ток ТЭНа</a></li><li><a href="stoimost-elektroenergii.html">Расход и стоимость электроэнергии</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -233,23 +233,22 @@ if(typeof init==='function')init();
 
 
 function calc(){
-var v=P('v'),tin=P('tin'),tout=P('tout'),k=N(S('k')),tar=P('tar'),tri=S('faza')==='3';
-if([v,tin,tout,tar].some(isNaN))return err('Заполните все поля.');
+var v=P('v'),tin=P('tin'),tout=P('tout'),k=N(S('k')),duty=P('duty'),tar=P('tar'),tri=S('faza')==='3';
+if([v,tin,tout,duty,tar].some(isNaN))return err('Заполните все поля.');
 if(v<=0)return err('Объём должен быть больше нуля.');
 if(tin<=tout)return err('Температура внутри должна быть выше наружной.');
+if(duty<0||duty>100)return err('Средняя загрузка задаётся от 0 до 100%.');
 var dt=tin-tout,p=v*dt*k/860,pz=p*1.15;
 var u=tri?380:220,i=tri?pz*1000/(Math.sqrt(3)*u):pz*1000/u;
-var ryad=[6,10,16,20,25,32,40,50,63,80,100];
-var av=0;for(var j=0;j<ryad.length;j++){if(ryad[j]>=i*1.25){av=ryad[j];break;}}
-var sut=p*0.5*24,mes=sut*30;
+var sut=p*duty/100*24,mes=sut*30;
 out(row('Перепад температур',fmt(dt,4)+' °C')+
 row('Расчётная тепловая мощность',fmt(p,5)+' кВт')+
 row('Мощность котла с запасом 15%',fmt(pz,5)+' кВт')+
 row('Ток при '+u+' В',fmt(i,5)+' А')+
-row('Рекомендуемый автомат',av?av+' А':'нужен отдельный расчёт')+
-row('Расход за сутки (средняя загрузка 50%)',fmt(sut,5)+' кВт·ч')+
+row('Статус выбора автомата','Недостаточно данных')+
+row('Расход за сутки при загрузке '+fmt(duty,4)+'%',fmt(sut,5)+' кВт·ч')+
 row('Стоимость за месяц',fmt(mes*tar,6)+' ₽')+
-note((!tri&&pz>7)?'Мощность свыше 7 кВт на однофазном вводе проблематична: ток превышает 30 А, и такую нагрузку редко разрешают. Рассмотрите трёхфазное подключение.':'Расход за сутки посчитан для средней загрузки котла 50% — в реальности он работает циклами и выходит на полную мощность только в сильные морозы. За отопительный сезон средняя загрузка обычно составляет 40–60%.'));
+note('Расход зависит от введённой средней загрузки. Для автомата нужны допустимый ток линии, способ прокладки, ток КЗ, отключающая способность и договорная мощность.'));
 }
 
 </script>

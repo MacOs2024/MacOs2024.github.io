@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Заполнение трубы и гофры кабелями — ВольтКальк</title>
-<meta name="description" content="Расчёт коэффициента заполнения трубы, гофры или кабель-канала по внутреннему диаметру и числу кабелей. Норма заполнения и максимальное число жил.">
+<title>Геометрическая проверка заполнения трубы по NEC — ВольтКальк</title>
+<meta name="description" content="Расчёт заполнения круглой трубы по NFPA 70 (NEC), Chapter 9, Table 1: 53% для одного кабеля, 31% для двух и 40% для трёх и более.">
 <link rel="canonical" href="https://macos2024.github.io/zapolnenie-truby-kabelem.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Заполнение трубы и гофры кабелями — ВольтКальк">
-<meta property="og:description" content="Расчёт коэффициента заполнения трубы, гофры или кабель-канала по внутреннему диаметру и числу кабелей. Норма заполнения и максимальное число жил.">
+<meta property="og:title" content="Геометрическая проверка заполнения трубы по NEC — ВольтКальк">
+<meta property="og:description" content="Расчёт заполнения круглой трубы по NFPA 70 (NEC), Chapter 9, Table 1: 53% для одного кабеля, 31% для двух и 40% для трёх и более.">
 <meta property="og:url" content="https://macos2024.github.io/zapolnenie-truby-kabelem.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Заполнение трубы и гофры кабелями","url":"https://macos2024.github.io/zapolnenie-truby-kabelem.html","description":"Расчёт коэффициента заполнения трубы, гофры или кабель-канала по внутреннему диаметру и числу кабелей. Норма заполнения и максимальное число жил.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Заполнение трубы и гофры кабелями","item":"https://macos2024.github.io/zapolnenie-truby-kabelem.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя набить трубу плотно?","acceptedAnswer":{"@type":"Answer","text":"Кабель просто не протянется, а при усилии повредится изоляция. Кроме того, ПУЭ требует возможности замены кабеля без вскрытия штробы — плотно забитая труба это исключает."}},{"@type":"Question","name":"Нужно ли снижать ток при нескольких кабелях в трубе?","acceptedAnswer":{"@type":"Answer","text":"Да. ПУЭ 1.3.10 вводит понижающие коэффициенты: при четырёх–шести проложенных вместе кабелях допустимый ток каждого снижается примерно до 0,68–0,8 от одиночного. Проверяйте это отдельно."}},{"@type":"Question","name":"Как считать для кабель-канала прямоугольного сечения?","acceptedAnswer":{"@type":"Answer","text":"Площадь считается как произведение внутренних размеров, а нормы заполнения те же. Прямоугольное сечение обычно позволяет уложить кабели плотнее круглого при равной площади."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Геометрическая проверка заполнения трубы по NEC","url":"https://macos2024.github.io/zapolnenie-truby-kabelem.html","description":"Расчёт заполнения круглой трубы по NFPA 70 (NEC), Chapter 9, Table 1: 53% для одного кабеля, 31% для двух и 40% для трёх и более.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Геометрическая проверка заполнения трубы по NEC","item":"https://macos2024.github.io/zapolnenie-truby-kabelem.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя набить трубу плотно?","acceptedAnswer":{"@type":"Answer","text":"Кабель может не пройти изгибы или получить повреждение при протяжке. Проверка площади — только первый фильтр; длина трассы, число изгибов и допустимое тяговое усилие здесь не рассчитываются."}},{"@type":"Question","name":"Подтверждает ли процент заполнения допустимый ток?","acceptedAnswer":{"@type":"Answer","text":"Нет. Группировка и условия охлаждения могут потребовать снижения допустимого тока; конкретные коэффициенты выбирают из применимого стандарта и паспортных данных кабеля."}},{"@type":"Question","name":"Как считать для кабель-канала прямоугольного сечения?","acceptedAnswer":{"@type":"Answer","text":"Не этим калькулятором: проценты 53/31/40% относятся к правилам NEC для conduit/tubing. Для кабель-канала используйте применимые требования и полезные внутренние размеры производителя."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -134,10 +134,10 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
-<h1>Заполнение трубы и гофры кабелями</h1>
-<p class="intro">Норма заполнения зависит от числа кабелей: один — 53%, два — 31%, три и более — 40%. Ограничение нужно и для протяжки, и для отвода тепла.</p>
+<h1>Геометрическая проверка заполнения трубы по NEC</h1>
+<p class="intro">Пределы NEC/NFPA 70 Chapter 9 Table 1: один кабель — 53%, два — 31%, три и более — 40%. Это не правило ПУЭ и не готовый вердикт для российского проекта.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Заполнение трубы и гофры кабелями</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Геометрическая проверка заполнения трубы по NEC</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
 <div class="f" id="f_d"><label for="d">Внутренний диаметр трубы</label><div class="fw"><input id="d" type="text" inputmode="decimal" autocomplete="off" value="25" placeholder=""><span class="u">мм</span></div><div class="hint">Для гофры 25 мм внутренний диаметр примерно 18,3 мм</div></div><div class="f" id="f_n"><label for="n">Число прокладываемых кабелей</label><div class="fw"><input id="n" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_dk"><label for="dk">Наружный диаметр одного кабеля</label><div class="fw"><input id="dk" type="text" inputmode="decimal" autocomplete="off" value="7" placeholder=""><span class="u">мм</span></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
@@ -149,22 +149,22 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="article">
 <h2>Как считается</h2>
 <div class="formula">Sтрубы = π · D² / 4&nbsp;&nbsp;&nbsp;Sкабелей = n · π · d² / 4<br>Заполнение = Sкабелей / Sтрубы · 100%</div>
-<p>Ограничение заполнения решает две задачи сразу. Механическую: при плотной набивке кабель невозможно протянуть без риска содрать изоляцию, а заменить его потом уже не получится. И тепловую: кабели в трубе греют друг друга, и чем плотнее набивка, тем хуже отводится тепло.</p>
+<p>Калькулятор воспроизводит только геометрические проценты NEC/NFPA 70 Chapter 9 Table 1. Они не являются ПУЭ и не переносятся автоматически в российский проект. Допустимый ток, температурные поправки, тип кабеля, радиус изгиба и фактическая протяжка проверяются отдельно.</p>
 <table class="t"><tr><th>Число кабелей</th><th>Предельное заполнение</th></tr>
 <tr><td>1</td><td>53%</td></tr>
 <tr><td>2</td><td>31%</td></tr>
 <tr><td>3 и более</td><td>40%</td></tr></table>
-<p>Провал у двух кабелей не ошибка: два круга в круге геометрически укладываются хуже всего, поэтому норма для них строже.</p>
+<p>Отдельное значение для двух кабелей непосредственно задано Table 1. Калькулятор сравнивает площади и не моделирует реальную укладку, изгибы или протяжку.</p>
 <p>Важная тонкость: у гофрированной трубы маркировка означает <b>наружный</b> диаметр. У гофры 25 мм внутренний диаметр составляет около 18,3 мм — считать нужно именно по нему.</p>
 <h2>Пример расчёта</h2>
-<p>Гофра с внутренним диаметром 25 мм, три кабеля ВВГнг 3×2,5 наружным диаметром 7 мм. Площадь трубы 490,9 мм², занято 115,5 мм², заполнение <b>23,52%</b> при норме 40% — с запасом. Кабелей такого диаметра в эту трубу поместится до <b>5 штук</b>.</p>
+<p>Труба с внутренним диаметром 25 мм и три круглых кабеля диаметром 7 мм: заполнение <b>23,52%</b>, что ниже геометрического предела NEC 40%. Это ещё не разрешение на прокладку: отдельно проверяют применимые нормы, ток, нагрев и радиус изгиба.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Почему нельзя набить трубу плотно?</h3><p>Кабель просто не протянется, а при усилии повредится изоляция. Кроме того, ПУЭ требует возможности замены кабеля без вскрытия штробы — плотно забитая труба это исключает.</p><h3>Нужно ли снижать ток при нескольких кабелях в трубе?</h3><p>Да. ПУЭ 1.3.10 вводит понижающие коэффициенты: при четырёх–шести проложенных вместе кабелях допустимый ток каждого снижается примерно до 0,68–0,8 от одиночного. Проверяйте это отдельно.</p><h3>Как считать для кабель-канала прямоугольного сечения?</h3><p>Площадь считается как произведение внутренних размеров, а нормы заполнения те же. Прямоугольное сечение обычно позволяет уложить кабели плотнее круглого при равной площади.</p>
+<h3>Почему нельзя набить трубу плотно?</h3><p>Кабель может не пройти изгибы или получить повреждение при протяжке. Проверка площади — только первый фильтр; длина трассы, число изгибов и допустимое тяговое усилие здесь не рассчитываются.</p><h3>Подтверждает ли процент заполнения допустимый ток?</h3><p>Нет. Группировка и условия охлаждения могут потребовать снижения допустимого тока; конкретные коэффициенты выбирают из применимого стандарта и паспортных данных кабеля.</p><h3>Как считать для кабель-канала прямоугольного сечения?</h3><p>Не этим калькулятором: проценты 53/31/40% относятся к правилам NEC для conduit/tubing. Для кабель-канала используйте применимые требования и полезные внутренние размеры производителя.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="sechenie-kabelya.html">Сечение кабеля по мощности и току</a></li><li><a href="padenie-napryazheniya.html">Падение напряжения в кабеле</a></li><li><a href="vybor-avtomata.html">Выбор автоматического выключателя по мощности</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2020_NEC_P08_FD_FRStatements.pdf" rel="nofollow noopener" target="_blank">NFPA 70 National Electrical Code — Chapter 9, Table 1</a> — National Fire Protection Association — Редакция 2020 first-revision report, FR-8326 — раздел Percent of cross section of conduit and tubing: 53%, 31%, 40% — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>53/31/40% — правило NEC/NFPA 70, а не ПУЭ. Геометрическая проверка не подтверждает допустимый ток, нагрев, радиус изгиба и соответствие российскому проекту.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="sechenie-kabelya.html">Предварительный выбор сечения провода по току</a></li><li><a href="padenie-napryazheniya.html">Падение напряжения в кабеле</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -243,10 +243,10 @@ var ok=f<=norm;
 out(row('Площадь сечения трубы',fmt(st,5)+' мм²')+
 row('Занято кабелями',fmt(tot,5)+' мм²')+
 row('Коэффициент заполнения',fmt(f,4)+' %')+
-row('Норма для '+n+' кабел'+(n===1?'я':'ей'),norm+' %')+
+row('Лимит NFPA 70 (NEC) для '+n+' кабел'+(n===1?'я':'ей'),norm+' %')+
 row('Максимум кабелей этого диаметра',maxn+' шт.')+
 row('Вердикт',ok?'В норме':'Норма превышена')+
-note(ok?'Запас достаточен для протяжки и для отвода тепла. Помните, что при прокладке нескольких силовых кабелей в одной трубе действует понижающий коэффициент на длительно допустимый ток.':'Заполнение выше нормы: кабель будет трудно протянуть, изоляция может повредиться, а отвод тепла ухудшится. Возьмите трубу большего диаметра или разнесите кабели по нескольким трубам.'));
+note((ok?'Геометрический предел NEC соблюдён. ':'Геометрический предел NEC превышен. ')+'Это не подтверждает допустимый ток, нагрев, радиус изгиба, протяжку или соответствие нормам вашего проекта; эти проверки выполняются отдельно.'));
 }
 
 </script>

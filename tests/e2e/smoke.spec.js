@@ -149,6 +149,43 @@ test.describe('Калькулятор', () => {
     await page.click('#go');
     await expect(page.locator('#res')).toContainText('Расчётное сечение PE4 мм²');
   });
+
+  test('автомат не выдаёт положительный вывод без Iz и тока КЗ', async ({ page }) => {
+    await page.goto('/vybor-avtomata.html');
+    await page.fill('#p', '3,5');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Недостаточно данных');
+    await page.fill('#iz', '19');
+    await page.fill('#isc', '1,5');
+    await page.selectOption('#icn', '6');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Базовые условия выполняются');
+    await expect(page.locator('#res')).not.toContainText('характеристика C');
+  });
+
+  test('заземление блокирует простое деление при близких стержнях', async ({ page }) => {
+    await page.goto('/raschet-zazemleniya.html');
+    await page.fill('#rho', '100');
+    await page.fill('#l', '2,5');
+    await page.fill('#n', '2');
+    await page.fill('#a', '10');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Недостаточно данных');
+    await page.fill('#a', '10,1');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('20 Ом');
+    await expect(page.locator('#res')).toContainText('требуется измерение');
+  });
+
+  test('молниезащита использует кусочные коэффициенты до 150 м', async ({ page }) => {
+    await page.goto('/molniezashchita.html');
+    await page.fill('#h', '150');
+    await page.selectOption('#nad', '0.999');
+    await page.fill('#hx', '0');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Высота конуса защиты h₀90 м');
+    await expect(page.locator('#res')).toContainText('Радиус зоны у земли r₀60 м');
+  });
 });
 
 test.describe('Вёрстка', () => {

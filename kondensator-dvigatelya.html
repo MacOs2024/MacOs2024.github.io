@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Конденсатор для трёхфазного двигателя в сети 220 В</title>
-<meta name="description" content="Калькулятор рабочего и пускового конденсатора для подключения трёхфазного электродвигателя к однофазной сети 220 В по схемам звезда и треугольник.">
+<title>Рабочий конденсатор схемы Штейнмеца — ВольтКальк</title>
+<meta name="description" content="Предварительная оценка рабочего конденсатора для маломощного трёхфазного двигателя, допускающего соединение треугольником на напряжение однофазной сети.">
 <link rel="canonical" href="https://macos2024.github.io/kondensator-dvigatelya.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Конденсатор для трёхфазного двигателя в сети 220 В">
-<meta property="og:description" content="Калькулятор рабочего и пускового конденсатора для подключения трёхфазного электродвигателя к однофазной сети 220 В по схемам звезда и треугольник.">
+<meta property="og:title" content="Рабочий конденсатор схемы Штейнмеца — ВольтКальк">
+<meta property="og:description" content="Предварительная оценка рабочего конденсатора для маломощного трёхфазного двигателя, допускающего соединение треугольником на напряжение однофазной сети.">
 <meta property="og:url" content="https://macos2024.github.io/kondensator-dvigatelya.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Конденсатор для трёхфазного двигателя в сети 220 В","url":"https://macos2024.github.io/kondensator-dvigatelya.html","description":"Калькулятор рабочего и пускового конденсатора для подключения трёхфазного электродвигателя к однофазной сети 220 В по схемам звезда и треугольник.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Конденсатор для трёхфазного двигателя в сети 220 В","item":"https://macos2024.github.io/kondensator-dvigatelya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Двигатель гудит и не крутится. Мало ёмкости?","acceptedAnswer":{"@type":"Answer","text":"Либо мало рабочей ёмкости, либо не хватает пусковой (особенно под нагрузкой). Добавьте пусковую ёмкость кнопкой на время разгона. Если после разгона корпус быстро греется — рабочей ёмкости, наоборот, слишком много."}},{"@type":"Question","name":"Подойдут ли электролитические конденсаторы?","acceptedAnswer":{"@type":"Answer","text":"Обычные полярные — нет, в сети переменного тока они выходят из строя. Допустимы только специальные неполярные пусковые электролиты, и только в цепи пуска на секунды."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Рабочий конденсатор схемы Штейнмеца","url":"https://macos2024.github.io/kondensator-dvigatelya.html","description":"Предварительная оценка рабочего конденсатора для маломощного трёхфазного двигателя, допускающего соединение треугольником на напряжение однофазной сети.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Рабочий конденсатор схемы Штейнмеца","item":"https://macos2024.github.io/kondensator-dvigatelya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Двигатель гудит и не крутится. Нужно просто увеличить ёмкость?","acceptedAnswer":{"@type":"Answer","text":"Нет. Причиной может быть недопустимая схема обмоток, нехватка пускового момента, неправильное подключение или перегрузка. Без измерения токов фаз слепо увеличивать ёмкость опасно."}},{"@type":"Question","name":"Подойдут ли электролитические конденсаторы?","acceptedAnswer":{"@type":"Answer","text":"Обычные полярные — нет, в сети переменного тока они выходят из строя. Допустимы только специальные неполярные пусковые электролиты, и только в цепи пуска на секунды."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -29,8 +29,7 @@
     })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111301996" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika -->
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -82,6 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
 footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
 .hero p{color:#3d4642}
@@ -134,12 +134,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
-<h1>Конденсатор для трёхфазного двигателя в сети 220 В</h1>
-<p class="intro">Оценочный расчёт: итоговую ёмкость всегда подбирают по факту — по току обмоток и нагреву двигателя. Схему соединения обмоток смотрите на шильдике (Δ/Y).</p>
+<h1>Рабочий конденсатор схемы Штейнмеца</h1>
+<p class="intro">Только для двигателя, на шильдике которого разрешено <b>Δ на напряжение сети</b> (например, 230Δ/400Y при сети 230 В). Это не расчёт пускового конденсатора.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Конденсатор для трёхфазного двигателя в сети 220 В</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Рабочий конденсатор схемы Штейнмеца</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_p"><label for="p">Мощность двигателя P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 1,1"><select id="p_unit" class="u" aria-label="Единицы"><option value="1">Вт</option><option value="1000" selected>кВт</option></select></div></div><div class="f" id="f_sh"><label for="sh">Схема обмоток</label><div class="fw"><select id="sh"><option value="tr" selected>Треугольник (обмотки 220 В) — типично</option><option value="zv">Звезда (обмотки 380 В)</option></select></div></div><div class="f" id="f_eta"><label for="eta">КПД η</label><div class="fw"><input id="eta" type="text" inputmode="decimal" autocomplete="off" value="0.8" placeholder=""></div></div><div class="f" id="f_c"><label for="c">cos φ</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="0.85" placeholder=""></div></div>
+<div class="f" id="f_p"><label for="p">Мощность двигателя P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 1,1"><select id="p_unit" class="u" aria-label="Единицы"><option value="1">Вт</option><option value="1000" selected>кВт</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение однофазной сети U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="230" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_f"><label for="f">Частота сети f</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">Гц</span></div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -148,18 +148,18 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<p>Фазосдвигающий конденсатор создаёт третью «фазу» для запуска и работы трёхфазного двигателя от бытовой сети. Классические оценочные формулы (U = 220 В — напряжение сети):</p>
-<div class="formula">Треугольник: Cраб = 4800 · I / U&nbsp;&nbsp;&nbsp;Звезда: Cраб = 2800 · I / U&nbsp;&nbsp;(мкФ)</div>
-<p>Номинальный ток I калькулятор считает по мощности, КПД и cos φ. Разные методики дают разброс ±30% — это нормально: ёмкость всё равно уточняется под конкретную нагрузку на валу. Учтите, что от однофазной сети двигатель развивает лишь 50–70% паспортной мощности.</p>
+<p>Конденсатор создаёт вспомогательную фазу, но поле остаётся эллиптическим и параметры двигателя ухудшаются. Для предварительной оценки используется опубликованное для схемы Штейнмеца выражение:</p>
+<div class="formula">C = 2·P / (√3 · 2πf · U²)</div>
+<p>P — паспортная механическая мощность, U — напряжение однофазной сети, f — частота. Это стартовое значение, а не гарантия момента или допустимого нагрева. Универсальные коэффициенты 4800/2800 удалены: они смешивали разные схемы и создавали ложную точность.</p>
 <h2>Пример расчёта</h2>
-<p>Двигатель 1,1 кВт (Δ, 220 В), η = 0,8, cos φ = 0,85: I ≈ 4,25 А, Cраб = 4800·4,25/220 ≈ <b>93 мкФ</b>; правило 70 мкФ/кВт даёт 77 мкФ. Разумный старт — 80 мкФ с проверкой нагрева; пусковой — ещё 160–240 мкФ через кнопку.</p>
+<p>Двигатель 1,1 кВт с шильдиком 230Δ/400Y, сеть 230 В 50 Гц: C ≈ <b>76,4 мкФ</b>. После сборки токи обмоток и нагрев проверяют под фактической нагрузкой.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Двигатель гудит и не крутится. Мало ёмкости?</h3><p>Либо мало рабочей ёмкости, либо не хватает пусковой (особенно под нагрузкой). Добавьте пусковую ёмкость кнопкой на время разгона. Если после разгона корпус быстро греется — рабочей ёмкости, наоборот, слишком много.</p><h3>Подойдут ли электролитические конденсаторы?</h3><p>Обычные полярные — нет, в сети переменного тока они выходят из строя. Допустимы только специальные неполярные пусковые электролиты, и только в цепи пуска на секунды.</p>
+<h3>Двигатель гудит и не крутится. Нужно просто увеличить ёмкость?</h3><p>Нет. Причиной может быть недопустимая схема обмоток, нехватка пускового момента, неправильное подключение или перегрузка. Без измерения токов фаз слепо увеличивать ёмкость опасно.</p><h3>Подойдут ли электролитические конденсаторы?</h3><p>Обычные полярные — нет, в сети переменного тока они выходят из строя. Допустимы только специальные неполярные пусковые электролиты, и только в цепи пуска на секунды.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="tok-elektrodvigatelya.html">Ток электродвигателя по мощности</a></li><li><a href="energiya-kondensatora.html">Энергия и заряд конденсатора</a></li><li><a href="moshchnost-toka.html">Мощность электрического тока (одно- и трёхфазная сеть)</a></li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://download.sew-eurodrive.com/download/pdf/33090874.pdf" rel="nofollow noopener" target="_blank">Operating Instructions – AC Motors, Steinmetz circuit</a> — SEW-EURODRIVE — Редакция edition 06/2023 — раздел Steinmetz circuit, motor nameplate connection — обращение 11.08.2026</li><li><a href="https://www.js-technik.co.uk/faq/electric-motors-general/5.-how-is-the-capacitor-calculated-in-a-steinmetz-circuit" rel="nofollow noopener" target="_blank">How is the capacitor calculated in a Steinmetz circuit?</a> — JS-Technik GmbH — Редакция онлайн-редакция, актуальная на дату обращения — раздел C = 2P/(√3·ω·U²), 230 V delta connection, limitations of Steinmetz operation — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Только предварительная оценка схемы Штейнмеца для двигателя, допускающего соединение Δ на напряжение однофазной сети; окончательная ёмкость определяется по току фаз, моменту и нагреву.</li><li>Работа трёхфазного двигателя от одной фазы снижает доступный момент и не заменяет частотный преобразователь.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li><li><a href="energiya-kondensatora.html">Энергия и заряд конденсатора</a></li><li><a href="moshchnost-toka.html">Мощность электрического тока (одно- и трёхфазная сеть)</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
@@ -226,20 +226,16 @@ if(typeof init==='function')init();
 
 
 function calc(){
-var p=P('p'),eta=P('eta'),c=P('c');
-if([p,eta,c].some(isNaN))return err('Заполните все поля.');
-if(p<=0)return err('Мощность должна быть больше нуля.');
-if(eta<=0||eta>1||c<=0||c>1)return err('КПД и cos φ задаются в долях от 0 до 1.');
-var tr=S('sh')==='tr';
-var un=tr?220:380;
-var i=p/(Math.sqrt(3)*un*eta*c);
-var cr=(tr?4800:2800)*i/220;
-var h=row('Номинальный ток двигателя',fmt(i,3)+' А')+
-row('Рабочая ёмкость Cраб',fmt(cr,3)+' мкФ');
-if(tr)h+=row('Проверка по правилу «70 мкФ на 1 кВт»',fmt(70*p/1000,3)+' мкФ');
-h+=row('Пусковая ёмкость Cпуск (2–3 · Cраб)',fmt(2*cr,3)+' – '+fmt(3*cr,3)+' мкФ')+
-note('Конденсаторы — плёночные (типа CBB60, МБГО) на напряжение не ниже 450 В. Начинайте с меньшей ёмкости: избыток греет обмотку, недостаток — двигатель не тянет. Пусковой конденсатор подключается на 2–3 секунды и отключается.');
-out(h);}
+var p=P('p'),u=P('u'),f=P('f');
+if([p,u,f].some(isNaN))return err('Заполните все поля.');
+if(p<=0||u<=0||f<=0)return err('Мощность, напряжение и частота должны быть больше нуля.');
+var omega=2*Math.PI*f;
+var cr=2*p/(Math.sqrt(3)*omega*u*u)*1e6;
+out(row('Предварительная рабочая ёмкость',fmt(cr,4)+' мкФ')+
+row('Ориентир на 1 кВт при этих U и f',fmt(cr*1000/p,4)+' мкФ/кВт')+
+row('Статус','Оценка, требуется настройка на двигателе')+
+note('Формула относится к схеме Штейнмеца. Проверьте шильдик: обмотки должны допускать Δ при напряжении сети. Ёмкость уточняют по токам фаз и нагреву под реальной нагрузкой; пусковую цепь этот расчёт не выбирает.'));
+}
 
 </script>
 </body>

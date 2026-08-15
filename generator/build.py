@@ -9,8 +9,10 @@ from data_d import CALCS_D
 from data_e import CALCS_E
 from data_f import CALCS_F
 from data_g import CALCS_G
+from audit_metadata import apply_audit_metadata
 
 CALCS = CALCS_A + CALCS_B + CALCS_C + CALCS_D + CALCS_E + CALCS_F + CALCS_G
+apply_audit_metadata(CALCS)
 
 # notice-страницы остаются по своему URL, но ничего не вычисляют: калькулятор
 # снят с публикации. В каталог и sitemap они не попадают.
