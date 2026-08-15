@@ -606,12 +606,8 @@ ABOUT_HTML = """<!DOCTYPE html>
 <meta name="description" content="Как устроены расчёты @SITE@: источники под каждой формулой, статусы инженерной проверки, эталонные тесты и честные ограничения.">
 <link rel="canonical" href="@BASE@/about.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<meta property="og:type" content="website">
-<meta property="og:title" content="О проекте @SITE@">
-<meta property="og:description" content="Источники под каждой формулой, статусы инженерной проверки и честные ограничения расчётов.">
-<meta property="og:url" content="@BASE@/about.html">
-<meta property="og:image" content="@BASE@/og-image.png">
-<meta name="twitter:card" content="summary_large_image">
+@OG@
+@SCHEMA@
 <style>@CSS@</style>
 @METRIKA@
 </head>
@@ -726,8 +722,47 @@ def write_site(calcs, outdir):
         f.write(PRIVACY_HTML.replace("@CSS@", CSS)
                             .replace("@SITE@", SITE_NAME).replace("@TAG@", TAGLINE)
                             .replace("@BASE@", BASE_URL))
+    # «О проекте» — страница, по которой поиск судит, кто отвечает за расчёты.
+    # Ей нужна та же разметка, что и калькуляторам: иначе именно на странице
+    # доверия структурированных данных не окажется вовсе.
+    about_url = "%s/about.html" % BASE_URL
+    about_desc = ("Как устроены расчёты %s: источники под каждой формулой, статусы "
+                  "инженерной проверки, эталонные тесты и честные ограничения." % SITE_NAME)
+    about_schema = ld_json({
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebPage",
+                "@id": about_url,
+                "url": about_url,
+                "name": "О проекте %s" % SITE_NAME,
+                "description": about_desc,
+                "inLanguage": "ru-RU",
+                "isPartOf": {"@id": "%s/#website" % BASE_URL},
+                "publisher": {"@id": "%s/#publisher" % BASE_URL},
+                "breadcrumb": {"@id": "%s#breadcrumb" % about_url},
+            },
+            {
+                "@type": "Organization",
+                "@id": "%s/#publisher" % BASE_URL,
+                "name": SITE_NAME,
+                "url": BASE_URL,
+                "logo": {"@type": "ImageObject", "url": "%s/%s" % (BASE_URL, OG_IMAGE)},
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": "%s#breadcrumb" % about_url,
+                "itemListElement": [
+                    {"@type": "ListItem", "position": 1, "name": "Главная", "item": "%s/" % BASE_URL},
+                    {"@type": "ListItem", "position": 2, "name": "О проекте", "item": about_url},
+                ],
+            },
+        ],
+    })
     with open(os.path.join(outdir, "about.html"), "w", encoding="utf-8") as f:
         f.write(ABOUT_HTML.replace("@CSS@", CSS).replace("@METRIKA@", METRIKA)
+                          .replace("@OG@", og_tags("О проекте %s" % SITE_NAME, about_desc, about_url))
+                          .replace("@SCHEMA@", about_schema)
                           .replace("@SITE@", SITE_NAME).replace("@TAG@", TAGLINE)
                           .replace("@BASE@", BASE_URL))
     with open(os.path.join(outdir, "README.md"), "w", encoding="utf-8") as f:
