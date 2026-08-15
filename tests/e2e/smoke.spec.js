@@ -248,6 +248,9 @@ test.describe('Вёрстка', () => {
     await expect(page).toHaveURL(/about\.html$/);
     await expect(page.locator('h1')).toHaveText('О проекте');
 
+    // Страница не анонимна: у расчётов есть автор, а не безликая редакция.
+    await expect(page.locator('.article')).toContainText('Максим');
+
     // Ключевое обещание страницы: честно сказано, что подписи инженера нет.
     await expect(page.locator('.rerr')).toContainText('независимо проверено');
     await expect(page.locator('table.t')).toBeVisible();
