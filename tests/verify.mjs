@@ -86,9 +86,11 @@ check(fs.existsSync(path.join(sourceDir, "og-image.png")), "Отсутствуе
 // них не вернулась форма расчёта.
 const noticePages = ["gasyashchiy-kondensator.html"];
 
-// Политика конфиденциальности — служебная страница сайта, а не калькулятор:
-// у неё свой набор требований, проверяется отдельным блоком ниже.
-const infoPages = ["privacy.html"];
+// Политика конфиденциальности и «О проекте» — текстовые страницы сайта, а не
+// калькуляторы: у них свой набор требований, проверяются отдельными блоками
+// ниже. Разница между ними принципиальная: privacy закрыт от индексации,
+// about — наоборот, обязан индексироваться и попадать в sitemap.
+const infoPages = ["privacy.html", "about.html"];
 
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
@@ -116,6 +118,34 @@ check(htmlFiles.length === 101, `Ожидался 101 HTML-файл, найде�
   // когда-нибудь включат, текст «записи не ведутся» станет ложью.
   check(/не ведутся/.test(privacy), "privacy.html: не сказано, что записи сессий не ведутся");
   check(/noindex/.test(privacy), "privacy.html: служебная страница должна быть закрыта от индексации");
+
+  // «О проекте» закрывает анонимность сайта: для расчётов, влияющих на
+  // безопасность, поисковые системы требуют понимать, кто отвечает за
+  // содержание и как оно проверяется. Страница обязана индексироваться.
+  const about = fs.readFileSync(path.join(sourceDir, "about.html"), "utf8");
+  check(!/noindex/.test(about), "about.html: страница о проекте не должна быть закрыта от индексации");
+  check(/<link rel="canonical" href="https:\/\/macos2024\.github\.io\/about\.html">/.test(about),
+    "about.html: нет canonical");
+  check(/mc\.yandex\.ru\/metrika\/tag\.js\?id=111301996/.test(about), "about.html: не подключён счётчик");
+  for (const required of [
+    "Основание расчёта",      // объяснение карточки источника
+    "независимо проверено",   // честное признание, что подписи инженера нет
+    "ENGINEERING_AUDIT.md",   // куда смотреть за статусами
+    "не заменяют",            // отказ от нормативной ответственности
+    "Нашли ошибку",           // канал обратной связи
+    "issues",                 // конкретный способ сообщить
+  ]) {
+    check(about.includes(required), `about.html: не раскрыт обязательный пункт «${required}»`);
+  }
+  // Страница обязана быть в sitemap: она несёт сигнал доверия для поиска.
+  const sitemapXml = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
+  check(sitemapXml.includes("https://macos2024.github.io/about.html"), "sitemap.xml: нет about.html");
+  check(!sitemapXml.includes("privacy.html"), "sitemap.xml: страница с noindex не должна быть в sitemap");
+  // Ссылка на «О проекте» должна быть доступна с любой страницы каталога.
+  for (const file of htmlFiles) {
+    const html = fs.readFileSync(path.join(sourceDir, file), "utf8");
+    check(html.includes('href="about.html"'), `${file}: нет ссылки на страницу о проекте`);
+  }
   // Пробелы схлопываем: правила свёрстаны по ширине, и фраза может быть
   // разорвана переносом строки — тест не должен ломаться от переформатирования.
   const projectRules = fs.readFileSync(path.join(sourceDir, "PROJECT_RULES.md"), "utf8")
@@ -764,7 +794,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 100, `В sitemap должно быть 100 URL (корень + 99 калькуляторов), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 101, `В sitemap должно быть 101 URL (корень + about + 99 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 for (const file of htmlFiles) {

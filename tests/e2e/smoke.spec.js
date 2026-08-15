@@ -238,6 +238,23 @@ test.describe('Вёрстка', () => {
     await expect(page.locator('#res')).toBeVisible();
   });
 
+  test('страница о проекте доступна из подвала и объясняет статусы', async ({ page }) => {
+    // Путь посетителя: с калькулятора в подвал — и к тому, кто отвечает за
+    // расчёт. Проверяем именно переход, а не прямой заход по адресу.
+    await page.goto('/zakon-oma.html');
+    await page.locator('footer a[href="about.html"]').click();
+    await expect(page).toHaveURL(/about\.html$/);
+    await expect(page.locator('h1')).toHaveText('О проекте');
+
+    // Ключевое обещание страницы: честно сказано, что подписи инженера нет.
+    await expect(page.locator('.rerr')).toContainText('независимо проверено');
+    await expect(page.locator('table.t')).toBeVisible();
+
+    // Обратный путь в каталог не должен быть тупиком.
+    await page.locator('footer a[href="index.html"]').click();
+    await expect(page.locator('.ccard').first()).toBeVisible();
+  });
+
   test('аналитика работает в оговоренном политикой объёме', async ({ page }) => {
     const tracked = [];
     page.on('request', request => {
