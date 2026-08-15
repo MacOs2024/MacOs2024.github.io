@@ -127,6 +127,20 @@ check(htmlFiles.length === 101, `Ожидался 101 HTML-файл, найде�
   check(/<link rel="canonical" href="https:\/\/macos2024\.github\.io\/about\.html">/.test(about),
     "about.html: нет canonical");
   check(/mc\.yandex\.ru\/metrika\/tag\.js\?id=111301996/.test(about), "about.html: не подключён счётчик");
+  // Страница доверия обязана иметь ту же разметку, что и калькуляторы:
+  // без неё поиск не свяжет сайт с его издателем.
+  check(/<meta property="og:image:width"/.test(about), "about.html: Open Graph усечён, нет размеров картинки");
+  const aboutLd = about.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  check(Boolean(aboutLd), "about.html: нет JSON-LD");
+  if (aboutLd) {
+    let graph = null;
+    try { graph = JSON.parse(aboutLd[1].replace(/\\u003c/g, "<"))["@graph"]; }
+    catch (error) { check(false, `about.html: JSON-LD не парсится: ${error.message}`); }
+    const types = (graph ?? []).map(node => node["@type"]);
+    for (const required of ["WebPage", "Organization", "BreadcrumbList"]) {
+      check(types.includes(required), `about.html: в разметке нет узла ${required}`);
+    }
+  }
   for (const required of [
     "Основание расчёта",      // объяснение карточки источника
     "независимо проверено",   // честное признание, что подписи инженера нет
