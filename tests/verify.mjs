@@ -813,6 +813,33 @@ const invalidInputChecked = [];
 }
 kind = "structural";
 
+// Страница без входящих контекстных ссылок достижима только с главной, где
+// вес размазан по сотне ссылок. Для поиска это сигнал «второстепенная»:
+// такая страница дольше индексируется и хуже ранжируется. Единственное
+// намеренное исключение — снятый расчёт: он исключён и из каталога, и из
+// sitemap, и ссылаться на него из «Смотрите также» не нужно.
+{
+  kind = "structural";
+  const withdrawn = new Set(noticePages.map(f => f.replace(/\.html$/, "")));
+  const inbound = new Map();
+  for (const file of htmlFiles) {
+    if (file === "index.html") continue;
+    inbound.set(file.replace(/\.html$/, ""), 0);
+  }
+  for (const file of htmlFiles) {
+    if (file === "index.html") continue;
+    const html = fs.readFileSync(path.join(sourceDir, file), "utf8");
+    const block = html.match(/<section class="related">([\s\S]*?)<\/section>/);
+    if (!block) continue;
+    for (const [, href] of block[1].matchAll(/href="([^"]+)\.html"/g)) {
+      if (inbound.has(href)) inbound.set(href, inbound.get(href) + 1);
+    }
+  }
+  const orphans = [...inbound].filter(([slug, n]) => n === 0 && !withdrawn.has(slug)).map(([slug]) => slug);
+  check(orphans.length === 0,
+    `страницы без входящих ссылок из «Смотрите также»: ${orphans.join(", ")}`);
+}
+
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);

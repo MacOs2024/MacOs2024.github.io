@@ -1074,7 +1074,7 @@ faqs=[
  ("Что такое эффект близости?",
   "Второе явление, усугубляющее картину: соседние проводники с током искажают распределение друг в друге, дополнительно вытесняя ток. В плотно намотанной многослойной катушке потери из-за эффекта близости могут превышать потери от собственно скин-эффекта."),
 ],
-related=["diametr-provoda-obmotki","induktivnost-katushki","drossel-impulsnogo"],
+related=["diametr-provoda-obmotki", "induktivnost-katushki", "drossel-impulsnogo", "shirina-dorozhki-pcb"],
 ),
 
 dict(

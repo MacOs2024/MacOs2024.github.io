@@ -193,7 +193,7 @@ faqs=[
  ("Можно ли соединять резисторы разных номиналов?",
   "Да, формулы это учитывают. Но параллелить резисторы для деления тока лучше близкими номиналами, иначе почти весь ток пойдёт через меньший."),
 ],
-related=["delitel-napryazheniya", "zakon-oma", "markirovka-rezistorov"],
+related=["delitel-napryazheniya", "zakon-oma", "markirovka-rezistorov", "preobrazovanie-y-delta"],
 ),
 
 # ─── 5. Делитель напряжения ──────────────────────────────────────────────────
@@ -232,7 +232,7 @@ faqs=[
  ("Что будет при изменении нагрузки на выходе?",
   "Нагрузка включается параллельно R2 и уменьшает его эффективное сопротивление — Uвых падает. Поэтому и нужен запас по току делителя в 10 и более раз."),
 ],
-related=["soedinenie-rezistorov", "rezistor-svetodioda", "zakon-oma"],
+related=["soedinenie-rezistorov", "rezistor-svetodioda", "zakon-oma", "ou-usilenie", "attenyuator"],
 ),
 
 # ─── 6. Цветовая маркировка резисторов ───────────────────────────────────────
@@ -376,7 +376,7 @@ faqs=[
  ("Можно ли розетки на 1,5 мм²?",
   "Формально 19 А проходит, но розеточную линию защищают автоматом 16 А, а любой обогреватель загрузит её надолго. Стандарт де-факто — 2,5 мм² на розетки."),
 ],
-related=["vybor-avtomata", "padenie-napryazheniya", "tok-po-moshchnosti"],
+related=["vybor-avtomata", "padenie-napryazheniya", "tok-po-moshchnosti", "awg-mm2", "koefficienty-prokladki"],
 review_status="agent-reviewed",
 sources=[
  dict(title="ПУЭ. Глава 1.3. Выбор проводников по нагреву", organization="Минэнерго СССР / нормативная база Техэксперт", edition="ПУЭ, 6-е издание с актуальными главами 7-го издания", sections=["1.3.10", "таблица 1.3.4", "таблица 1.3.5"], accessed="11.08.2026", url="https://docs.cntd.ru/document/1200001616/titles/7DE0K8"),

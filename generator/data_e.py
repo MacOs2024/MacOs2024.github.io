@@ -467,7 +467,7 @@ faqs=[
  ("Где взять PSH?","Используйте климатическую базу или PVWatts/SAM для нужной точки, ориентации и угла."),
  ("Можно вводить КПД панели?","Нет: паспортная мощность массива уже учитывает мощность модулей. Здесь нужен суммарный коэффициент потерь всей системы."),
 ],
-related=["stoimost-elektroenergii","vremya-raboty-akkumulyatora","power-bank-runtime"],
+related=["stoimost-elektroenergii", "vremya-raboty-akkumulyatora", "power-bank-runtime", "solnechnye-paneli-massiv"],
 ),
 
 dict(

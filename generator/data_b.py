@@ -112,7 +112,7 @@ faqs=[
  ("УЗО срабатывает «само по себе». Почему?",
   "Суммарная естественная утечка длинных линий и старой техники может подбираться к уставке (штатное срабатывание — от 0,5·IΔn). Разделите нагрузку на несколько УЗО или найдите прибор-виновник поочерёдным отключением."),
 ],
-related=["vybor-avtomata", "sechenie-kabelya", "raschet-zazemleniya"],
+related=["vybor-avtomata", "sechenie-kabelya", "raschet-zazemleniya", "emkostnyy-tok-utechki"],
 review_status="agent-reviewed",
 sources=[
  dict(title="Additional protection: High sensitivity RCDs", organization="Schneider Electric Electrical Installation Guide", edition="онлайн-редакция от 05.08.2026", sections=["High sensitivity RCDs", "IEC 60364-4-41 applications"], accessed="11.08.2026", url="https://www.electrical-installation.org/enwiki/Additional_protection%3A_High_sensitivity_RCDs"),
@@ -168,7 +168,7 @@ faqs=[
  ("Прибор «в дежурном режиме» — это заметные деньги?",
   "Один прибор — копейки (0,5–3 Вт), но десяток устройств в режиме ожидания круглосуточно дают 50–200 кВт·ч в год. Подставьте 1,5 Вт и 24 часа — увидите свою цифру."),
 ],
-related=["tok-po-moshchnosti", "kva-kvt", "vremya-raboty-akkumulyatora"],
+related=["tok-po-moshchnosti", "kva-kvt", "vremya-raboty-akkumulyatora", "moshchnost-po-schetchiku", "zaryadka-elektromobilya"],
 ),
 
 # ─── 12. Ток электродвигателя ────────────────────────────────────────────────
@@ -209,7 +209,7 @@ faqs=[
  ("Что происходит с током при просадке напряжения?",
   "Момент двигателя падает как квадрат напряжения, скольжение растёт, и ток увеличивается — двигатель греется. Для удалённых насосов сначала проверьте падение напряжения в линии."),
 ],
-related=["kondensator-dvigatelya", "vybor-avtomata", "padenie-napryazheniya"],
+related=["kondensator-dvigatelya", "vybor-avtomata", "padenie-napryazheniya", "moshchnost-nasosa", "prosadka-pri-puske"],
 ),
 
 # ─── 13. Конденсатор для двигателя ───────────────────────────────────────────
@@ -296,7 +296,7 @@ faqs=[
  ("Можно ли использовать арматуру и трубы отопления?",
   "Материал, размеры, коррозионную стойкость и соединения выбирают по действующим нормам и условиям грунта. Калькулятор этого не проверяет."),
 ],
-related=["vybor-uzo", "sechenie-kabelya", "soprotivlenie-provoda"],
+related=["vybor-uzo", "sechenie-kabelya", "soprotivlenie-provoda", "molniezashchita"],
 review_status="estimate",
 sources=[
  dict(title="Installation and measurements of earth electrodes", organization="Schneider Electric Electrical Installation Guide", edition="онлайн-редакция, актуальная на 11.08.2026", sections=["Earthing rods", "Influence of the type of soil", "Measurement of the earth-electrode resistance"], accessed="11.08.2026", url="https://www.electrical-installation.org/enwiki/Installation_and_measurements_of_earth_electrodes"),
@@ -438,6 +438,6 @@ faqs=[
  ("Какое напряжение считать опасным?",
   "Условная граница — 50 В, но решает энергия и путь тока: заряженные сотни микрофарад на 300–400 В в блоках питания и вспышках способны нанести серьёзную травму даже одиночным разрядом."),
 ],
-related=["zaryad-kondensatora", "reaktivnoe-soprotivlenie", "kondensator-dvigatelya"],
+related=["zaryad-kondensatora", "reaktivnoe-soprotivlenie", "kondensator-dvigatelya", "soedinenie-kondensatorov"],
 ),
 ]

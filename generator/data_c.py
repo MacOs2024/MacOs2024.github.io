@@ -82,7 +82,7 @@ faqs=[
  ("Почему реальная частота отличается от расчётной?",
   "Свою лепту вносят паразитные ёмкости монтажа и межвитковая ёмкость катушки, а также разброс номиналов. В перестраиваемых контурах поэтому ставят подстроечные конденсаторы."),
 ],
-related=["reaktivnoe-soprotivlenie", "rc-filtr", "zaryad-kondensatora"],
+related=["reaktivnoe-soprotivlenie", "rc-filtr", "zaryad-kondensatora", "dlina-antenny", "lc-filtr-raschet"],
 ),
 
 # ─── 20. RC-фильтр ───────────────────────────────────────────────────────────
@@ -121,7 +121,7 @@ faqs=[
  ("Почему на границе фильтр «режет» так плавно?",
   "Один RC-каскад даёт спад лишь 6 дБ/октаву — это физика первого порядка. Круче: несколько каскадов, LC-фильтры или активные фильтры на операционных усилителях."),
 ],
-related=["rezonans-lc", "zaryad-kondensatora", "reaktivnoe-soprotivlenie"],
+related=["rezonans-lc", "zaryad-kondensatora", "reaktivnoe-soprotivlenie", "snabber-rc"],
 ),
 
 # ─── 21. Заряд конденсатора ──────────────────────────────────────────────────
@@ -161,7 +161,7 @@ faqs=[
  ("Каким будет начальный ток заряда?",
   "I₀ = U₀/R — конденсатор в первый момент ведёт себя как проводник. Поэтому большие ёмкости заряжают через резистор или NTC-термистор, иначе бросок тока выжигает контакты и диоды."),
 ],
-related=["energiya-kondensatora", "rc-filtr", "rezonans-lc"],
+related=["energiya-kondensatora", "rc-filtr", "rezonans-lc", "discharge-resistor-capacitor", "umnozhitel-napryazheniya"],
 ),
 
 # ─── 22. Трансформатор ───────────────────────────────────────────────────────
@@ -380,6 +380,6 @@ faqs=[
  ("Влияет ли изоляция или оплётка на сопротивление?",
   "На сопротивление — нет, ток течёт по металлу. Но изоляция ограничивает допустимый нагрев, а значит и предельный ток: голый нихром может работать раскалённым, провод в ПВХ — не выше 70 °C."),
 ],
-related=["padenie-napryazheniya", "sechenie-kabelya", "zakon-oma"],
+related=["padenie-napryazheniya", "sechenie-kabelya", "zakon-oma", "skin-effekt"],
 ),
 ]

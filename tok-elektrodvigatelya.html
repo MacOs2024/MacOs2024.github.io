@@ -148,10 +148,10 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 </section>
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
-<h2>Как считается</h2>
+<h2>Оценка номинального тока электродвигателя: как считается</h2>
 <div class="formula">I = P / (√3 · U · η · cos φ) — трёхфазный<br>I = P / (U · η · cos φ) — однофазный</div>
 <p>Мощность на шильдике — механическая, на валу. Электрическая потребляемая больше из-за потерь, а ток зависит от коэффициента мощности — поэтому в формуле присутствуют η и cos φ. Результат должен согласоваться с паспортным током, но не заменяет его.</p>
-<h2>Пример расчёта</h2>
+<h2>Оценка номинального тока электродвигателя: пример расчёта</h2>
 <p>Двигатель 3 кВт, 380 В, η = 0,85, cos φ = 0,85: I = 3000 / (1,73 · 380 · 0,85 · 0,85) ≈ <b>6,3 А</b>. Пусковые параметры и защиту по этой цифре автоматически не выбирают.</p>
 <div class="faq"><h2>Частые вопросы</h2>
 <h3>Почему нельзя просто разделить мощность на напряжение?</h3><p>Получится ток идеального нагревателя. Двигатель тратит часть энергии на потери (КПД) и обменивается с сетью реактивной мощностью (cos φ) — реальный ток в 1,4–1,7 раза выше наивной оценки.</p><h3>Что происходит с током при просадке напряжения?</h3><p>Момент двигателя падает как квадрат напряжения, скольжение растёт, и ток увеличивается — двигатель греется. Для удалённых насосов сначала проверьте падение напряжения в линии.</p>
@@ -159,7 +159,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.energy.gov/sites/prod/files/2014/04/f15/amo_motors_guidebook_web.pdf" rel="nofollow noopener" target="_blank">Continuous Energy Improvement in Motor Driven Systems</a> — U.S. Department of Energy — Редакция DOE/GO-102014-4357, 2014 — раздел motor input power, power factor, efficiency, pump systems — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Power_and_reactive_energy" rel="nofollow noopener" target="_blank">Electrical Installation Guide</a> — Schneider Electric — Редакция онлайн-редакция, актуальная на дату обращения — раздел Power and reactive energy, three-phase circuits, motor current — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Только установившийся симметричный режим; номинальный и пусковой ток следует брать с шильдика и из паспорта конкретного двигателя.</li></ul></section>
-<section class="related"><h2>Смотрите также</h2><ul><li><a href="kondensator-dvigatelya.html">Рабочий конденсатор схемы Штейнмеца</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li><li><a href="padenie-napryazheniya.html">Падение напряжения в кабеле</a></li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="kondensator-dvigatelya.html">Рабочий конденсатор схемы Штейнмеца</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li><li><a href="padenie-napryazheniya.html">Падение напряжения в кабеле</a></li><li><a href="moshchnost-nasosa.html">Мощность насоса по расходу и напору</a></li><li><a href="prosadka-pri-puske.html">Просадка напряжения при пуске двигателя</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
 <script>
