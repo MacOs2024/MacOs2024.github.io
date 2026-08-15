@@ -47,9 +47,9 @@ h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
 .f{margin:0 0 12px}
 .f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
 .fw{display:flex;gap:8px;align-items:center}
-input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
 input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
-select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
 .u{font-size:15px;color:#5c6660;min-width:34px}
 .hint{font-size:13px;color:#6b746e;margin-top:3px}
 .btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
@@ -65,6 +65,7 @@ select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;ba
 .article{margin-top:26px}
 .article h2{font-size:20px;margin:22px 0 8px}
 .article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
 .article ul{margin:8px 0;padding-left:22px}
 .formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
 table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
@@ -80,7 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-agent{background:#fdf6e7;color:#7a5b10}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
-footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
 .privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
@@ -139,7 +140,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Предварительный выбор сечения провода по току</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_znaju"><label for="znaju">Что известно</label><div class="fw"><select id="znaju"><option value="p" selected>Мощность нагрузки</option><option value="i">Ток нагрузки</option></select></div></div><div class="f" id="f_p"><label for="p">Мощность P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 5"><select id="p_unit" class="u" aria-label="Единицы"><option value="1">Вт</option><option value="1000" selected>кВт</option></select></div></div><div class="f" id="f_i"><label for="i">Ток I</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 25"><span class="u">А</span></div></div><div class="f" id="f_faza"><label for="faza">Сеть</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная (220 В)</option><option value="3">Трёхфазная (380 В)</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_c"><label for="c">cos φ</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div></div><div class="f" id="f_mat"><label for="mat">Материал жилы</label><div class="fw"><select id="mat"><option value="cu" selected>Медь</option><option value="al">Алюминий</option></select></div></div><div class="f" id="f_pr"><label for="pr">Колонка таблицы ПУЭ</label><div class="fw"><select id="pr"><option value="closed" selected>Два одножильных провода в одной трубе</option><option value="open">Один одножильный провод открыто</option></select></div></div><div class="f" id="f_kt"><label for="kt">Поправка на температуру Kt</label><div class="fw"><input id="kt" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div><div class="hint">Возьмите из применимого норматива; 1 только при табличных условиях</div></div><div class="f" id="f_kg"><label for="kg">Поправка на группировку Kg</label><div class="fw"><input id="kg" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div><div class="hint">Возьмите из применимого норматива; 1 только для одиночной цепи без снижения</div></div>
+<div class="f" id="f_znaju"><label for="znaju">Что известно</label><div class="fw"><select id="znaju"><option value="p" selected>Мощность нагрузки</option><option value="i">Ток нагрузки</option></select></div></div><div class="f" id="f_p"><label for="p">Мощность P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 5"><select id="p_unit" class="u" aria-label="Единицы: Мощность P"><option value="1">Вт</option><option value="1000" selected>кВт</option></select></div></div><div class="f" id="f_i"><label for="i">Ток I</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 25"><span class="u">А</span></div></div><div class="f" id="f_faza"><label for="faza">Сеть</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная (220 В)</option><option value="3">Трёхфазная (380 В)</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_c"><label for="c">cos φ</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div></div><div class="f" id="f_mat"><label for="mat">Материал жилы</label><div class="fw"><select id="mat"><option value="cu" selected>Медь</option><option value="al">Алюминий</option></select></div></div><div class="f" id="f_pr"><label for="pr">Колонка таблицы ПУЭ</label><div class="fw"><select id="pr"><option value="closed" selected>Два одножильных провода в одной трубе</option><option value="open">Один одножильный провод открыто</option></select></div></div><div class="f" id="f_kt"><label for="kt">Поправка на температуру Kt</label><div class="fw"><input id="kt" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div><div class="hint">Возьмите из применимого норматива; 1 только при табличных условиях. Больше 1 бывает при температуре среды ниже расчётной</div></div><div class="f" id="f_kg"><label for="kg">Поправка на группировку Kg</label><div class="fw"><input id="kg" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div><div class="hint">Возьмите из применимого норматива; 1 только для одиночной цепи без снижения</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -150,7 +151,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h2>Как считается</h2>
 <p>Сечение подбирают по длительно допустимому току. Расчёт использует таблицы 1.3.4 (медь) и 1.3.5 (алюминий) ПУЭ для проводов с резиновой или ПВХ-изоляцией и только две явно названные колонки: один одножильный провод открыто либо два одножильных провода в одной трубе.</p>
 <div class="formula">Iz = Iтабл · Kt · Kg&nbsp;&nbsp;&nbsp;условие: IB ≤ Iz</div>
-<table class="t"><tr><th>Сечение, мм²</th><th>Медь скрыто, А</th><th>Медь открыто, А</th><th>Алюминий скрыто, А</th></tr>
+<table class="t"><tr><th>Сечение, мм²</th><th>Медь, два провода в трубе, А</th><th>Медь, один провод открыто, А</th><th>Алюминий, два провода в трубе, А</th></tr>
 <tr><td>1,5</td><td>19</td><td>23</td><td>—</td></tr>
 <tr><td>2,5</td><td>27</td><td>30</td><td>20</td></tr>
 <tr><td>4</td><td>38</td><td>41</td><td>28</td></tr>
@@ -191,8 +192,8 @@ return fmt(x/1e-12)+' п'+unit;}
 function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
 function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
 function note(t){return '<div class="rnote">'+t+'</div>';}
-function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');}
-function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
 function buildPrint(){
 var d=new Date();
 var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
@@ -245,7 +246,8 @@ $('faza').addEventListener('change',function(){$('u').value=(S('faza')==='3')?'3
 sync();}
 function calc(){
 var i,kt=P('kt'),kg=P('kg');
-if(isNaN(kt)||isNaN(kg)||kt<=0||kt>1||kg<=0||kg>1)return err('Поправочные коэффициенты должны быть больше 0 и не больше 1.');
+if(isNaN(kt)||isNaN(kg)||kt<=0||kg<=0||kg>1)return err('Поправочные коэффициенты должны быть больше нуля, а поправка на группировку — не больше 1.');
+if(kt>1.3)return err('Поправка на температуру больше 1,3 не встречается в таблицах: проверьте значение.');
 if(S('znaju')==='p'){
 var p=P('p'),u=P('u'),c=P('c');
 if(isNaN(p)||isNaN(u))return err('Введите мощность и напряжение.');

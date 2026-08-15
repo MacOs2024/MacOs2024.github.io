@@ -47,9 +47,9 @@ h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
 .f{margin:0 0 12px}
 .f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
 .fw{display:flex;gap:8px;align-items:center}
-input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
 input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
-select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
 .u{font-size:15px;color:#5c6660;min-width:34px}
 .hint{font-size:13px;color:#6b746e;margin-top:3px}
 .btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
@@ -65,6 +65,7 @@ select{padding:10px;font-size:15px;border:1px solid #cdd4cf;border-radius:9px;ba
 .article{margin-top:26px}
 .article h2{font-size:20px;margin:22px 0 8px}
 .article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
 .article ul{margin:8px 0;padding-left:22px}
 .formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
 table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
@@ -80,7 +81,7 @@ table.t th{background:#eef1ec}
 .src .st-agent{background:#fdf6e7;color:#7a5b10}
 .src .st-estimate{background:#eef1ec;color:#4b5450}
 .src .st-pending{background:#fdeaea;color:#a3352b}
-footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#6b746e;border-top:1px solid #e2e6e0}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
 .privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
 .hero{padding:22px 0 6px}
 .hero h1{font-size:27px}
@@ -139,7 +140,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <section class="card">
 <div id="printhead"><div class="pt">⚡ ВольтКальк — Расчёт заземления: контур из вертикальных электродов</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_grunt"><label for="grunt">Ориентир по грунту</label><div class="fw"><select id="grunt"><option value="50" selected>Плодородный влажный грунт (≈50 Ом·м)</option><option value="500">Сухой грунт / гравий (≈500 Ом·м)</option><option value="3000">Каменистый грунт / сухой песок (≈3000 Ом·м)</option></select></div></div><div class="f" id="f_rho"><label for="rho">Удельное сопротивление грунта ρ</label><div class="fw"><input id="rho" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">Ом·м</span></div><div class="hint">Можно вписать своё значение по данным изысканий</div></div><div class="f" id="f_l"><label for="l">Длина электрода L</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="2.5" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_n"><label for="n">Количество стержней n</label><div class="fw"><input id="n" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">шт</span></div></div><div class="f" id="f_a"><label for="a">Расстояние между стержнями</label><div class="fw"><input id="a" type="text" inputmode="decimal" autocomplete="off" value="10.1" placeholder=""><span class="u">м</span></div><div class="hint">Для формулы должно быть больше 4·L</div></div><div class="f" id="f_rt"><label for="rt">Заданная проектом цель</label><div class="fw"><input id="rt" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">Ом</span></div><div class="hint">Это не универсальная норма: значение задаётся проектом по системе заземления и защите</div></div>
+<div class="f" id="f_grunt"><label for="grunt">Ориентир по грунту</label><div class="fw"><select id="grunt"><option value="50" selected>Плодородный влажный грунт (≈50 Ом·м)</option><option value="500">Сухой грунт / гравий (≈500 Ом·м)</option><option value="3000">Каменистый грунт / сухой песок (≈3000 Ом·м)</option></select></div></div><div class="f" id="f_rho"><label for="rho">Удельное сопротивление грунта ρ</label><div class="fw"><input id="rho" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">Ом·м</span></div><div class="hint">Можно вписать своё значение по данным изысканий</div></div><div class="f" id="f_l"><label for="l">Длина электрода L</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="2.5" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_n"><label for="n">Количество стержней n</label><div class="fw"><input id="n" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">шт</span></div></div><div class="f" id="f_a"><label for="a">Расстояние между стержнями</label><div class="fw"><input id="a" type="text" inputmode="decimal" autocomplete="off" value="10.1" placeholder=""><span class="u">м</span></div><div class="hint">Для формулы должно быть больше 3·L — верхняя граница диапазона, указанного источником</div></div><div class="f" id="f_rt"><label for="rt">Заданная проектом цель</label><div class="fw"><input id="rt" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">Ом</span></div><div class="hint">Это не универсальная норма: значение задаётся проектом по системе заземления и защите</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -148,11 +149,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
 <h2>Как считается</h2>
-<p>Schneider Electric приводит для вертикальных стержней в однородном грунте приближённую зависимость:</p>
-<div class="formula">R ≈ ρ / (n · L), если расстояние между стержнями &gt; 4L</div>
-<p>ρ — удельное сопротивление грунта, L — длина одного стержня, n — число стержней. При меньшем расстоянии простое деление на n недопустимо из-за взаимного влияния полей растекания.</p>
+<p>Schneider Electric приводит для вертикальных стержней в однородном грунте приближённую зависимость: суммарное сопротивление равно сопротивлению одного стержня, делённому на их число.</p>
+<div class="formula">R ≈ ρ / (n · L)</div>
+<p>ρ — удельное сопротивление грунта, L — длина одного стержня, n — число стержней.</p>
+<p><b>Когда делить на n нельзя.</b> Источник оговаривает, что расстояние между стержнями должно превышать глубину их забивки <b>в 2–3 раза</b>. При меньшем шаге поля растекания перекрываются, стержни начинают «мешать» друг другу, и простое деление на n даёт заниженное сопротивление — то есть результат выглядит лучше действительности. Калькулятор берёт верхнюю, более строгую границу диапазона: он считает только при расстоянии больше 3·L, а ниже честно отвечает «недостаточно данных».</p>
 <h2>Пример расчёта</h2>
-<p>При ρ = 100 Ом·м, двух стержнях длиной 2,5 м и расстоянии 10,1 м: R ≈ 100/(2·2,5) = <b>20 Ом</b>. Это предварительная оценка; соответствие проектному требованию подтверждают измерением.</p>
+<p>При ρ = 100 Ом·м, двух стержнях длиной 2,5 м и расстоянии 10,1 м: 10,1 &gt; 3·2,5 = 7,5, поэтому формула применима: R ≈ 100/(2·2,5) = <b>20 Ом</b>. Это предварительная оценка; соответствие проектному требованию подтверждают измерением. При том же шаге 7 м расчёт вердикта уже не даст: 7 &lt; 7,5.</p>
 <div class="faq"><h2>Частые вопросы</h2>
 <h3>Почему замер весной хороший, а летом сопротивление выросло?</h3><p>ρ грунта сильно зависит от влажности и промерзания; Schneider указывает возможное изменение сопротивления в 1–3 раза уже на глубине около метра.</p><h3>Можно ли использовать арматуру и трубы отопления?</h3><p>Материал, размеры, коррозионную стойкость и соединения выбирают по действующим нормам и условиям грунта. Калькулятор этого не проверяет.</p>
 </div>
@@ -182,8 +184,8 @@ return fmt(x/1e-12)+' п'+unit;}
 function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
 function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
 function note(t){return '<div class="rnote">'+t+'</div>';}
-function out(h){var r=$('res');r.innerHTML=h;r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');}
-function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
 function buildPrint(){
 var d=new Date();
 var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
@@ -231,8 +233,8 @@ var rho=P('rho'),L=P('l'),n=P('n'),a=P('a'),rt=P('rt');
 if([rho,L,n,a,rt].some(isNaN))return err('Заполните все поля.');
 if(rho<=0||L<=0||n<1||a<=0||rt<=0)return err('Значения должны быть больше нуля, число стержней — не меньше одного.');
 if(Math.floor(n)!==n)return err('Количество стержней должно быть целым числом.');
-if(n>1&&a<=4*L)return out(row('Статус','Недостаточно данных')+
- note('Формула R ≈ ρ/(n·L) применима при расстоянии между стержнями больше 4·L. Для указанного шага взаимное влияние электродов нужно учитывать проектным методом и подтвердить измерением.'));
+if(n>1&&a<=3*L)return out(row('Статус','Недостаточно данных')+
+ note('Формула R ≈ ρ/(n·L) применима, когда расстояние между стержнями превышает глубину забивки в 2–3 раза; калькулятор берёт верхнюю границу этого диапазона, то есть 3·L. Для меньшего шага взаимное влияние полей растекания нужно учитывать проектным методом и подтвердить измерением.'));
 var r=rho/(n*L),cmp=r<=rt?'ниже или равно заданной цели':'выше заданной цели';
 out(row('Оценочное сопротивление R',fmt(r,4)+' Ом')+
 row('Сравнение с целью',fmt(r,4)+' Ом — '+cmp)+
