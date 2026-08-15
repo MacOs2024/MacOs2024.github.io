@@ -154,7 +154,7 @@ faqs=[
  ("Учитывает ли расчёт перекос фаз?",
   "Нет, формулы верны для симметричной нагрузки. При неравных фазах в звезде без нулевого провода смещается нейтраль и напряжения на фазах становятся разными — там нужен отдельный расчёт по методу двух узлов."),
 ],
-related=["moshchnost-toka","tok-elektrodvigatelya","kva-kvt"],
+related=["moshchnost-toka", "tok-elektrodvigatelya", "kva-kvt", "tok-v-nule-perekos"],
 ),
 
 dict(
@@ -1078,7 +1078,7 @@ faqs=[
  ("Как выбрать напряжение системы?",
   "По мощности нагрузки: до 1 кВт хватает 12 В, для 1–3 кВт берут 24 В, свыше 3 кВт — 48 В. Чем выше напряжение, тем меньше ток при той же мощности и тем тоньше может быть силовая проводка."),
 ],
-related=["batareya-posledovatelno-parallelno","vremya-raboty-akkumulyatora","solar-panel-energy"],
+related=["batareya-posledovatelno-parallelno", "vremya-raboty-akkumulyatora", "solar-panel-energy", "raschet-invertora"],
 ),
 
 dict(
@@ -1586,7 +1586,7 @@ faqs=[
  ("Учитывает ли расчёт скин-эффект?",
   "Нет, формула справедлива для постоянного тока и промышленной частоты 50 Гц. На частотах в десятки килогерц ток вытесняется к поверхности проводника, и толстый провод перестаёт работать всей площадью — там переходят на литцендрат или фольгу."),
 ],
-related=["raschet-transformatora","soprotivlenie-provoda","sechenie-kabelya"],
+related=["raschet-transformatora", "soprotivlenie-provoda", "sechenie-kabelya", "awg-mm2"],
 ),
 
 dict(
