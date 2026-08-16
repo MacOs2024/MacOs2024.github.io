@@ -150,6 +150,20 @@ test.describe('Калькулятор', () => {
     await expect(page.locator('#res')).toContainText('Расчётное сечение PE4 мм²');
   });
 
+  test('сечение провода синхронизирует трёхфазную колонку ПУЭ', async ({ page }) => {
+    await page.goto('/sechenie-kabelya.html');
+    await expect(page.locator('#u')).toHaveValue('220');
+    await expect(page.locator('#pr option').first()).toHaveText(/Два одножильных/);
+    await page.selectOption('#faza', '3');
+    await expect(page.locator('#u')).toHaveValue('380');
+    await expect(page.locator('#pr option').first()).toHaveText(/Три одножильных/);
+    await page.fill('#p', '12');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Предварительный кандидат2,5 мм²');
+    await expect(page.locator('#res')).toContainText('Скорректированный допустимый ток Iz25 А');
+    await expect(page.locator('#res')).not.toContainText('Iz19 А');
+  });
+
   test('автомат не выдаёт положительный вывод без Iz и тока КЗ', async ({ page }) => {
     await page.goto('/vybor-avtomata.html');
     await page.fill('#p', '3,5');
@@ -168,12 +182,12 @@ test.describe('Калькулятор', () => {
     await page.fill('#rho', '100');
     await page.fill('#l', '2,5');
     await page.fill('#n', '2');
-    // Граница — 3·L = 7,5 м: верхняя граница диапазона «2–3 глубины забивки»,
-    // который указывает источник. Ровно на границе вердикта быть не должно.
-    await page.fill('#a', '7,5');
+    // Граница — 4·L = 10 м: строже источника намеренно, потому что ошибка
+    // упрощённой формулы односторонняя — она занижает сопротивление.
+    await page.fill('#a', '10');
     await page.click('#go');
     await expect(page.locator('#res')).toContainText('Недостаточно данных');
-    await page.fill('#a', '7,6');
+    await page.fill('#a', '10,1');
     await page.click('#go');
     await expect(page.locator('#res')).toContainText('20 Ом');
     await expect(page.locator('#res')).toContainText('требуется измерение');

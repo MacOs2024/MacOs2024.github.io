@@ -23,14 +23,14 @@
 |---|---|---|---:|---|
 | `tok-korotkogo-zamykaniya` | `agent-reviewed` | Schneider Electric EIG: conventional method `0,8·U/Z`, диапазоны B/C/D | 8 + неверный ввод | Codex, источник и тесты |
 | `sechenie-pe-provodnika` | `agent-reviewed` | Schneider Electric EIG: правило `S`, `16`, `S/2`; ПУЭ 1.7.127: минимумы отдельно проложенного PE — медь 2,5/4 мм², алюминий 16 мм² | 17 + неверный ввод | Codex и Claude, источники и тесты |
-| `sechenie-kabelya` | `agent-reviewed` | ПУЭ 1.3.4/1.3.5 только для двух явно названных колонок; `Iz = Iтабл·Kt·Kg` | 2 + неверный ввод | Codex, источник и тесты |
+| `sechenie-kabelya` | `agent-reviewed` | ПУЭ 6-го издания, 1.3.4/1.3.5: открыто, 2 и 3 одножильных провода в трубе; `Iz = Iтабл·Kt·Kg` | 96 + неверный ввод + browser | Codex, 45 табличных эталонов, границы и тесты |
 | `padenie-napryazheniya` | `estimate` | Schneider Electric EIG / IEC 60364-5-52: пользовательский бюджет, активное сопротивление при 20 °C | 3 + неверный ввод | Codex, источник и тесты |
 | `dlina-kabelya-po-padeniyu` | `estimate` | Обратная задача падения напряжения с теми же ограничениями | 2 + неверный ввод | Codex, источник и тесты |
 | `koefficienty-prokladki` | `agent-reviewed` | Schneider Electric EIG: коэффициенты зависят от точного способа прокладки; автоматическая таблица удалена | 2 + неверный ввод | Codex, источник и тесты |
 | `vybor-avtomata` | `agent-reviewed` | Schneider Electric EIG: `IB ≤ In ≤ Iz`, `Icn ≥ Isc`; B/C/D не угадывается | 3 + неверный ввод | Codex, источник и тесты |
 | `vybor-uzo` | `agent-reviewed` | Schneider Electric EIG / IEC summaries: ≤30 мА, ≤300 мА, типы AC/A/F/B | 2 режима | Codex, источник и тесты |
 | `emkostnyy-tok-utechki` | `agent-reviewed` | ПУЭ 7.1.83 как оценка только при отсутствии фактических данных | 2 + неверный ввод | Codex, источник и тесты |
-| `raschet-zazemleniya` | `estimate` | Schneider Electric EIG: `R ≈ ρ/(nL)` только при шаге `>4L`; обязательное измерение | 3 + неверный ввод | Codex, источник и тесты |
+| `raschet-zazemleniya` | `estimate` | `R ≈ ρ/(nL)`. Schneider Electric EIG указывает шаг в 2–3 глубины забивки; порог `>4L` — более строгий запас проекта, источнику не принадлежит. Обязательное измерение | 4 + неверный ввод | Codex и Claude, источник и тесты |
 | `prosadka-pri-puske` | `estimate` | Schneider Electric EIG: `R·cosφ + X·sinφ`, отдельный upstream-провал; момент относительно полновольтного пуска; ΔU≥U блокируется | 14 + неверный ввод + browser | Codex, Schneider Example 1, границы и тесты |
 | `molniezashchita` | `agent-reviewed` | СО 153-34.21.122-2003, таблица 3.4 и формула 3.1, диапазон до 150 м | 6 + неверный ввод | Codex, источник и тесты |
 | `raschet-radiatora` | `agent-reviewed` | onsemi AND9016/D и AND9859/D: последовательная тепловая цепь `Rθjc + Rθcs + Rθsa` | 3 + неверный ввод | Codex, источник и тесты |
