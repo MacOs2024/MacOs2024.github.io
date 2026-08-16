@@ -23,7 +23,7 @@
 |---|---|---|---:|---|
 | `tok-korotkogo-zamykaniya` | `agent-reviewed` | Schneider Electric EIG: conventional method `0,8·U/Z`, диапазоны B/C/D | 8 + неверный ввод | Codex, источник и тесты |
 | `sechenie-pe-provodnika` | `agent-reviewed` | Schneider Electric EIG: правило `S`, `16`, `S/2`; ПУЭ 1.7.127: минимумы отдельно проложенного PE — медь 2,5/4 мм², алюминий 16 мм² | 17 + неверный ввод | Codex и Claude, источники и тесты |
-| `sechenie-kabelya` | `agent-reviewed` | ПУЭ 1.3.4/1.3.5 только для двух явно названных колонок; `Iz = Iтабл·Kt·Kg` | 2 + неверный ввод | Codex, источник и тесты |
+| `sechenie-kabelya` | `agent-reviewed` | ПУЭ 6-го издания, 1.3.4/1.3.5: открыто, 2 и 3 одножильных провода в трубе; `Iz = Iтабл·Kt·Kg` | 96 + неверный ввод + browser | Codex, 45 табличных эталонов, границы и тесты |
 | `padenie-napryazheniya` | `estimate` | Schneider Electric EIG / IEC 60364-5-52: пользовательский бюджет, активное сопротивление при 20 °C | 3 + неверный ввод | Codex, источник и тесты |
 | `dlina-kabelya-po-padeniyu` | `estimate` | Обратная задача падения напряжения с теми же ограничениями | 2 + неверный ввод | Codex, источник и тесты |
 | `koefficienty-prokladki` | `agent-reviewed` | Schneider Electric EIG: коэффициенты зависят от точного способа прокладки; автоматическая таблица удалена | 2 + неверный ввод | Codex, источник и тесты |
