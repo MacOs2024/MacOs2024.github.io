@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Просадка напряжения при пуске двигателя — ВольтКальк</title>
-<meta name="description" content="Расчёт кратковременного провала напряжения в линии при пуске асинхронного двигателя по пусковому току, сечению и длине кабеля.">
+<title>Оценка просадки напряжения при пуске двигателя — ВольтКальк</title>
+<meta name="description" content="Оценка кратковременного провала напряжения при пуске двигателя с активным и реактивным сопротивлением кабеля и отдельным провалом вышестоящей сети.">
 <link rel="canonical" href="https://macos2024.github.io/prosadka-pri-puske.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ВольтКальк">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:title" content="Просадка напряжения при пуске двигателя — ВольтКальк">
-<meta property="og:description" content="Расчёт кратковременного провала напряжения в линии при пуске асинхронного двигателя по пусковому току, сечению и длине кабеля.">
+<meta property="og:title" content="Оценка просадки напряжения при пуске двигателя — ВольтКальк">
+<meta property="og:description" content="Оценка кратковременного провала напряжения при пуске двигателя с активным и реактивным сопротивлением кабеля и отдельным провалом вышестоящей сети.">
 <meta property="og:url" content="https://macos2024.github.io/prosadka-pri-puske.html">
 <meta property="og:image" content="https://macos2024.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Просадка напряжения при пуске двигателя","url":"https://macos2024.github.io/prosadka-pri-puske.html","description":"Расчёт кратковременного провала напряжения в линии при пуске асинхронного двигателя по пусковому току, сечению и длине кабеля.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Просадка напряжения при пуске двигателя","item":"https://macos2024.github.io/prosadka-pri-puske.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя ориентироваться только на рабочий ток?","acceptedAnswer":{"@type":"Answer","text":"Потому что кабель, проходящий по нагреву и по падению в рабочем режиме, при шестикратном токе даёт вшестеро больший провал. Линия, где рабочее падение составляет приемлемые 3%, при пуске просядет на 18% — двигатель может не запуститься."}},{"@type":"Question","name":"Как уменьшить провал, не меняя кабель?","acceptedAnswer":{"@type":"Answer","text":"Устройством плавного пуска или частотным преобразователем: они ограничивают пусковой ток до 2–3 номиналов, и провал уменьшается соответственно. Для мощных двигателей применяют пуск переключением звезда-треугольник — он снижает пусковой ток втрое."}},{"@type":"Question","name":"Считается ли сопротивление источника?","acceptedAnswer":{"@type":"Answer","text":"В этом расчёте учтена только линия. Если питание идёт от слабого источника — генератора, длинного ввода или трансформатора малой мощности — их внутреннее сопротивление добавит свою долю провала, и результат окажется оптимистичным."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Оценка просадки напряжения при пуске двигателя","url":"https://macos2024.github.io/prosadka-pri-puske.html","description":"Оценка кратковременного провала напряжения при пуске двигателя с активным и реактивным сопротивлением кабеля и отдельным провалом вышестоящей сети.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Оценка просадки напряжения при пуске двигателя","item":"https://macos2024.github.io/prosadka-pri-puske.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя ориентироваться только на рабочий ток?","acceptedAnswer":{"@type":"Answer","text":"Потому что кабель, проходящий по нагреву и по падению в рабочем режиме, при шестикратном токе даёт вшестеро больший провал. Линия, где рабочее падение составляет приемлемые 3%, при пуске просядет на 18% — двигатель может не запуститься."}},{"@type":"Question","name":"Как уменьшить провал, не меняя кабель?","acceptedAnswer":{"@type":"Answer","text":"Устройством плавного пуска или частотным преобразователем: они ограничивают пусковой ток до 2–3 номиналов, и провал уменьшается соответственно. Для мощных двигателей применяют пуск переключением звезда-треугольник — он снижает пусковой ток втрое."}},{"@type":"Question","name":"Считается ли сопротивление источника?","acceptedAnswer":{"@type":"Answer","text":"Введите отдельно известный провал вышестоящей сети. Нулевое значение означает только то, что эта составляющая не задана, а не то, что трансформатор, ввод и источник имеют нулевой импеданс."}}]}]}</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -135,12 +135,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
 <main>
 <nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
-<h1>Просадка напряжения при пуске двигателя</h1>
-<p class="intro">Пусковой ток в 5–7 раз выше номинального. Кабель, нормальный для рабочего режима, может не дать двигателю запуститься.</p>
+<h1>Оценка просадки напряжения при пуске двигателя</h1>
+<p class="intro">Это оценка, а не гарантия пуска. Укажите пусковой cos φ, реактивность кабеля и известный провал вышестоящей сети; при расчётном падении не меньше напряжения числовой прогноз пуска блокируется.</p>
 <section class="card">
-<div id="printhead"><div class="pt">⚡ ВольтКальк — Просадка напряжения при пуске двигателя</div><div class="pd" id="pdate"></div></div>
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Оценка просадки напряжения при пуске двигателя</div><div class="pd" id="pdate"></div></div>
 <div id="pvals"></div>
-<div class="f" id="f_i"><label for="i">Номинальный ток двигателя</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_k"><label for="k">Кратность пускового тока</label><div class="fw"><input id="k" type="text" inputmode="decimal" autocomplete="off" value="6" placeholder=""></div><div class="hint">Асинхронный двигатель 5–7; с плавным пуском 2–3</div></div><div class="f" id="f_l"><label for="l">Длина линии (в одну сторону)</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_s"><label for="s">Сечение жилы</label><div class="fw"><input id="s" type="text" inputmode="decimal" autocomplete="off" value="4" placeholder=""><span class="u">мм²</span></div></div><div class="f" id="f_mat"><label for="mat">Материал жилы</label><div class="fw"><select id="mat"><option value="0.0175" selected>Медь (ρ = 0,0175)</option><option value="0.028">Алюминий (ρ = 0,028)</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение сети</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_faza"><label for="faza">Линия</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная</option><option value="3">Трёхфазная</option></select></div></div><div class="f" id="f_lim"><label for="lim">Допустимый провал по проекту</label><div class="fw"><input id="lim" type="text" inputmode="decimal" autocomplete="off" value="15" placeholder=""><span class="u">%</span></div><div class="hint">Не универсальная норма: задайте по двигателю, пускателю и требованиям сети</div></div>
+<div class="f" id="f_i"><label for="i">Номинальный ток двигателя</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_k"><label for="k">Кратность пускового тока</label><div class="fw"><input id="k" type="text" inputmode="decimal" autocomplete="off" value="6" placeholder=""></div><div class="hint">Асинхронный двигатель 5–7; с плавным пуском 2–3</div></div><div class="f" id="f_l"><label for="l">Длина линии (в одну сторону)</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_s"><label for="s">Сечение жилы</label><div class="fw"><input id="s" type="text" inputmode="decimal" autocomplete="off" value="4" placeholder=""><span class="u">мм²</span></div></div><div class="f" id="f_mat"><label for="mat">Материал жилы</label><div class="fw"><select id="mat"><option value="cu" selected>Медь (R = 23,7/S Ом/км)</option><option value="al">Алюминий (R = 37,6/S Ом/км)</option></select></div></div><div class="f" id="f_c"><label for="c">Пусковой cos φ</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="0.35" placeholder=""></div><div class="hint">Schneider приводит типовое значение 0,35; по возможности используйте данные двигателя</div></div><div class="f" id="f_x"><label for="x">Реактивное сопротивление X</label><div class="fw"><input id="x" type="text" inputmode="decimal" autocomplete="off" value="0.08" placeholder=""><span class="u">Ом/км</span></div><div class="hint">При отсутствии данных Schneider предлагает 0,08 Ом/км</div></div><div class="f" id="f_u"><label for="u">Напряжение сети</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_faza"><label for="faza">Линия</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная</option><option value="3">Трёхфазная</option></select></div></div><div class="f" id="f_up"><label for="up">Провал вышестоящей сети при пуске</label><div class="fw"><input id="up" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">В</span></div><div class="hint">От трансформатора, ввода и других участков; 0 означает, что он неизвестен или не задан</div></div><div class="f" id="f_lim"><label for="lim">Допустимый провал по проекту</label><div class="fw"><input id="lim" type="text" inputmode="decimal" autocomplete="off" value="15" placeholder=""><span class="u">%</span></div><div class="hint">Не универсальная норма: задайте по двигателю, пускателю и требованиям сети</div></div>
 <button id="go" class="btn" type="button">Рассчитать</button>
 <div id="res" class="result" aria-live="polite"></div>
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
@@ -148,23 +148,23 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 </section>
 <!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
 <section class="article">
-<h2>Просадка напряжения при пуске двигателя: как считается</h2>
-<div class="formula">Iпуск = Iном · k&nbsp;&nbsp;&nbsp;ΔU = kф · Iпуск · ρ · L / S<br>Мпуск ∝ (Uост / Uном)²</div>
-<p>Асинхронный двигатель в момент пуска представляет собой почти короткозамкнутый трансформатор: ток достигает 5–7 номиналов и держится несколько секунд. На сопротивлении кабеля этот ток создаёт провал напряжения, и до двигателя доходит уже меньше положенного.</p>
-<p>Ключевая проблема в том, что <b>пусковой момент пропорционален квадрату напряжения</b>. Провал в 15% снижает момент не на 15%, а на 28%. При провале в 30% момент падает вдвое, и двигатель под нагрузкой может вообще не тронуться — он останется стоять, продолжая потреблять пусковой ток, и обмотки начнут перегреваться.</p>
+<h2>Оценка просадки напряжения при пуске двигателя: как считается</h2>
+<div class="formula">Iпуск = Iном · k<br>ΔU₁ф = 2 · Iпуск · (R·cosφ + X·sinφ) · L<br>ΔU₃ф = √3 · Iпуск · (R·cosφ + X·sinφ) · L<br>Мпуск / Мпуск,полн = (Uост / Uном)²</div>
+<p>В формулах Schneider длина L задаётся в километрах, R и X — в Ом/км. Для кабеля с XLPE-изоляцией источник использует R = 23,7/S для меди и 37,6/S для алюминия; при отсутствии иных данных X принимается 0,08 Ом/км. Типовой пусковой cos φ — 0,35. Если у изготовителя кабеля или двигателя есть точные значения, используйте их в проектном расчёте вместо типовых.</p>
+<p>Ключевая проблема в том, что <b>пусковой момент пропорционален квадрату напряжения</b>. Отображаемый процент относится к пусковому моменту того же двигателя при полном напряжении. Например, 70% напряжения дают 49% полновольтного пускового момента; это не означает 49% номинального момента на валу.</p>
 <p>Для линии двигателя кроме рабочего режима проверяют пуск. Универсального предела 15%, гарантирующего запуск любого двигателя, нет: допустимый провал задают по характеристикам двигателя, пускателя, момента нагрузки и требованиям к остальной сети.</p>
-<table class="t"><tr><th>Провал</th><th>Остаточный момент</th><th>Оценка</th></tr>
+<table class="t"><tr><th>Провал</th><th>Доля полновольтного пускового момента</th><th>Оценка</th></tr>
 <tr><td>10%</td><td>81%</td><td>Хорошо</td></tr>
 <tr><td>15%</td><td>72%</td><td>Требует проверки момента нагрузки</td></tr>
 <tr><td>30%</td><td>49%</td><td>Высокий риск затяжного или сорванного пуска</td></tr></table>
-<h2>Просадка напряжения при пуске двигателя: пример расчёта</h2>
-<p>Двигатель с номинальным током 10 А и кратностью пуска 6 на кабеле 4 мм² медь длиной 30 м, сеть 220 В. Пусковой ток — <b>60 А</b>, расчётный провал линии — <b>15,75 В</b>, или <b>7,159%</b>. На клеммах по этой модели остаётся 204,25 В, а относительный момент — около 86,19%. Окончательный вывод о запуске требует характеристики двигателя и нагрузки.</p>
+<h2>Оценка просадки напряжения при пуске двигателя: пример расчёта</h2>
+<p>Контрольный пример Schneider: трёхфазный медный кабель 35 мм² длиной 50 м, пусковой ток 500 А, cos φ = 0,35. Формула даёт около <b>13,5 В</b> на кабеле; при дополнительно заданных 14 В на вышестоящей сети суммарно получается около <b>27,5 В</b>, или 6,9% от 400 В. Даже такой результат остаётся оценкой и должен сопоставляться с характеристиками двигателя и нагрузки.</p>
 <div class="faq"><h2>Частые вопросы</h2>
-<h3>Почему нельзя ориентироваться только на рабочий ток?</h3><p>Потому что кабель, проходящий по нагреву и по падению в рабочем режиме, при шестикратном токе даёт вшестеро больший провал. Линия, где рабочее падение составляет приемлемые 3%, при пуске просядет на 18% — двигатель может не запуститься.</p><h3>Как уменьшить провал, не меняя кабель?</h3><p>Устройством плавного пуска или частотным преобразователем: они ограничивают пусковой ток до 2–3 номиналов, и провал уменьшается соответственно. Для мощных двигателей применяют пуск переключением звезда-треугольник — он снижает пусковой ток втрое.</p><h3>Считается ли сопротивление источника?</h3><p>В этом расчёте учтена только линия. Если питание идёт от слабого источника — генератора, длинного ввода или трансформатора малой мощности — их внутреннее сопротивление добавит свою долю провала, и результат окажется оптимистичным.</p>
+<h3>Почему нельзя ориентироваться только на рабочий ток?</h3><p>Потому что кабель, проходящий по нагреву и по падению в рабочем режиме, при шестикратном токе даёт вшестеро больший провал. Линия, где рабочее падение составляет приемлемые 3%, при пуске просядет на 18% — двигатель может не запуститься.</p><h3>Как уменьшить провал, не меняя кабель?</h3><p>Устройством плавного пуска или частотным преобразователем: они ограничивают пусковой ток до 2–3 номиналов, и провал уменьшается соответственно. Для мощных двигателей применяют пуск переключением звезда-треугольник — он снижает пусковой ток втрое.</p><h3>Считается ли сопротивление источника?</h3><p>Введите отдельно известный провал вышестоящей сети. Нулевое значение означает только то, что эта составляющая не задана, а не то, что трансформатор, ввод и источник имеют нулевой импеданс.</p>
 </div>
 </section>
 <!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
-<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Maximum_voltage_drop_limit" rel="nofollow noopener" target="_blank">Maximum voltage drop limit</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция от 05.08.2026 — раздел Circuits supplying motors — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Calculation_of_voltage_drop_in_steady_load_conditions" rel="nofollow noopener" target="_blank">Calculation of voltage drop in steady load conditions</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция от 05.08.2026 — раздел Voltage drop during motor start-up, Example 1 — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Учитывается только активное сопротивление указанного участка кабеля; импеданс источника и вышестоящей сети не входит.</li><li>Пусковой cos φ и реактивное сопротивление кабеля не учитываются, поэтому результат ориентировочный.</li><li>Сравнение с пользовательским пределом не доказывает достаточность пускового момента.</li></ul></section>
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enw/index.php?title=Maximum_voltage_drop_limit&amp;oldid=29547" rel="nofollow noopener" target="_blank">Maximum voltage drop limit</a> — Schneider Electric Electrical Installation Guide — Редакция редакция 05.08.2026, oldid=29547 — раздел Circuits supplying motors, steady-state limits do not apply during starting — обращение 15.08.2026</li><li><a href="https://www.electrical-installation.org/enw/index.php?title=Calculation_of_voltage_drop_in_steady_load_conditions&amp;oldid=29653" rel="nofollow noopener" target="_blank">Calculation of voltage drop in steady load conditions</a> — Schneider Electric Electrical Installation Guide — Редакция редакция 05.08.2026, oldid=29653 — раздел Figure G29, Figure G30, Voltage drop during motor start-up, Example 1 — обращение 15.08.2026</li><li><a href="https://productinfo.se.com/nadigest/5cc35b7ed6593c0001ba8661/Supplemental%20Digest/SD17716_MAIN%20%28bookmap%29_0000066217.xml/%24/_SD17717018_Heading2_7" rel="nofollow noopener" target="_blank">Reduced Voltage Starting of Squirrel Cage Motors</a> — Schneider Electric / Square D — Редакция Digest Plus, Supplemental 16, редакция на дату обращения — раздел Description of All Types, torque proportional to voltage squared — обращение 15.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>R вычисляется по приближённым коэффициентам Schneider для медного или алюминиевого кабеля с XLPE-изоляцией; фактические данные кабеля имеют приоритет.</li><li>X и пусковой cos φ задаются пользователем; значения 0,08 Ом/км и 0,35 являются типовыми допущениями источника.</li><li>Провал вышестоящей сети учитывается только в объёме введённого пользователем значения; 0 В не доказывает его отсутствие.</li><li>Сравнение с пользовательским пределом не доказывает достаточность пускового момента.</li><li>При ΔU ≥ U числовой прогноз напряжения и момента блокируется как выход линейной модели за область применимости.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li><li><a href="padenie-napryazheniya.html">Падение напряжения в кабеле</a></li><li><a href="vnutrennee-soprotivlenie.html">Внутреннее сопротивление источника</a></li></ul></section>
 </main>
 <footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
@@ -231,21 +231,37 @@ if(typeof init==='function')init();
 });
 
 
+function init(){$('faza').addEventListener('change',function(){$('u').value=S('faza')==='3'?'380':'220';});}
 function calc(){
-var i=P('i'),k=P('k'),l=P('l'),s=P('s'),ro=N(S('mat')),u=P('u'),lim=P('lim');
-if([i,k,l,s,u,lim].some(isNaN))return err('Заполните все поля.');
-if(i<=0||k<=0||l<=0||s<=0||u<=0||lim<=0||lim>=100)return err('Все значения должны быть больше нуля; допустимый провал — меньше 100%.');
+var i=P('i'),k=P('k'),l=P('l'),s=P('s'),c=P('c'),x=P('x'),u=P('u'),up=P('up'),lim=P('lim');
+if([i,k,l,s,c,x,u,up,lim].some(isNaN))return err('Заполните все поля.');
+if(i<=0||k<=0||l<=0||s<=0||u<=0)return err('Ток, кратность, длина, сечение и напряжение должны быть больше нуля.');
+if(c<=0||c>1)return err('Пусковой cos φ должен быть больше 0 и не больше 1.');
+if(x<0)return err('Реактивное сопротивление X не может быть отрицательным.');
+if(up<0)return err('Провал вышестоящей сети не может быть отрицательным.');
+if(lim<=0||lim>=100)return err('Допустимый провал должен быть больше 0 и меньше 100%.');
 var kf=S('faza')==='3'?Math.sqrt(3):2;
-var ip=i*k,du=kf*ip*ro*l/s,pc=100*du/u,ust=u-du;
-var dun=kf*i*ro*l/s,pcn=100*dun/u;
+var r=(S('mat')==='cu'?23.7:37.6)/s;
+var sinphi=Math.sqrt(Math.max(0,1-c*c));
+var ip=i*k,keff=kf*(r*c+x*sinphi),duCable=keff*ip*l/1000;
+var du=duCable+up,pc=100*du/u;
+if(!isFinite(r)||!isFinite(keff)||!isFinite(ip)||!isFinite(duCable)||!isFinite(du)||!isFinite(pc))return err('Исходные данные слишком велики для надёжного расчёта.');
+var base=row('Пусковой ток',fmt(ip,5)+' А')+
+row('Сопротивление проводника R',fmt(r,5)+' Ом/км')+
+row('Расчётный коэффициент линии',fmt(keff,5)+' В/(А·км)')+
+row('Провал на кабеле',fmt(duCable,5)+' В')+
+row('Провал вышестоящей сети',fmt(up,5)+' В')+
+row('Суммарный расчётный провал',fmt(du,5)+' В ('+fmt(pc,4)+' %)');
+if(du>=u)return out(base+
+row('Сравнение с заданным пределом','Не применяется')+
+row('Статус','Модель вне области применимости; пуск не подтверждён')+
+note('Суммарный расчётный провал не меньше напряжения сети. Линейная модель не может предсказывать отрицательное напряжение: результат означает, что исходная схема не подтверждает пуск и требует полноценного расчёта источника, сети, двигателя и нагрузки.'));
+var ust=u-du;
 var ok=pc<=lim;
 var n=ok?'Расчётный провал не превышает заданный пользователем предел. Это не гарантирует пуск: нужно сравнить доступный момент с моментом сопротивления и учесть падение во всей питающей сети.':'Расчётный провал превышает заданный пользователем предел. Увеличьте сечение, укоротите линию или примените согласованный способ пуска.';
-out(row('Пусковой ток',fmt(ip,5)+' А')+
-row('Провал напряжения при пуске',fmt(du,5)+' В')+
-row('То же в процентах',fmt(pc,4)+' %')+
+out(base+
 row('Напряжение на двигателе при пуске',fmt(ust,5)+' В')+
-row('Падение в рабочем режиме',fmt(dun,4)+' В ('+fmt(pcn,3)+' %)')+
-row('Остаточный пусковой момент','около '+fmt(100*Math.pow(ust/u,2),4)+' % от номинального')+
+row('Относительный пусковой момент','около '+fmt(100*Math.pow(ust/u,2),4)+' % от полновольтного пускового момента')+
 row('Сравнение с заданным пределом',ok?'Укладывается':'Превышает')+
 row('Статус','Оценка, не гарантия пуска')+
 note(n));
