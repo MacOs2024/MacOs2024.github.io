@@ -199,7 +199,7 @@ NFPA_CONDUIT = source(
     "NFPA 70 National Electrical Code — Chapter 9, Table 1",
     "National Fire Protection Association",
     "2020 first-revision report, First Revision No. 8330-NFPA70-2018",
-    ["Chapter 9, Table 1: 53%, 31%, 40%", "Chapter 9, Note 6: rounding conductor or cable count at decimal ≥ 0.8"],
+    ["Chapter 9, Table 1: 53%, 31%, 40%", "Chapter 9, Note 7: rounding conductor or cable count at decimal ≥ 0.8"],
     "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2020_NEC_P08_FD_FRStatements.pdf",
 )
 NFPA_CONDUIT["accessed"] = "15.08.2026"

@@ -193,7 +193,7 @@ test.describe('Калькулятор', () => {
     await expect(page.locator('#res')).toContainText('требуется измерение');
   });
 
-  test('заполнение трубы учитывает категории количества и округление Note 6', async ({ page }) => {
+  test('заполнение трубы учитывает категории количества и округление Note 7', async ({ page }) => {
     await page.goto('/zapolnenie-truby-kabelem.html');
     await page.fill('#d', '20');
     await page.fill('#n', '1');
