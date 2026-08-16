@@ -54,8 +54,8 @@ function setValues(document, values) {
   }
 }
 
-async function calculate(file, values, expected) {
-  kind = "functional";
+async function calculate(file, values, expected, scenarioKind = "functional") {
+  kind = scenarioKind;
   recordScenario(file);
   const dom = await load(file);
   const { document } = dom.window;
@@ -322,6 +322,57 @@ await calculate("delitel-napryazheniya.html", { uin: "12", r1: "1", r2: "2" }, [
 
 await calculate("sechenie-kabelya.html", { p: "3,5" }, ["Расчётный ток15,9 А", "Предварительный кандидат1,5 мм²", "Скорректированный допустимый ток Iz19 А"]);
 await calculate("sechenie-kabelya.html", { znaju: "i", i: "25", mat: "al", pr: "open", kt: "0,9", kg: "0,8" }, ["Расчётный ток25 А", "Предварительный кандидат6 мм²", "Скорректированный допустимый ток Iz28,08 А"]);
+// Независимый эталон ПУЭ 1.3.4/1.3.5. Эти значения намеренно перечислены
+// отдельно от JS страницы: тест не копирует массив из калькулятора.
+const pueCurrentFixtures = [
+  { name: "Cu/open", mat: "cu", faza: "1", pr: "open", rows: [[1.5,23],[2.5,30],[4,41],[6,50],[10,80],[16,100],[25,140],[35,170]] },
+  { name: "Cu/pipe2", mat: "cu", faza: "1", pr: "pipe2", rows: [[1.5,19],[2.5,27],[4,38],[6,46],[10,70],[16,85],[25,115],[35,135]] },
+  { name: "Cu/pipe3", mat: "cu", faza: "3", pr: "pipe3", rows: [[1.5,17],[2.5,25],[4,35],[6,42],[10,60],[16,80],[25,100],[35,125]] },
+  { name: "Al/open", mat: "al", faza: "1", pr: "open", rows: [[2.5,24],[4,32],[6,39],[10,60],[16,75],[25,105],[35,130]] },
+  { name: "Al/pipe2", mat: "al", faza: "1", pr: "pipe2", rows: [[2.5,20],[4,28],[6,36],[10,50],[16,60],[25,85],[35,100]] },
+  { name: "Al/pipe3", mat: "al", faza: "3", pr: "pipe3", rows: [[2.5,19],[4,28],[6,32],[10,47],[16,60],[25,80],[35,95]] },
+];
+for (const fixture of pueCurrentFixtures) {
+  for (let index = 0; index < fixture.rows.length; index++) {
+    const [section, current] = fixture.rows[index];
+    const values = { znaju: "i", faza: fixture.faza, mat: fixture.mat, pr: fixture.pr, i: String(current) };
+    const sectionText = String(section).replace('.', ',');
+    await calculate("sechenie-kabelya.html", values, [
+      `Предварительный кандидат${sectionText} мм²`,
+      `Скорректированный допустимый ток Iz${current} А`,
+    ]);
+
+    const above = { ...values, i: String(current + 0.001) };
+    const next = fixture.rows[index + 1];
+    await calculate("sechenie-kabelya.html", above, next
+      ? [`Предварительный кандидат${String(next[0]).replace('.', ',')} мм²`]
+      : ["выходит за пределы бытовой таблицы"], "boundary");
+  }
+}
+// Опасные регрессии: фазовый режим влияет на колонку даже при вводе тока,
+// а 12 кВт в трёхфазной сети больше не получают двухпроводную строку 19 А.
+await calculate("sechenie-kabelya.html", { p: "12000", p_unit: "1", faza: "3", mat: "cu", pr: "pipe3" }, ["Расчётный ток18,2 А", "Предварительный кандидат2,5 мм²", "Скорректированный допустимый ток Iz25 А"]);
+await calculate("sechenie-kabelya.html", { znaju: "i", faza: "3", mat: "al", pr: "pipe3", i: "19,5" }, ["Предварительный кандидат4 мм²", "Скорректированный допустимый ток Iz28 А"]);
+await calculate("sechenie-kabelya.html", { znaju: "i", faza: "3", mat: "cu", pr: "open", i: "18,5" }, ["Предварительный кандидат1,5 мм²", "Скорректированный допустимый ток Iz23 А"]);
+{
+  recordScenario("sechenie-kabelya.html");
+  const dom = await load("sechenie-kabelya.html");
+  const { document } = dom.window;
+  const phase = document.getElementById("faza");
+  const voltage = document.getElementById("u");
+  const pipe = document.getElementById("pr").options[0];
+  check(voltage.value === "220" && pipe.value === "pipe2" && pipe.textContent.includes("Два"),
+    "sechenie-kabelya.html: начальная однофазная колонка не синхронизирована");
+  phase.value = "3";
+  phase.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  check(voltage.value === "380" && pipe.value === "pipe3" && pipe.textContent.includes("Три"),
+    "sechenie-kabelya.html: смена на три фазы не обновила напряжение и колонку ПУЭ");
+  phase.value = "1";
+  phase.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  check(voltage.value === "220" && pipe.value === "pipe2" && pipe.textContent.includes("Два"),
+    "sechenie-kabelya.html: возврат на одну фазу не восстановил колонку ПУЭ");
+  dom.window.close();
+}
 await calculate("padenie-napryazheniya.html", { i: "10", l: "20", s: "1,5" }, ["Падение напряжения ΔU4,67 В", "2,12 %"]);
 await calculate("padenie-napryazheniya.html", { i: "10", l: "20", s: "1,5", dop: "2" }, ["Сравнение с лимитомПревышает 2 %", "нужно не менее 1,59 мм²", "2,5 мм²"]);
 await calculate("padenie-napryazheniya.html", { i: "50", l: "100", s: "25", mat: "al", faza: "3", u: "400", dop: "3" }, ["Падение напряжения ΔU9,7 В", "2,42 %", "Сравнение с лимитомУкладывается в 3 %"]);

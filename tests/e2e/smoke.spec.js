@@ -150,6 +150,20 @@ test.describe('Калькулятор', () => {
     await expect(page.locator('#res')).toContainText('Расчётное сечение PE4 мм²');
   });
 
+  test('сечение провода синхронизирует трёхфазную колонку ПУЭ', async ({ page }) => {
+    await page.goto('/sechenie-kabelya.html');
+    await expect(page.locator('#u')).toHaveValue('220');
+    await expect(page.locator('#pr option').first()).toHaveText(/Два одножильных/);
+    await page.selectOption('#faza', '3');
+    await expect(page.locator('#u')).toHaveValue('380');
+    await expect(page.locator('#pr option').first()).toHaveText(/Три одножильных/);
+    await page.fill('#p', '12');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Предварительный кандидат2,5 мм²');
+    await expect(page.locator('#res')).toContainText('Скорректированный допустимый ток Iz25 А');
+    await expect(page.locator('#res')).not.toContainText('Iz19 А');
+  });
+
   test('автомат не выдаёт положительный вывод без Iz и тока КЗ', async ({ page }) => {
     await page.goto('/vybor-avtomata.html');
     await page.fill('#p', '3,5');
