@@ -31,7 +31,7 @@
 | `vybor-uzo` | `agent-reviewed` | Schneider Electric EIG / IEC summaries: ≤30 мА, ≤300 мА, типы AC/A/F/B | 2 режима | Codex, источник и тесты |
 | `emkostnyy-tok-utechki` | `agent-reviewed` | ПУЭ 7.1.83 как оценка только при отсутствии фактических данных | 2 + неверный ввод | Codex, источник и тесты |
 | `raschet-zazemleniya` | `estimate` | Schneider Electric EIG: `R ≈ ρ/(nL)` только при шаге `>4L`; обязательное измерение | 3 + неверный ввод | Codex, источник и тесты |
-| `prosadka-pri-puske` | `estimate` | Schneider Electric EIG: пусковой ток и провал; универсальный предел 15% удалён | 2 + неверный ввод | Codex, источник и тесты |
+| `prosadka-pri-puske` | `estimate` | Schneider Electric EIG: `R·cosφ + X·sinφ`, отдельный upstream-провал; момент относительно полновольтного пуска; ΔU≥U блокируется | 14 + неверный ввод + browser | Codex, Schneider Example 1, границы и тесты |
 | `molniezashchita` | `agent-reviewed` | СО 153-34.21.122-2003, таблица 3.4 и формула 3.1, диапазон до 150 м | 6 + неверный ввод | Codex, источник и тесты |
 | `raschet-radiatora` | `agent-reviewed` | onsemi AND9016/D и AND9859/D: последовательная тепловая цепь `Rθjc + Rθcs + Rθsa` | 3 + неверный ввод | Codex, источник и тесты |
 | `gasyashchiy-kondensator` | `pending` | Опасный расчёт снят с публикации | не применимо | — |
