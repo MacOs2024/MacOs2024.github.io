@@ -179,6 +179,22 @@ test.describe('Калькулятор', () => {
     await expect(page.locator('#res')).toContainText('требуется измерение');
   });
 
+  test('заполнение трубы учитывает категории количества и округление Note 6', async ({ page }) => {
+    await page.goto('/zapolnenie-truby-kabelem.html');
+    await page.fill('#d', '20');
+    await page.fill('#n', '1');
+    await page.fill('#dk', '10');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Максимум кабелей этого диаметра1 шт.');
+
+    await page.fill('#d', '10');
+    await page.fill('#n', '5');
+    await page.fill('#dk', '2,88');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Применено: дробная часть расчётного количества ≥ 0,8');
+    await expect(page.locator('#res')).toContainText('Допустимо по геометрической проверке');
+  });
+
   test('молниезащита использует кусочные коэффициенты до 150 м', async ({ page }) => {
     await page.goto('/molniezashchita.html');
     await page.fill('#h', '150');
