@@ -193,6 +193,36 @@ test.describe('Калькулятор', () => {
     await expect(page.locator('#res')).toContainText('требуется измерение');
   });
 
+  test('пуск двигателя синхронизирует фазы и блокирует коллапс напряжения', async ({ page }) => {
+    await page.goto('/prosadka-pri-puske.html');
+    await expect(page.locator('#u')).toHaveValue('220');
+    await page.selectOption('#faza', '3');
+    await expect(page.locator('#u')).toHaveValue('380');
+
+    await page.fill('#i', '100');
+    await page.fill('#k', '5');
+    await page.fill('#l', '50');
+    await page.fill('#s', '35');
+    await page.fill('#u', '400');
+    await page.fill('#up', '14');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Провал на кабеле13,507 В');
+    await expect(page.locator('#res')).toContainText('Суммарный расчётный провал27,507 В');
+
+    await page.selectOption('#faza', '1');
+    await page.fill('#i', '1');
+    await page.fill('#k', '1');
+    await page.fill('#l', '1000');
+    await page.fill('#s', '23,7');
+    await page.fill('#c', '1');
+    await page.fill('#x', '0');
+    await page.fill('#up', '218');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Модель вне области применимости; пуск не подтверждён');
+    await expect(page.locator('#res')).not.toContainText('Напряжение на двигателе при пуске');
+    await expect(page.locator('#res')).not.toContainText('пускового момента');
+  });
+
   test('молниезащита использует кусочные коэффициенты до 150 м', async ({ page }) => {
     await page.goto('/molniezashchita.html');
     await page.fill('#h', '150');

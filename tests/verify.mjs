@@ -772,8 +772,47 @@ await calculate("emkostnyy-tok-utechki.html", { i: "25", l: "80", uzo: "30" }, [
 await calculate("emkostnyy-tok-utechki.html", { i: "10", l: "50", uzo: "30" }, ["Суммарный ток утечки4,5 мА", "Условие ПУЭ 7.1.83Выполняется по оценке"]);
 await calculate("tok-v-nule-perekos.html", { ia: "30", ib: "20", ic: "10", u: "220" }, ["Ток основной гармоники I(N)17,321 А", "не предназначена для выбора сечения"]);
 await calculate("tok-v-nule-perekos.html", { ia: "20", ib: "20", ic: "20", u: "220" }, ["Ток основной гармоники I(N)0 А", "тройные гармоники"]);
-await calculate("prosadka-pri-puske.html", { i: "10", k: "6", l: "30", s: "4", u: "220", lim: "15" }, ["Пусковой ток60 А", "Провал напряжения при пуске15,75 В", "Сравнение с заданным пределомУкладывается", "СтатусОценка, не гарантия пуска"]);
-await calculate("prosadka-pri-puske.html", { i: "20", k: "5", l: "50", s: "10", u: "400", faza: "3", lim: "3" }, ["Пусковой ток100 А", "Провал напряжения при пуске15,155 В", "То же в процентах3,789 %", "Сравнение с заданным пределомПревышает"]);
+await calculate("prosadka-pri-puske.html", { i: "10", k: "6", l: "30", s: "4", u: "220", c: "0,35", x: "0,08", lim: "15" }, ["Пусковой ток60 А", "Провал на кабеле7,7353 В", "Суммарный расчётный провал7,7353 В (3,516 %)", "Сравнение с заданным пределомУкладывается", "СтатусОценка, не гарантия пуска"]);
+// Schneider Figure G30 / Example 1: Cu 35 мм², 50 м, 500 А, 3 фазы,
+// cos φ=0,35 -> около 13,5 В на кабеле; вместе с 14 В сверху -> 27,5 В.
+await calculate("prosadka-pri-puske.html", { i: "100", k: "5", l: "50", s: "35", faza: "3", u: "400", c: "0,35", x: "0,08", up: "14", lim: "7" }, ["Пусковой ток500 А", "Расчётный коэффициент линии0,5403 В/(А·км)", "Провал на кабеле13,507 В", "Суммарный расчётный провал27,507 В (6,877 %)", "Сравнение с заданным пределомУкладывается"]);
+await calculate("prosadka-pri-puske.html", { i: "10", k: "6", l: "30", s: "4", mat: "al", c: "0,35", x: "0,08", u: "220", up: "0", lim: "10" }, ["Сопротивление проводника R9,4 Ом/км", "Провал на кабеле12,114 В", "Суммарный расчётный провал12,114 В (5,506 %)"]);
+// 70% напряжения должны означать 49% именно полновольтного пускового момента.
+await calculate("prosadka-pri-puske.html", { i: "1", k: "1", l: "1000", s: "23,7", mat: "cu", c: "1", x: "0", u: "220", up: "64", lim: "31" }, ["Суммарный расчётный провал66 В (30 %)", "Напряжение на двигателе при пуске154 В", "около 49 % от полновольтного пускового момента"]);
+await calculate("prosadka-pri-puske.html", { i: "1", k: "1", l: "1000", s: "23,7", mat: "cu", c: "1", x: "0", u: "220", up: "217", lim: "99,9" }, ["Суммарный расчётный провал219 В (99,55 %)", "Напряжение на двигателе при пуске1 В", "около 0,002066 % от полновольтного пускового момента"]);
+for (const up of ["218", "219"]) {
+  recordScenario("prosadka-pri-puske.html");
+  const dom = await load("prosadka-pri-puske.html");
+  setValues(dom.window.document, { i: "1", k: "1", l: "1000", s: "23,7", c: "1", x: "0", u: "220", up, lim: "15" });
+  dom.window.document.getElementById("go").click();
+  const result = dom.window.document.getElementById("res").textContent.replace(/\s+/g, " ");
+  check(result.includes("Модель вне области применимости; пуск не подтверждён"), `prosadka-pri-puske.html: ΔU≥U не заблокировано при upstream=${up}`);
+  check(result.includes("Сравнение с заданным пределомНе применяется"), `prosadka-pri-puske.html: при ΔU≥U остался обычный вердикт`);
+  check(!result.includes("Напряжение на двигателе при пуске"), `prosadka-pri-puske.html: при ΔU≥U показано фиктивное напряжение`);
+  check(!result.includes("пускового момента"), `prosadka-pri-puske.html: при ΔU≥U показан фиктивный момент`);
+  check(!/NaN|Infinity|−|-\d/.test(result), `prosadka-pri-puske.html: при ΔU≥U появился нефизичный результат «${result}»`);
+  dom.window.close();
+}
+{
+  recordScenario("prosadka-pri-puske.html");
+  const dom = await load("prosadka-pri-puske.html");
+  const phase = dom.window.document.getElementById("faza");
+  const voltage = dom.window.document.getElementById("u");
+  check(voltage.value === "220", "prosadka-pri-puske.html: неверное начальное напряжение");
+  phase.value = "3";
+  phase.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  check(voltage.value === "380", "prosadka-pri-puske.html: три фазы не установили 380 В");
+  phase.value = "1";
+  phase.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  check(voltage.value === "220", "prosadka-pri-puske.html: одна фаза не восстановила 220 В");
+  dom.window.close();
+}
+await calculate("prosadka-pri-puske.html", { c: "0" }, ["Пусковой cos φ должен быть больше 0 и не больше 1"]);
+await calculate("prosadka-pri-puske.html", { c: "1,01" }, ["Пусковой cos φ должен быть больше 0 и не больше 1"]);
+await calculate("prosadka-pri-puske.html", { x: "-0,01" }, ["Реактивное сопротивление X не может быть отрицательным"]);
+await calculate("prosadka-pri-puske.html", { up: "-1" }, ["Провал вышестоящей сети не может быть отрицательным"]);
+await calculate("prosadka-pri-puske.html", { lim: "0" }, ["Допустимый провал должен быть больше 0 и меньше 100%"]);
+await calculate("prosadka-pri-puske.html", { lim: "100" }, ["Допустимый провал должен быть больше 0 и меньше 100%"]);
 await calculate("molniezashchita.html", { h: "12", nad: "0.99", hx: "6" }, ["Высота конуса защиты h₀9,6 м", "Радиус на высоте 6 м3,6 м"]);
 await calculate("molniezashchita.html", { h: "150", nad: "0.9", hx: "0" }, ["Высота конуса защиты h₀127,5 м", "Радиус зоны у земли r₀172,5 м"]);
 await calculate("molniezashchita.html", { h: "100", nad: "0.99", hx: "0" }, ["Высота конуса защиты h₀80 м", "Радиус зоны у земли r₀69,99 м"]);
