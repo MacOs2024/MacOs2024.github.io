@@ -242,10 +242,10 @@ var st=Math.PI*d*d/4,sk=Math.PI*dk*dk/4,tot=n*sk,f=100*tot/st;
 if(!isFinite(st)||!isFinite(sk)||!isFinite(tot)||!isFinite(f))return err('Размеры слишком велики для надёжного расчёта.');
 function maxByPercent(percent){
  var raw=(percent/100)*st/sk;
- if(!isFinite(raw))return null;
+ if(!isFinite(raw)||raw<0||raw>Number.MAX_SAFE_INTEGER)return null;
  var base=Math.floor(raw),fraction=raw-base;
- var tolerance=8*Number.EPSILON*Math.max(1,Math.abs(raw));
- var result=fraction>=0.8-tolerance?base+1:base;
+ var tolerance=8*Number.EPSILON;
+ var result=(fraction>=0.8||(fraction<0.8&&0.8-fraction<=tolerance))?base+1:base;
  return Number.isSafeInteger(result)?result:null;
 }
 var max53=maxByPercent(53),max31=maxByPercent(31),max40=maxByPercent(40);

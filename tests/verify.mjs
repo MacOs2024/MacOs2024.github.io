@@ -796,6 +796,7 @@ await calculate("zapolnenie-truby-kabelem.html", { d: "10", n: "5", dk: "2,88675
 await calculate("zapolnenie-truby-kabelem.html", { d: "20", n: "9007199254740992", dk: "5" }, ["целое положительное число в безопасном диапазоне"]);
 await calculate("zapolnenie-truby-kabelem.html", { d: "1e308", n: "3", dk: "1" }, ["Размеры слишком велики для надёжного расчёта"]);
 await calculate("zapolnenie-truby-kabelem.html", { d: "1e153", n: "1", dk: "1" }, ["слишком большое число кабелей для надёжного расчёта"]);
+await calculate("zapolnenie-truby-kabelem.html", { d: "100000000", n: "3", dk: "1" }, ["Максимум кабелей этого диаметра4000000000000000 шт."]);
 await calculate("zaryad-kondensatora.html", { r: "1000", c: "100", pc: "63,2120559" }, ["Постоянная времени τ = R·C100 мс", "До 63,2%100 мс"]);
 await calculate("zaryadka-elektromobilya.html", { c: "100", s0: "0", s1: "100", p: "10", eff: "100", tar: "1" }, ["Взять из сети с учётом КПД100 кВт·ч", "Время зарядки10 ч", "Стоимость зарядки100 ₽"]);
 
