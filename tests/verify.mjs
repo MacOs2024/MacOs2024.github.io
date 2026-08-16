@@ -334,10 +334,10 @@ await calculate("stoimost-elektroenergii.html", { p: "1000", h: "2", d: "30", t:
 await calculate("tok-elektrodvigatelya.html", { p: "1,5" }, ["Номинальный ток3,23 А"]);
 await calculate("kondensator-dvigatelya.html", { p: "1,1", u: "230", f: "50" }, ["Предварительная рабочая ёмкость76,43 мкФ", "Оценка, требуется настройка на двигателе"]);
 await calculate("raschet-zazemleniya.html", {}, ["Оценочное сопротивление R20 Ом", "СтатусОценка, требуется измерение"]);
-// Граница применимости формулы — 3·L (верх диапазона «2–3 глубины забивки»,
-// который указывает источник). Ровно на границе вердикт не выдаётся.
-await calculate("raschet-zazemleniya.html", { rho: "100", l: "2,5", n: "2", a: "7,5", rt: "30" }, ["СтатусНедостаточно данных", "в 2–3 раза"]);
-await calculate("raschet-zazemleniya.html", { rho: "100", l: "2,5", n: "2", a: "7,6", rt: "30" }, ["Оценочное сопротивление R20 Ом"]);
+// Граница упрощённой формулы — строго больше 4·L. При L=2,5 м ровно
+// 10 м блокируется, а 10,1 м даёт числовую оценку.
+await calculate("raschet-zazemleniya.html", { rho: "100", l: "2,5", n: "2", a: "10", rt: "30" }, ["СтатусНедостаточно данных", "a ≤ 4·L"]);
+await calculate("raschet-zazemleniya.html", { rho: "100", l: "2,5", n: "2", a: "10,1", rt: "30" }, ["Оценочное сопротивление R20 Ом"]);
 await calculate("raschet-zazemleniya.html", { rho: "50", l: "2", n: "1", a: "1", rt: "20" }, ["Оценочное сопротивление R25 Ом", "выше заданной цели"]);
 await calculate("kva-kvt.html", { v: "10", c: "0,8" }, ["10 кВА при cos φ = 0,88 кВт"]);
 await calculate("rezistor-svetodioda.html", {}, ["Расчётный резистор500 Ом", "Ближайший из ряда Е24 (вверх)510 Ом"]);

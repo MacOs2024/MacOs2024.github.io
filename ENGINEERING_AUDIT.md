@@ -30,7 +30,7 @@
 | `vybor-avtomata` | `agent-reviewed` | Schneider Electric EIG: `IB ≤ In ≤ Iz`, `Icn ≥ Isc`; B/C/D не угадывается | 3 + неверный ввод | Codex, источник и тесты |
 | `vybor-uzo` | `agent-reviewed` | Schneider Electric EIG / IEC summaries: ≤30 мА, ≤300 мА, типы AC/A/F/B | 2 режима | Codex, источник и тесты |
 | `emkostnyy-tok-utechki` | `agent-reviewed` | ПУЭ 7.1.83 как оценка только при отсутствии фактических данных | 2 + неверный ввод | Codex, источник и тесты |
-| `raschet-zazemleniya` | `estimate` | Schneider Electric EIG: `R ≈ ρ/(nL)` только при шаге `>4L`; обязательное измерение | 3 + неверный ввод | Codex, источник и тесты |
+| `raschet-zazemleniya` | `estimate` | Schneider Electric EIG: `R ≈ ρ/(nL)` только при шаге `>4L`; обязательное измерение | 4 + неверный ввод + browser | Codex, источник, строгая граница и тесты |
 | `prosadka-pri-puske` | `estimate` | Schneider Electric EIG: пусковой ток и провал; универсальный предел 15% удалён | 2 + неверный ввод | Codex, источник и тесты |
 | `molniezashchita` | `agent-reviewed` | СО 153-34.21.122-2003, таблица 3.4 и формула 3.1, диапазон до 150 м | 6 + неверный ввод | Codex, источник и тесты |
 | `raschet-radiatora` | `agent-reviewed` | onsemi AND9016/D и AND9859/D: последовательная тепловая цепь `Rθjc + Rθcs + Rθsa` | 3 + неверный ввод | Codex, источник и тесты |

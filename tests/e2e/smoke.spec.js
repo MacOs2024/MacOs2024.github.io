@@ -168,12 +168,12 @@ test.describe('Калькулятор', () => {
     await page.fill('#rho', '100');
     await page.fill('#l', '2,5');
     await page.fill('#n', '2');
-    // Граница — 3·L = 7,5 м: верхняя граница диапазона «2–3 глубины забивки»,
-    // который указывает источник. Ровно на границе вердикта быть не должно.
-    await page.fill('#a', '7,5');
+    // Упрощённая формула допустима только строго выше 4·L.
+    // При L=2,5 м ровно 10 м ещё блокируются.
+    await page.fill('#a', '10');
     await page.click('#go');
     await expect(page.locator('#res')).toContainText('Недостаточно данных');
-    await page.fill('#a', '7,6');
+    await page.fill('#a', '10,1');
     await page.click('#go');
     await expect(page.locator('#res')).toContainText('20 Ом');
     await expect(page.locator('#res')).toContainText('требуется измерение');
