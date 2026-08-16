@@ -193,6 +193,16 @@ test.describe('Калькулятор', () => {
     await page.click('#go');
     await expect(page.locator('#res')).toContainText('Применено: дробная часть расчётного количества ≥ 0,8');
     await expect(page.locator('#res')).toContainText('Допустимо по геометрической проверке');
+
+    await page.fill('#dk', '2,886751345948129');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Максимум кабелей этого диаметра5 шт.');
+    await expect(page.locator('#res')).toContainText('Применено: дробная часть расчётного количества ≥ 0,8');
+
+    await page.fill('#dk', '2,8867513459482792');
+    await page.click('#go');
+    await expect(page.locator('#res')).toContainText('Максимум кабелей этого диаметра4 шт.');
+    await expect(page.locator('#res')).toContainText('Геометрический предел превышен');
   });
 
   test('молниезащита использует кусочные коэффициенты до 150 м', async ({ page }) => {
