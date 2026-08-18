@@ -300,7 +300,7 @@ faqs=[
 related=["vybor-uzo", "sechenie-kabelya", "soprotivlenie-provoda", "molniezashchita"],
 review_status="estimate",
 sources=[
- dict(title="Installation and measurements of earth electrodes", organization="Schneider Electric Electrical Installation Guide", edition="онлайн-редакция, актуальная на 11.08.2026", sections=["Earthing rods", "Influence of the type of soil", "Measurement of the earth-electrode resistance"], accessed="11.08.2026", url="https://www.electrical-installation.org/enwiki/Installation_and_measurements_of_earth_electrodes"),
+ dict(title="Installation and measurements of earth electrodes", organization="Schneider Electric Electrical Installation Guide", edition="редакция 15.08.2026, oldid=29521", sections=["Earthing rods: шаг в 2–3 глубины забивки", "Influence of the type of soil", "Measurement of the earth-electrode resistance"], accessed="17.08.2026", url="https://www.electrical-installation.org/enw/index.php?title=Installation_and_measurements_of_earth_electrodes&oldid=29521"),
 ],
 assumptions=[
  "Грунт однородный, значение ρ обосновано измерением или изысканиями.",

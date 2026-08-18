@@ -386,6 +386,21 @@ def field_html(f):
             '<div class="fw"><input id="%s" type="text" inputmode="decimal" autocomplete="off" value="%s" placeholder="%s">%s</div>%s</div>'
             % (fid, fid, esc(f["label"]), fid, val, ph, unit_html, hint))
 
+def add_table_scope(html):
+    """Проставляет заголовкам таблиц scope="col".
+
+    Во всех таблицах каталога <th> встречается только в первой строке, то есть
+    это заголовки столбцов; проверка в tests/verify.mjs падает, если появится
+    <th> в другой строке — тогда безусловный scope="col" станет неверным.
+
+    Без scope скринридер не связывает ячейку с её заголовком: таблица сечений
+    читается как плоский поток чисел, в котором непонятно, где допустимый ток,
+    а где само сечение. Разметка руками в 37 таблицах разошлась бы, поэтому
+    атрибут ставится одной точкой при сборке.
+    """
+    return html.replace("<th>", '<th scope="col">')
+
+
 def page_html(c, all_by_slug):
     fields = "".join(field_html(f) for f in c.get("fields", []))
     fields += c.get("extra", "")
@@ -424,6 +439,7 @@ def page_html(c, all_by_slug):
         article = ("<h2>%s: как считается</h2>\n%s\n<h2>%s: пример расчёта</h2>\n%s\n"
                    '<div class="faq"><h2>Частые вопросы</h2>\n%s\n</div>'
                    % (topic, c["about"], topic, c["example"], faqs))
+    article = add_table_scope(article)
     main_node = {
         "@type": "WebPage",
         "name": c["name"],
@@ -626,7 +642,7 @@ ABOUT_HTML = """<!DOCTYPE html>
 <p>Исходный код сайта открыт, поэтому историю правок любой формулы можно посмотреть в <a href="https://github.com/MacOs2024/MacOs2024.github.io" rel="noopener" target="_blank">репозитории проекта</a>.</p>
 <h2>Что означает статус у расчёта</h2>
 <table class="t">
-<tr><th>Статус</th><th>Что он означает</th></tr>
+<tr><th scope="col">Статус</th><th scope="col">Что он означает</th></tr>
 <tr><td>Сверено с источником и тестами</td><td>Формула сверена с указанным первоисточником и покрыта эталонными тестами</td></tr>
 <tr><td>Оценка, не нормативный вердикт</td><td>Физическая модель с явными допущениями: зависит от паспортных данных, геометрии, температуры или измерения</td></tr>
 <tr><td>Ожидает проверки</td><td>Расчёт снят с публикации либо намеренно не выдаёт вердикт</td></tr>
