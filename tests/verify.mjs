@@ -951,6 +951,31 @@ await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", bet
   dom.window.close();
 }
 
+// Доступность таблиц. Без scope скринридер не связывает ячейку с заголовком
+// столбца и читает таблицу сечений как плоский поток чисел. Атрибут ставится
+// генератором безусловно, а это верно только пока <th> встречается лишь в
+// первой строке: заголовок строки требовал бы scope="row". Проверяем оба
+// условия — что атрибут проставлен и что допущение всё ещё выполняется.
+{
+  kind = "structural";
+  let tablesChecked = 0;
+  for (const file of htmlFiles) {
+    if (noticePages.includes(file) && file !== "about.html") continue;
+    const html = fs.readFileSync(path.join(sourceDir, file), "utf8");
+    const tables = html.match(/<table[^>]*>[\s\S]*?<\/table>/g) || [];
+    for (const table of tables) {
+      tablesChecked++;
+      const bare = (table.match(/<th(?![^>]*scope=)/g) || []).length;
+      check(bare === 0, `${file}: ${bare} заголовков таблицы без scope`);
+      const rows = table.match(/<tr>[\s\S]*?<\/tr>/g) || [];
+      const lateHeader = rows.slice(1).some(r => /<th/.test(r));
+      check(!lateHeader,
+        `${file}: <th> вне первой строки таблицы — безусловный scope="col" стал неверным, нужен scope="row"`);
+    }
+  }
+  check(tablesChecked >= 35, `проверено таблиц: ${tablesChecked}, ожидалось не меньше 35`);
+}
+
 // Семантика заземления. Порог «шаг > 4·L» — собственный запас проекта, и
 // приписывать его Schneider нельзя: источник задаёт только однородный грунт и
 // шаг в 2–3 глубины забивки. Эта ложная атрибуция возвращалась на страницу
