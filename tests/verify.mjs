@@ -1079,6 +1079,14 @@ const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => 
 check(sitemapPages.length === 101, `В sitemap должно быть 101 URL (корень + about + 99 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
+
+// ads.txt для РСЯ. Строка DIRECT — обязательное условие, без неё Яндекс не
+// считает домен авторизованным продавцом собственной рекламы. Остальные
+// строки — чужие учётные записи ре-селлеров из личного кабинета, их нельзя
+// менять произвольно, поэтому проверяем только структурно необходимое.
+const adsTxt = fs.readFileSync(path.join(sourceDir, "ads.txt"), "utf8");
+check(/yandex\.com,\s*330023171,\s*DIRECT/.test(adsTxt), "ads.txt: нет прямой строки Яндекса (DIRECT) — без неё домен не авторизован как продавец");
+check(adsTxt.trim().split("\n").length >= 8, "ads.txt: часть строк ре-селлеров пропала при пересборке");
 for (const file of htmlFiles) {
   const inSitemap = sitemapPages.some(url => url.endsWith(`/${file}`) || (file === "index.html" && /\/$/.test(url)));
   if (noticePages.includes(file)) {
