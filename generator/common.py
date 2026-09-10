@@ -22,6 +22,20 @@ YANDEX_VERIFICATION_HTML = """<html>
 GOOGLE_VERIFICATION = "google42573797fafc16a7.html"
 GOOGLE_VERIFICATION_HTML = "google-site-verification: google42573797fafc16a7.html"
 
+# ads.txt для РСЯ: подтверждает, что именно эти продавцы вправе показывать
+# рекламу на домене. Строки и порядок — как выданы в личном кабинете
+# partner2.yandex.ru, менять нельзя: это не наш текст, а чужие учётные
+# записи ре-селлеров, сверенные Яндексом под конкретный аккаунт площадки.
+ADS_TXT = """google.com, pub-5533854580432370, RESELLER, f08c47fec0942fa0
+improvedigital.com, 2031, RESELLER
+uis.mobfox.com, 165, RESELLER
+hyperad.tech, 215, RESELLER
+betweendigital.com, 43554, RESELLER
+yandex.com, 330023171, DIRECT
+Contextweb.com, 562899, RESELLER, 89ff185a4c4e857c
+hyperad.tech, 150, RESELLER
+"""
+
 # Фавикон: молния в фирменных цветах сайта (тёмно-зелёный фон, янтарная молния).
 FAVICON = "favicon.svg"
 FAVICON_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
@@ -729,6 +743,8 @@ def write_site(calcs, outdir):
         f.write(sm)
     with open(os.path.join(outdir, "robots.txt"), "w", encoding="utf-8") as f:
         f.write("User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n" % BASE_URL)
+    with open(os.path.join(outdir, "ads.txt"), "w", encoding="utf-8") as f:
+        f.write(ADS_TXT)
     with open(os.path.join(outdir, ".nojekyll"), "w") as f:
         f.write("")
     with open(os.path.join(outdir, YANDEX_VERIFICATION), "w", encoding="utf-8") as f:
