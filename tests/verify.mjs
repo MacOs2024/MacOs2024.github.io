@@ -1131,7 +1131,7 @@ await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "2", n12: "4", clam
 await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "2", n12: "4", clamps: "0", studs: "1", yokes: "2", ydev: "14", negc: "0", v: "30" }, ["Внутренние зажимы, (B)(2)0 дюйм³", "Опорные элементы светильника, (B)(3)2,25 дюйм³", "Устройства на суппортах, (B)(4)8 дюйм³", "Заземляющие проводники, (B)(5)0 дюйм³", "Требуемый объём23,25 дюйм³"]);
 await calculate("zapolnenie-montazhnoy-korobki.html", { v: "295", v_unit: "0.06102374409473229" }, ["Объём коробки18,002 дюйм³ (295 см³)", "Заполнение объёма88,88 %", "Объём достаточен"]);
 await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "0", n6: "2", clamps: "1", yokes: "0", negc: "1", gegc: "10", v: "20" }, ["Проводники, 314.16(B)(1)10 дюйм³", "Внутренние зажимы, (B)(2)5 дюйм³", "Заземляющие проводники, (B)(5)2,5 дюйм³", "Требуемый объём17,5 дюйм³"]);
-await calculate("zapolnenie-montazhnoy-korobki.html", { ydev: "12" }, ["нет калибра 12 AWG"], "boundary");
+await calculate("zapolnenie-montazhnoy-korobki.html", { ydev: "12" }, ["Проводники, 314.16(B)(1)8 дюйм³", "Внутренние зажимы, (B)(2)2,25 дюйм³", "Устройства на суппортах, (B)(4)4,5 дюйм³", "Требуемый объём16,75 дюйм³", "Заполнение объёма93,06 %", "перемычка, целиком лежащая в коробке"], "boundary");
 await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "2,5" }, ["целое неотрицательное число"], "boundary");
 await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "0" }, ["хотя бы один изолированный проводник"], "boundary");
 await calculate("zapolnenie-montazhnoy-korobki.html", { v: "0" }, ["Объём коробки должен быть больше нуля"], "boundary");
