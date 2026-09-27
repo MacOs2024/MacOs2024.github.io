@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Максимальная длина линии по срабатыванию автомата</title>
+<meta name="description" content="Предельная длина линии в системе TN, при которой ток замыкания по конвенциональному методу Schneider Electric (0,8·U₀) ещё достигает тока мгновенного срабатывания автомата B, C, D или заданного тока Ia.">
+<link rel="canonical" href="https://macos2024.github.io/dlina-kabelya-po-toku-kz.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Максимальная длина линии по срабатыванию автомата">
+<meta property="og:description" content="Предельная длина линии в системе TN, при которой ток замыкания по конвенциональному методу Schneider Electric (0,8·U₀) ещё достигает тока мгновенного срабатывания автомата B, C, D или заданного тока Ia.">
+<meta property="og:url" content="https://macos2024.github.io/dlina-kabelya-po-toku-kz.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Максимальная длина линии по срабатыванию автомата","url":"https://macos2024.github.io/dlina-kabelya-po-toku-kz.html","description":"Предельная длина линии в системе TN, при которой ток замыкания по конвенциональному методу Schneider Electric (0,8·U₀) ещё достигает тока мгновенного срабатывания автомата B, C, D или заданного тока Ia.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Максимальная длина линии по срабатыванию автомата","item":"https://macos2024.github.io/dlina-kabelya-po-toku-kz.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему для алюминия допустимая длина меньше?","acceptedAnswer":{"@type":"Answer","text":"У алюминия больше удельное сопротивление: 0,036 против 0,0225 Ом·мм²/м. При тех же сечениях и том же автомате предельная длина получается в 1,6 раза короче."}},{"@type":"Question","name":"Почему здесь 0,0225, а не 0,0175, как при расчёте падения напряжения?","acceptedAnswer":{"@type":"Answer","text":"0,0175 Ом·мм²/м — принятое на сайте значение для меди при 20 °C. Для проверки срабатывания защиты источник берёт сопротивление при нормальной рабочей температуре жил: оно выше, и допустимая длина получается консервативнее."}},{"@type":"Question","name":"Что делать, если линия длиннее Lmax?","acceptedAnswer":{"@type":"Answer","text":"Увеличить сечение фазы и PE, выбрать автомат с меньшим порогом мгновенного расцепления, если это допускают пусковые токи, либо выполнить проектную проверку. УЗО может отключить замыкание на PE, но при КЗ фаза–N разности токов нет, поэтому защиту от сверхтока оно не заменяет."}},{"@type":"Question","name":"Известен ток КЗ на вводе линии — это как-то упрощает расчёт?","acceptedAnswer":{"@type":"Answer","text":"Да, но другим калькулятором: «Ток КЗ фаза–PE по длине и сечению линии» умеет метод композиции по известному току на вводе, а не только конвенциональный метод с 0,8·U₀. Здесь эта возможность не реализована."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Максимальная длина линии по срабатыванию автомата</h1>
+<p class="intro">Обратная задача к расчёту <a href="tok-korotkogo-zamykaniya.html">минимального тока КЗ</a>: на каком удалении от автомата ток замыкания фаза–PE ещё достигает порога мгновенного расцепителя. Метод конвенциональный — напряжение в месте установки защиты при замыкании принимается равным 80% номинального.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Максимальная длина линии по срабатыванию автомата</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_u"><label for="u">Номинальное фазное напряжение U₀</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div><div class="hint">Фазное, а не линейное: 380–400 В вместо фазного завысят предельную длину примерно в 1,73 раза</div></div><div class="f" id="f_mat"><label for="mat">Материал жил</label><div class="fw"><select id="mat"><option value="0.0225" selected>Медь (ρ = 0,0225 Ом·мм²/м)</option><option value="0.036">Алюминий (ρ = 0,036 Ом·мм²/м)</option></select></div><div class="hint">Сопротивление при нормальной рабочей температуре жил, как в источнике</div></div><div class="f" id="f_sph"><label for="sph">Сечение фазного проводника Sф</label><div class="fw"><input id="sph" type="text" inputmode="decimal" autocomplete="off" value="2,5" placeholder=""><span class="u">мм²</span></div></div><div class="f" id="f_spe"><label for="spe">Сечение обратного проводника петли</label><div class="fw"><input id="spe" type="text" inputmode="decimal" autocomplete="off" value="2,5" placeholder=""><span class="u">мм²</span></div><div class="hint">PE при замыкании на корпус или N при КЗ фаза–ноль; того же металла, что и фаза</div></div><div class="f" id="f_dev"><label for="dev">Защитный аппарат</label><div class="fw"><select id="dev"><option value="5">Автомат B — верхняя граница 5·In</option><option value="10" selected>Автомат C — верхняя граница 10·In</option><option value="20">Автомат D — верхняя граница 20·In</option><option value="im">Промышленный автомат: уставка Im (+20% допуска)</option><option value="ia">Ток Ia задан вручную</option></select></div></div><div class="f" id="f_inn"><label for="inn">Номинальный ток автомата In</label><div class="fw"><input id="inn" type="text" inputmode="decimal" autocomplete="off" value="16" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_im"><label for="im">Уставка мгновенного расцепителя Im</label><div class="fw"><input id="im" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 1000"><span class="u">А</span></div><div class="hint">Для автомата по IEC 60947-2; расчёт ведётся для Im + 20%</div></div><div class="f" id="f_ia"><label for="ia">Ток Ia, обеспечивающий срабатывание за требуемое время</label><div class="fw"><input id="ia" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 100"><span class="u">А</span></div><div class="hint">Для предохранителя — по его времятоковой характеристике; или по данным изготовителя аппарата</div></div><div class="f" id="f_l"><label for="l">Фактическая длина линии</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="необязательно"><span class="u">м</span></div><div class="hint">Длина трассы от защитного аппарата до самой удалённой точки; без неё выдаётся только предел</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Максимальная длина линии по срабатыванию автомата: как считается</h2>
+<div class="formula">Lmax = 0,8 · U₀ · Sф / (ρ · (1 + m) · Ia)&nbsp;&nbsp;&nbsp;m = Sф / SPE</div>
+<p>Формула Schneider Electric для систем TN. U₀ — номинальное фазное напряжение, Sф и SPE — сечения фазного и защитного проводников (для КЗ фаза–ноль петлю образуют фаза и N, и вместо SPE подставляют сечение N), ρ — удельное сопротивление жил при нормальной рабочей температуре (0,0225 Ом·мм²/м для меди и 0,036 — для алюминия), Ia — ток, при котором защитный аппарат срабатывает мгновенно, а для предохранителя — ток, обеспечивающий его срабатывание за требуемое время.</p>
+<p><b>Что означает 0,8.</b> Конвенциональный метод принимает, что при замыкании напряжение в месте установки защиты составляет 80% номинального. Питающая сеть выше аппарата в явном виде в формулу не входит — её влияние заложено в это допущение, — а в знаменателе остаётся петля самой линии: фазный проводник и PE длиной L. Если включить в сопротивление петли ещё и питающую сеть, как при проверке по полному Z в калькуляторе минимального тока КЗ, результат получится строже.</p>
+<p><b>Ток срабатывания.</b> Для бытовых автоматов берётся верхняя граница диапазона мгновенного расцепления: B — 5·In, C — 10·In, D — 20·In, как в проверке минимального тока КЗ. Для промышленных автоматов по IEC 60947-2 уставка Im задаётся с допуском ±20%, поэтому источник рекомендует считать Lmax для Im + 20% — калькулятор умножает введённое Im на 1,2.</p>
+<table class="t"><tr><th scope="col">Автомат</th><th scope="col">1,5 мм²</th><th scope="col">2,5 мм²</th><th scope="col">4 мм²</th></tr>
+<tr><td>B16 (Ia = 80 А)</td><td>73,3 м</td><td>122,2 м</td><td>195,6 м</td></tr>
+<tr><td>C16 (Ia = 160 А)</td><td>36,7 м</td><td>61,1 м</td><td>97,8 м</td></tr>
+<tr><td>C25 (Ia = 250 А)</td><td>23,5 м</td><td>39,1 м</td><td>62,6 м</td></tr></table>
+<p>Таблица — медь, PE того же сечения (m = 1), U₀ = 220 В.</p>
+<p><b>Про время срабатывания.</b> Условие метода — ток замыкания не меньше Ia. Для автомата это значит, что сработает мгновенный расцепитель; требуемое время отключения задаёт норматив для конкретной системы заземления и вида цепи, и калькулятор его не проверяет. Для предохранителя Ia берут по его времятоковой характеристике для требуемого времени.</p>
+<p><b>Границы.</b> Реактивное сопротивление кабеля в формуле не учитывается, поэтому калькулятор ограничен сечениями до 120 мм² — это граница самого калькулятора, а не цитата источника. PE считается из того же металла, что и фаза, проложенным в том же кабеле или рядом с фазными жилами.</p>
+<h2>Максимальная длина линии по срабатыванию автомата: пример расчёта</h2>
+<p>Медная линия 2,5 мм² с PE того же сечения, автомат C16, U₀ = 220 В: Ia = 160 А, m = 1, Lmax = 0,8 · 220 · 2,5 / (0,0225 · 2 · 160) ≈ <b>61,1 м</b>. Сопротивление петли на пределе — 0,8 · 220 / 160 = 1,1 Ом, ровно предельное Z из проверки минимального тока КЗ. Линия длиной 50 м проходит условие метода с запасом 1,22; линия 70 м — нет: нужно увеличить сечение или, если позволяют пусковые токи, взять автомат B16 (Lmax ≈ 122 м).</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему для алюминия допустимая длина меньше?</h3><p>У алюминия больше удельное сопротивление: 0,036 против 0,0225 Ом·мм²/м. При тех же сечениях и том же автомате предельная длина получается в 1,6 раза короче.</p><h3>Почему здесь 0,0225, а не 0,0175, как при расчёте падения напряжения?</h3><p>0,0175 Ом·мм²/м — принятое на сайте значение для меди при 20 °C. Для проверки срабатывания защиты источник берёт сопротивление при нормальной рабочей температуре жил: оно выше, и допустимая длина получается консервативнее.</p><h3>Что делать, если линия длиннее Lmax?</h3><p>Увеличить сечение фазы и PE, выбрать автомат с меньшим порогом мгновенного расцепления, если это допускают пусковые токи, либо выполнить проектную проверку. УЗО может отключить замыкание на PE, но при КЗ фаза–N разности токов нет, поэтому защиту от сверхтока оно не заменяет.</p><h3>Известен ток КЗ на вводе линии — это как-то упрощает расчёт?</h3><p>Да, но другим калькулятором: «Ток КЗ фаза–PE по длине и сечению линии» умеет метод композиции по известному току на вводе, а не только конвенциональный метод с 0,8·U₀. Здесь эта возможность не реализована.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/TN_system_-_Earth-fault_current_calculation" rel="nofollow noopener" target="_blank">TN system - Earth-fault current calculation</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел Lmax = 0,8·U0·Sph / (ρ·(1+m)·Ia), ρ = 22,5·10⁻³ Ом·мм²/м (медь), 36·10⁻³ (алюминий) при нормальной рабочей температуре, m = Sph / SPE; Ia — ток мгновенного срабатывания автомата или ток срабатывания предохранителя за требуемое время — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Calculation_of_minimum_levels_of_short-circuit_current" rel="nofollow noopener" target="_blank">Calculation of minimum levels of short-circuit current</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел Conventional method: 0,8·U = Isc·Zd, ρ при максимально допустимой рабочей температуре для цепей с автоматом, Im промышленных автоматов ±20% — расчёт Lmax для Im + 20% — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Fundamental_characteristics_of_a_circuit-breaker" rel="nofollow noopener" target="_blank">Fundamental characteristics of a circuit-breaker</a> — Schneider Electric Electrical Installation Guide — Редакция на дату обращения — раздел Domestic breakers IEC 60898: B, C and D magnetic trip ranges — обращение 10.08.2026</li></ul><p><b>Допущения:</b></p><ul><li>Система TN; петля замыкания — фазный проводник и PE (или N) защищаемой линии.</li><li>Напряжение в месте установки защиты при замыкании — 80% номинального (конвенциональный метод).</li><li>ρ — при нормальной рабочей температуре жил: 0,0225 (медь) и 0,036 (алюминий) Ом·мм²/м; фаза и обратный проводник из одного металла.</li><li>Для B/C/D берётся верхняя граница мгновенного расцепления; для промышленного автомата — Im + 20%.</li></ul><p><b>Границы применимости:</b></p><ul><li>Реактивное сопротивление не учитывается: сечения больше 120 мм² не рассчитываются, а у верхней границы диапазона результат оптимистичен.</li><li>Не проверяет время отключения по характеристике конкретного аппарата, термическую стойкость, падение напряжения и отключающую способность.</li><li>Не применяется к системе TT: там петля замыкания на корпус проходит через заземлители и грунт.</li><li>Отдельно проложенный PE увеличивает индуктивное сопротивление петли — такой случай требует полного расчёта.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="tok-korotkogo-zamykaniya.html">Минимальный ток КЗ по конвенциональному методу</a></li><li><a href="tok-kz-petlya-faza-pe.html">Ток КЗ фаза–PE по длине и сечению линии</a></li><li><a href="vybor-difavtomata.html">Предварительный выбор дифавтомата (АВДТ)</a></li><li><a href="sechenie-pe-provodnika.html">Сечение защитного проводника PE</a></li><li><a href="dlina-kabelya-po-padeniyu.html">Максимальная длина кабеля по падению напряжения</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function mode(){var d=S('dev');hideF('inn',d==='im'||d==='ia');hideF('im',d!=='im');hideF('ia',d!=='ia');}
+function init(){$('dev').addEventListener('change',mode);mode();}
+function opt(id){var el=$(id),s=el?String(el.value).trim():'';return s===''?null:N(s);}
+function calc(){
+var u=P('u'),rho=N(S('mat')),sph=P('sph'),spe=P('spe'),d=S('dev');
+if([u,sph,spe].some(isNaN))return err('Заполните напряжение и сечения проводников.');
+if(!(u>0&&sph>0&&spe>0)||!isFinite(u)||!isFinite(sph)||!isFinite(spe))return err('Напряжение и сечения должны быть больше нуля.');
+if(sph>120||spe>120)return err('Сечения больше 120 мм² калькулятор не рассчитывает: реактивное сопротивление кабеля здесь не учитывается, а на крупных сечениях оно заметно. Нужен полный расчёт петли.');
+var ia,how;
+if(d==='im'){
+ var im=P('im');
+ if(isNaN(im))return err('Введите уставку мгновенного расцепителя Im.');
+ if(!(im>0)||!isFinite(im))return err('Уставка Im должна быть больше нуля.');
+ ia=1.2*im;how='Im + 20% допуска';
+}else if(d==='ia'){
+ ia=P('ia');
+ if(isNaN(ia))return err('Введите ток срабатывания Ia.');
+ if(!(ia>0)||!isFinite(ia))return err('Ток Ia должен быть больше нуля.');
+ how='задан вручную';
+}else{
+ var k=N(d),inn=P('inn');
+ if(isNaN(inn))return err('Введите номинал автомата In.');
+ if(!(inn>0)||!isFinite(inn))return err('Номинал автомата должен быть больше нуля.');
+ ia=k*inn;how=fmt(k,3)+'·In, верхняя граница мгновенного расцепления';
+}
+var L=opt('l');
+if(L!==null&&isNaN(L))return err('Фактическая длина должна быть числом или пустым полем.');
+if(L!==null&&(!(L>0)||!isFinite(L)))return err('Фактическая длина должна быть больше нуля.');
+var m=sph/spe,lmax=0.8*u*sph/(rho*(1+m)*ia),zmax=0.8*u/ia;
+if(!isFinite(lmax)||!isFinite(zmax)||!(lmax>0))return err('Исходные данные вне диапазона надёжного расчёта.');
+var h=row('Ток срабатывания Ia',fmt(ia,5)+' А ('+how+')')+
+row('Отношение сечений m = Sф / SPE',fmt(m,4))+
+row('Удельное сопротивление ρ',fmt(rho,4)+' Ом·мм²/м')+
+row('Предельная длина Lmax',fmt(lmax,5)+' м')+
+row('Предельное сопротивление петли 0,8·U₀ / Ia',si(zmax,'Ом'));
+var w=u>260?' Проверьте напряжение: в формулу подставляется фазное U₀; линейное напряжение завысит предельную длину примерно в 1,73 раза.':'';
+if(L===null){
+ h+=row('Статус','Недостаточно данных: длина линии не задана')+
+ note('Предельная длина рассчитана, но вывод о конкретной линии не делается. Введите длину трассы от защитного аппарата до самой удалённой точки.'+w);
+}else{
+ var ok=L<=lmax*(1+1e-12);
+ h+=row('Фактическая длина L',fmt(L,5)+' м')+
+ row('Запас Lmax / L',fmt(lmax/L,4))+
+ row('Статус',ok?'Условие метода выполняется':'Условие метода не выполняется')+
+ note((ok?'При этой длине оценка тока замыкания по конвенциональному методу не ниже Ia. Это проверка одного условия метода, а не итоговый нормативный вердикт по установке.':'Линия длиннее предельной: по конвенциональному методу ток замыкания в конце линии ниже Ia, и мгновенное срабатывание не гарантировано. Увеличьте сечение фазы и PE, выберите аппарат с меньшим Ia или выполните проектную проверку.')+w);
+}
+out(h+'<div class="rerr">Онлайн-оценка не заменяет расчёт проекта, проверку времятоковой характеристики конкретного аппарата и измерения электролаборатории.</div>');
+}
+
+</script>
+</body>
+</html>

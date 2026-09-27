@@ -543,7 +543,7 @@ limitations=[
  "Механические минимумы применяются только к PE, проложенному отдельно от фазных проводников; в составе кабеля они не добавляются.",
  "Учтены только медь и алюминий. Для стали и других материалов минимумы задаются отдельно и здесь не рассчитываются.",
 ],
-related=["sechenie-kabelya","raschet-zazemleniya","tok-korotkogo-zamykaniya"],
+related=["sechenie-kabelya","sechenie-pen-provodnika","raschet-zazemleniya","tok-korotkogo-zamykaniya"],
 ),
 
 dict(

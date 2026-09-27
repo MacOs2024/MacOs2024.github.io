@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Сопротивление изоляции: сравнение с нормой — ВольтКальк</title>
+<meta name="description" content="Сравнение показания мегаомметра с минимальным сопротивлением изоляции по таблице 1.8.34 ПУЭ или таблице 6.1 ГОСТ Р 50571.16-2019 с проверкой испытательного напряжения. Вывод относится только к условиям измерения.">
+<link rel="canonical" href="https://macos2024.github.io/soprotivlenie-izolyacii.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Сопротивление изоляции: сравнение с нормой — ВольтКальк">
+<meta property="og:description" content="Сравнение показания мегаомметра с минимальным сопротивлением изоляции по таблице 1.8.34 ПУЭ или таблице 6.1 ГОСТ Р 50571.16-2019 с проверкой испытательного напряжения. Вывод относится только к условиям измерения.">
+<meta property="og:url" content="https://macos2024.github.io/soprotivlenie-izolyacii.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Сопротивление изоляции: сравнение с нормой","url":"https://macos2024.github.io/soprotivlenie-izolyacii.html","description":"Сравнение показания мегаомметра с минимальным сопротивлением изоляции по таблице 1.8.34 ПУЭ или таблице 6.1 ГОСТ Р 50571.16-2019 с проверкой испытательного напряжения. Вывод относится только к условиям измерения.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Сопротивление изоляции: сравнение с нормой","item":"https://macos2024.github.io/soprotivlenie-izolyacii.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Можно ли измерить на 1000 В, если по таблице нужно 500 В?","acceptedAnswer":{"@type":"Answer","text":"Для сравнения с таблицей ГОСТ Р 50571.16-2019 — нет: минимум задан для 500 В. Кроме того, повышенное напряжение может повредить подключённые электронные устройства и УЗИП, которые стандарт требует отключать перед измерением."}},{"@type":"Question","name":"Прибор показал «больше предела». Что вписать?","acceptedAnswer":{"@type":"Answer","text":"Верхний предел шкалы прибора, например 2000 МОм. Настоящее сопротивление не меньше этого значения, поэтому сравнение с минимумом останется корректным."}},{"@type":"Question","name":"Почему в сырую погоду показания хуже?","acceptedAnswer":{"@type":"Answer","text":"Влага и конденсат снижают сопротивление по поверхности и в толще изоляции. Megger указывает, что пока оборудование теплее точки росы, влажность воздуха влияет на показание мало, а конденсат ниже точки росы снижает его заметно. Повторите измерение в сухих условиях, прежде чем делать выводы."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Сопротивление изоляции: сравнение с нормой</h1>
+<p class="intro">Выберите документ и тип цепи, укажите напряжение, которым проводилось измерение, и показание прибора. Если напряжение не совпадает с требуемым, сравнения с нормой не будет. Совпадение с минимумом не означает, что «изоляция в порядке»: показание зависит от температуры, влажности и подготовки цепи.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Сопротивление изоляции: сравнение с нормой</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_norm"><label for="norm">Документ и тип цепи</label><div class="fw"><select id="norm"><option value="gost-500" selected>ГОСТ Р 50571.16-2019: цепь до 500 В (230/400 В)</option><option value="gost-spd">ГОСТ Р 50571.16-2019: до 500 В, УЗИП отключить нельзя</option><option value="gost-selv">ГОСТ Р 50571.16-2019: цепь БСНН или ЗСНН</option><option value="gost-1000">ГОСТ Р 50571.16-2019: цепь свыше 500 В</option><option value="pue">ПУЭ, табл. 1.8.34: электропроводки, в т. ч. осветительные</option></select></div></div><div class="f" id="f_ui"><label for="ui">Испытательное напряжение мегаомметра</label><div class="fw"><select id="ui"><option value="250">250 В</option><option value="500" selected>500 В</option><option value="1000">1000 В</option><option value="2500">2500 В</option></select></div><div class="hint">Постоянное напряжение, выставленное на приборе при измерении</div></div><div class="f" id="f_r"><label for="r">Показание мегаомметра</label><div class="fw"><input id="r" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 20"><select id="r_unit" class="u" aria-label="Единицы: Показание мегаомметра"><option value="0.001">кОм</option><option value="1" selected>МОм</option><option value="1000">ГОм</option></select></div><div class="hint">Если прибор показал «больше предела», впишите верхний предел шкалы</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Сопротивление изоляции: как считается</h2>
+<p>Мегаомметр подаёт постоянное испытательное напряжение между проводниками и измеряет ток через изоляцию, пересчитывая его в сопротивление. Нормативы задают минимум вместе с испытательным напряжением, и эти пары в разных документах различаются:</p>
+<table class="t"><tr><th scope="col">Документ и цепь</th><th scope="col">Испытательное напряжение</th><th scope="col">Минимум</th></tr>
+<tr><td>ГОСТ Р 50571.16-2019, БСНН и ЗСНН</td><td>250 В</td><td>0,5 МОм</td></tr>
+<tr><td>ГОСТ Р 50571.16-2019, до 500 В включительно</td><td>500 В</td><td>1,0 МОм</td></tr>
+<tr><td>ГОСТ Р 50571.16-2019, до 500 В с неотключаемым УЗИП</td><td>250 В</td><td>1,0 МОм</td></tr>
+<tr><td>ГОСТ Р 50571.16-2019, свыше 500 В</td><td>1000 В</td><td>1,0 МОм</td></tr>
+<tr><td>ПУЭ, табл. 1.8.34, электропроводки</td><td>1000 В</td><td>0,5 МОм</td></tr></table>
+<div class="formula">сравнение возможно, только если Uисп = Uнорм<br>R ≥ Rmin — не ниже минимума;&nbsp;&nbsp;&nbsp;R &lt; Rmin — ниже минимума</div>
+<p>ГОСТ Р 50571.16-2019 идентичен МЭК 60364-6:2016. Сопротивление считается удовлетворительным, если главный распределительный щит и каждая распределительная цепь, испытанная вместе с присоединёнными конечными цепями, но с отсоединёнными электроприёмниками, имеют сопротивление не меньше значения таблицы 6.1. УЗИП и оборудование, которое может исказить результат или повредиться, перед измерением отключают. Если УЗИП отключить практически невозможно — например, он встроен в стационарную розетку, — испытательное напряжение цепи допускается снизить до 250 В, но сопротивление должно быть не менее 1 МОм. ПУЭ в таблице 1.8.34 задаёт для приёмо-сдаточных испытаний электропроводок свою пару: 1000 В и 0,5 МОм. Какой документ применять, определяют проект и программа испытаний; калькулятор сравнивает с тем, который выбран.</p>
+<p><b>Почему это не вердикт «изоляция в порядке».</b> Сопротивление изоляции сильно зависит от условий. Megger в руководстве «A Stitch in Time» приводит эмпирическое правило: на каждые 10 °C роста температуры сопротивление примерно вдвое падает, — и оговаривает, что у разных материалов эта зависимость своя. Если оборудование холоднее точки росы, конденсат на поверхностях заметно снижает показание. Калькулятор температурную поправку не вводит, а одно показание не заменяет сравнения с прошлыми измерениями той же цепи.</p>
+<h2>Сопротивление изоляции: пример расчёта</h2>
+<p>Групповая линия 230 В проверена мегаомметром на 500 В, показание — 0,8 МОм. По ГОСТ Р 50571.16-2019 минимум для цепи до 500 В — 1,0 МОм при 500 В: показание <b>ниже минимума</b> при данных условиях. С таблицей ПУЭ ту же цифру сравнивать нельзя: для электропроводок там задано 1000 В, и калькулятор выдаст «недостаточно данных».</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Можно ли измерить на 1000 В, если по таблице нужно 500 В?</h3><p>Для сравнения с таблицей ГОСТ Р 50571.16-2019 — нет: минимум задан для 500 В. Кроме того, повышенное напряжение может повредить подключённые электронные устройства и УЗИП, которые стандарт требует отключать перед измерением.</p><h3>Прибор показал «больше предела». Что вписать?</h3><p>Верхний предел шкалы прибора, например 2000 МОм. Настоящее сопротивление не меньше этого значения, поэтому сравнение с минимумом останется корректным.</p><h3>Почему в сырую погоду показания хуже?</h3><p>Влага и конденсат снижают сопротивление по поверхности и в толще изоляции. Megger указывает, что пока оборудование теплее точки росы, влажность воздуха влияет на показание мало, а конденсат ниже точки росы снижает его заметно. Повторите измерение в сухих условиях, прежде чем делать выводы.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.consultant.ru/document/cons_doc_LAW_91515/26a8fbb40f75ea4bd44e7535cedbc469ff7cef84/" rel="nofollow noopener" target="_blank">ПУЭ. Глава 1.8. Нормы приёмо-сдаточных испытаний, таблица 1.8.34</a> — Минэнерго России; публикация нормативного текста КонсультантПлюс — Редакция ПУЭ, 7-е издание; утверждена приказом Минэнерго России от 09.04.2003 № 150, действует с 01.09.2003 — раздел 1.8.37, подпункт 1, таблица 1.8.34: электропроводки, в том числе осветительные сети — мегаомметр 1000 В, не менее 0,5 МОм — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200163804" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.16-2019/МЭК 60364-6:2016 Электроустановки низковольтные. Часть 6. Испытания</a> — Росстандарт — Редакция 2019 года: утверждён приказом Росстандарта от 09.04.2019 № 127-ст, дата введения 01.06.2019 — раздел 6.4.3.3, таблица 6.1: БСНН и ЗСНН — 250 В, не менее 0,5 МОм; до 500 В — 500 В, не менее 1,0 МОм; свыше 500 В — 1000 В, не менее 1,0 МОм, неотключаемый УЗИП: 250 В, не менее 1 МОм — обращение 27.09.2026</li><li><a href="https://www.instrumart.com/assets/Megger-Guide-to-Insulation-Testing.pdf" rel="nofollow noopener" target="_blank">A Stitch in Time — The Complete Guide to Electrical Insulation Testing</a> — Megger — Редакция © 2006; PDF на сайте дистрибьютора Instrumart — раздел влияние температуры: примерно вдвое на каждые 10 °C, у разных материалов по-разному, влияние влажности и точки росы — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Измерение выполнено постоянным напряжением мегаомметра, указанным в поле, при отсоединённых электроприёмниках и отключённых УЗИП, кроме случая, выбранного отдельно.</li><li>Показание относится к одной испытанной цепи и снято в известных температуре и влажности.</li></ul><p><b>Границы применимости:</b></p><ul><li>Вывод относится только к выбранному документу и к условиям конкретного измерения; температурная поправка не применяется.</li><li>Коэффициент абсорбции, индекс поляризации и тренд измерений не оцениваются; для электрических машин и кабелей выше 1 кВ действуют свои методики.</li><li>Нормы для машин, трансформаторов, вторичных цепей и других строк таблицы 1.8.34 не включены.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="emkostnyy-tok-utechki.html">Оценка тока утечки по ПУЭ 7.1.83</a></li><li><a href="udlinitel-na-katushke.html">Удлинитель на катушке: нагрузка смотанного кабеля</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+var NORM={
+'gost-500':{u:500,r:1,doc:'ГОСТ Р 50571.16-2019, табл. 6.1',txt:'цепи до 500 В включительно'},
+'gost-spd':{u:250,r:1,doc:'ГОСТ Р 50571.16-2019, п. 6.4.3.3',txt:'цепи до 500 В с неотключаемым УЗИП'},
+'gost-selv':{u:250,r:0.5,doc:'ГОСТ Р 50571.16-2019, табл. 6.1',txt:'цепи БСНН или ЗСНН'},
+'gost-1000':{u:1000,r:1,doc:'ГОСТ Р 50571.16-2019, табл. 6.1',txt:'цепи свыше 500 В'},
+'pue':{u:1000,r:0.5,doc:'ПУЭ, табл. 1.8.34',txt:'электропроводки'}};
+function calc(){
+var n=NORM[S('norm')],ui=N(S('ui')),r=P('r');
+if(!n)return err('Выберите документ и тип цепи.');
+if(isNaN(r))return err('Введите показание мегаомметра числом.');
+if(r<=0)return err('Показание должно быть больше нуля: нулевое означает замыкание или ошибку подключения, сравнивать с нормой нечего.');
+var h=row('Документ',n.doc)+
+row('Минимум для '+n.txt,fmt(n.r,3)+' МОм при '+n.u+' В')+
+row('Показание',si(r*1e6,'Ом')+' при '+ui+' В');
+if(ui!==n.u)return out(h+row('Испытательное напряжение',ui+' В вместо требуемых '+n.u+' В')+
+ row('Статус','Недостаточно данных')+
+ note('Минимум задан вместе с испытательным напряжением, и показание, снятое другим напряжением, с ним не сравнивается: при меньшем напряжении слабые места изоляции могут не проявиться, а большее может повредить подключённое оборудование. Повторите измерение напряжением '+n.u+' В или выберите документ, для которого ваше напряжение является требуемым.'));
+var ok=r>=n.r*(1-1e-9);
+out(h+row('Отношение показания к минимуму',fmt(r/n.r,4))+
+row('Сравнение с минимумом',ok?'Не ниже минимума':'Ниже минимума')+
+row('Статус',(ok?'Соответствует минимуму ':'Не соответствует минимуму ')+n.doc+' при данных условиях измерения')+
+note(ok?'Показание не ниже минимума выбранного документа при этом испытательном напряжении. Это не вывод «изоляция в порядке»: сопротивление изоляции сильно зависит от температуры и влажности (эмпирическое правило Megger — примерно вдвое меньше на каждые 10 °C нагрева), от подготовки цепи и времени приложения напряжения. Для оценки состояния полезнее сравнение с прошлыми измерениями той же цепи в тех же условиях.':'Показание ниже минимума выбранного документа при данных условиях. Прежде чем искать повреждение, проверьте подготовку цепи: отключены ли электроприёмники, УЗИП и электронные устройства, нет ли влаги или конденсата. Если после этого показание остаётся ниже минимума, цепь не соответствует выбранной норме — нужен поиск места повреждения квалифицированным электриком.'));
+}
+
+</script>
+</body>
+</html>

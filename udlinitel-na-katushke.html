@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Удлинитель на катушке: нагрузка смотанного кабеля</title>
+<meta name="description" content="Проверка нагрузки удлинителя на катушке по его маркировке: мощность для полностью смотанного и полностью размотанного кабеля по ГОСТ 31223-2012 (IEC 61242). Частично смотанный кабель оценивается по значению для смотанного.">
+<link rel="canonical" href="https://macos2024.github.io/udlinitel-na-katushke.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Удлинитель на катушке: нагрузка смотанного кабеля">
+<meta property="og:description" content="Проверка нагрузки удлинителя на катушке по его маркировке: мощность для полностью смотанного и полностью размотанного кабеля по ГОСТ 31223-2012 (IEC 61242). Частично смотанный кабель оценивается по значению для смотанного.">
+<meta property="og:url" content="https://macos2024.github.io/udlinitel-na-katushke.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Удлинитель на катушке: нагрузка смотанного кабеля","url":"https://macos2024.github.io/udlinitel-na-katushke.html","description":"Проверка нагрузки удлинителя на катушке по его маркировке: мощность для полностью смотанного и полностью размотанного кабеля по ГОСТ 31223-2012 (IEC 61242). Частично смотанный кабель оценивается по значению для смотанного.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Удлинитель на катушке: нагрузка смотанного кабеля","item":"https://macos2024.github.io/udlinitel-na-katushke.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"На катушке написано только «3500 Вт». Это для размотанного кабеля?","acceptedAnswer":{"@type":"Answer","text":"Скорее всего, это мощность при полностью размотанном кабеле: у просмотренных нами моделей в названии стоит именно она. Значение для смотанного ищите рядом со значком барабана или в паспорте. Если найти его не удалось, пользуйтесь катушкой с большой нагрузкой только полностью размотанной."}},{"@type":"Question","name":"Катушка отключилась сама, а потом снова заработала. Это нормально?","acceptedAnswer":{"@type":"Answer","text":"Так срабатывает термозащита, если она встроена: кабель или катушка перегрелись. Отключите нагрузку, полностью размотайте кабель, дайте ему остыть и сравните нагрузку с маркировкой. Термозащита — аварийная мера, а не способ работать на пределе."}},{"@type":"Question","name":"Можно ли размотать только часть кабеля?","acceptedAnswer":{"@type":"Answer","text":"Для частично смотанного кабеля стандарт отдельного значения не даёт. Оставшиеся на барабане витки по-прежнему охлаждаются плохо, поэтому калькулятор применяет предел для смотанного кабеля. Чтобы пользоваться значением для размотанного, кабель нужно размотать полностью."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Удлинитель на катушке: нагрузка смотанного кабеля</h1>
+<p class="intro">Смотанный на барабан кабель охлаждается хуже, поэтому допустимая мощность у него заметно ниже. Введите обе мощности с маркировки или из паспорта своей катушки: универсального коэффициента нет — у найденных моделей трёх марок смотанный кабель допускает от 23 до 50 % мощности размотанного.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Удлинитель на катушке: нагрузка смотанного кабеля</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_p"><label for="p">Мощность подключаемой нагрузки</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 2000"><select id="p_unit" class="u" aria-label="Единицы: Мощность подключаемой нагрузки"><option value="1" selected>Вт</option><option value="1000">кВт</option></select></div><div class="hint">Сумма паспортных мощностей приборов, включённых в катушку одновременно</div></div><div class="f" id="f_sost"><label for="sost">Состояние кабеля во время работы</label><div class="fw"><select id="sost"><option value="wound" selected>Кабель полностью на барабане</option><option value="part">Размотан частично</option><option value="full">Размотан полностью</option></select></div></div><div class="f" id="f_pw"><label for="pw">Мощность по маркировке — кабель смотан</label><div class="fw"><input id="pw" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="с корпуса или из паспорта"><span class="u">Вт</span></div><div class="hint">Указывается рядом со значком намотанного барабана или в паспорте</div></div><div class="f" id="f_pu"><label for="pu">Мощность по маркировке — кабель размотан</label><div class="fw"><input id="pu" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="с корпуса или из паспорта"><span class="u">Вт</span></div><div class="hint">Часто это число вынесено в название модели, например «3500 Вт»</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Удлинитель на катушке: как считается</h2>
+<p>Кабель нагревается током, а отдаёт тепло своей поверхностью. На барабане витки прижаты друг к другу, внутренние слои окружены такими же нагретыми витками, поэтому смотанный кабель при том же токе нагревается сильнее. Отсюда две мощности в маркировке: ГОСТ 31223-2012 (IEC 61242) предусматривает значение для полностью смотанного и для полностью размотанного кабеля.</p>
+<div class="formula">Загрузка = Pнагрузки / Pмаркировки · 100 %<br>размотан полностью — предел Pразм; смотан или размотан частично — предел Pсмот</div>
+<p>Универсального коэффициента снижения нет. По маркировке конкретных моделей смотанный кабель допускает очень разную долю мощности:</p>
+<table class="t"><tr><th scope="col">Модель</th><th scope="col">Кабель</th><th scope="col">Смотан</th><th scope="col">Размотан</th><th scope="col">Доля</th></tr>
+<tr><td>RS PRO, 15 м, 240 В</td><td>нет данных</td><td>720 Вт</td><td>3120 Вт</td><td>23 %</td></tr>
+<tr><td>Brennenstuhl BAT 260, 40 м</td><td>H05VV-F 3G1,5</td><td>1000 Вт</td><td>3500 Вт</td><td>29 %</td></tr>
+<tr><td>Brennenstuhl 320 KU 4200, 40 м</td><td>H07RN-F 3G2,5</td><td>1300 Вт</td><td>3300 Вт</td><td>39 %</td></tr>
+<tr><td>IEK INDUSTRIAL УК20, 20 м</td><td>3 × 1,5 мм²</td><td>1750 Вт</td><td>3500 Вт</td><td>50 %</td></tr></table>
+<p>Разброс — от 23 до 50 %. У моделей разные сечение, длина и конструкция барабана, и по маркировке не понять, что именно определяет разницу. Поэтому калькулятор не пересчитывает одну мощность в другую и при отсутствии нужного значения выдаёт «недостаточно данных».</p>
+<p>Для частично смотанного кабеля стандарт отдельного значения не даёт. Оставшиеся на барабане витки по-прежнему охлаждаются плохо, а насколько меньше они нагреваются, чем при полной намотке, по маркировке не узнать. Поэтому калькулятор консервативно применяет предел для смотанного кабеля — это его допущение, а не требование стандарта.</p>
+<h2>Удлинитель на катушке: пример расчёта</h2>
+<p>Катушка с маркировкой 1000 Вт для смотанного и 3500 Вт для размотанного кабеля, к ней подключён обогреватель 1500 Вт. Пока кабель на барабане, предел — 1000 Вт: загрузка <b>150 %</b>, маркировка превышена. Если размотать кабель полностью, предел — 3500 Вт, загрузка около <b>43 %</b>. Размотать «наполовину» недостаточно: для частично смотанного кабеля действует предел смотанного.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>На катушке написано только «3500 Вт». Это для размотанного кабеля?</h3><p>Скорее всего, это мощность при полностью размотанном кабеле: у просмотренных нами моделей в названии стоит именно она. Значение для смотанного ищите рядом со значком барабана или в паспорте. Если найти его не удалось, пользуйтесь катушкой с большой нагрузкой только полностью размотанной.</p><h3>Катушка отключилась сама, а потом снова заработала. Это нормально?</h3><p>Так срабатывает термозащита, если она встроена: кабель или катушка перегрелись. Отключите нагрузку, полностью размотайте кабель, дайте ему остыть и сравните нагрузку с маркировкой. Термозащита — аварийная мера, а не способ работать на пределе.</p><h3>Можно ли размотать только часть кабеля?</h3><p>Для частично смотанного кабеля стандарт отдельного значения не даёт. Оставшиеся на барабане витки по-прежнему охлаждаются плохо, поэтому калькулятор применяет предел для смотанного кабеля. Чтобы пользоваться значением для размотанного, кабель нужно размотать полностью.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://docs.cntd.ru/document/1200102083" rel="nofollow noopener" target="_blank">ГОСТ 31223-2012 (IEC 61242:1995) Удлинители бытового и аналогичного назначения на кабельных катушках. Общие требования и методы испытаний</a> — Межгосударственный стандарт; в РФ введён приказом Росстандарта от 15.11.2012 № 860-ст — Редакция 2012 года, действует в РФ с 01.01.2014 — раздел 7 «Маркировка»: мощность при полностью намотанном и при полностью размотанном кабеле — обращение 27.09.2026</li><li><a href="https://www.brennenstuhl.com/de-IT/produkte/kabeltrommeln/bat-kabeltrommel-260-4x-schutzkontakt-steckdosen-230v-16a-40m-h05vv-f-3g1-5-schwarz-ip20-54-stueck-pro-palette" rel="nofollow noopener" target="_blank">BAT 260 Kabeltrommel, 40m H05VV-F 3G1,5 — технические данные</a> — Hugo Brennenstuhl GmbH &amp; Co. KG — Редакция актуальная на дату обращения (карточка изделия на сайте изготовителя) — раздел Leistung aufgerollter Zustand 230V: 1000 W, Leistung abgerollter Zustand 230V: 3500 W — обращение 27.09.2026</li><li><a href="https://www.brennenstuhl.com/de-DE/produkte/kabeltrommeln/professional-kabeltrommel-320-ku-4200-ip44-40m-h07rn-f-3g2-5" rel="nofollow noopener" target="_blank">Professional Kabeltrommel 320 KU 4200 IP44, 40m H07RN-F 3G2,5 — технические данные</a> — Hugo Brennenstuhl GmbH &amp; Co. KG — Редакция актуальная на дату обращения (карточка изделия на сайте изготовителя) — раздел Leistung aufgerollter Zustand 230V: 1300 W, Leistung abgerollter Zustand 230V: 3300 W — обращение 27.09.2026</li><li><a href="https://www.iek.ru/products/catalog/izdeliya_elektroustanovochnye_udliniteli_i_silovye_razemy/udliniteli_silovye/udliniteli_na_katushkakh/udliniteli_na_katushkakh_industrial/katushka_uk20_s_termozashchitoy_4_mesta_2ppe20m_3kh1_5mm2_industrial_iek" rel="nofollow noopener" target="_blank">Катушка УК20 с термозащитой 4 места 2P+PE/20 м 3×1,5 мм² INDUSTRIAL (WKP15-16-04-20)</a> — IEK — Редакция актуальная на дату обращения (карточка изделия на сайте изготовителя) — раздел максимальная мощность нагрузки при смотанном кабеле 1750 Вт, при размотанном кабеле 3500 Вт — обращение 27.09.2026</li><li><a href="https://docs.rs-online.com/61bc/A700000007125711.pdf" rel="nofollow noopener" target="_blank">RS PRO 15m 4 Socket Type G Cable Reel, 240V — datasheet</a> — RS Components (RS PRO) — Редакция документа A700000007125711 (техническое описание) — раздел Maximum Load: 720W/240V – Fully Wound, 3120W/240V – Fully Unwound — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Обе мощности взяты с маркировки или из паспорта именно этой катушки и указаны для одного напряжения; мощность нагрузки — паспортная при том же номинальном напряжении.</li><li>Частично смотанный кабель оценивается по значению для полностью смотанного — консервативное допущение калькулятора, а не требование стандарта.</li></ul><p><b>Границы применимости:</b></p><ul><li>Процент снижения при намотке не вычисляется и не подставляется: он индивидуален для модели и берётся только с маркировки.</li><li>Не учитываются температура окружающей среды, солнечный нагрев, укрытие катушки, состояние изоляции и контактов.</li><li>Не проверяются падение напряжения на длинном кабеле и согласование с защитой линии, к которой подключена катушка.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="padenie-napryazheniya.html">Падение напряжения в кабеле</a></li><li><a href="rozetochnaya-gruppa.html">Нагрузка на розеточную группу</a></li><li><a href="soprotivlenie-izolyacii.html">Сопротивление изоляции: сравнение с нормой</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function calc(){
+var p=P('p'),st=S('sost'),pwS=S('pw').trim(),puS=S('pu').trim();
+var pw=pwS===''?null:P('pw'),pu=puS===''?null:P('pu');
+if(isNaN(p))return err('Введите мощность нагрузки.');
+if(p<=0)return err('Мощность нагрузки должна быть больше нуля.');
+if(pw!==null&&(isNaN(pw)||pw<=0))return err('Мощность для смотанного кабеля должна быть положительным числом — или оставьте поле пустым.');
+if(pu!==null&&(isNaN(pu)||pu<=0))return err('Мощность для размотанного кабеля должна быть положительным числом — или оставьте поле пустым.');
+if(pw!==null&&pu!==null&&pw>pu)return err('По маркировке смотанный кабель не может выдерживать больше, чем размотанный: проверьте, не перепутаны ли значения.');
+var h=row('Нагрузка',fmt(p,5)+' Вт');
+if(pw!==null&&pu!==null)h+=row('Смотанный кабель по маркировке этой катушки',fmt(100*pw/pu,3)+' % от размотанного');
+var lim=null,basis='';
+if(st==='full'){
+ if(pu!==null){lim=pu;basis='значение для размотанного кабеля';}
+ else if(pw!==null&&p<=pw*(1+1e-9)){lim=pw;basis='значение для смотанного кабеля: размотанный выдерживает не меньше';}
+}else if(pw!==null){
+ lim=pw;basis=st==='part'?'значение для смотанного кабеля — частично смотанный оценивается как смотанный':'значение для смотанного кабеля';
+}
+if(lim===null){
+ var why=st==='full'?'Для полностью размотанного кабеля нужна мощность с маркировки для размотанного состояния: значение для смотанного подтверждает только нагрузку не выше него.':'Для смотанного или частично смотанного кабеля нужна мощность с маркировки именно для смотанного состояния.';
+ return out(h+row('Статус','Недостаточно данных')+
+ note(why+' Пересчитывать одно значение в другое по «типовому проценту» нельзя: у моделей Brennenstuhl, IEK и RS PRO допустимая мощность смотанного кабеля составляет от 23 до 50 % мощности размотанного. Найдите значение на корпусе или в паспорте — ГОСТ 31223-2012 предусматривает маркировку обеих мощностей — либо полностью размотайте кабель.'));
+}
+var ok=p<=lim*(1+1e-9);
+out(h+row('Применённый предел',fmt(lim,5)+' Вт — '+basis)+
+row('Загрузка относительно предела',fmt(100*p/lim,4)+' %')+
+row('Сравнение с маркировкой',ok?'Не превышает':'Превышает')+
+row('Статус','Сравнение с маркировкой, не гарантия безопасности')+
+note(ok?'Нагрузка не превышает значение маркировки для выбранного состояния кабеля. Маркировка относится к исправной катушке в обычных условиях: жара, солнце, укрытие катушки, повреждённая изоляция или ослабленные контакты уменьшают запас.':'Нагрузка превышает значение маркировки для выбранного состояния кабеля: кабель может нагреться выше допустимого изготовителем. Полностью размотайте кабель и сравните нагрузку с мощностью для размотанного состояния либо уменьшите нагрузку. Термозащита, если она есть, — аварийная мера, а не способ работать на пределе.'));
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Предварительный выбор дифавтомата (АВДТ) — ВольтКальк</title>
+<meta name="description" content="Предварительная проверка дифавтомата (АВДТ, RCBO): условия автоматной части IB ≤ In ≤ Iz и Icn ≥ Isc плюс уставка IΔn и тип AC, A, F или B дифференциальной части. Характеристика B/C/D не назначается.">
+<link rel="canonical" href="https://macos2024.github.io/vybor-difavtomata.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Предварительный выбор дифавтомата (АВДТ) — ВольтКальк">
+<meta property="og:description" content="Предварительная проверка дифавтомата (АВДТ, RCBO): условия автоматной части IB ≤ In ≤ Iz и Icn ≥ Isc плюс уставка IΔn и тип AC, A, F или B дифференциальной части. Характеристика B/C/D не назначается.">
+<meta property="og:url" content="https://macos2024.github.io/vybor-difavtomata.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Предварительный выбор дифавтомата (АВДТ)","url":"https://macos2024.github.io/vybor-difavtomata.html","description":"Предварительная проверка дифавтомата (АВДТ, RCBO): условия автоматной части IB ≤ In ≤ Iz и Icn ≥ Isc плюс уставка IΔn и тип AC, A, F или B дифференциальной части. Характеристика B/C/D не назначается.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Предварительный выбор дифавтомата (АВДТ)","item":"https://macos2024.github.io/vybor-difavtomata.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Дифавтомат или автомат + УЗО — есть ли разница?","acceptedAnswer":{"@type":"Answer","text":"По функции они совпадают только при одинаковых характеристиках и правильной координации. Отдельное УЗО не защищает себя от сверхтока и должно быть согласовано с автоматом; у дифавтомата защита от сверхтока встроена. Практическое отличие: общее УЗО на несколько групп при утечке отключает их все, а дифавтомат — только свою линию."}},{"@type":"Question","name":"Почему калькулятор не выбирает B, C или D?","acceptedAnswer":{"@type":"Answer","text":"Потому что характеристика определяется не мощностью, а пусковыми токами нагрузки и минимальным током КЗ в конце линии. Для второго условия есть калькуляторы минимального тока КЗ и предельной длины линии."}},{"@type":"Question","name":"Будут ли дифавтоматы выбивать вместе с УЗО на вводе?","acceptedAnswer":{"@type":"Answer","text":"Это вопрос селективности. Вышестоящее УЗО должно иметь уставку не менее чем втрое больше и выдержку времени — проверьте пару в калькуляторе селективности УЗО."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Предварительный выбор дифавтомата (АВДТ)</h1>
+<p class="intro">Дифавтомат (АВДТ, RCBO по IEC 61009-1) — автоматический выключатель и УЗО в одном корпусе, поэтому один аппарат должен выполнить условия <b>обеих</b> частей. Характеристику B/C/D калькулятор не выбирает.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Предварительный выбор дифавтомата (АВДТ)</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_faza"><label for="faza">Сеть</label><div class="fw"><select id="faza"><option value="1" selected>Однофазная (220 В)</option><option value="3">Трёхфазная (380 В)</option></select></div></div><div class="f" id="f_p"><label for="p">Мощность нагрузки P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 3,5"><select id="p_unit" class="u" aria-label="Единицы: Мощность нагрузки P"><option value="1">Вт</option><option value="1000" selected>кВт</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_c"><label for="c">cos φ</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div></div><div class="f" id="f_iz"><label for="iz">Допустимый ток кабеля Iz</label><div class="fw"><input id="iz" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="после всех поправок"><span class="u">А</span></div><div class="hint">Из таблицы для конкретного кабеля, способа прокладки, температуры и группировки</div></div><div class="f" id="f_isc"><label for="isc">Ожидаемый ток КЗ в точке установки</label><div class="fw"><input id="isc" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 1,5"><span class="u">кА</span></div><div class="hint">Из расчёта сети или измерения; без него отключающую способность не проверить</div></div><div class="f" id="f_icn"><label for="icn">Отключающая способность дифавтомата Icn</label><div class="fw"><input id="icn" type="text" inputmode="decimal" autocomplete="off" value="6" placeholder=""><span class="u">кА</span></div><div class="hint">Указана на корпусе аппарата, например 4500 А = 4,5 кА</div></div><div class="f" id="f_nz"><label for="nz">Назначение дифференциальной защиты</label><div class="fw"><select id="nz"><option value="person" selected>Дополнительная защита людей (≤ 30 мА)</option><option value="fire">Защита от пожара (≤ 300 мА)</option></select></div></div><div class="f" id="f_load"><label for="load">Характер нагрузки</label><div class="fw"><select id="load"><option value="ac">Только синусоидальный переменный ток</option><option value="a" selected>Однофазная электроника / выпрямители</option><option value="f">Однофазный частотно-регулируемый привод</option><option value="b">Трёхфазный привод, PV-инвертор или EV</option></select></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Предварительный выбор дифавтомата (АВДТ): как считается</h2>
+<p>В дифавтомате номинал In — это номинал встроенной защиты от сверхтока, а сам аппарат реагирует и на остаточный ток. Условие «номинал УЗО не меньше номинала автомата», нужное для пары из отдельных аппаратов, здесь отпадает: номинал один. Все остальные условия остаются, и выполнить их должен один и тот же аппарат:</p>
+<div class="formula">IB ≤ In ≤ Iz&nbsp;&nbsp;&nbsp;Icn ≥ Isc&nbsp;&nbsp;&nbsp;IΔn ≤ 30 мА (защита людей)&nbsp;&nbsp;&nbsp;тип по форме тока утечки</div>
+<p><b>Автоматная часть</b> — те же проверки, что у обычного автомата: расчётный ток нагрузки IB не больше номинала In, номинал не больше допустимого тока кабеля Iz после всех поправок, отключающая способность Icn не меньше ожидаемого тока КЗ Isc в месте установки.</p>
+<p><b>Дифференциальная часть</b> — те же требования, что к УЗО: для дополнительной защиты людей IΔn не более 30 мА, для защиты от пожара из-за токов утечки — не более 300 мА. Тип выбирают по форме остаточного тока: AC — синусоидальный переменный, A — ещё и пульсирующий постоянный, F — однофазные частотно-регулируемые приводы, B — также сглаженный постоянный (ряд трёхфазных приводов, PV-инверторы, зарядка EV).</p>
+<table class="t"><tr><th scope="col">Аппарат</th><th scope="col">Стандарт</th><th scope="col">Защита от сверхтока</th></tr>
+<tr><td>УЗО (RCCB)</td><td>IEC 61008-1</td><td>нет, нужен согласованный автомат</td></tr>
+<tr><td>Дифавтомат (RCBO, АВДТ)</td><td>IEC 61009-1</td><td>встроенная</td></tr></table>
+<p>IEC 61009-1:2024 распространяется на дифавтоматы с номинальным напряжением до 440 В переменного тока, номинальным током до 125 А и отключающей способностью до 25 кА. Характеристику мгновенного расцепления B, C или D одним расчётным током выбрать нельзя: она должна пропускать пусковые токи и обеспечивать отключение при минимальном токе КЗ.</p>
+<h2>Предварительный выбор дифавтомата (АВДТ): пример расчёта</h2>
+<p>Линия 3,5 кВт, 220 В, cos φ = 1: IB ≈ 15,9 А, кандидат — дифавтомат 16 А. При Iz = 19 А и Isc = 1,5 кА аппарат с Icn = 6 кА проходит обе автоматные проверки: 15,9 ≤ 16 ≤ 19 и 6 ≥ 1,5. Для розеточной группы с бытовой электроникой дифференциальная часть — <b>не более 30 мА, тип не ниже A</b>. Характеристику B/C/D выбирают отдельно.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Дифавтомат или автомат + УЗО — есть ли разница?</h3><p>По функции они совпадают только при одинаковых характеристиках и правильной координации. Отдельное УЗО не защищает себя от сверхтока и должно быть согласовано с автоматом; у дифавтомата защита от сверхтока встроена. Практическое отличие: общее УЗО на несколько групп при утечке отключает их все, а дифавтомат — только свою линию.</p><h3>Почему калькулятор не выбирает B, C или D?</h3><p>Потому что характеристика определяется не мощностью, а пусковыми токами нагрузки и минимальным током КЗ в конце линии. Для второго условия есть калькуляторы минимального тока КЗ и предельной длины линии.</p><h3>Будут ли дифавтоматы выбивать вместе с УЗО на вводе?</h3><p>Это вопрос селективности. Вышестоящее УЗО должно иметь уставку не менее чем втрое больше и выдержку времени — проверьте пару в калькуляторе селективности УЗО.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Practical_values_for_a_protective_scheme" rel="nofollow noopener" target="_blank">Practical values for a protective scheme</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция от 22.06.2022 — раздел General rules, Protection by circuit-breaker — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Fundamental_characteristics_of_a_circuit-breaker" rel="nofollow noopener" target="_blank">Fundamental characteristics of a circuit-breaker</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция, актуальная на 11.08.2026 — раздел Rated current, Rated short-circuit breaking capacity — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Additional_protection%3A_High_sensitivity_RCDs" rel="nofollow noopener" target="_blank">Additional protection: High sensitivity RCDs</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция от 05.08.2026 — раздел High sensitivity RCDs — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Types_of_RCDs" rel="nofollow noopener" target="_blank">Types of RCDs</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция, актуальная на 11.08.2026 — раздел Type AC, Type A, Type F, Type B — обращение 11.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Protection_against_fire_due_to_insulation_failure" rel="nofollow noopener" target="_blank">Protection against fire due to insulation failure</a> — Schneider Electric Electrical Installation Guide — Редакция IEC 60364-4-42:2024 summary — раздел Protection with RCDs — обращение 11.08.2026</li><li><a href="https://library.e.abb.com/public/a5861200ea7c59fec1256dc50039e0ed/1SDC010001D0201.pdf" rel="nofollow noopener" target="_blank">Electrical Installation Handbook, Volume 2 — Electrical devices</a> — ABB SACE — Редакция 1SDC010001D0201, first edition, July 2003 — раздел 5.7 Residual current devices, RCCB versus RCBO — обращение 11.08.2026</li><li><a href="https://webstore.iec.ch/en/publication/67981" rel="nofollow noopener" target="_blank">IEC 61009-1:2024 Residual current operated circuit-breakers with integral overcurrent protection for household and similar uses (RCBOs) — Part 1: General rules</a> — International Electrotechnical Commission — Редакция 4-е издание, 2024 — раздел Scope: до 440 В переменного тока, In до 125 А, отключающая способность до 25 000 А — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Кандидат по номиналу — первое значение ряда 6–63 А не меньше IB; это исходная точка, а не выбор аппарата.</li><li>Iz и Isc получены расчётом или измерением для конкретной линии.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не выбирает характеристику B/C/D и не проверяет время отключения при минимальном токе КЗ.</li><li>Не проверяет естественные токи утечки линии (ПУЭ 7.1.83) и селективность с вышестоящими УЗО.</li><li>Для EV, PV и частотных приводов действуют требования изготовителя оборудования и профильных частей IEC 60364.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="selektivnost-uzo.html">Селективность последовательно включённых УЗО</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="dlina-kabelya-po-toku-kz.html">Максимальная длина линии по срабатыванию автомата</a></li><li><a href="emkostnyy-tok-utechki.html">Оценка тока утечки по ПУЭ 7.1.83</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+var RAT=[6,10,16,20,25,32,40,50,63];
+var TYP={ac:'AC',a:'A',f:'F',b:'B'};
+function init(){$('faza').addEventListener('change',function(){$('u').value=(S('faza')==='3')?'380':'220';});}
+function opt(id){var el=$(id),s=el?String(el.value).trim():'';return s===''?null:N(s);}
+function calc(){
+var p=P('p'),u=P('u'),c=P('c'),icn=P('icn');
+if([p,u,c].some(isNaN))return err('Введите мощность, напряжение и cos φ.');
+if(!(p>0)||!(u>0)||!isFinite(p)||!isFinite(u))return err('Мощность и напряжение должны быть больше нуля.');
+if(!(c>0)||c>1)return err('cos φ должен быть в диапазоне от 0 до 1.');
+if(isNaN(icn))return err('Введите отключающую способность дифавтомата Icn.');
+if(!(icn>0)||!isFinite(icn))return err('Отключающая способность должна быть больше нуля.');
+var iz=opt('iz'),isc=opt('isc');
+if((iz!==null&&isNaN(iz))||(isc!==null&&isNaN(isc)))return err('Iz и ток КЗ должны быть числами или пустыми полями.');
+if(iz!==null&&(!(iz>0)||!isFinite(iz)))return err('Допустимый ток кабеля Iz должен быть больше нуля.');
+if(isc!==null&&(isc<0||!isFinite(isc)))return err('Ток КЗ не может быть отрицательным.');
+var i=p/(((S('faza')==='3')?Math.sqrt(3):1)*u*c);
+var nom=null;
+for(var k=0;k<RAT.length;k++){if(RAT[k]>=i){nom=RAT[k];break;}}
+if(!nom)return err('Расчётный ток '+fmt(i,3)+' А больше 63 А — вне ряда калькулятора, нужен проектный подбор аппарата.');
+var leak=S('nz')==='person'?'не более 30 мА':'не более 300 мА',tip=TYP[S('load')]||'A';
+var h=row('Расчётный ток IB',fmt(i,3)+' А')+row('Кандидат по номиналу In',nom+' А');
+var st,expl;
+if(iz===null||isc===null){
+ st='Недостаточно данных';
+ expl='Укажите Iz и ожидаемый ток КЗ: без них нельзя проверить защиту кабеля и отключающую способность автоматной части.';
+}else{
+ var cableOk=nom<=iz,breakOk=icn>=isc;
+ h+=row('Условие IB ≤ In ≤ Iz',fmt(i,3)+' ≤ '+nom+' ≤ '+fmt(iz,3)+' А — '+(cableOk?'выполняется':'НЕ выполняется'))+
+ row('Условие Icn ≥ Isc',fmt(icn,3)+' ≥ '+fmt(isc,3)+' кА — '+(breakOk?'выполняется':'НЕ выполняется'));
+ st=(cableOk&&breakOk)?'Базовые условия выполняются':'Кандидат не подходит';
+ expl=(cableOk&&breakOk)?'Автоматная часть проходит базовые проверки; дифференциальная часть задана уставкой и типом.':'Хотя бы одно условие автоматной части не выполнено: такой дифавтомат не подходит, даже если его дифференциальная часть выбрана верно.';
+}
+h+=row('Уставка IΔn',leak)+row('Минимальный тип по форме тока',tip)+row('Статус',st)+
+note(expl+' Характеристика B/C/D не выбирается: её подбирают по пусковым токам и минимальному току КЗ. Естественные утечки линии (ПУЭ 7.1.83) и селективность с вышестоящими УЗО проверяются отдельно. Для EV тип A допустим только при отдельном обнаружении постоянной утечки 6 мА, иначе требуется тип B.');
+out(h);
+}
+
+</script>
+</body>
+</html>
