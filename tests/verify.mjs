@@ -1155,6 +1155,7 @@ await calculate("vybor-difavtomata.html", { faza: "3", p: "12", u: "380", c: "0,
 await calculate("vybor-difavtomata.html", { p: "1,5", u: "230", c: "0,8", load: "f" }, ["Расчётный ток IB8,15 А", "Кандидат по номиналу In10 А", "Минимальный тип по форме токаF", "СтатусНедостаточно данных"]);
 await calculate("vybor-difavtomata.html", { p: "1", load: "ac" }, ["Минимальный тип по форме токаAC"]);
 await calculate("vybor-difavtomata.html", { p: "7,4", iz: "40", isc: "3", icn: "6", load: "ev" }, ["Расчётный ток IB33,6 А", "Кандидат по номиналу In40 А", "40 ≤ 40 А — выполняется", "Защита зарядной точки EVУЗО типа B либо типа A с отключением при постоянной утечке более 6 мА", "СтатусБазовые условия выполняются", "п. 722.531.2.101", "RDC-DD по IEC 62955"]);
+await calculate("vybor-difavtomata.html", { p: "7,4", iz: "40", isc: "3", icn: "6", load: "ev", nz: "fire" }, ["Уставка IΔnне более 30 мА — собственное УЗО каждой точки подключения", "Уставка 300 мА для зарядной точки не допускается"]);
 await calculate("vybor-difavtomata.html", { p: "20" }, ["больше 63 А"], "boundary");
 await calculate("vybor-difavtomata.html", { p: "3,5", c: "1,2" }, ["cos φ должен быть"], "boundary");
 await calculate("vybor-difavtomata.html", { p: "3,5", iz: "19abc", isc: "1" }, ["Iz и ток КЗ должны быть числами"], "boundary");
@@ -1342,6 +1343,8 @@ await invalid("kolcevoy-zazemlitel.html", { rho: "1e308", zad: "l", l: "1e-300" 
   check(/I′ = 5·Ia/.test(loop), "tok-kz-petlya-faza-pe: нет условия, при котором методы дают одну предельную длину");
   const ring = text("kolcevoy-zazemlitel.html");
   check(!/как выше, так и ниже/.test(ring), "kolcevoy-zazemlitel: направление погрешности формулы скрыто");
+  check(/множитель 2 дословно не виден/.test(ring) && /проверена независимо/.test(ring),
+    "kolcevoy-zazemlitel: множитель 2 приписан Schneider без оговорки, что дословно он не сверен и проверен численно");
   check(/занижает/.test(ring) && /численн/.test(ring),
     "kolcevoy-zazemlitel: не сказано, что для типичного дома формула занижает R, или не указан численный расчёт");
 }
