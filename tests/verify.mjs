@@ -424,7 +424,9 @@ await calculate("vybor-uzo.html", { avt: "40", nz: "fire", load: "b" }, ["Ном
 await calculate("stoimost-elektroenergii.html", { p: "1000", h: "2", d: "30", t: "5" }, ["Расход за месяц60 кВт·ч", "Стоимость в месяц300 ₽"]);
 await calculate("tok-elektrodvigatelya.html", { p: "1,5" }, ["Номинальный ток3,23 А"]);
 await calculate("kondensator-dvigatelya.html", { p: "1,1", u: "230", f: "50" }, ["Предварительная рабочая ёмкость76,43 мкФ", "Оценка, требуется настройка на двигателе"]);
-await calculate("raschet-zazemleniya.html", {}, ["Оценочное сопротивление R20 Ом", "СтатусОценка, требуется измерение"]);
+// По умолчанию ρ совпадает с выбранным ориентиром грунта (≈50 Ом·м):
+// 50 / (2 · 2,5) = 10 Ом.
+await calculate("raschet-zazemleniya.html", {}, ["Оценочное сопротивление R10 Ом", "Сравнение с целью10 Ом — ниже или равно заданной цели", "СтатусОценка, требуется измерение"]);
 // Граница применимости — строже источника: он говорит про 2–3 глубины
 // забивки, калькулятор требует больше 4·L. Причина в направлении ошибки:
 // при тесном шаге простое деление занижает сопротивление, то есть
@@ -1003,6 +1005,27 @@ await calculate("solnechnye-paneli-massiv.html", { voc: "41,5", vmp: "34,5", bet
     `raschet-zazemleniya: вернулась ложная атрибуция порога 4·L источнику (${falseAttribution})`);
   check(/2[–-]3 раза|двух[- ]трёх|2 to 3/.test(text),
     "raschet-zazemleniya: на странице должно остаться, что источник говорит про 2–3 глубины забивки");
+}
+
+// Ориентир грунта и поле ρ обязаны совпадать при открытии страницы: иначе
+// пользователь видит «≈50 Ом·м», а расчёт идёт по другому числу. Так было
+// на двух страницах заземления; проверка общая, чтобы рассинхрон не вернулся
+// и на новых страницах с тем же пресетом.
+{
+  kind = "structural";
+  let pages = 0;
+  for (const file of htmlFiles) {
+    const html = fs.readFileSync(path.join(sourceDir, file), "utf8");
+    if (!html.includes('id="grunt"') || !html.includes('id="rho"')) continue;
+    pages += 1;
+    const dom = await load(file);
+    const { document } = dom.window;
+    const preset = document.getElementById("grunt")?.value;
+    const rho = document.getElementById("rho")?.value;
+    check(preset === rho, `${file}: ориентир грунта ${preset} Ом·м, а в поле ρ по умолчанию ${rho}`);
+    dom.window.close();
+  }
+  check(pages >= 2, `проверка ориентира грунта нашла ${pages} страниц, ожидалось не меньше 2`);
 }
 
 // Семантика заполнения трубы. Страница ищется по слову «гофра», а поле
