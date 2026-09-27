@@ -245,7 +245,7 @@ if(!(icn>0)||!isFinite(icn))return err('Отключающая способно�
 var iz=opt('iz'),isc=opt('isc');
 if((iz!==null&&isNaN(iz))||(isc!==null&&isNaN(isc)))return err('Iz и ток КЗ должны быть числами или пустыми полями.');
 if(iz!==null&&(!(iz>0)||!isFinite(iz)))return err('Допустимый ток кабеля Iz должен быть больше нуля.');
-if(isc!==null&&(isc<0||!isFinite(isc)))return err('Ток КЗ не может быть отрицательным.');
+if(isc!==null&&(!(isc>0)||!isFinite(isc)))return err('Ожидаемый ток КЗ должен быть больше нуля.');
 var i=p/(((S('faza')==='3')?Math.sqrt(3):1)*u*c);
 var nom=null;
 for(var k=0;k<RAT.length;k++){if(RAT[k]>=i){nom=RAT[k];break;}}

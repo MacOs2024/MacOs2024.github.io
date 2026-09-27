@@ -1158,6 +1158,7 @@ await calculate("vybor-difavtomata.html", { p: "20" }, ["больше 63 А"], "
 await calculate("vybor-difavtomata.html", { p: "3,5", c: "1,2" }, ["cos φ должен быть"], "boundary");
 await calculate("vybor-difavtomata.html", { p: "3,5", iz: "19abc", isc: "1" }, ["Iz и ток КЗ должны быть числами"], "boundary");
 await calculate("vybor-difavtomata.html", { p: "3,5", icn: "0" }, ["Отключающая способность должна быть больше нуля"], "boundary");
+await calculate("vybor-difavtomata.html", { p: "3,5", iz: "19", isc: "0", icn: "6" }, ["Ожидаемый ток КЗ должен быть больше нуля"], "boundary");
 
 await calculate("selektivnost-uzo.html", {}, ["Кратность IΔn₂ / IΔn₁3,333 — не меньше 3", "при утечке от 30 до 50 мА отключается только нижестоящее", "Выдержка ступенейу вышестоящего больше — порядок верный", "СтатусУсловия правила выполняются", "таблицы селективности изготовителя"]);
 await calculate("selektivnost-uzo.html", { i2: "90" }, ["Кратность IΔn₂ / IΔn₁3 — не меньше 3", "СтатусУсловия правила выполняются"], "boundary");
@@ -1176,7 +1177,8 @@ await calculate("dlina-kabelya-po-toku-kz.html", {}, ["Ток срабатыва
 await calculate("dlina-kabelya-po-toku-kz.html", { l: "50" }, ["Фактическая длина L50 м", "Запас Lmax / L1,222", "СтатусУсловие метода выполняется"]);
 await calculate("dlina-kabelya-po-toku-kz.html", { l: "61,2" }, ["СтатусУсловие метода не выполняется"]);
 await calculate("dlina-kabelya-po-toku-kz.html", { u: "230", mat: "0.036", sph: "16", spe: "16", dev: "10", inn: "32" }, ["Ток срабатывания Ia320 А", "Удельное сопротивление ρ0,036 Ом·мм²/м", "Предельная длина Lmax127,78 м", "Предельное сопротивление петли 0,8·U₀ / Ia575 мОм"]);
-await calculate("dlina-kabelya-po-toku-kz.html", { sph: "16", spe: "10", dev: "20", inn: "25" }, ["Ток срабатывания Ia500 А (20·In", "Отношение сечений m = Sф / SPE1,6", "Предельная длина Lmax96,274 м", "352 мОм", "допускает и верхнюю границу 50·In"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { sph: "16", spe: "10", dev: "20", inn: "25" }, ["Ток срабатывания Ia500 А (20·In", "Отношение сечений m = Sф / SPE1,6", "Предельная длина Lmax96,274 м", "352 мОм", "допускает для D и 50·In"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { dev: "50", inn: "16" }, ["Ток срабатывания Ia800 А (50·In, верхняя граница мгновенного расцепления)", "Предельная длина Lmax12,222 м", "220 мОм", "взято 50·In"]);
 await calculate("dlina-kabelya-po-toku-kz.html", { l: "60" }, ["Запас Lmax / L1,019", "СтатусУсловие метода выполняется"]);
 await calculate("dlina-kabelya-po-toku-kz.html", { dev: "5", inn: "16" }, ["Ток срабатывания Ia80 А (5·In", "Предельная длина Lmax122,22 м"]);
 await calculate("dlina-kabelya-po-toku-kz.html", { dev: "im", im: "1000", sph: "50", spe: "25" }, ["Ток срабатывания Ia1200 А (Im + 20% допуска)", "Отношение сечений m = Sф / SPE2", "Предельная длина Lmax108,64 м", "146,7 мОм"]);
@@ -1272,8 +1274,12 @@ await calculate("zona-srabatyvaniya-avtomata.html", { ik: "100", in: "40", tip: 
 await calculate("zona-srabatyvaniya-avtomata.html", { ik: "23,2" }, ["Кратность тока Iкз/In1,45", "ЗонаТепловой расцепитель"], "boundary");
 await calculate("zona-srabatyvaniya-avtomata.html", { ik: "20" }, ["Кратность тока Iкз/In1,25", "ЗонаМежду условными токами нерасцепления и расцепления", "СтатусОтключение не гарантировано"]);
 await calculate("zona-srabatyvaniya-avtomata.html", { ik: "18,08" }, ["Кратность тока Iкз/In1,13", "ЗонаНе выше условного тока нерасцепления 1,13·In"], "boundary");
-await calculate("zona-srabatyvaniya-avtomata.html", { ik: "18" }, ["Кратность тока Iкз/In1,125", "ЗонаНе выше условного тока нерасцепления 1,13·In", "СтатусАвтомат не отключит цепь", "условного времени 1 ч"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { ik: "18" }, ["Кратность тока Iкз/In1,125", "ЗонаНе выше условного тока нерасцепления 1,13·In", "СтатусНе отключается в течение условного времени 1 ч", "после этого времени, стандарт не нормирует"]);
 await calculate("zona-srabatyvaniya-avtomata.html", { ik: "100", in: "80", tip: "D" }, ["ЗонаМежду условными токами нерасцепления и расцепления", "условного времени 2 ч", "50·In"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { ik: "400", in: "16", tip: "D" }, ["Диапазон мгновенного расцепления Dсвыше 10·In до 20·In (160…320 А)", "ЗонаГарантированное мгновенное расцепление", "Граница 20·In для D должна подтверждаться паспортом"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { ik: "400", in: "16", tip: "D50" }, ["Диапазон мгновенного расцепления Dсвыше 10·In до 50·In (160…800 А)", "ЗонаРазброс электромагнитного расцепителя", "СтатусМгновенное отключение не гарантировано", "взято 50·In"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { ik: "800", in: "16", tip: "D50" }, ["Кратность тока Iкз/In50", "ЗонаГарантированное мгновенное расцепление"], "boundary");
+await calculate("zona-srabatyvaniya-avtomata.html", { ik: "799", in: "16", tip: "D50" }, ["Кратность тока Iкз/In49,94", "ЗонаРазброс электромагнитного расцепителя"], "boundary");
 await invalid("zona-srabatyvaniya-avtomata.html", { in: "0" }, "Ток КЗ и номинал автомата должны быть больше нуля");
 await invalid("zona-srabatyvaniya-avtomata.html", { in: "160" }, "Номинал больше 125 А");
 await invalid("zona-srabatyvaniya-avtomata.html", { ik: "" }, "Введите ток КЗ и номинал автомата");
@@ -1281,7 +1287,8 @@ await invalid("zona-srabatyvaniya-avtomata.html", { ik: "1e308", in: "1e-308" },
 
 await calculate("tok-kz-petlya-faza-pe.html", {}, ["Сопротивление петли линии Zц (фаза + PE)0,54 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)325,9 А", "Порог гарантированного мгновенного расцепления Ia160 А (10·In)", "Запас Iкз / Ia2,04", "Предельная длина линии по этому условию61,11 м", "СтатусУсловие мгновенного расцепления выполняется"]);
 await calculate("tok-kz-petlya-faza-pe.html", { tip: "5" }, ["Порог гарантированного мгновенного расцепления Ia80 А (5·In)", "Предельная длина линии по этому условию122,2 м"]);
-await calculate("tok-kz-petlya-faza-pe.html", { tip: "20" }, ["Порог гарантированного мгновенного расцепления Ia320 А (20·In)", "Запас Iкз / Ia1,02", "Предельная длина линии по этому условию30,56 м", "допускает и верхнюю границу 50·In"]);
+await calculate("tok-kz-petlya-faza-pe.html", { tip: "20" }, ["Порог гарантированного мгновенного расцепления Ia320 А (20·In)", "Запас Iкз / Ia1,02", "Предельная длина линии по этому условию30,56 м", "допускает для D и 50·In"]);
+await calculate("tok-kz-petlya-faza-pe.html", { tip: "50" }, ["Порог гарантированного мгновенного расцепления Ia800 А (50·In)", "Запас Iкз / Ia0,407", "Предельная длина линии по этому условию12,22 м", "СтатусУсловие мгновенного расцепления не выполняется", "взято 50·In"]);
 await calculate("tok-kz-petlya-faza-pe.html", { u: "225", sph: "4", spe: "4", l: "100" }, ["Сопротивление петли линии Zц (фаза + PE)1,125 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)160 А", "Предельная длина линии по этому условию100 м", "СтатусУсловие мгновенного расцепления выполняется"], "boundary");
 await calculate("tok-kz-petlya-faza-pe.html", { u: "225", sph: "4", spe: "4", l: "101" }, ["Ток КЗ в конце линии (0,8·U₀/Zц)158,4 А", "СтатусУсловие мгновенного расцепления не выполняется"], "boundary");
 await calculate("tok-kz-petlya-faza-pe.html", { mat: "al", sph: "16", spe: "16", l: "100", in: "63" }, ["Сопротивление петли линии Zц (фаза + PE)0,45 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)391,1 А", "Порог гарантированного мгновенного расцепления Ia630 А (10·In)", "Предельная длина линии по этому условию62,08 м", "СтатусУсловие мгновенного расцепления не выполняется"]);
