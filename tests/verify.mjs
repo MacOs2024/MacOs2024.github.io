@@ -1256,7 +1256,7 @@ await calculate("sechenie-pen-provodnika.html", {}, ["По правилу PE (П
 await calculate("sechenie-pen-provodnika.html", { s: "6" }, ["Определяющее условиемеханический минимум", "Принять по стандартному ряду10 мм²", "Кабель с жилами 6 мм²Совмещать PE и N в его жиле нельзя", "СтатусЖилы тоньше минимума PEN"]);
 await calculate("sechenie-pen-provodnika.html", { s: "6", metal: "al" }, ["Механический минимум PEN (ПУЭ 1.7.131, 7.1.45)16 мм²", "Принять по стандартному ряду16 мм²", "не менее 16 мм² по алюминию"]);
 await calculate("sechenie-pen-provodnika.html", { s: "95", nagr: "odn" }, ["По правилу PE (ПУЭ 1.7.126, табл. 1.7.5)47,5 мм²", "Сечение N (ПУЭ 7.1.45)95 мм² — равно фазному", "Определяющее условиесечение N", "Принять по стандартному ряду95 мм²"]);
-await calculate("sechenie-pen-provodnika.html", { s: "95", nagr: "sim" }, ["Сечение N (ПУЭ 7.1.45)47,5 мм² — не менее 50 % фазного", "Минимальное сечение PEN47,5 мм²", "Принять по стандартному ряду50 мм²", "Уменьшенный N допустим только"]);
+await calculate("sechenie-pen-provodnika.html", { s: "95", nagr: "sim" }, ["Сечение N (ПУЭ 7.1.45)47,5 мм² — не менее 50 % фазного", "Минимальное сечение PEN47,5 мм²", "Принять по стандартному ряду50 мм²", "СтатусМинимум по ПУЭ для нагрузки без заметных гармоник", "Уменьшенный N допустим только", "с учётом гармоник", "п. 524.3"]);
 await calculate("sechenie-pen-provodnika.html", { s: "35", metal: "al", nagr: "sim" }, ["Сечение N (ПУЭ 7.1.45)17,5 мм² — не менее 50 % фазного", "Принять по стандартному ряду25 мм²"]);
 await calculate("sechenie-pen-provodnika.html", { s: "25", metal: "al", nagr: "sim" }, ["Сечение N (ПУЭ 7.1.45)25 мм² — равно фазному", "Принять по стандартному ряду25 мм²"], "boundary");
 await calculate("sechenie-pen-provodnika.html", { s: "25,01", metal: "al", nagr: "sim" }, ["Определяющее условиеправило PE, механический минимум", "Принять по стандартному ряду16 мм²"], "boundary");
@@ -1322,8 +1322,11 @@ await invalid("kolcevoy-zazemlitel.html", { rho: "1e308", zad: "l", l: "1e-300" 
   kind = "structural";
   const text = file => fs.readFileSync(path.join(sourceDir, file), "utf8")
     .replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
-  check(/питающиеся по однофазным ответвлениям от ВЛ/.test(text("sechenie-pen-provodnika.html")),
+  const pen = text("sechenie-pen-provodnika.html");
+  check(/питающиеся по однофазным ответвлениям от ВЛ/.test(pen),
     "sechenie-pen-provodnika: исключение ПУЭ 1.7.145 распространено на все частные дома — потеряно условие об однофазных ответвлениях от ВЛ");
+  check(/ГОСТ Р 50571\.5\.52-2011/.test(pen) && /без заметных гармоник/.test(pen),
+    "sechenie-pen-provodnika: уменьшенный N предлагается без условия о гармониках (ГОСТ Р 50571.5.52-2011, п. 524.3)");
   check(/прогретый автомат/.test(text("zona-srabatyvaniya-avtomata.html")),
     "zona-srabatyvaniya-avtomata: не сказано, что испытание при 1,45·In идёт сразу после 1,13·In, из нагретого состояния");
   const loop = text("tok-kz-petlya-faza-pe.html");
