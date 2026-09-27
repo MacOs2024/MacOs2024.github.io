@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Стоимость электроэнергии по зонам суток — ВольтКальк</title>
+<meta name="description" content="Расчёт оплаты электроэнергии при двухзонном (день/ночь) и трёхзонном (пик/полупик/ночь) учёте: расход каждой зоны умножается на её ставку. Сравнение с одноставочным тарифом по вашим же ставкам.">
+<link rel="canonical" href="https://macos2024.github.io/mnogotarifnyy-schetchik.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Стоимость электроэнергии по зонам суток — ВольтКальк">
+<meta property="og:description" content="Расчёт оплаты электроэнергии при двухзонном (день/ночь) и трёхзонном (пик/полупик/ночь) учёте: расход каждой зоны умножается на её ставку. Сравнение с одноставочным тарифом по вашим же ставкам.">
+<meta property="og:url" content="https://macos2024.github.io/mnogotarifnyy-schetchik.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Стоимость электроэнергии по зонам суток","url":"https://macos2024.github.io/mnogotarifnyy-schetchik.html","description":"Расчёт оплаты электроэнергии при двухзонном (день/ночь) и трёхзонном (пик/полупик/ночь) учёте: расход каждой зоны умножается на её ставку. Сравнение с одноставочным тарифом по вашим же ставкам.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Стоимость электроэнергии по зонам суток","item":"https://macos2024.github.io/mnogotarifnyy-schetchik.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Какая зона на счётчике T1, а какая T2?","acceptedAnswer":{"@type":"Answer","text":"Соответствие обозначений T1, T2, T3 зонам задаётся настройкой конкретного счётчика. Сверьтесь с его паспортом или с квитанцией, где расход уже разнесён по зонам; определять зону по номеру тарифа наугад нельзя."}},{"@type":"Question","name":"Когда зонный учёт выгоднее одноставочного?","acceptedAnswer":{"@type":"Answer","text":"Когда заметная часть потребления приходится на ночь: водонагреватель, стиральная и посудомоечная машины с отложенным запуском, зарядка электромобиля. Выигрыш тем больше, чем сильнее различаются ставки и чем выше доля ночного расхода. Проверьте на своих цифрах, вписав одноставочный тариф из того же тарифного решения."}},{"@type":"Question","name":"Почему итог может не совпасть с квитанцией?","acceptedAnswer":{"@type":"Answer","text":"Калькулятор округляет до копейки итоговую сумму, а в квитанции могут округлять каждую зону отдельно — это одна-две копейки. Крупные расхождения обычно связаны с другими начислениями: перерасчётами, социальной нормой или диапазонами объёма потребления, если они действуют в регионе."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Стоимость электроэнергии по зонам суток</h1>
+<p class="intro">Введите расход по каждой зоне за период — разность показаний этой зоны на счётчике — и ставки из квитанции. Калькулятор не подставляет ни ставки, ни интервалы зон: ставки у каждого региона свои.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Стоимость электроэнергии по зонам суток</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_zony"><label for="zony">Тариф</label><div class="fw"><select id="zony"><option value="2" selected>Двухзонный: день / ночь</option><option value="3">Трёхзонный: пик / полупик / ночь</option></select></div></div><div class="f" id="f_e_day"><label for="e_day">Расход в дневной зоне</label><div class="fw"><input id="e_day" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 180"><span class="u">кВт·ч</span></div><div class="hint">Разность показаний дневной зоны на конец и на начало периода</div></div><div class="f" id="f_e_peak"><label for="e_peak">Расход в пиковой зоне</label><div class="fw"><input id="e_peak" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 50"><span class="u">кВт·ч</span></div></div><div class="f" id="f_e_half"><label for="e_half">Расход в полупиковой зоне</label><div class="fw"><input id="e_half" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 100"><span class="u">кВт·ч</span></div></div><div class="f" id="f_e_night"><label for="e_night">Расход в ночной зоне</label><div class="fw"><input id="e_night" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 120"><span class="u">кВт·ч</span></div></div><div class="f" id="f_t_day"><label for="t_day">Ставка дневной зоны</label><div class="fw"><input id="t_day" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="из квитанции"><span class="u">₽/кВт·ч</span></div></div><div class="f" id="f_t_peak"><label for="t_peak">Ставка пиковой зоны</label><div class="fw"><input id="t_peak" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="из квитанции"><span class="u">₽/кВт·ч</span></div></div><div class="f" id="f_t_half"><label for="t_half">Ставка полупиковой зоны</label><div class="fw"><input id="t_half" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="из квитанции"><span class="u">₽/кВт·ч</span></div></div><div class="f" id="f_t_night"><label for="t_night">Ставка ночной зоны</label><div class="fw"><input id="t_night" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="из квитанции"><span class="u">₽/кВт·ч</span></div></div><div class="f" id="f_t_one"><label for="t_one">Одноставочный тариф для сравнения</label><div class="fw"><input id="t_one" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="необязательно"><span class="u">₽/кВт·ч</span></div><div class="hint">Ставка без деления на зоны из того же тарифного решения; пустое поле — без сравнения</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Стоимость электроэнергии по зонам суток: как считается</h2>
+<div class="formula">Стоимость = Σ Eᵢ · Tᵢ<br>день/ночь: Eд · Tд + Eн · Tн<br>пик/полупик/ночь: Eп · Tп + Eпп · Tпп + Eн · Tн</div>
+<p>Eᵢ — расход в зоне за период, то есть разность показаний этой зоны на счётчике; Tᵢ — ставка зоны в рублях за кВт·ч. Многотарифный счётчик копит показания каждой зоны отдельно, поэтому стоимость считается по зонам независимо и затем складывается.</p>
+<p>Интервалы зон суток для населения и приравненных к нему категорий потребителей установлены приказом ФСТ России от 26.11.2013 № 1473-э; время в нём местное:</p>
+<table class="t"><tr><th scope="col">Зона</th><th scope="col">Интервал</th></tr>
+<tr><td>Ночная</td><td>23:00–7:00</td></tr>
+<tr><td>Пиковая</td><td>7:00–10:00 и 17:00–21:00</td></tr>
+<tr><td>Полупиковая</td><td>остальное время: 10:00–17:00 и 21:00–23:00</td></tr>
+<tr><td>Дневная (двухзонный учёт)</td><td>пиковая и полупиковая вместе: 7:00–23:00</td></tr></table>
+<p>Выгоду зонного учёта определяет не сам тариф, а доля расхода, пришедшаяся на дешёвую зону. Поэтому калькулятор показывает среднюю цену 1 кВт·ч и, если задан одноставочный тариф, разницу с ним. Если дневная ставка выше одноставочной, а ночного расхода мало, зонный учёт может обойтись дороже.</p>
+<h2>Стоимость электроэнергии по зонам суток: пример расчёта</h2>
+<p>Ставки условные, только для примера: день — 6 ₽/кВт·ч, ночь — 3 ₽/кВт·ч, одноставочный — 5 ₽/кВт·ч. За месяц набежало 180 кВт·ч днём и 120 кВт·ч ночью. По зонам: 180 · 6 + 120 · 3 = <b>1440 ₽</b>; по одноставочному тарифу: 300 · 5 = 1500 ₽. Зонный учёт дешевле на 60 ₽, средняя цена — 4,8 ₽/кВт·ч. Реальные ставки берите из своей квитанции.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Какая зона на счётчике T1, а какая T2?</h3><p>Соответствие обозначений T1, T2, T3 зонам задаётся настройкой конкретного счётчика. Сверьтесь с его паспортом или с квитанцией, где расход уже разнесён по зонам; определять зону по номеру тарифа наугад нельзя.</p><h3>Когда зонный учёт выгоднее одноставочного?</h3><p>Когда заметная часть потребления приходится на ночь: водонагреватель, стиральная и посудомоечная машины с отложенным запуском, зарядка электромобиля. Выигрыш тем больше, чем сильнее различаются ставки и чем выше доля ночного расхода. Проверьте на своих цифрах, вписав одноставочный тариф из того же тарифного решения.</p><h3>Почему итог может не совпасть с квитанцией?</h3><p>Калькулятор округляет до копейки итоговую сумму, а в квитанции могут округлять каждую зону отдельно — это одна-две копейки. Крупные расхождения обычно связаны с другими начислениями: перерасчётами, социальной нормой или диапазонами объёма потребления, если они действуют в регионе.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.consultant.ru/document/cons_doc_LAW_156706/" rel="nofollow noopener" target="_blank">Приказ ФСТ России от 26.11.2013 № 1473-э «Об утверждении интервалов тарифных зон суток для населения и приравненных к нему категорий потребителей»</a> — Федеральная служба по тарифам России; публикация КонсультантПлюс — Редакция действующая на дату обращения; приказ зарегистрирован Минюстом России 26.12.2013 № 30866 — раздел ночная зона 23:00–7:00, пиковая зона 7:00–10:00 и 17:00–21:00, полупиковая — остальное время; дневная — пиковая и полупиковая — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Расход каждой зоны — разность показаний этой зоны за один и тот же расчётный период.</li><li>Ставки по зонам взяты из квитанции или тарифного решения и относятся к вашему объёму потребления.</li></ul><p><b>Границы применимости:</b></p><ul><li>Ставки и интервалы зон не подставляются: калькулятор только перемножает и складывает введённые значения.</li><li>Социальная норма, диапазоны объёма потребления, льготы, перерасчёты и пени не моделируются.</li><li>Итог округляется до копейки; при раздельном округлении зон в квитанции возможна разница в одну-две копейки.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="stoimost-elektroenergii.html">Расход и стоимость электроэнергии</a></li><li><a href="moshchnost-po-schetchiku.html">Мощность по показаниям счётчика</a></li><li><a href="nagruzka-vvoda-doma.html">Расчётная нагрузка ввода дома по группам</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+var Z2=[['e_day','t_day','Дневная зона'],['e_night','t_night','Ночная зона']];
+var Z3=[['e_peak','t_peak','Пиковая зона'],['e_half','t_half','Полупиковая зона'],['e_night','t_night','Ночная зона']];
+function sync(){var t=S('zony')==='3';hideF('e_day',t);hideF('t_day',t);hideF('e_peak',!t);hideF('t_peak',!t);hideF('e_half',!t);hideF('t_half',!t);}
+function init(){$('zony').addEventListener('change',sync);sync();}
+// Деньги — до копейки, половина копейки вверх. toPrecision(12) снимает
+// двоичный хвост: 1,005·100 в double равно 100,49999…, а должно быть 100,5.
+function rub(x){var neg=x<0,k=Math.round(Number((Math.abs(x)*100).toPrecision(12))),r=String(k%100);
+if(r.length<2)r='0'+r;return (neg&&k>0?'−':'')+Math.floor(k/100)+','+r+' ₽';}
+function calc(){
+var tri=S('zony')==='3',Z=tri?Z3:Z2,sumE=0,sumC=0,parts=[],k;
+for(k=0;k<Z.length;k++){
+ var e=P(Z[k][0]),t=P(Z[k][1]);
+ if(isNaN(e)||isNaN(t))return err('Заполните расход и ставку для каждой зоны выбранного тарифа.');
+ if(e<0)return err('Расход не может быть отрицательным.');
+ if(t<=0)return err('Ставка зоны должна быть больше нуля.');
+ sumE+=e;sumC+=e*t;parts.push([Z[k][2],e,t]);
+}
+if(sumE<=0)return err('Суммарный расход равен нулю — рассчитывать нечего.');
+var oneS=S('t_one').trim(),one=null;
+if(oneS!==''){
+ one=P('t_one');
+ if(isNaN(one))return err('Одноставочный тариф должен быть числом — или оставьте поле пустым.');
+ if(one<=0)return err('Одноставочный тариф должен быть больше нуля.');
+}
+var h='';
+for(k=0;k<parts.length;k++)h+=row(parts[k][0]+': '+fmt(parts[k][1],6)+' кВт·ч × '+fmt(parts[k][2],6)+' ₽',rub(parts[k][1]*parts[k][2]));
+h+=row('Всего израсходовано',fmt(sumE,6)+' кВт·ч');
+if(tri)h+=row('Дневной расход (пик + полупик)',fmt(parts[0][1]+parts[1][1],6)+' кВт·ч');
+h+=row('Доля ночного расхода',fmt(100*parts[parts.length-1][1]/sumE,4)+' %')+
+row('Итого по зонам',rub(sumC))+
+row('Средняя цена 1 кВт·ч',fmt(sumC/sumE,4)+' ₽');
+if(one!==null){
+ var single=sumE*one,d=single-sumC;
+ h+=row('По одноставочному тарифу',rub(single))+
+ row('Сравнение',Math.abs(d)<0.005?'Одинаково':(d>0?'Зонный учёт дешевле на '+rub(d):'Зонный учёт дороже на '+rub(-d)));
+}
+h+=note('Ставки и интервалы зон калькулятор не подставляет — он перемножает введённые значения. Итог округлён до копейки; в квитанции суммы по зонам могут округлять отдельно. Социальная норма и диапазоны объёма потребления, если они действуют в регионе, меняют применимую ставку: вводите ту, что относится к вашему объёму.');
+out(h);
+}
+
+</script>
+</body>
+</html>

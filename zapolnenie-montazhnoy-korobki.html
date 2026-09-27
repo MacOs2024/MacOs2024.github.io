@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Заполнение монтажной коробки по NEC 314.16 — ВольтКальк</title>
+<meta name="description" content="Проверка объёма монтажной коробки по NFPA 70 (NEC), статья 314.16: объём на проводник по калибру AWG, внутренние зажимы, опоры светильника, устройства и заземляющие проводники. Американское правило, а не ПУЭ.">
+<link rel="canonical" href="https://macos2024.github.io/zapolnenie-montazhnoy-korobki.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Заполнение монтажной коробки по NEC 314.16 — ВольтКальк">
+<meta property="og:description" content="Проверка объёма монтажной коробки по NFPA 70 (NEC), статья 314.16: объём на проводник по калибру AWG, внутренние зажимы, опоры светильника, устройства и заземляющие проводники. Американское правило, а не ПУЭ.">
+<meta property="og:url" content="https://macos2024.github.io/zapolnenie-montazhnoy-korobki.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Заполнение монтажной коробки по NEC 314.16","url":"https://macos2024.github.io/zapolnenie-montazhnoy-korobki.html","description":"Проверка объёма монтажной коробки по NFPA 70 (NEC), статья 314.16: объём на проводник по калибру AWG, внутренние зажимы, опоры светильника, устройства и заземляющие проводники. Американское правило, а не ПУЭ.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Заполнение монтажной коробки по NEC 314.16","item":"https://macos2024.github.io/zapolnenie-montazhnoy-korobki.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Можно ли применять этот расчёт к российским подрозетникам и проводам в мм²?","acceptedAnswer":{"@type":"Answer","text":"Только как ориентир. Объёмы заданы американским NEC для проводников AWG и американских коробок; это правило NEC, а не ПУЭ. Для метрического провода консервативно выбирайте калибр AWG с сечением не меньше фактического (перевод — в калькуляторе AWG ↔ мм²); это допущение пользователя, а не правило NEC."}},{"@type":"Question","name":"Почему заземляющие проводники больше не считаются одним объёмом?","acceptedAnswer":{"@type":"Answer","text":"Так было до редакции NEC 2020. С 2020 года один объём покрывает не больше четырёх EGC, каждый следующий добавляет четверть объёма по наибольшему EGC. В коробке с шестью EGC 12 AWG их доля — 2,25 · 1,5 = 3,375 дюйм³, а не 2,25."}},{"@type":"Question","name":"Нужно ли считать провод, который проходит коробку без разрыва?","acceptedAnswer":{"@type":"Answer","text":"Да, один раз. Но если он уложен петлёй длиной не меньше двойной минимальной свободной длины по 300.14, петля считается двумя проводниками: её можно разрезать и получить два конца."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Заполнение монтажной коробки по NEC 314.16</h1>
+<p class="intro">Расчёт по американскому правилу <b>NFPA 70 (NEC), статья 314.16</b> для проводников от 18 до 6 AWG. Это не ПУЭ и не российский норматив: для российского проекта результат — ориентир, а не нормативный вывод.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Заполнение монтажной коробки по NEC 314.16</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_v"><label for="v">Объём коробки</label><div class="fw"><input id="v" type="text" inputmode="decimal" autocomplete="off" value="18" placeholder=""><select id="v_unit" class="u" aria-label="Единицы: Объём коробки"><option value="1" selected>дюйм³</option><option value="0.06102374409473229">см³</option></select></div><div class="hint">Вместе с надставками, рамками и куполообразными крышками, если на них маркирован объём (NEC 314.16(A))</div></div><div class="f" id="f_n18"><label for="n18">Проводников 18 AWG</label><div class="fw"><input id="n18" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">шт.</span></div><div class="hint">Проводник, заходящий извне и заканчивающийся или сращиваемый в коробке, и проводник, проходящий транзитом, — по 1; непрерывная петля не короче двойной свободной длины по 300.14 — 2; перемычка, целиком лежащая в коробке, не считается. Заземляющие проводники вводятся ниже отдельно</div></div><div class="f" id="f_n16"><label for="n16">Проводников 16 AWG</label><div class="fw"><input id="n16" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_n14"><label for="n14">Проводников 14 AWG</label><div class="fw"><input id="n14" type="text" inputmode="decimal" autocomplete="off" value="4" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_n12"><label for="n12">Проводников 12 AWG</label><div class="fw"><input id="n12" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_n10"><label for="n10">Проводников 10 AWG</label><div class="fw"><input id="n10" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_n8"><label for="n8">Проводников 8 AWG</label><div class="fw"><input id="n8" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_n6"><label for="n6">Проводников 6 AWG</label><div class="fw"><input id="n6" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_clamps"><label for="clamps">Внутренние кабельные зажимы</label><div class="fw"><select id="clamps"><option value="1" selected>Есть (один или несколько)</option><option value="0">Нет</option></select></div><div class="hint">Любое число внутренних зажимов даёт один объём по наибольшему проводнику в коробке</div></div><div class="f" id="f_studs"><label for="studs">Опорные элементы светильника</label><div class="fw"><select id="studs"><option value="0" selected>Нет</option><option value="1">Один вид: шпильки или хикки</option><option value="2">Оба вида: шпильки и хикки</option></select></div><div class="hint">Каждый вид — один объём по наибольшему проводнику в коробке</div></div><div class="f" id="f_yokes"><label for="yokes">Суппортов (yoke) с устройствами</label><div class="fw"><input id="yokes" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">шт.</span></div><div class="hint">Суппорт с одним или несколькими устройствами — двойной объём. Устройство шире одного поста 2 дюйма считается по числу занимаемых постов</div></div><div class="f" id="f_ydev"><label for="ydev">Наибольший проводник, подключённый к устройствам</label><div class="fw"><select id="ydev"><option value="18">18 AWG</option><option value="16">16 AWG</option><option value="14" selected>14 AWG</option><option value="12">12 AWG</option><option value="10">10 AWG</option><option value="8">8 AWG</option><option value="6">6 AWG</option></select></div><div class="hint">Если к устройству подключена перемычка, целиком лежащая в коробке, укажите и её калибр: в счёт проводников она не входит, а объём на суппорт считается по наибольшему подключённому проводнику</div></div><div class="f" id="f_negc"><label for="negc">Заземляющих проводников и перемычек (EGC)</label><div class="fw"><input id="negc" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">шт.</span></div><div class="hint">Входящих в коробку. До четырёх — один объём по наибольшему EGC, каждый следующий — ещё четверть объёма</div></div><div class="f" id="f_gegc"><label for="gegc">Наибольший заземляющий проводник</label><div class="fw"><select id="gegc"><option value="18">18 AWG</option><option value="16">16 AWG</option><option value="14" selected>14 AWG</option><option value="12">12 AWG</option><option value="10">10 AWG</option><option value="8">8 AWG</option><option value="6">6 AWG</option></select></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Заполнение монтажной коробки по NEC 314.16: как считается</h2>
+<p>NEC 314.16 проверяет не площадь сечения, а <b>объём</b>. Каждому проводнику, зажиму, опоре светильника и устройству отводится объём из таблицы 314.16(B) по калибру AWG, и сумма не должна превышать объём коробки.</p>
+<div class="formula">Vтреб = Σ nᵢ·vᵢ + Vзажимов + Vопор + 2·vуст·Nсуппортов + VEGC ≤ Vкоробки</div>
+<table class="t"><tr><th scope="col">Калибр</th><th scope="col">Объём на проводник, дюйм³</th><th scope="col">То же, см³</th></tr>
+<tr><td>18 AWG</td><td>1,50</td><td>24,6</td></tr>
+<tr><td>16 AWG</td><td>1,75</td><td>28,7</td></tr>
+<tr><td>14 AWG</td><td>2,00</td><td>32,8</td></tr>
+<tr><td>12 AWG</td><td>2,25</td><td>36,9</td></tr>
+<tr><td>10 AWG</td><td>2,50</td><td>41,0</td></tr>
+<tr><td>8 AWG</td><td>3,00</td><td>49,2</td></tr>
+<tr><td>6 AWG</td><td>5,00</td><td>81,9</td></tr></table>
+<table class="t"><tr><th scope="col">Что в коробке</th><th scope="col">Как считается по 314.16(B)</th></tr>
+<tr><td>Проводник, заходящий извне и заканчивающийся или сращиваемый в коробке, или проходящий транзитом</td><td>1 объём по своему калибру</td></tr>
+<tr><td>Непрерывная петля не короче двойной минимальной свободной длины по 300.14</td><td>2 объёма</td></tr>
+<tr><td>Перемычка, целиком лежащая в коробке</td><td>не считается</td></tr>
+<tr><td>Внутренние кабельные зажимы, сколько бы их ни было</td><td>1 объём по наибольшему проводнику в коробке</td></tr>
+<tr><td>Опоры светильника: шпильки, хикки</td><td>1 объём на каждый вид по наибольшему проводнику</td></tr>
+<tr><td>Суппорт (yoke) с одним или несколькими устройствами</td><td>2 объёма по наибольшему проводнику, подключённому к устройствам на нём</td></tr>
+<tr><td>Заземляющие проводники и перемычки (EGC)</td><td>до четырёх — 1 объём по наибольшему EGC, каждый следующий — ещё ¼</td></tr></table>
+<p><b>Заземляющие проводники.</b> До редакции NEC 2020 все EGC вместе давали один объём, сколько бы их ни было. С редакции 2020 один объём покрывает не больше четырёх EGC, а каждый следующий добавляет четверть объёма по наибольшему EGC; в редакции 2023 правило то же, и, по вторичным источникам, в действующей редакции 2026 оно не менялось. Расчёт «все EGC — один объём» по старым статьям занижает требуемый объём, когда заземляющих проводников больше четырёх.</p>
+<p><b>Объём коробки</b> — суммарный объём собранных частей плюс надставки, рамки и куполообразные крышки, если на них маркирован объём или они изготовлены из коробок, перечисленных в Table 314.16(A). Устройство шире одной однопостовой коробки 2 дюйма получает двойной объём на каждый пост, нужный для его установки: введите число таких постов как число суппортов.</p>
+<p><b>Исключение.</b> Заземляющие проводники и не более четырёх проводов светильника тоньше 14 AWG, которые входят в коробку из-под купола светильника или подобного колпака и заканчиваются в этой коробке, в расчёт можно не включать — просто не вводите их.</p>
+<p><b>Границы.</b> Статья 314.16 рассчитана на проводники от 18 до 6 AWG. Коробки с проводниками 4 AWG и крупнее дополнительно подчиняются 314.28, а к клеммным коробкам двигателей и генераторов 314.16 не применяется.</p>
+<h2>Заполнение монтажной коробки по NEC 314.16: пример расчёта</h2>
+<p>Однопостовая коробка: два кабеля 14/2 с заземлением (вход и выход), двойная розетка на одном суппорте, внутренние зажимы. Четыре изолированных проводника 14 AWG — 4 · 2,00 = 8,00 дюйм³; зажимы — 2,00; розетка — 2 · 2,00 = 4,00; два EGC — один объём 2,00. Итого <b>16 дюйм³</b> (≈ 262,2 см³). Коробка 3 × 2 × 2½ дюйма объёмом 12,5 дюйм³ по Table 314.16(A) мала, а 3 × 2 × 3½ дюйма объёмом 18,0 дюйм³ подходит с заполнением <b>88,89%</b>.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Можно ли применять этот расчёт к российским подрозетникам и проводам в мм²?</h3><p>Только как ориентир. Объёмы заданы американским NEC для проводников AWG и американских коробок; это правило NEC, а не ПУЭ. Для метрического провода консервативно выбирайте калибр AWG с сечением не меньше фактического (перевод — в калькуляторе AWG ↔ мм²); это допущение пользователя, а не правило NEC.</p><h3>Почему заземляющие проводники больше не считаются одним объёмом?</h3><p>Так было до редакции NEC 2020. С 2020 года один объём покрывает не больше четырёх EGC, каждый следующий добавляет четверть объёма по наибольшему EGC. В коробке с шестью EGC 12 AWG их доля — 2,25 · 1,5 = 3,375 дюйм³, а не 2,25.</p><h3>Нужно ли считать провод, который проходит коробку без разрыва?</h3><p>Да, один раз. Но если он уложен петлёй длиной не меньше двойной минимальной свободной длины по 300.14, петля считается двумя проводниками: её можно разрезать и получить два конца.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://up.codes/viewer/nfpa/nfpa-70-2023" rel="nofollow noopener" target="_blank">NFPA 70 National Electrical Code — Article 314.16, Number of Conductors in Outlet, Device, and Junction Boxes, and Conduit Bodies</a> — National Fire Protection Association — Редакция NFPA 70-2023; правило (B)(5) о четырёх EGC и ¼ объёма действует с NFPA 70-2020. Действующая редакция — NFPA 70-2026: по вторичным источникам правило в ней не изменилось, первичный текст 2026 не сверялся — раздел 314.16(A) — объём коробки с надставками и крышками, 314.16(B)(1)–(B)(5) — подсчёт проводников, зажимов, опор, устройств и EGC, Table 314.16(B) — объём на проводник 18–6 AWG, Table 314.16(A) — объёмы стандартных коробок — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Проводники от 18 до 6 AWG; объём на проводник — по Table 314.16(B), расчёт ведётся в кубических дюймах.</li><li>Объём в см³ пересчитывается как 1 дюйм³ = 16,387064 см³; метрическая колонка NEC округлена до 0,1 см³, поэтому на самой границе возможна разница в десятые доли кубического сантиметра.</li><li>Все суппорты считаются по одному калибру — наибольшему проводнику, подключённому к устройствам; если на разных суппортах калибры разные, это консервативно.</li><li>Для зажимов и опор светильника берётся наибольший проводник в коробке с учётом EGC и проводника, подключённого к устройствам, — консервативное прочтение «largest conductor present in the box».</li></ul><p><b>Границы применимости:</b></p><ul><li>Правило NFPA 70 (NEC, США), а не ПУЭ: результат не является нормативным выводом для российского проекта.</li><li>Не проверяются 314.28 для проводников 4 AWG и крупнее, глубина коробки, свободная длина проводников и требования к конкретному устройству.</li><li>Правильность подсчёта (транзит, петли, перемычки, исключение для купола светильника) остаётся за пользователем.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="zapolnenie-kabelnogo-koroba.html">Заполнение кабельного короба по ПУЭ 2.1.61</a></li><li><a href="zapolnenie-truby-kabelem.html">Геометрическая проверка заполнения трубы по NEC</a></li><li><a href="awg-mm2.html">Перевод AWG ↔ мм²</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+var G=['18','16','14','12','10','8','6'];
+var V={'18':1.5,'16':1.75,'14':2,'12':2.25,'10':2.5,'8':3,'6':5};
+var CM=16.387064;
+function cnt(id){var el=$(id),s=el?String(el.value).trim():'';return s===''?0:N(s);}
+function whole(n){return Number.isSafeInteger(n)&&n>=0;}
+function calc(){
+var v=P('v');
+if(isNaN(v))return err('Введите объём коробки.');
+if(!(v>0)||!isFinite(v))return err('Объём коробки должен быть больше нуля.');
+var cond=0,tot=0,vmax=0,c={};
+for(var i=0;i<G.length;i++){
+ var g=G[i],n=cnt('n'+g);
+ if(isNaN(n)||!whole(n))return err('Число проводников '+g+' AWG — целое неотрицательное число.');
+ c[g]=n;tot+=n;cond+=n*V[g];
+ if(n>0&&V[g]>vmax)vmax=V[g];
+}
+if(tot<1)return err('Укажите хотя бы один изолированный проводник: без них объёмы по 314.16(B) не определены.');
+var ny=cnt('yokes'),ne=cnt('negc');
+if(isNaN(ny)||!whole(ny))return err('Число суппортов — целое неотрицательное число.');
+if(isNaN(ne)||!whole(ne))return err('Число заземляющих проводников — целое неотрицательное число.');
+var dev=S('ydev'),ge=S('gegc'),pig=ny>0&&c[dev]===0;
+if(ny>0&&V[dev]>vmax)vmax=V[dev];
+if(ne>0&&V[ge]>vmax)vmax=V[ge];
+var vc=S('clamps')==='1'?vmax:0;
+var vs=N(S('studs'))*vmax;
+var vd=2*ny*V[dev];
+var ve=ne>0?V[ge]*(1+0.25*Math.max(0,ne-4)):0;
+var need=cond+vc+vs+vd+ve;
+if(!isFinite(need)||!isFinite(need*CM))return err('Значения слишком велики для надёжного расчёта.');
+var ok=need<=v*(1+1e-12),f=100*need/v;
+out(row('Проводники, 314.16(B)(1)',fmt(cond,5)+' дюйм³')+
+row('Внутренние зажимы, (B)(2)',fmt(vc,4)+' дюйм³')+
+row('Опорные элементы светильника, (B)(3)',fmt(vs,4)+' дюйм³')+
+row('Устройства на суппортах, (B)(4)',fmt(vd,5)+' дюйм³')+
+row('Заземляющие проводники, (B)(5)',fmt(ve,5)+' дюйм³')+
+row('Требуемый объём',fmt(need,5)+' дюйм³ ('+fmt(need*CM,5)+' см³)')+
+row('Объём коробки',fmt(v,5)+' дюйм³ ('+fmt(v*CM,5)+' см³)')+
+row('Заполнение объёма',fmt(f,4)+' %')+
+row('Вердикт NEC 314.16',ok?'Объём достаточен':'Объём недостаточен')+
+note((ok?'Объём коробки не меньше требуемого по NEC 314.16. ':'Требуемый объём больше объёма коробки: нужна коробка больше или глубже, надставка с маркированным объёмом либо меньше проводников. ')+(pig?'Калибр '+dev+' AWG у устройств не совпадает ни с одним введённым проводником: так бывает, если к устройству подключена перемычка, целиком лежащая в коробке. В счёт проводников она не входит, но объём на суппорт считается по ней, а для зажимов и опор она учтена как проводник в коробке. Если перемычки нет, проверьте калибр. ':'')+'Это американское правило NFPA 70 (NEC), а не ПУЭ. Оно проверяет только объём и не подтверждает допустимый ток, нагрев и требования российского проекта.'));
+}
+
+</script>
+</body>
+</html>

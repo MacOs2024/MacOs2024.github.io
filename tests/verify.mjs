@@ -95,7 +95,7 @@ const infoPages = ["privacy.html", "about.html"];
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
   .sort();
-check(htmlFiles.length === 101, `Ожидался 101 HTML-файл, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 116, `Ожидался 116 HTML-файлов, найдено ${htmlFiles.length}`);
 
 // Совет закоротить заряженный конденсатор перемычкой, отвёрткой или
 // закороткой опасен: при запасённой энергии это даёт дугу и разбрызгивание
@@ -418,6 +418,7 @@ await calculate("padenie-napryazheniya.html", { i: "50", l: "100", s: "25", mat:
 await calculate("vybor-avtomata.html", { p: "3,5", iz: "19", isc: "1,5", icn: "6" }, ["Расчётный ток IB15,9 А", "Кандидат по номиналу In16 А", "15,9 ≤ 16 ≤ 19 А — выполняется", "6 ≥ 1,5 кА — выполняется", "Базовые условия выполняются"]);
 await calculate("vybor-avtomata.html", { p: "3,5", iz: "19", isc: "7", icn: "6" }, ["Условие Icn ≥ Isc6 ≥ 7 кА — НЕ выполняется", "Кандидат не подходит"]);
 await calculate("vybor-avtomata.html", { p: "3,5", iz: "", isc: "" }, ["СтатусНедостаточно данных"]);
+await calculate("vybor-avtomata.html", { p: "3,5", iz: "19", isc: "0", icn: "6" }, ["Iz и ожидаемый ток КЗ должны быть больше нуля"], "boundary");
 await calculate("vybor-uzo.html", {}, ["Номинальный ток УЗО16 А", "не более 30 мА", "Минимальный тип по форме токаA"]);
 await calculate("vybor-uzo.html", { avt: "40", nz: "fire", load: "b" }, ["Номинальный ток УЗО40 А", "не более 300 мА", "Минимальный тип по форме токаB"]);
 await calculate("stoimost-elektroenergii.html", { p: "1000", h: "2", d: "30", t: "5" }, ["Расход за месяц60 кВт·ч", "Стоимость в месяц300 ₽"]);
@@ -1076,7 +1077,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 101, `В sitemap должно быть 101 URL (корень + about + 99 калькуляторов), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 116, `В sitemap должно быть 116 URL (корень + about + 114 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 
@@ -1095,6 +1096,360 @@ for (const file of htmlFiles) {
     check(inSitemap, `В sitemap отсутствует ${file}`);
   }
 }
+
+// ===========================================================================
+// Партия №1: 15 новых калькуляторов «Проводка и защита» (data_h/i/j.py).
+// Три параллельных агента, независимая перепроверка перед сборкой — детали
+// в ENGINEERING_AUDIT.md. Ниже — их тестовые сценарии как есть, сведённые
+// в один блок вручную при интеграции.
+// ===========================================================================
+
+// Общий хелпер для проверки реакции на неверный ввод: помимо совпадения
+// фрагмента текста ошибки проверяет, что не осталось следов «Статус» и что
+// не протекли NaN/Infinity/undefined.
+async function invalid(file, values, fragment) {
+  kind = "boundary"; recordScenario(file);
+  const dom = await load(file); setValues(dom.window.document, values);
+  dom.window.document.getElementById("go").click();
+  const result = dom.window.document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+  check(result.includes(fragment), `${file}: при неверном вводе ожидалось «${fragment}», получено «${result}»`);
+  check(!/Статус/.test(result), `${file}: при неверном вводе не должно быть статуса`);
+  check(!/NaN|Infinity|undefined/.test(result), `${file}: NaN/Infinity/undefined при неверном вводе`);
+  dom.window.close();
+}
+
+// --- data_h.py: короб NEC 314.16, короб ПУЭ 2.1.61, дифавтомат,
+// селективность УЗО, предельная длина по срабатыванию ---
+
+await calculate("zapolnenie-montazhnoy-korobki.html", {}, ["Проводники, 314.16(B)(1)8 дюйм³", "Внутренние зажимы, (B)(2)2 дюйм³", "Устройства на суппортах, (B)(4)4 дюйм³", "Заземляющие проводники, (B)(5)2 дюйм³", "Требуемый объём16 дюйм³ (262,19 см³)", "Заполнение объёма88,89 %", "Вердикт NEC 314.16Объём достаточен", "а не ПУЭ"]);
+await calculate("zapolnenie-montazhnoy-korobki.html", { v: "12,5" }, ["Требуемый объём16 дюйм³", "Заполнение объёма128 %", "Вердикт NEC 314.16Объём недостаточен"]);
+await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "0", n12: "6", clamps: "0", yokes: "0", negc: "6", gegc: "12", v: "17" }, ["Проводники, 314.16(B)(1)13,5 дюйм³", "Заземляющие проводники, (B)(5)3,375 дюйм³", "Требуемый объём16,875 дюйм³", "Заполнение объёма99,26 %", "Объём достаточен"]);
+await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "0", n12: "6", clamps: "0", yokes: "0", negc: "6", gegc: "12", v: "16,8" }, ["Заполнение объёма100,4 %", "Объём недостаточен"], "boundary");
+await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "0", n12: "6", clamps: "0", yokes: "0", negc: "4", gegc: "12", v: "15,75" }, ["Заземляющие проводники, (B)(5)2,25 дюйм³", "Требуемый объём15,75 дюйм³", "Заполнение объёма100 %", "Объём достаточен"], "boundary");
+await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "2", n12: "4", clamps: "1", studs: "2", yokes: "1", ydev: "12", negc: "3", gegc: "12", v: "26,5" }, ["Проводники, 314.16(B)(1)13 дюйм³", "Внутренние зажимы, (B)(2)2,25 дюйм³", "Опорные элементы светильника, (B)(3)4,5 дюйм³", "Устройства на суппортах, (B)(4)4,5 дюйм³", "Заземляющие проводники, (B)(5)2,25 дюйм³", "Требуемый объём26,5 дюйм³", "Заполнение объёма100 %", "Объём достаточен"], "boundary");
+await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "2", n12: "4", clamps: "1", studs: "2", yokes: "1", ydev: "12", negc: "3", gegc: "12", v: "26,4" }, ["Заполнение объёма100,4 %", "Объём недостаточен"], "boundary");
+await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "2", n12: "4", clamps: "0", studs: "1", yokes: "2", ydev: "14", negc: "0", v: "30" }, ["Внутренние зажимы, (B)(2)0 дюйм³", "Опорные элементы светильника, (B)(3)2,25 дюйм³", "Устройства на суппортах, (B)(4)8 дюйм³", "Заземляющие проводники, (B)(5)0 дюйм³", "Требуемый объём23,25 дюйм³"]);
+await calculate("zapolnenie-montazhnoy-korobki.html", { v: "295", v_unit: "0.06102374409473229" }, ["Объём коробки18,002 дюйм³ (295 см³)", "Заполнение объёма88,88 %", "Объём достаточен"]);
+await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "0", n6: "2", clamps: "1", yokes: "0", negc: "1", gegc: "10", v: "20" }, ["Проводники, 314.16(B)(1)10 дюйм³", "Внутренние зажимы, (B)(2)5 дюйм³", "Заземляющие проводники, (B)(5)2,5 дюйм³", "Требуемый объём17,5 дюйм³"]);
+await calculate("zapolnenie-montazhnoy-korobki.html", { ydev: "12" }, ["Проводники, 314.16(B)(1)8 дюйм³", "Внутренние зажимы, (B)(2)2,25 дюйм³", "Устройства на суппортах, (B)(4)4,5 дюйм³", "Требуемый объём16,75 дюйм³", "Заполнение объёма93,06 %", "перемычка, целиком лежащая в коробке"], "boundary");
+await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "2,5" }, ["целое неотрицательное число"], "boundary");
+await calculate("zapolnenie-montazhnoy-korobki.html", { n14: "0" }, ["хотя бы один изолированный проводник"], "boundary");
+await calculate("zapolnenie-montazhnoy-korobki.html", { v: "0" }, ["Объём коробки должен быть больше нуля"], "boundary");
+
+await calculate("zapolnenie-kabelnogo-koroba.html", {}, ["Сечение короба в свету1000 мм²", "Площадь кабелей по наружным диаметрам153,94 мм²", "Коэффициент заполнения15,39 %", "Предел ПУЭ 2.1.6140 %", "Максимум кабелей этого диаметра10 шт.", "ВердиктУкладывается в предел ПУЭ 2.1.61"]);
+await calculate("zapolnenie-kabelnogo-koroba.html", { tip: "35" }, ["Предел ПУЭ 2.1.6135 %", "Допустимая площадь кабелей350 мм²", "Максимум кабелей этого диаметра9 шт.", "Укладывается в предел ПУЭ 2.1.61"]);
+await calculate("zapolnenie-kabelnogo-koroba.html", { w: "60", h: "40", n1: "6", d1: "10", n2: "10", d2: "5" }, ["Сечение короба в свету2400 мм²", "Площадь кабелей по наружным диаметрам667,59 мм²", "Коэффициент заполнения27,82 %", "Резерв площади до предела292,41 мм²", "Ещё кабелей группы 1 до предела3 шт.", "Укладывается в предел ПУЭ 2.1.61"]);
+await calculate("zapolnenie-kabelnogo-koroba.html", { tip: "35", w: "60", h: "40", n1: "6", d1: "10", n2: "20", d2: "5" }, ["Площадь кабелей по наружным диаметрам863,94 мм²", "Коэффициент заполнения36 %", "Превышение предела23,938 мм²", "ВердиктПредел ПУЭ 2.1.61 превышен"]);
+await calculate("zapolnenie-kabelnogo-koroba.html", { w: "20", h: "10", n1: "6", d1: "5" }, ["Площадь кабелей по наружным диаметрам117,81 мм²", "Коэффициент заполнения58,9 %", "Максимум кабелей этого диаметра4 шт.", "ВердиктПредел ПУЭ 2.1.61 превышен"]);
+await calculate("zapolnenie-kabelnogo-koroba.html", { w: "100", h: "20", n1: "8", d1: "11,283791670955125" }, ["Коэффициент заполнения40 %", "Максимум кабелей этого диаметра8 шт.", "Укладывается в предел ПУЭ 2.1.61"], "boundary");
+await calculate("zapolnenie-kabelnogo-koroba.html", { w: "100", h: "20", n1: "8", d1: "11,29" }, ["Площадь кабелей по наружным диаметрам800,88 мм²", "Коэффициент заполнения40,04 %", "Максимум кабелей этого диаметра7 шт.", "Предел ПУЭ 2.1.61 превышен"], "boundary");
+await calculate("zapolnenie-kabelnogo-koroba.html", { d1: "26" }, ["Кабель не помещается"], "boundary");
+await calculate("zapolnenie-kabelnogo-koroba.html", { n2: "2", d2: "" }, ["Для группы 2 укажите наружный диаметр"], "boundary");
+await calculate("zapolnenie-kabelnogo-koroba.html", { n1: "0" }, ["целое положительное число"], "boundary");
+
+await calculate("vybor-difavtomata.html", { p: "3,5", iz: "19", isc: "1,5", icn: "6" }, ["Расчётный ток IB15,9 А", "Кандидат по номиналу In16 А", "15,9 ≤ 16 ≤ 19 А — выполняется", "6 ≥ 1,5 кА — выполняется", "Уставка IΔnне более 30 мА", "Минимальный тип по форме токаA", "СтатусБазовые условия выполняются"]);
+await calculate("vybor-difavtomata.html", { p: "3,5" }, ["Кандидат по номиналу In16 А", "СтатусНедостаточно данных", "Уставка IΔnне более 30 мА"]);
+await calculate("vybor-difavtomata.html", { p: "3,5", iz: "15", isc: "1,5" }, ["15,9 ≤ 16 ≤ 15 А — НЕ выполняется", "СтатусКандидат не подходит"]);
+await calculate("vybor-difavtomata.html", { p: "3,5", iz: "19", isc: "7", icn: "6" }, ["6 ≥ 7 кА — НЕ выполняется", "СтатусКандидат не подходит"]);
+await calculate("vybor-difavtomata.html", { faza: "3", p: "12", u: "380", c: "0,9", iz: "25", isc: "3", icn: "4,5", nz: "fire", load: "b" }, ["Расчётный ток IB20,3 А", "Кандидат по номиналу In25 А", "20,3 ≤ 25 ≤ 25 А — выполняется", "4,5 ≥ 3 кА — выполняется", "Уставка IΔnне более 300 мА", "Минимальный тип по форме токаB", "СтатусБазовые условия выполняются"], "boundary");
+await calculate("vybor-difavtomata.html", { p: "1,5", u: "230", c: "0,8", load: "f" }, ["Расчётный ток IB8,15 А", "Кандидат по номиналу In10 А", "Минимальный тип по форме токаF", "СтатусНедостаточно данных"]);
+await calculate("vybor-difavtomata.html", { p: "1", load: "ac" }, ["Минимальный тип по форме токаAC"]);
+await calculate("vybor-difavtomata.html", { p: "7,4", iz: "40", isc: "3", icn: "6", load: "ev" }, ["Расчётный ток IB33,6 А", "Кандидат по номиналу In40 А", "40 ≤ 40 А — выполняется", "Защита зарядной точки EVУЗО типа B либо типа A с отключением при постоянной утечке более 6 мА", "СтатусБазовые условия выполняются", "п. 722.531.2.101", "RDC-DD по IEC 62955"]);
+await calculate("vybor-difavtomata.html", { p: "7,4", iz: "40", isc: "3", icn: "6", load: "ev", nz: "fire" }, ["Уставка IΔnне более 30 мА — собственное УЗО каждой точки подключения", "Уставка 300 мА для зарядной точки не допускается"]);
+await calculate("vybor-difavtomata.html", { p: "20" }, ["больше 63 А"], "boundary");
+await calculate("vybor-difavtomata.html", { p: "3,5", c: "1,2" }, ["cos φ должен быть"], "boundary");
+await calculate("vybor-difavtomata.html", { p: "3,5", iz: "19abc", isc: "1" }, ["Iz и ток КЗ должны быть числами"], "boundary");
+await calculate("vybor-difavtomata.html", { p: "3,5", icn: "0" }, ["Отключающая способность должна быть больше нуля"], "boundary");
+await calculate("vybor-difavtomata.html", { p: "3,5", iz: "19", isc: "0", icn: "6" }, ["Ожидаемый ток КЗ должен быть больше нуля"], "boundary");
+
+await calculate("selektivnost-uzo.html", {}, ["Кратность IΔn₂ / IΔn₁3,333 — не меньше 3", "Время срабатывания по ПУЭ 7.1.73 (не менее чем втрое)не проверено", "при утечке от 30 до 50 мА отключается только нижестоящее", "Выдержка ступенейу вышестоящего больше — порядок верный", "СтатусНедостаточно данных: кратность и выдержки верны, время по ПУЭ 7.1.73 не проверено", "таблицы селективности изготовителя"]);
+await calculate("selektivnost-uzo.html", { i2: "90" }, ["Кратность IΔn₂ / IΔn₁3 — не меньше 3", "СтатусНедостаточно данных: кратность и выдержки верны, время по ПУЭ 7.1.73 не проверено"], "boundary");
+await calculate("selektivnost-uzo.html", { i2: "89" }, ["Кратность IΔn₂ / IΔn₁2,967 — меньше 3", "СтатусУсловия правила не выполняются", "ПУЭ 7.1.73 требует"], "boundary");
+await calculate("selektivnost-uzo.html", { i2: "300", t2: "g" }, ["Кратность IΔn₂ / IΔn₁10 — не меньше 3", "временной селективности нет", "СтатусУсловия правила не выполняются", "оба аппарата могут отключиться одновременно"]);
+await calculate("selektivnost-uzo.html", { i1: "100", t1: "s", i2: "300", t2: "s" }, ["Кратность IΔn₂ / IΔn₁3 — не меньше 3", "СтатусУсловия правила не выполняются", "Одинаковая выдержка"]);
+await calculate("selektivnost-uzo.html", { i1: "100", t1: "s", i2: "1000", t2: "r" }, ["Кратность IΔn₂ / IΔn₁10 — не меньше 3", "порядок верный", "СтатусНедостаточно данных: кратность и выдержки верны, время по ПУЭ 7.1.73 не проверено"]);
+await calculate("selektivnost-uzo.html", { i1: "30", t1: "g", i2: "100", t2: "r" }, ["порядок верный", "СтатусНедостаточно данных: кратность и выдержки верны, время по ПУЭ 7.1.73 не проверено"]);
+await calculate("selektivnost-uzo.html", { i2: "30", t2: "g" }, ["Кратность IΔn₂ / IΔn₁1 — меньше 3", "диапазона нет", "СтатусУсловия правила не выполняются"]);
+await calculate("selektivnost-uzo.html", { i2: "60" }, ["Кратность IΔn₂ / IΔn₁2 — меньше 3", "диапазона нет"], "boundary");
+await calculate("selektivnost-uzo.html", { i1: "0" }, ["Уставки IΔn должны быть больше нуля"], "boundary");
+await calculate("selektivnost-uzo.html", { i2: "-100" }, ["Уставки IΔn должны быть больше нуля"], "boundary");
+await calculate("selektivnost-uzo.html", { i1: "30abc" }, ["Введите уставки IΔn"], "boundary");
+
+await calculate("dlina-kabelya-po-toku-kz.html", {}, ["Ток срабатывания Ia160 А (10·In, верхняя граница мгновенного расцепления)", "Отношение сечений m = Sф / SPE1", "Удельное сопротивление ρ0,0225 Ом·мм²/м", "Предельная длина Lmax61,111 м", "Предельное сопротивление петли 0,8·U₀ / Ia1,1 Ом", "СтатусНедостаточно данных: длина линии не задана"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { l: "50" }, ["Фактическая длина L50 м", "Запас Lmax / L1,222", "СтатусУсловие метода выполняется"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { l: "61,2" }, ["СтатусУсловие метода не выполняется"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { u: "230", mat: "0.036", sph: "16", spe: "16", dev: "10", inn: "32" }, ["Ток срабатывания Ia320 А", "Удельное сопротивление ρ0,036 Ом·мм²/м", "Предельная длина Lmax127,78 м", "Предельное сопротивление петли 0,8·U₀ / Ia575 мОм"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { sph: "16", spe: "10", dev: "20", inn: "25" }, ["Ток срабатывания Ia500 А (20·In", "Отношение сечений m = Sф / SPE1,6", "Предельная длина Lmax96,274 м", "352 мОм", "допускает для D и 50·In"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { dev: "50", inn: "16" }, ["Ток срабатывания Ia800 А (50·In, верхняя граница мгновенного расцепления)", "Предельная длина Lmax12,222 м", "220 мОм", "взято 50·In"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { l: "60" }, ["Запас Lmax / L1,019", "СтатусУсловие метода выполняется"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { dev: "5", inn: "16" }, ["Ток срабатывания Ia80 А (5·In", "Предельная длина Lmax122,22 м"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { dev: "im", im: "1000", sph: "50", spe: "25" }, ["Ток срабатывания Ia1200 А (Im + 20% допуска)", "Отношение сечений m = Sф / SPE2", "Предельная длина Lmax108,64 м", "146,7 мОм"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { dev: "ia", ia: "100", sph: "1,5", spe: "1,5" }, ["Ток срабатывания Ia100 А (задан вручную)", "Предельная длина Lmax58,667 м", "1,76 Ом"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { u: "225", sph: "4", spe: "4", dev: "5", inn: "10", l: "320" }, ["Предельная длина Lmax320 м", "Запас Lmax / L1", "СтатусУсловие метода выполняется"], "boundary");
+await calculate("dlina-kabelya-po-toku-kz.html", { u: "225", sph: "4", spe: "4", dev: "5", inn: "10", l: "320,01" }, ["СтатусУсловие метода не выполняется"], "boundary");
+await calculate("dlina-kabelya-po-toku-kz.html", { u: "380" }, ["Предельная длина Lmax105,56 м", "Проверьте напряжение"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { sph: "120", spe: "70", dev: "im", im: "2000" }, ["Отношение сечений m = Sф / SPE1,714", "Предельная длина Lmax144,09 м"], "boundary");
+await calculate("dlina-kabelya-po-toku-kz.html", { sph: "150" }, ["больше 120 мм²"], "boundary");
+await calculate("dlina-kabelya-po-toku-kz.html", { sph: "0" }, ["Напряжение и сечения должны быть больше нуля"], "boundary");
+await calculate("dlina-kabelya-po-toku-kz.html", { inn: "-16" }, ["Номинал автомата должен быть больше нуля"], "boundary");
+await calculate("dlina-kabelya-po-toku-kz.html", { l: "50abc" }, ["Фактическая длина должна быть числом"], "boundary");
+await calculate("dlina-kabelya-po-toku-kz.html", { dev: "im", im: "" }, ["Введите уставку мгновенного расцепителя Im"], "boundary");
+
+{
+  kind = "structural";
+  const dom = await load("dlina-kabelya-po-toku-kz.html");
+  const { document, Event } = dom.window;
+  const visible = id => document.getElementById(`f_${id}`).style.display !== "none";
+  check(visible("inn") && !visible("im") && !visible("ia"), "dlina-kabelya-po-toku-kz: в режиме B/C/D должен быть виден только In");
+  const dev = document.getElementById("dev");
+  dev.value = "im"; dev.dispatchEvent(new Event("change", { bubbles: true }));
+  check(!visible("inn") && visible("im") && !visible("ia"), "dlina-kabelya-po-toku-kz: в режиме Im должно быть видно только поле Im");
+  dev.value = "ia"; dev.dispatchEvent(new Event("change", { bubbles: true }));
+  check(!visible("inn") && !visible("im") && visible("ia"), "dlina-kabelya-po-toku-kz: в режиме Ia должно быть видно только поле Ia");
+  dom.window.close();
+}
+{
+  kind = "structural";
+  const dom = await load("vybor-difavtomata.html");
+  const { document, Event } = dom.window;
+  const faza = document.getElementById("faza"), u = document.getElementById("u");
+  faza.value = "3"; faza.dispatchEvent(new Event("change", { bubbles: true }));
+  check(u.value === "380", "vybor-difavtomata: три фазы не установили 380 В");
+  faza.value = "1"; faza.dispatchEvent(new Event("change", { bubbles: true }));
+  check(u.value === "220", "vybor-difavtomata: одна фаза не вернула 220 В");
+  dom.window.close();
+}
+{
+  kind = "functional";
+  const dom = await load("vybor-difavtomata.html");
+  const { document } = dom.window;
+  setValues(document, { p: "7,4", load: "ev" });
+  document.getElementById("go").click();
+  await new Promise(resolve => dom.window.setTimeout(resolve, 0));
+  const res = document.getElementById("res").textContent;
+  check(/Защита зарядной точки EV/.test(res) && !/Минимальный тип по форме тока/.test(res),
+    "vybor-difavtomata: для EV тип B нельзя называть минимальным — допустим и тип A с отключением постоянной утечки 6 мА");
+  setValues(document, { load: "b" });
+  document.getElementById("go").click();
+  await new Promise(resolve => dom.window.setTimeout(resolve, 0));
+  check(!/722\.531\.2\.101/.test(document.getElementById("res").textContent),
+    "vybor-difavtomata: требование к зарядной точке EV выводится для привода или PV-инвертора");
+  dom.window.close();
+}
+
+// --- data_i.py: ток утечки группы, сечение PEN, зона срабатывания B/C/D,
+// ток КЗ петля фаза-PE (+ метод композиции), кольцевой заземлитель ---
+
+await calculate("summarnyy-tok-utechki-uzo.html", {}, ["Утечка приборов по паспорту или замеру1 мА (1 шт.)", "Утечка приборов по оценке ПУЭ (0,4 мА на 1 А)4 мА (1 шт.)", "Утечка сети (10 мкА на 1 м)0,3 мА", "Суммарный ток утечки5,3 мА", "Доля от IΔn = 30 мА17,67 %", "ПУЭ 7.1.83: не более ⅓·IΔn = 10 мАВыполняется", "IEC 60364-5-53, 531.3.2: не более 30 % IΔn = 9 мАВыполняется", "Рекомендация Schneider Electric: не более 0,25·IΔn = 7,5 мАВыполняется", "СтатусОценка: часть утечек принята по ПУЭ 7.1.83"]);
+await calculate("summarnyy-tok-utechki-uzo.html", { c3: "12", c3_unit: "0.4" }, ["Утечка приборов по оценке ПУЭ (0,4 мА на 1 А)8,8 мА (2 шт.)", "Суммарный ток утечки10,1 мА", "ПУЭ 7.1.83: не более ⅓·IΔn = 10 мАНе выполняется", "Разделите нагрузку на несколько групп"]);
+await calculate("summarnyy-tok-utechki-uzo.html", { c1: "3,5", c2: "3,5", c2_unit: "1", c3: "3", l: "0" }, ["Суммарный ток утечки10 мА", "ПУЭ 7.1.83: не более ⅓·IΔn = 10 мАВыполняется", "IEC 60364-5-53, 531.3.2: не более 30 % IΔn = 9 мАНе выполняется", "Рекомендация Schneider Electric: не более 0,25·IΔn = 7,5 мАНе выполняется", "СтатусРасчёт по введённым значениям утечек"], "boundary");
+await calculate("summarnyy-tok-utechki-uzo.html", { c1: "3,5", c2: "3,5", c2_unit: "1", c3: "3,01", l: "0" }, ["Суммарный ток утечки10,01 мА", "ПУЭ 7.1.83: не более ⅓·IΔn = 10 мАНе выполняется"], "boundary");
+await calculate("summarnyy-tok-utechki-uzo.html", { uzo: "10", c1: "2,5", c2: "2,5", c2_unit: "1", l: "0" }, ["Суммарный ток утечки5 мА", "ПУЭ 7.1.83: не более ⅓·IΔn = 3,333 мАНе выполняется", "не меньше 0,5·IΔn = 5 мА"], "boundary");
+await calculate("summarnyy-tok-utechki-uzo.html", { c1: "10", c1_unit: "1", c2: "", l: "0" }, ["Суммарный ток утечки10 мА", "СтатусРасчёт по введённым значениям утечек"]);
+await calculate("summarnyy-tok-utechki-uzo.html", { c1: "10", c1_unit: "0.4", c2: "", l: "0" }, ["Суммарный ток утечки4 мА", "СтатусОценка: часть утечек принята по ПУЭ 7.1.83"]);
+await calculate("summarnyy-tok-utechki-uzo.html", { c1: "1", c1_unit: "1", c2: "2", c2_unit: "1", l: "30" }, ["Утечка сети (10 мкА на 1 м)0,3 мА", "Суммарный ток утечки3,3 мА", "СтатусОценка: утечка сети принята по ПУЭ 7.1.83", "Условие ПУЭ 7.1.83 выполняется по оценке"]);
+await invalid("summarnyy-tok-utechki-uzo.html", { c1: "-1" }, "Потребитель 1: значение не может быть отрицательным");
+await invalid("summarnyy-tok-utechki-uzo.html", { c2: "abc" }, "Потребитель 2: введите число или оставьте поле пустым");
+await invalid("summarnyy-tok-utechki-uzo.html", { c1: "", c2: "", l: "0" }, "Укажите хотя бы одного потребителя");
+await invalid("summarnyy-tok-utechki-uzo.html", { l: "" }, "Введите суммарную длину фазных проводников");
+await invalid("summarnyy-tok-utechki-uzo.html", { c1: "1e308", c1_unit: "1", c2: "1e308", c2_unit: "1" }, "слишком велики");
+
+await calculate("sechenie-pen-provodnika.html", {}, ["По правилу PE (ПУЭ 1.7.126, табл. 1.7.5)16 мм²", "Сечение N (ПУЭ 7.1.45)16 мм² — равно фазному", "Механический минимум PEN (ПУЭ 1.7.131, 7.1.45)10 мм²", "Определяющее условиеправило PE, сечение N", "Принять по стандартному ряду16 мм²", "СтатусМинимум по ПУЭ; стойкость к току КЗ не проверялась"]);
+await calculate("sechenie-pen-provodnika.html", { s: "6" }, ["Определяющее условиемеханический минимум", "Принять по стандартному ряду10 мм²", "Кабель с жилами 6 мм²Совмещать PE и N в его жиле нельзя", "СтатусЖилы тоньше минимума PEN"]);
+await calculate("sechenie-pen-provodnika.html", { s: "6", metal: "al" }, ["Механический минимум PEN (ПУЭ 1.7.131, 7.1.45)16 мм²", "Принять по стандартному ряду16 мм²", "не менее 16 мм² по алюминию"]);
+await calculate("sechenie-pen-provodnika.html", { s: "95", nagr: "odn" }, ["По правилу PE (ПУЭ 1.7.126, табл. 1.7.5)47,5 мм²", "Сечение N (ПУЭ 7.1.45)95 мм² — равно фазному", "Определяющее условиесечение N", "Принять по стандартному ряду95 мм²"]);
+await calculate("sechenie-pen-provodnika.html", { s: "95", nagr: "sim" }, ["Сечение N (ПУЭ 7.1.45)47,5 мм² — не менее 50 % фазного", "Минимальное сечение PEN47,5 мм²", "Принять по стандартному ряду50 мм²", "СтатусМинимум по ПУЭ для нагрузки без заметных гармоник", "Уменьшенный N допустим только", "с учётом гармоник", "п. 524.3"]);
+await calculate("sechenie-pen-provodnika.html", { s: "35", metal: "al", nagr: "sim" }, ["Сечение N (ПУЭ 7.1.45)17,5 мм² — не менее 50 % фазного", "Принять по стандартному ряду25 мм²"]);
+await calculate("sechenie-pen-provodnika.html", { s: "25", metal: "al", nagr: "sim" }, ["Сечение N (ПУЭ 7.1.45)25 мм² — равно фазному", "Принять по стандартному ряду25 мм²"], "boundary");
+await calculate("sechenie-pen-provodnika.html", { s: "25,01", metal: "al", nagr: "sim" }, ["Определяющее условиеправило PE, механический минимум", "Принять по стандартному ряду16 мм²"], "boundary");
+await calculate("sechenie-pen-provodnika.html", { s: "300" }, ["Принять по стандартному рядусвыше 240 мм² — вне стандартного ряда", "СтатусНужен отдельный расчёт"], "boundary");
+await calculate("sechenie-pen-provodnika.html", { cep: "1" }, ["Совмещённый PEN-проводникНе допускается", "ОснованиеПУЭ 1.7.132", "СтатусНужен отдельный защитный проводник PE"]);
+await invalid("sechenie-pen-provodnika.html", { s: "0" }, "Сечение должно быть больше нуля");
+await invalid("sechenie-pen-provodnika.html", { s: "abc" }, "Введите сечение фазной жилы");
+
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design" }, ["Кратность тока Iкз/In25", "Диапазон мгновенного расцепления Cсвыше 5·In до 10·In (80…160 А)", "ЗонаГарантированное мгновенное расцепление", "СтатусМгновенное отключение гарантировано характеристикой", "быстрее 0,1 с"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "0,4", ik_unit: "1000" }, ["Кратность тока Iкз/In25", "ЗонаГарантированное мгновенное расцепление"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "160" }, ["Кратность тока Iкз/In10", "ЗонаГарантированное мгновенное расцепление"], "boundary");
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "159" }, ["Кратность тока Iкз/In9,938", "ЗонаРазброс электромагнитного расцепителя", "СтатусМгновенное отключение не гарантировано"], "boundary");
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "80" }, ["Кратность тока Iкз/In5", "ЗонаТепловой расцепитель", "СтатусОтключение с выдержкой времени", "не срабатывает: его порог лежит выше 5·In", "в пределах условного времени 1 ч", "от 1 до 60 с"], "boundary");
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "100", in: "40", tip: "B" }, ["Кратность тока Iкз/In2,5", "Диапазон мгновенного расцепления Bсвыше 3·In до 5·In (120…200 А)", "ЗонаТепловой расцепитель", "от 1 до 120 с"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "23,2" }, ["Кратность тока Iкз/In1,45", "ЗонаТепловой расцепитель"], "boundary");
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "20" }, ["Кратность тока Iкз/In1,25", "ЗонаМежду условными токами нерасцепления и расцепления", "СтатусОтключение не гарантировано"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "18,08" }, ["Кратность тока Iкз/In1,13", "ЗонаНе выше условного тока нерасцепления 1,13·In"], "boundary");
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "18" }, ["Кратность тока Iкз/In1,125", "ЗонаНе выше условного тока нерасцепления 1,13·In", "СтатусНе отключается в течение условного времени 1 ч", "после этого времени, стандарт не нормирует"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "100", in: "80", tip: "D" }, ["ЗонаМежду условными токами нерасцепления и расцепления", "условного времени 2 ч", "50·In"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "400", in: "16", tip: "D" }, ["Диапазон мгновенного расцепления Dсвыше 10·In до 20·In (160…320 А)", "ЗонаГарантированное мгновенное расцепление", "Граница 20·In для D должна подтверждаться паспортом"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "400", in: "16", tip: "D50" }, ["Диапазон мгновенного расцепления Dсвыше 10·In до 50·In (160…800 А)", "ЗонаРазброс электромагнитного расцепителя", "СтатусМгновенное отключение не гарантировано", "взято 50·In"]);
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "800", in: "16", tip: "D50" }, ["Кратность тока Iкз/In50", "ЗонаГарантированное мгновенное расцепление"], "boundary");
+await calculate("zona-srabatyvaniya-avtomata.html", { iksrc: "design", ik: "799", in: "16", tip: "D50" }, ["Кратность тока Iкз/In49,94", "ЗонаРазброс электромагнитного расцепителя"], "boundary");
+await calculate("zona-srabatyvaniya-avtomata.html", {}, ["ЗонаГарантированное мгновенное расцепление", "СтатусНедостаточно данных: ток КЗ измерен без поправки на худшие условия", "Зона показана справочно"]);
+await invalid("zona-srabatyvaniya-avtomata.html", { in: "0" }, "Ток КЗ и номинал автомата должны быть больше нуля");
+await invalid("zona-srabatyvaniya-avtomata.html", { in: "160" }, "Номинал больше 125 А");
+await invalid("zona-srabatyvaniya-avtomata.html", { ik: "" }, "Введите ток КЗ и номинал автомата");
+await invalid("zona-srabatyvaniya-avtomata.html", { ik: "1e308", in: "1e-308" }, "слишком велики");
+
+await calculate("tok-kz-petlya-faza-pe.html", {}, ["Сопротивление петли линии Zц (фаза + PE)0,54 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)325,9 А", "Порог гарантированного мгновенного расцепления Ia160 А (10·In)", "Запас Iкз / Ia2,04", "Предельная длина линии по этому условию61,11 м", "СтатусУсловие мгновенного расцепления выполняется"]);
+await calculate("tok-kz-petlya-faza-pe.html", { tip: "5" }, ["Порог гарантированного мгновенного расцепления Ia80 А (5·In)", "Предельная длина линии по этому условию122,2 м"]);
+await calculate("tok-kz-petlya-faza-pe.html", { tip: "20" }, ["Порог гарантированного мгновенного расцепления Ia320 А (20·In)", "Запас Iкз / Ia1,02", "Предельная длина линии по этому условию30,56 м", "допускает для D и 50·In"]);
+await calculate("tok-kz-petlya-faza-pe.html", { tip: "50" }, ["Порог гарантированного мгновенного расцепления Ia800 А (50·In)", "Запас Iкз / Ia0,407", "Предельная длина линии по этому условию12,22 м", "СтатусУсловие мгновенного расцепления не выполняется", "взято 50·In"]);
+await calculate("tok-kz-petlya-faza-pe.html", { u: "225", sph: "4", spe: "4", l: "100" }, ["Сопротивление петли линии Zц (фаза + PE)1,125 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)160 А", "Предельная длина линии по этому условию100 м", "СтатусУсловие мгновенного расцепления выполняется"], "boundary");
+await calculate("tok-kz-petlya-faza-pe.html", { u: "225", sph: "4", spe: "4", l: "101" }, ["Ток КЗ в конце линии (0,8·U₀/Zц)158,4 А", "СтатусУсловие мгновенного расцепления не выполняется"], "boundary");
+await calculate("tok-kz-petlya-faza-pe.html", { mat: "al", sph: "16", spe: "16", l: "100", in: "63" }, ["Сопротивление петли линии Zц (фаза + PE)0,45 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)391,1 А", "Порог гарантированного мгновенного расцепления Ia630 А (10·In)", "Предельная длина линии по этому условию62,08 м", "СтатусУсловие мгновенного расцепления не выполняется"]);
+await calculate("tok-kz-petlya-faza-pe.html", { sph: "35", spe: "16", l: "100", in: "63" }, ["Сопротивление петли линии Zц (фаза + PE)0,2049 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)858,9 А", "Предельная длина линии по этому условию136,3 м", "СтатусУсловие мгновенного расцепления выполняется"]);
+await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "1", ik0_unit: "1000", ik0src: "design" }, ["Сопротивление сети до автомата U₀/I′0,22 Ом", "Ток КЗ в конце линии (метод композиции)289,5 А", "Напряжение в месте установки автомата при этом КЗ≈ 71,1 % U₀", "Предельная длина линии по этому условию64,17 м", "СтатусУсловие мгновенного расцепления выполняется", "было бы оптимистичным"]);
+await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "1", ik0_unit: "1000" }, ["Ток КЗ в конце линии (метод композиции)289,5 А", "СтатусНедостаточно данных", "измерен без поправки на худшие условия"]);
+await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "150", ik0_unit: "1", ik0src: "design" }, ["Ток КЗ в конце линии (метод композиции)109,6 А", "Предельная длина линии по этому условиюнет: ток КЗ на вводе не выше Ia", "СтатусУсловие мгновенного расцепления не выполняется"], "boundary");
+await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "800", ik0_unit: "1", ik0src: "design" }, ["Сопротивление сети до автомата U₀/I′0,275 Ом", "Предельная длина линии по этому условию61,11 м"], "boundary");
+await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "400", ik0_unit: "1", ik0src: "design", l: "60" }, ["Сопротивление петли линии Zц (фаза + PE)1,08 Ом", "Ток КЗ в конце линии (метод композиции)135 А", "Предельная длина линии по этому условию45,83 м", "СтатусУсловие мгновенного расцепления не выполняется"]);
+await invalid("tok-kz-petlya-faza-pe.html", { l: "0" }, "Напряжение, длина линии и номинал должны быть больше нуля");
+await invalid("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "" }, "Введите ток однофазного КЗ в месте установки автомата");
+await invalid("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "-1" }, "Ток КЗ в месте установки автомата должен быть больше нуля");
+await invalid("tok-kz-petlya-faza-pe.html", { u: "1e308", l: "1e-300" }, "слишком велики");
+
+await calculate("kolcevoy-zazemlitel.html", {}, ["Длина замкнутого контура L40 м", "Оценочное сопротивление R ≈ 2ρ/L2,5 Ом", "Возможное занижение формулы (однородный грунт)до 17 %", "Сравнение с целью2,5 Ом — не выше заданной цели и с учётом возможного занижения формулы", "Длина контура для цели 10 Ом по формуле10 м", "СтатусОценка, требуется измерение"]);
+await calculate("kolcevoy-zazemlitel.html", { grunt: "500" }, ["Оценочное сопротивление R ≈ 2ρ/L25 Ом", "Сравнение с целью25 Ом — оценка выше заданной цели", "Длина контура для цели 10 Ом по формуле100 м"]);
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "25", rho: "50", rt: "4" }, ["Длина замкнутого контура L25 м", "Оценочное сопротивление R ≈ 2ρ/L4 Ом", "Возможное занижение формулы (однородный грунт)до 9 %", "Сравнение с целью4 Ом — оценка не выше цели, но запас меньше возможного занижения — цель не подтверждена", "Длина контура для цели 4 Ом по формуле25 м"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "24", rho: "50", rt: "4" }, ["Оценочное сопротивление R ≈ 2ρ/L4,167 Ом", "Сравнение с целью4,167 Ом — оценка выше заданной цели"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "15", rho: "50", rt: "6,8" }, ["Оценочное сопротивление R ≈ 2ρ/L6,667 Ом", "Возможное занижение формулы (однородный грунт)нет: для контура до 15 м формула скорее завышает R", "Сравнение с целью6,667 Ом — оценка не выше цели, но форма контура не задана", "скорее завышает сопротивление"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "15,01", rho: "50", rt: "6,8" }, ["Возможное занижение формулы (однородный грунт)до 5 %", "запас меньше возможного занижения — цель не подтверждена"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { a: "12", b: "8", rho: "100", rt: "5,85" }, ["Оценочное сопротивление R ≈ 2ρ/L5 Ом", "Сравнение с целью5 Ом — не выше заданной цели и с учётом возможного занижения формулы"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { a: "12", b: "8", rho: "100", rt: "5,84" }, ["Сравнение с целью5 Ом — оценка не выше цели, но запас меньше возможного занижения — цель не подтверждена"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "150", rho: "100", rt: "5" }, ["Возможное занижение формулы (однородный грунт)до 38 %", "оценка не выше цели, но форма контура не задана"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "150,01", rho: "100", rt: "5" }, ["Возможное занижение формулы (однородный грунт)не оценивалось: контур длиннее 150 м", "погрешность формулы для такого контура не оценивалась", "может превышать 38 %"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { a: "30", b: "1", rho: "100", rt: "5" }, ["Длина замкнутого контура L62 м", "Возможное занижение формулы (однородный грунт)не оценивалось: стороны контура длиннее 3:1", "погрешность формулы для такого контура не оценивалась", "длиннее 3:1 занижение формулы больше"]);
+await calculate("kolcevoy-zazemlitel.html", { a: "15", b: "5", rho: "100", rt: "10" }, ["Возможное занижение формулы (однородный грунт)до 17 %", "Сравнение с целью5 Ом — не выше заданной цели и с учётом возможного занижения формулы"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { a: "15,01", b: "5", rho: "100", rt: "10" }, ["не оценивалось: стороны контура длиннее 3:1"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "40", rho: "100", rt: "10" }, ["Возможное занижение формулы (однородный грунт)до 17 % — при сторонах не длиннее 3:1", "Сравнение с целью5 Ом — оценка не выше цели, но форма контура не задана — чтобы учесть занижение формулы, задайте стороны", "цель с учётом занижения не подтверждается"]);
+await calculate("kolcevoy-zazemlitel.html", { a: "12", b: "8", rho: "100", rt: "10" }, ["Сравнение с целью5 Ом — не выше заданной цели и с учётом возможного занижения формулы"]);
+await invalid("kolcevoy-zazemlitel.html", { rho: "-1" }, "Удельное сопротивление и цель должны быть больше нуля");
+await invalid("kolcevoy-zazemlitel.html", { a: "0" }, "Стороны контура должны быть больше нуля");
+await invalid("kolcevoy-zazemlitel.html", { zad: "l", l: "" }, "Введите длину замкнутого проводника");
+await invalid("kolcevoy-zazemlitel.html", { rho: "1e308", zad: "l", l: "1e-300" }, "слишком велики");
+
+{
+  kind = "structural";
+  const text = file => fs.readFileSync(path.join(sourceDir, file), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  const pen = text("sechenie-pen-provodnika.html");
+  check(/питающиеся по однофазным ответвлениям от ВЛ/.test(pen),
+    "sechenie-pen-provodnika: исключение ПУЭ 1.7.145 распространено на все частные дома — потеряно условие об однофазных ответвлениях от ВЛ");
+  check(/ГОСТ Р 50571\.5\.52-2011/.test(pen) && /без заметных гармоник/.test(pen),
+    "sechenie-pen-provodnika: уменьшенный N предлагается без условия о гармониках (ГОСТ Р 50571.5.52-2011, п. 524.3)");
+  check(/прогретый автомат/.test(text("zona-srabatyvaniya-avtomata.html")),
+    "zona-srabatyvaniya-avtomata: не сказано, что испытание при 1,45·In идёт сразу после 1,13·In, из нагретого состояния");
+  const loop = text("tok-kz-petlya-faza-pe.html");
+  check(!/уже не конвенциональный метод/.test(loop),
+    "tok-kz-petlya-faza-pe: подход калькулятора минимального тока КЗ объявлен «не конвенциональным методом»");
+  check(/I′ = 5·Ia/.test(loop), "tok-kz-petlya-faza-pe: нет условия, при котором методы дают одну предельную длину");
+  const ring = text("kolcevoy-zazemlitel.html");
+  check(!/как выше, так и ниже/.test(ring), "kolcevoy-zazemlitel: направление погрешности формулы скрыто");
+  check(/множитель 2 дословно не виден/.test(ring) && /проверена независимо/.test(ring),
+    "kolcevoy-zazemlitel: множитель 2 приписан Schneider без оговорки, что дословно он не сверен и проверен численно");
+  check(/занижает/.test(ring) && /численн/.test(ring),
+    "kolcevoy-zazemlitel: не сказано, что для типичного дома формула занижает R, или не указан численный расчёт");
+}
+{
+  kind = "structural";
+  const dom = await load("tok-kz-petlya-faza-pe.html");
+  const { document, Event } = dom.window;
+  const visible = id => document.getElementById(`f_${id}`).style.display !== "none";
+  check(!visible("ik0") && !visible("ik0src"), "tok-kz-petlya-faza-pe: в конвенциональном режиме поля I′ должны быть скрыты");
+  const mode = document.getElementById("mode");
+  mode.value = "comp"; mode.dispatchEvent(new Event("change", { bubbles: true }));
+  check(visible("ik0") && visible("ik0src"), "tok-kz-petlya-faza-pe: в режиме композиции поля I′ должны быть видны");
+  check(Boolean(document.querySelector('a[href="dlina-kabelya-po-toku-kz.html"]')),
+    "tok-kz-petlya-faza-pe: нет ссылки на калькулятор максимальной длины линии");
+  dom.window.close();
+}
+
+{
+  kind = "structural";
+  const text = file => fs.readFileSync(path.join(sourceDir, file), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  const box = text("zapolnenie-montazhnoy-korobki.html");
+  check(/NFPA 70/.test(box) && /не ПУЭ/.test(box), "zapolnenie-montazhnoy-korobki: не сказано, что это NEC, а не ПУЭ");
+  check(/не больше четырёх EGC/.test(box) && /четверть объёма/.test(box), "zapolnenie-montazhnoy-korobki: нет правила EGC редакций 2020/2023");
+  const duct = text("zapolnenie-kabelnogo-koroba.html");
+  check(/2\.1\.61/.test(duct) && /35%/.test(duct) && /40%/.test(duct), "zapolnenie-kabelnogo-koroba: нет пределов ПУЭ 2.1.61");
+  check(/процента заполнения не задаёт/.test(duct), "zapolnenie-kabelnogo-koroba: не сказано, что для лотков ПУЭ процента не задаёт");
+  const sel = text("selektivnost-uzo.html");
+  check(/ПУЭ 7\.1\.73/.test(sel) && /таблиц[а-я]* селективности изготовителя/.test(sel), "selektivnost-uzo: нет ПУЭ 7.1.73 или оговорки о таблицах изготовителя");
+  check(!/Селективность обеспечена|Селективно без оговорок/.test(sel), "selektivnost-uzo: категоричный вердикт селективности");
+  const len = text("dlina-kabelya-po-toku-kz.html");
+  check(/источник считает такое приближение допустимым для сечений до 120 мм²/.test(len) && !/не цитата источника/.test(len),
+    "dlina-kabelya-po-toku-kz: предел 120 мм² взят у Schneider Electric (приближение без реактивного сопротивления), а не является собственной границей");
+  check(!/0,1\s*с/.test(len), "dlina-kabelya-po-toku-kz: обещание конкретного времени отключения");
+  check(!/ровно предельное Z/.test(len), "dlina-kabelya-po-toku-kz: предел петли самой линии выдан за полное Z калькулятора минимального тока КЗ");
+  check(/I′ = 5·Ia/.test(len) && /оптимистичен/.test(len), "dlina-kabelya-po-toku-kz: не сказано, что при I′ < 5·Ia результат оптимистичен");
+  const dif = text("vybor-difavtomata.html");
+  check(/ГОСТ Р 50571\.7\.722-2017/.test(dif) && /722\.531\.2\.101/.test(dif),
+    "vybor-difavtomata: нет источника требования к УЗО зарядной точки EV");
+  check(!/По геометрии в такой короб/.test(duct), "zapolnenie-kabelnogo-koroba: предел ПУЭ выдан за геометрическую вместимость");
+}
+
+// --- data_j.py: многотарифный счётчик, нагрузка ввода дома, удлинитель на
+// катушке, сопротивление изоляции, розеточная группа ---
+
+await calculate("mnogotarifnyy-schetchik.html", { zony: "2", e_day: "180", e_night: "120", t_day: "6", t_night: "3", t_one: "5" }, ["Дневная зона: 180 кВт·ч × 6 ₽1080,00 ₽", "Ночная зона: 120 кВт·ч × 3 ₽360,00 ₽", "Всего израсходовано300 кВт·ч", "Доля ночного расхода40 %", "Итого по зонам1440,00 ₽", "Средняя цена 1 кВт·ч4,8 ₽", "По одноставочному тарифу1500,00 ₽", "СравнениеЗонный учёт дешевле на 60,00 ₽"]);
+await calculate("mnogotarifnyy-schetchik.html", { zony: "3", e_peak: "50", e_half: "100", e_night: "150", t_peak: "7,5", t_half: "5,25", t_night: "2,5" }, ["Пиковая зона: 50 кВт·ч × 7,5 ₽375,00 ₽", "Полупиковая зона: 100 кВт·ч × 5,25 ₽525,00 ₽", "Ночная зона: 150 кВт·ч × 2,5 ₽375,00 ₽", "Дневной расход (пик + полупик)150 кВт·ч", "Доля ночного расхода50 %", "Итого по зонам1275,00 ₽", "Средняя цена 1 кВт·ч4,25 ₽"]);
+await calculate("mnogotarifnyy-schetchik.html", { zony: "2", e_day: "300", e_night: "0", t_day: "6", t_night: "3", t_one: "5" }, ["Итого по зонам1800,00 ₽", "СравнениеЗонный учёт дороже на 300,00 ₽"], "boundary");
+await calculate("mnogotarifnyy-schetchik.html", { zony: "2", e_day: "100", e_night: "100", t_day: "5", t_night: "5", t_one: "5" }, ["СравнениеОдинаково"], "boundary");
+await calculate("mnogotarifnyy-schetchik.html", { zony: "2", e_day: "1,005", e_night: "0", t_day: "1", t_night: "1" }, ["Итого по зонам1,01 ₽"], "boundary");
+await calculate("mnogotarifnyy-schetchik.html", { zony: "2", e_peak: "мусор", t_peak: "мусор", e_day: "180", e_night: "120", t_day: "6", t_night: "3" }, ["Итого по зонам1440,00 ₽"]);
+await calculate("mnogotarifnyy-schetchik.html", { zony: "2", e_day: "-1", e_night: "10", t_day: "6", t_night: "3" }, ["Расход не может быть отрицательным"], "boundary");
+await calculate("mnogotarifnyy-schetchik.html", { zony: "2", e_day: "0", e_night: "0", t_day: "6", t_night: "3" }, ["Суммарный расход равен нулю"], "boundary");
+await calculate("mnogotarifnyy-schetchik.html", { zony: "2", e_day: "10", e_night: "10", t_day: "6", t_night: "3", t_one: "abc" }, ["Одноставочный тариф должен быть числом"], "boundary");
+await calculate("mnogotarifnyy-schetchik.html", { zony: "3", e_peak: "10", e_half: "10", e_night: "10", t_peak: "0", t_half: "5", t_night: "3" }, ["Ставка зоны должна быть больше нуля"], "boundary");
+
+await calculate("nagruzka-vvoda-doma.html", { faza: "1", u: "220", p_light: "1", k_light: "1", p_sock: "8", k_sock: "0,2", p_pow: "6", k_pow: "0,5", ko: "1", cos: "1" }, ["Освещение: 1 кВт × 11 кВт", "Розетки общего назначения: 8 кВт × 0,21,6 кВт", "Стационарные силовые приборы: 6 кВт × 0,53 кВт", "Установленная мощность15 кВт", "Расчётная мощность ввода Pр5,6 кВт", "Итоговый коэффициент Pр / Pуст0,3733", "Расчётный ток25,455 А", "Статус выбора вводного автоматаНедостаточно данных"]);
+await calculate("nagruzka-vvoda-doma.html", { faza: "3", u: "380", p_light: "2", k_light: "1", p_sock: "10", k_sock: "0,3", p_pow: "9", k_pow: "0,6", p_heat: "12", k_heat: "1", ko: "0,9", cos: "0,95" }, ["Сумма расчётных мощностей групп22,4 кВт", "Расчётная мощность ввода Pр20,16 кВт", "Итоговый коэффициент Pр / Pуст0,6109", "Расчётный ток на фазу32,242 А", "Статус выбора вводного автоматаНедостаточно данных"]);
+await calculate("nagruzka-vvoda-doma.html", { p_light: "1", p_sock: "2" }, ["Установленная мощность3 кВт", "Расчётная мощность ввода Pр3 кВт", "Итоговый коэффициент Pр / Pуст1", "Расчётный ток13,636 А"]);
+await calculate("nagruzka-vvoda-doma.html", { p_light: "1", k_light: "1", p_sock: "8", k_sock: "0,2", p_pow: "6", k_pow: "0,5", p_razr: "5" }, ["Сравнение с разрешённой мощностьюПревышает 5 кВт на 0,6 кВт"], "boundary");
+await calculate("nagruzka-vvoda-doma.html", { p_light: "1", k_light: "1", p_sock: "8", k_sock: "0,2", p_pow: "6", k_pow: "0,5", p_razr: "5,6" }, ["Сравнение с разрешённой мощностьюНе превышает 5,6 кВт"], "boundary");
+await calculate("nagruzka-vvoda-doma.html", { p_sock: "8", k_sock: "1,2" }, ["Коэффициент спроса группы «Розетки общего назначения» задаётся в диапазоне от 0 до 1"], "boundary");
+await calculate("nagruzka-vvoda-doma.html", { p_light: "1", ko: "0" }, ["Коэффициент одновременности задаётся в диапазоне от 0 до 1"], "boundary");
+await calculate("nagruzka-vvoda-doma.html", {}, ["Введите установленную мощность хотя бы одной группы"], "boundary");
+await calculate("nagruzka-vvoda-doma.html", { p_light: "1", p_razr: "abc" }, ["Разрешённая мощность должна быть числом"], "boundary");
+
+await calculate("udlinitel-na-katushke.html", { sost: "wound", p: "1500", pw: "1000", pu: "3500" }, ["Нагрузка1500 Вт", "Смотанный кабель по маркировке этой катушки28,6 % от размотанного", "Применённый предел1000 Вт — значение для смотанного кабеля", "Загрузка относительно предела150 %", "Сравнение с маркировкойПревышает"]);
+await calculate("udlinitel-na-katushke.html", { sost: "full", p: "3000", pw: "1000", pu: "3500" }, ["Применённый предел3500 Вт — значение для размотанного кабеля", "Загрузка относительно предела85,71 %", "Сравнение с маркировкойНе превышает"]);
+await calculate("udlinitel-na-katushke.html", { sost: "part", p: "900", pw: "1000", pu: "3500" }, ["частично смотанный оценивается как смотанный", "Загрузка относительно предела90 %", "Сравнение с маркировкойНе превышает"]);
+await calculate("udlinitel-na-katushke.html", { sost: "part", p: "1200", pw: "1000", pu: "3500" }, ["Сравнение с маркировкойПревышает"], "boundary");
+await calculate("udlinitel-na-katushke.html", { sost: "wound", p: "1000", pw: "1000", pu: "3500" }, ["Загрузка относительно предела100 %", "Сравнение с маркировкойНе превышает"], "boundary");
+await calculate("udlinitel-na-katushke.html", { sost: "wound", p: "1500", pw: "", pu: "3500" }, ["СтатусНедостаточно данных", "от 23 до 50 %"], "boundary");
+await calculate("udlinitel-na-katushke.html", { sost: "full", p: "800", pw: "1000", pu: "" }, ["Применённый предел1000 Вт — значение для смотанного кабеля: размотанный выдерживает не меньше", "Сравнение с маркировкойНе превышает"], "boundary");
+await calculate("udlinitel-na-katushke.html", { sost: "full", p: "1200", pw: "1000", pu: "" }, ["СтатусНедостаточно данных"], "boundary");
+await calculate("udlinitel-na-katushke.html", { sost: "full", p: "1,5", p_unit: "1000", pw: "1000", pu: "3500" }, ["Нагрузка1500 Вт", "Загрузка относительно предела42,86 %"]);
+await calculate("udlinitel-na-katushke.html", { sost: "wound", p: "500", pw: "4000", pu: "3500" }, ["не может выдерживать больше"], "boundary");
+await calculate("udlinitel-na-katushke.html", { sost: "wound", p: "0", pw: "1000", pu: "3500" }, ["Мощность нагрузки должна быть больше нуля"], "boundary");
+await calculate("udlinitel-na-katushke.html", { sost: "wound", p: "500", pw: "abc", pu: "3500" }, ["Мощность для смотанного кабеля должна быть положительным числом"], "boundary");
+
+await calculate("soprotivlenie-izolyacii.html", { norm: "gost-500", ui: "500", r: "1" }, ["ДокументГОСТ Р 50571.16-2019, табл. 6.1", "Минимум для цепи до 500 В включительно1 МОм при 500 В", "Показание1 МОм при 500 В", "Сравнение с минимумомНе ниже минимума", "СтатусСоответствует минимуму ГОСТ Р 50571.16-2019, табл. 6.1 при данных условиях измерения"], "boundary");
+await calculate("soprotivlenie-izolyacii.html", { norm: "gost-500", ui: "500", r: "0,99" }, ["Показание990 кОм при 500 В", "Сравнение с минимумомНиже минимума", "СтатусНе соответствует минимуму ГОСТ Р 50571.16-2019, табл. 6.1 при данных условиях измерения"], "boundary");
+await calculate("soprotivlenie-izolyacii.html", { norm: "pue", ui: "1000", r: "0,5" }, ["Минимум для электропроводки0,5 МОм при 1000 В", "Сравнение с минимумомНе ниже минимума", "СтатусСоответствует минимуму ПУЭ, табл. 1.8.34 при данных условиях измерения"], "boundary");
+await calculate("soprotivlenie-izolyacii.html", { norm: "pue", ui: "1000", r: "0,49" }, ["Сравнение с минимумомНиже минимума"], "boundary");
+await calculate("soprotivlenie-izolyacii.html", { norm: "pue", ui: "500", r: "100" }, ["Испытательное напряжение500 В вместо требуемых 1000 В", "СтатусНедостаточно данных"]);
+await calculate("soprotivlenie-izolyacii.html", { norm: "gost-spd", ui: "250", r: "0,9" }, ["Минимум для цепи до 500 В с неотключаемым УЗИП1 МОм при 250 В", "Сравнение с минимумомНиже минимума"]);
+await calculate("soprotivlenie-izolyacii.html", { norm: "gost-selv", ui: "250", r: "0,5" }, ["Минимум для цепи БСНН или ЗСНН0,5 МОм при 250 В", "Сравнение с минимумомНе ниже минимума"], "boundary");
+await calculate("soprotivlenie-izolyacii.html", { norm: "gost-1000", ui: "1000", r: "5" }, ["Минимум для цепи свыше 500 В1 МОм при 1000 В", "Отношение показания к минимуму5", "Сравнение с минимумомНе ниже минимума"]);
+await calculate("soprotivlenie-izolyacii.html", { norm: "gost-500", ui: "500", r: "800", r_unit: "0.001" }, ["Показание800 кОм при 500 В", "Сравнение с минимумомНиже минимума"]);
+await calculate("soprotivlenie-izolyacii.html", { norm: "gost-500", ui: "500", r: "2", r_unit: "1000" }, ["Показание2 ГОм при 500 В", "Отношение показания к минимуму2000", "Сравнение с минимумомНе ниже минимума"]);
+await calculate("soprotivlenie-izolyacii.html", { norm: "gost-500", ui: "1000", r: "50" }, ["Испытательное напряжение1000 В вместо требуемых 500 В", "СтатусНедостаточно данных"]);
+await calculate("soprotivlenie-izolyacii.html", { norm: "gost-500", ui: "500", r: "0" }, ["Показание должно быть больше нуля"], "boundary");
+await calculate("soprotivlenie-izolyacii.html", { norm: "gost-500", ui: "500", r: "-5" }, ["Показание должно быть больше нуля"], "boundary");
+
+await calculate("rozetochnaya-gruppa.html", { tip: "rozetki", inom: "16", u: "220", cos: "1", p1: "2000", p2: "1200" }, ["Суммарная одновременная мощность3200 Вт", "Расчётный ток IB14,55 А", "Номинал автомата In16 А", "Загрузка от номинала90,91 %", "Условие IB ≤ InВыполняется", "Запас до номинала320 Вт", "одновременно включённые приборы не превышают номинал автомата"]);
+await calculate("rozetochnaya-gruppa.html", { tip: "rozetki", inom: "16", u: "220", cos: "1", p1: "2000", p2: "1200", p3: "800" }, ["Расчётный ток IB18,18 А", "Загрузка от номинала113,6 %", "Условие IB ≤ InНе выполняется", "Превышение номинала480 Вт", "Одновременно включённые приборы превышают номинал автомата"]);
+await calculate("rozetochnaya-gruppa.html", { tip: "rozetki", inom: "16", u: "220", cos: "1", p1: "3520" }, ["Расчётный ток IB16 А", "Загрузка от номинала100 %", "Условие IB ≤ InВыполняется", "Запас до номинала0 Вт"], "boundary");
+await calculate("rozetochnaya-gruppa.html", { tip: "rozetki", inom: "16", u: "230", cos: "0,8", p1: "2944" }, ["Расчётный ток IB16 А", "Условие IB ≤ InВыполняется", "Запас до номинала0 Вт"], "boundary");
+await calculate("rozetochnaya-gruppa.html", { tip: "rozetki", inom: "16", u: "230", cos: "0,8", p1: "2945" }, ["Условие IB ≤ InНе выполняется", "Превышение номинала1 Вт"], "boundary");
+await calculate("rozetochnaya-gruppa.html", { tip: "svet", inom: "10", u: "220", cos: "1", p1: "500", nl: "12", nr: "8" }, ["Расчётный ток IB2,273 А", "Ламп и розеток на фазу20 шт.", "Ограничение ПУЭ 6.2.10Не более 20 — соблюдено"], "boundary");
+await calculate("rozetochnaya-gruppa.html", { tip: "svet", inom: "10", u: "220", cos: "1", p1: "500", nl: "12", nr: "9" }, ["Ламп и розеток на фазу21 шт.", "Ограничение ПУЭ 6.2.10Больше 20 — превышено ограничение, заданное «как правило»"], "boundary");
+await calculate("rozetochnaya-gruppa.html", { tip: "rozetki", inom: "16", u: "220", cos: "1", p1: "2000", nl: "мусор", nr: "мусор" }, ["Условие IB ≤ InВыполняется"]);
+await calculate("rozetochnaya-gruppa.html", { tip: "svet", inom: "10", u: "220", cos: "1", p1: "500", nl: "12", nr: "2,5" }, ["целые неотрицательные числа"], "boundary");
+await calculate("rozetochnaya-gruppa.html", { p1: "-100" }, ["не может быть отрицательной"], "boundary");
+await calculate("rozetochnaya-gruppa.html", { p1: "", p2: "" }, ["Введите мощность хотя бы одного прибора"], "boundary");
+await calculate("rozetochnaya-gruppa.html", { p1: "1000", cos: "1,2" }, ["cos φ должен быть в диапазоне от 0 до 1"], "boundary");
 
 // Coverage guard считает фактически выполненные сценарии. Простое load()
 // больше не выдаётся за проверку формулы. Минимум один сценарий предотвращает

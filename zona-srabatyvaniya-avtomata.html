@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Зона срабатывания автомата B, C, D по току КЗ — ВольтКальк</title>
+<meta name="description" content="Определение зоны срабатывания модульного автомата с характеристикой B, C или D по кратности тока КЗ: гарантированное мгновенное расцепление, разброс электромагнитного расцепителя, тепловое отключение или отсутствие гарантии.">
+<link rel="canonical" href="https://macos2024.github.io/zona-srabatyvaniya-avtomata.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Зона срабатывания автомата B, C, D по току КЗ — ВольтКальк">
+<meta property="og:description" content="Определение зоны срабатывания модульного автомата с характеристикой B, C или D по кратности тока КЗ: гарантированное мгновенное расцепление, разброс электромагнитного расцепителя, тепловое отключение или отсутствие гарантии.">
+<meta property="og:url" content="https://macos2024.github.io/zona-srabatyvaniya-avtomata.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Зона срабатывания автомата B, C, D по току КЗ","url":"https://macos2024.github.io/zona-srabatyvaniya-avtomata.html","description":"Определение зоны срабатывания модульного автомата с характеристикой B, C или D по кратности тока КЗ: гарантированное мгновенное расцепление, разброс электромагнитного расцепителя, тепловое отключение или отсутствие гарантии.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Зона срабатывания автомата B, C, D по току КЗ","item":"https://macos2024.github.io/zona-srabatyvaniya-avtomata.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему калькулятор не пишет время отключения в секундах?","acceptedAnswer":{"@type":"Answer","text":"Стандарт не задаёт его формулой. Он нормирует только испытательные точки: 1,13·In, 1,45·In, 2,55·In и границы мгновенного расцепления. Время между ними определяется конструкцией конкретного автомата и берётся из его времятоковой кривой."}},{"@type":"Question","name":"Какой ток КЗ подставлять?","acceptedAnswer":{"@type":"Answer","text":"Минимальный ожидаемый — в самой удалённой точке линии, при нагретых проводниках: например, из расчёта по петле фаза–PE. Измеренный прибором ток отражает условия замера, поэтому по нему калькулятор показывает зону справочно, без вывода. Максимальный ток КЗ здесь не подходит: он нужен для проверки отключающей способности, а не срабатывания."}},{"@type":"Question","name":"Почему C16 при токе 100 А может не отключиться мгновенно?","acceptedAnswer":{"@type":"Answer","text":"Кратность 100 / 16 = 6,25 лежит между 5 и 10. Порог мгновенного расцепителя конкретного экземпляра C находится где-то в этом диапазоне; гарантия есть только от 10·In. Экземпляр с высоким порогом отключится тепловым расцепителем, то есть медленнее."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Зона срабатывания автомата B, C, D по току КЗ</h1>
+<p class="intro">Время отключения здесь не выдумывается: стандарт задаёт не формулу, а <b>зоны и испытательные точки</b>. Введите минимальный ожидаемый ток КЗ в конце линии, номинал и характеристику автомата.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Зона срабатывания автомата B, C, D по току КЗ</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_ik"><label for="ik">Ток КЗ в конце защищаемой линии</label><div class="fw"><input id="ik" type="text" inputmode="decimal" autocomplete="off" value="400" placeholder=""><select id="ik_unit" class="u" aria-label="Единицы: Ток КЗ в конце защищаемой линии"><option value="1" selected>А</option><option value="1000">кА</option></select></div><div class="hint">Минимальный ожидаемый ток однофазного КЗ в самой удалённой точке линии</div></div><div class="f" id="f_iksrc"><label for="iksrc">Откуда известен ток КЗ</label><div class="fw"><select id="iksrc"><option value="measured" selected>Измерен прибором, без поправки на худшие условия</option><option value="design">Минимальный расчётный ток: расчёт с нагретыми жилами или данные сетевой организации</option></select></div><div class="hint">Замер отражает напряжение сети и нагрев проводников в момент измерения; минимальный ток КЗ может быть меньше</div></div><div class="f" id="f_in"><label for="in">Номинальный ток автомата In</label><div class="fw"><input id="in" type="text" inputmode="decimal" autocomplete="off" value="16" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_tip"><label for="tip">Характеристика автомата</label><div class="fw"><select id="tip"><option value="B">B — мгновенное расцепление свыше 3·In до 5·In</option><option value="C" selected>C — свыше 5·In до 10·In</option><option value="D">D — свыше 10·In до 20·In, если это подтверждает паспорт</option><option value="D50">D без подтверждения паспортом — до 50·In</option></select></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Зона срабатывания автомата B, C, D по току КЗ: как считается</h2>
+<div class="formula">k = Iкз / In&nbsp;&nbsp;&nbsp;B: 3…5&nbsp;&nbsp;&nbsp;C: 5…10&nbsp;&nbsp;&nbsp;D: 10…20</div>
+<p>ГОСТ IEC 60898-1-2020 (МЭК 60898-1:2019; сменил ГОСТ Р 50345-2010, сами диапазоны не изменились) задаёт для характеристик B, C и D диапазоны тока мгновенного расцепления: свыше 3·In до 5·In включительно, свыше 5·In до 10·In и свыше 10·In до 20·In (о значении 50·In для D — ниже). Порог конкретного экземпляра может оказаться в любом месте своего диапазона. Мгновенным считается срабатывание быстрее 0,1 с: на нижней границе диапазона автомат не должен отключаться за 0,1 с, на верхней — обязан.</p>
+<table class="t"><tr><th scope="col">Кратность k</th><th scope="col">Зона</th><th scope="col">Что гарантировано</th></tr>
+<tr><td>k ≥ верхней границы</td><td>Мгновенное расцепление</td><td>Отключение быстрее 0,1 с</td></tr>
+<tr><td>между границами</td><td>Разброс электромагнитного расцепителя</td><td>Возможно и мгновенное, и тепловое отключение</td></tr>
+<tr><td>1,45 ≤ k ≤ нижней границы</td><td>Тепловой расцепитель</td><td>Отключение с выдержкой времени</td></tr>
+<tr><td>1,13 &lt; k &lt; 1,45</td><td>Между условными токами</td><td>Отключение за условное время не гарантировано</td></tr>
+<tr><td>k ≤ 1,13</td><td>Условный ток нерасцепления</td><td>Автомат не должен отключаться в течение условного времени</td></tr></table>
+<p><b>Испытательные точки теплового расцепителя.</b> При 1,13·In из холодного состояния автомат не должен отключаться в течение условного времени — 1 ч при In ≤ 63 А и 2 ч при In &gt; 63 А. Сразу после этого ток за 5 с повышают до 1,45·In, и уже прогретый автомат должен отключиться в пределах того же условного времени. При 2,55·In из холодного состояния — за время от 1 до 60 с при In ≤ 32 А и от 1 до 120 с при In &gt; 32 А. Между этими точками стандарт формулы не даёт: время для вашей кратности берут по времятоковой кривой изготовителя.</p>
+<p><b>Характеристика D.</b> МЭК 60898 допускает для неё и верхнюю границу 50·In; Schneider Electric отмечает, что большинство европейских производителей считают это значение нереалистично высоким. Поэтому для D два варианта: 20·In — если это подтверждает паспорт аппарата, и 50·In — если нет. Без подтверждения мгновенное отключение при токе от 20·In до 50·In не гарантировано.</p>
+<p><b>Измеренный ток.</b> Замер показывает ток при напряжении сети и нагреве проводников в момент измерения, а минимальный ток КЗ может быть меньше. Поэтому по измеренному без поправки току калькулятор показывает зону справочно и вывода не делает — так же, как калькуляторы тока КЗ поступают с измеренными значениями.</p>
+<h2>Зона срабатывания автомата B, C, D по току КЗ: пример расчёта</h2>
+<p>Линия с автоматом C16, минимальный ожидаемый ток КЗ 400 А: k = 25 ≥ 10 — гарантированное мгновенное отключение. При токе КЗ 120 А (k = 7,5) автомат попадает в зону разброса: мгновенное отключение не гарантировано.</p>
+<p>При 64 А (k = 4) мгновенный расцепитель C не срабатывает — его порог выше 5·In, — и отключит тепловой расцепитель с выдержкой времени. Стандарт нормирует её только в испытательных точках: например, при 2,55·In — от 1 до 60 с для In ≤ 32 А.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему калькулятор не пишет время отключения в секундах?</h3><p>Стандарт не задаёт его формулой. Он нормирует только испытательные точки: 1,13·In, 1,45·In, 2,55·In и границы мгновенного расцепления. Время между ними определяется конструкцией конкретного автомата и берётся из его времятоковой кривой.</p><h3>Какой ток КЗ подставлять?</h3><p>Минимальный ожидаемый — в самой удалённой точке линии, при нагретых проводниках: например, из расчёта по петле фаза–PE. Измеренный прибором ток отражает условия замера, поэтому по нему калькулятор показывает зону справочно, без вывода. Максимальный ток КЗ здесь не подходит: он нужен для проверки отключающей способности, а не срабатывания.</p><h3>Почему C16 при токе 100 А может не отключиться мгновенно?</h3><p>Кратность 100 / 16 = 6,25 лежит между 5 и 10. Порог мгновенного расцепителя конкретного экземпляра C находится где-то в этом диапазоне; гарантия есть только от 10·In. Экземпляр с высоким порогом отключится тепловым расцепителем, то есть медленнее.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://protect.gost.ru/gost/details/8fcc0e72-206d-4876-a320-92f59b97a659" rel="nofollow noopener" target="_blank">ГОСТ IEC 60898-1-2020 (МЭК 60898-1:2019). Автоматические выключатели для защиты от сверхтоков бытового и аналогичного назначения. Часть 1</a> — Росстандарт — Редакция ГОСТ IEC 60898-1-2020 — действующая редакция, сменившая ГОСТ Р 50345-2010; сами диапазоны B/C/D и время-токовые точки между редакциями не менялись — раздел таблица 7 — время-токовые рабочие характеристики (1,13·In, 1,45·In, 2,55·In), диапазоны тока мгновенного расцепления B, C, D — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Fundamental_characteristics_of_a_circuit-breaker" rel="nofollow noopener" target="_blank">Fundamental characteristics of a circuit-breaker</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел Domestic breakers IEC 60898: B, C, D, 50·In для характеристики D — обращение 27.09.2026</li><li><a href="https://professional-electrician.com/technical/determining-selectivity-for-circuit-breakers-conforming-to-bs-en-60898/" rel="nofollow noopener" target="_blank">Determining selectivity for circuit-breakers conforming to BS EN 60898</a> — Professional Electrician &amp; Installer — Редакция онлайн-статья на дату обращения — раздел instantaneous operation — within 0.1 second, тип B: 3·In — тепловое, 5·In — мгновенное, между — любое — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Автомат с характеристикой B, C или D по ГОСТ IEC 60898-1-2020 / МЭК 60898-1; верхняя граница мгновенного расцепления — 5, 10 или 20·In, для D без подтверждения паспортом — 50·In.</li><li>Введён минимальный ожидаемый ток КЗ в конце защищаемой линии; по измеренному без поправки току вывод не делается.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не рассчитывает время отключения: для кратностей между испытательными точками время берут по кривой изготовителя.</li><li>Не проверяет требуемое время автоматического отключения для системы заземления.</li><li>Граница 20·In для D должна подтверждаться паспортом аппарата; без подтверждения выбирайте вариант с 50·In.</li><li>При токе не выше 1,13·In стандарт гарантирует только отсутствие отключения в течение условного времени, а не вообще.</li><li>Не применяется к автоматам с регулируемыми расцепителями и к номиналам свыше 125 А.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="tok-kz-petlya-faza-pe.html">Ток КЗ фаза–PE по длине и сечению линии</a></li><li><a href="tok-korotkogo-zamykaniya.html">Минимальный ток КЗ по конвенциональному методу</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+var LIM={B:[3,5],C:[5,10],D:[10,20],D50:[10,50]};
+function ge(a,b){return a>=b*(1-1e-12);}
+function gt(a,b){return a>b*(1+1e-12);}
+function calc(){
+var ik=P('ik'),inn=P('in'),t=S('tip'),lim=LIM[t];
+if(isNaN(ik)||isNaN(inn))return err('Введите ток КЗ и номинал автомата.');
+if(ik<=0||inn<=0)return err('Ток КЗ и номинал автомата должны быть больше нуля.');
+if(!isFinite(ik/inn))return err('Значения слишком велики для надёжного расчёта.');
+if(inn>125)return err('Номинал больше 125 А — вне области этого калькулятора: он рассчитан на модульные автоматы с характеристиками B, C, D.');
+var k=ik/inn,lo=lim[0],hi=lim[1],tc=inn<=63?'1 ч':'2 ч',t255=inn<=32?'60':'120';
+var zone,st,gar;
+if(ge(k,hi)){zone='Гарантированное мгновенное расцепление';st='Мгновенное отключение гарантировано характеристикой';
+ gar='При токе от '+hi+'·In стандарт требует расцепления быстрее 0,1 с.';}
+else if(gt(k,lo)){zone='Разброс электромагнитного расцепителя';st='Мгновенное отключение не гарантировано';
+ gar='Порог мгновенного расцепления конкретного экземпляра лежит где-то между '+lo+'·In и '+hi+'·In. Автомат может отключиться мгновенно, а может — только тепловым расцепителем с выдержкой времени.';}
+else if(ge(k,1.45)){zone='Тепловой расцепитель';st='Отключение с выдержкой времени';
+ gar='Мгновенный расцепитель при такой кратности не срабатывает: его порог лежит выше '+lo+'·In, а при '+lo+'·In стандарт требует, чтобы автомат не отключался быстрее 0,1 с. Отключит тепловой расцепитель: при 1,45·In, поданном сразу после прогрева током 1,13·In, — в пределах условного времени '+tc+', при 2,55·In из холодного состояния — за время от 1 до '+t255+' с.';}
+else if(gt(k,1.13)){zone='Между условными токами нерасцепления и расцепления';st='Отключение не гарантировано';
+ gar='Ток выше 1,13·In, но ниже 1,45·In: отключение в пределах условного времени '+tc+' стандарт не гарантирует.';}
+else{zone='Не выше условного тока нерасцепления 1,13·In';st='Не отключается в течение условного времени '+tc;
+ gar='При 1,13·In стандарт требует, чтобы автомат из холодного состояния не отключался в течение условного времени '+tc+'. Что будет после этого времени, стандарт не нормирует.';}
+var meas=S('iksrc')==='measured';
+if(meas)st='Недостаточно данных: ток КЗ измерен без поправки на худшие условия';
+var n=(meas?'Зона показана справочно: измеренный ток отражает напряжение сети и нагрев проводников в момент замера, и минимальный ток КЗ может оказаться меньше. Для вывода нужен минимальный расчётный ток. ':'')+gar+' Время отключения между испытательными точками стандарта берут по времятоковой кривой изготовителя. Подставляйте минимальный ожидаемый ток КЗ в конце линии.';
+if(t==='D')n+=' Граница 20·In для D должна подтверждаться паспортом аппарата: МЭК 60898 допускает для D и 50·In.';
+if(t==='D50')n+=' Верхняя граница D не подтверждена паспортом, поэтому взято 50·In, которое допускает МЭК 60898; большинство изготовителей укладываются в 20·In — проверьте паспорт.';
+out(row('Кратность тока Iкз/In',fmt(k,4))+
+row('Диапазон мгновенного расцепления '+(t==='D50'?'D':t),'свыше '+lo+'·In до '+hi+'·In ('+fmt(lo*inn,4)+'…'+fmt(hi*inn,4)+' А)')+
+row('Зона',zone)+
+row('Статус',st)+
+note(n));
+}
+
+</script>
+</body>
+</html>

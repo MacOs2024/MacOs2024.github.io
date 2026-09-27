@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Суммарный ток утечки нескольких потребителей на одном УЗО</title>
+<meta name="description" content="Сложение токов утечки нескольких электроприёмников и сети на одной линии УЗО: паспортные значения или оценка ПУЭ 7.1.83, сравнение с пределом ⅓·IΔn и двумя другими ориентирами.">
+<link rel="canonical" href="https://macos2024.github.io/summarnyy-tok-utechki-uzo.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Суммарный ток утечки нескольких потребителей на одном УЗО">
+<meta property="og:description" content="Сложение токов утечки нескольких электроприёмников и сети на одной линии УЗО: паспортные значения или оценка ПУЭ 7.1.83, сравнение с пределом ⅓·IΔn и двумя другими ориентирами.">
+<meta property="og:url" content="https://macos2024.github.io/summarnyy-tok-utechki-uzo.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Суммарный ток утечки нескольких потребителей на одном УЗО","url":"https://macos2024.github.io/summarnyy-tok-utechki-uzo.html","description":"Сложение токов утечки нескольких электроприёмников и сети на одной линии УЗО: паспортные значения или оценка ПУЭ 7.1.83, сравнение с пределом ⅓·IΔn и двумя другими ориентирами.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Суммарный ток утечки нескольких потребителей на одном УЗО","item":"https://macos2024.github.io/summarnyy-tok-utechki-uzo.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Где взять ток утечки прибора?","acceptedAnswer":{"@type":"Answer","text":"В паспорте, протоколе измерений или у изготовителя. Если данных нет, ПУЭ 7.1.83 разрешает оценку 0,4 мА на 1 А тока нагрузки. У техники с ЭМС-фильтрами и импульсными источниками фактическая утечка может отличаться от этой оценки, поэтому при сомнениях её измеряют."}},{"@type":"Question","name":"Почему не поставить УЗО на 100 мА, если утечка большая?","acceptedAnswer":{"@type":"Answer","text":"Если УЗО установлено для дополнительной защиты людей, его чувствительность не подбирают под утечку. При превышении предела линию делят на несколько групп со своими УЗО. Более грубая уставка допустима только там, где назначение защиты это позволяет, например у противопожарного УЗО."}},{"@type":"Question","name":"Нужно ли учитывать длину нулевого проводника?","acceptedAnswer":{"@type":"Answer","text":"Нет. ПУЭ 7.1.83 задаёт утечку сети по длине фазного проводника — 10 мкА на 1 м. Для разветвлённой группы суммируют длины всех фазных проводников за этим УЗО."}},{"@type":"Question","name":"Почему пределов три, а не один?","acceptedAnswer":{"@type":"Answer","text":"Это разные документы: ПУЭ 7.1.83 (треть IΔn), IEC 60364-5-53, пункт 531.3.2 (30 %), и практическая рекомендация Schneider Electric (0,25·IΔn). Для российской установки нормативным является ПУЭ; более строгие ориентиры полезны, когда утечки известны лишь приблизительно."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Суммарный ток утечки нескольких потребителей на одном УЗО</h1>
+<p class="intro">Для каждого прибора введите утечку из паспорта или замера. Если данных нет, укажите ток нагрузки прибора — калькулятор применит оценку ПУЭ 7.1.83: 0,4 мА на 1 А. Утечка самой сети добавляется по длине фазных проводников.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Суммарный ток утечки нескольких потребителей на одном УЗО</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_uzo"><label for="uzo">Номинальный отключающий дифференциальный ток УЗО IΔn</label><div class="fw"><select id="uzo"><option value="10">10 мА</option><option value="30" selected>30 мА</option><option value="100">100 мА</option><option value="300">300 мА</option></select></div></div><div class="f" id="f_c1"><label for="c1">Потребитель 1</label><div class="fw"><input id="c1" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><select id="c1_unit" class="u" aria-label="Единицы: Потребитель 1"><option value="1" selected>мА утечки</option><option value="0.4">А нагрузки</option></select></div><div class="hint">«мА утечки» — значение из паспорта или протокола измерения. «А нагрузки» — ток прибора, если утечка неизвестна: оценка ПУЭ 7.1.83, 0,4 мА на 1 А. Пустое поле не учитывается.</div></div><div class="f" id="f_c2"><label for="c2">Потребитель 2</label><div class="fw"><input id="c2" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="c2_unit" class="u" aria-label="Единицы: Потребитель 2"><option value="1">мА утечки</option><option value="0.4" selected>А нагрузки</option></select></div></div><div class="f" id="f_c3"><label for="c3">Потребитель 3</label><div class="fw"><input id="c3" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="пусто — не учитывается"><select id="c3_unit" class="u" aria-label="Единицы: Потребитель 3"><option value="1" selected>мА утечки</option><option value="0.4">А нагрузки</option></select></div></div><div class="f" id="f_c4"><label for="c4">Потребитель 4</label><div class="fw"><input id="c4" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="пусто — не учитывается"><select id="c4_unit" class="u" aria-label="Единицы: Потребитель 4"><option value="1" selected>мА утечки</option><option value="0.4">А нагрузки</option></select></div></div><div class="f" id="f_c5"><label for="c5">Потребитель 5</label><div class="fw"><input id="c5" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="пусто — не учитывается"><select id="c5_unit" class="u" aria-label="Единицы: Потребитель 5"><option value="1" selected>мА утечки</option><option value="0.4">А нагрузки</option></select></div></div><div class="f" id="f_l"><label for="l">Суммарная длина фазных проводников за УЗО</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">м</span></div><div class="hint">ПУЭ 7.1.83: 10 мкА на 1 м. Для разветвлённой группы — сумма длин всех фазных проводников; 0 — если утечку сети не учитывать</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Суммарный ток утечки нескольких потребителей на одном УЗО: как считается</h2>
+<div class="formula">Iут = ΣIут,i + 0,4 мА/А · ΣIнагр,j + 0,01 мА/м · L&nbsp;&nbsp;&nbsp;ПУЭ 7.1.83: Iут ≤ IΔn / 3</div>
+<p>ПУЭ 7.1.83 требует, чтобы суммарный ток утечки сети с учётом присоединяемых стационарных и переносных электроприёмников в нормальном режиме не превосходил трети номинального тока УЗО. Там же дана оценка на случай отсутствия данных: ток утечки электроприёмников — 0,4 мА на 1 А тока нагрузки, ток утечки сети — 10 мкА на 1 м длины фазного проводника.</p>
+<p>Калькулятор позволяет смешивать оба вида данных. Для прибора с известной утечкой (паспорт, протокол измерения) вводится её значение в миллиамперах, для остальных — ток нагрузки в амперах. Утечки складываются арифметически, как в ПУЭ. УЗО реагирует на векторную сумму токов, а модуль суммы не больше суммы модулей, поэтому арифметическое сложение не занижает результат — в том числе в трёхфазной линии, где утечки разных фаз частично компенсируются.</p>
+<p><b>Три ориентира запаса.</b> Кроме условия ПУЭ показаны ещё два предела из других документов. Они близки, но не совпадают, и подменять их друг другом нельзя:</p>
+<table class="t"><tr><th scope="col">Документ</th><th scope="col">Предел суммарной утечки</th><th scope="col">Для УЗО 30 мА</th></tr>
+<tr><td>ПУЭ 7.1.83</td><td>⅓·IΔn</td><td>10 мА</td></tr>
+<tr><td>IEC 60364-5-53, 531.3.2</td><td>30 % IΔn</td><td>9 мА</td></tr>
+<tr><td>Schneider Electric, практическая рекомендация</td><td>0,25·IΔn</td><td>7,5 мА</td></tr></table>
+<p>Нормативным для российских электроустановок остаётся условие ПУЭ; две другие строки показывают, насколько вывод чувствителен к выбору критерия. Запас нужен потому, что исправное УЗО может отключиться при дифференциальном токе от половины номинального: если естественная утечка подбирается к 0,5·IΔn, отключения становятся случайными.</p>
+<h2>Суммарный ток утечки нескольких потребителей на одном УЗО: пример расчёта</h2>
+<p>Линия с УЗО 30 мА: компьютер с паспортной утечкой 1 мА, стиральная машина без данных с током нагрузки 10 А и 30 м фазного проводника. Утечка машины по ПУЭ: 0,4 · 10 = 4 мА, утечка сети: 0,01 · 30 = 0,3 мА. Сумма — <b>5,3 мА</b>, или 17,67 % от IΔn: условие ПУЭ (не более 10 мА) выполняется, как и оба более строгих ориентира — 9 и 7,5 мА.</p>
+<p>Если на ту же линию добавить обогреватель без данных с током 12 А, прибавится 0,4 · 12 = 4,8 мА, и сумма составит <b>10,1 мА</b> — больше трети от 30 мА. Такую группу делят на две со своими УЗО.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Где взять ток утечки прибора?</h3><p>В паспорте, протоколе измерений или у изготовителя. Если данных нет, ПУЭ 7.1.83 разрешает оценку 0,4 мА на 1 А тока нагрузки. У техники с ЭМС-фильтрами и импульсными источниками фактическая утечка может отличаться от этой оценки, поэтому при сомнениях её измеряют.</p><h3>Почему не поставить УЗО на 100 мА, если утечка большая?</h3><p>Если УЗО установлено для дополнительной защиты людей, его чувствительность не подбирают под утечку. При превышении предела линию делят на несколько групп со своими УЗО. Более грубая уставка допустима только там, где назначение защиты это позволяет, например у противопожарного УЗО.</p><h3>Нужно ли учитывать длину нулевого проводника?</h3><p>Нет. ПУЭ 7.1.83 задаёт утечку сети по длине фазного проводника — 10 мкА на 1 м. Для разветвлённой группы суммируют длины всех фазных проводников за этим УЗО.</p><h3>Почему пределов три, а не один?</h3><p>Это разные документы: ПУЭ 7.1.83 (треть IΔn), IEC 60364-5-53, пункт 531.3.2 (30 %), и практическая рекомендация Schneider Electric (0,25·IΔn). Для российской установки нормативным является ПУЭ; более строгие ориентиры полезны, когда утечки известны лишь приблизительно.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://docs.cntd.ru/document/1200001642" rel="nofollow noopener" target="_blank">ПУЭ. Глава 7.1. Электроустановки жилых, общественных, административных и бытовых зданий</a> — Минэнерго России / нормативная база Техэксперт — Редакция 7-е издание — раздел 7.1.83 — обращение 27.09.2026</li><li>IEC 60364-5-53. Low-voltage electrical installations — Part 5-53 — International Electrotechnical Commission (IEC) — Редакция Ed. 4.0 (2019); формулировка сверена по вторичным цитатам пункта, включая BS 7671:2018, 531.3.2 — раздел 531.3.2 — накопленные токи утечки за УЗО не более 30 % IΔn — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Sensitivity_of_RCDs_to_disturbances" rel="nofollow noopener" target="_blank">Sensitivity of RCDs to disturbances</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел ограничение постоянной утечки 0,25·IΔn делением цепей, срабатывание УЗО в диапазоне 0,5·IΔn…IΔn — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Утечки складываются арифметически, как в ПУЭ 7.1.83; модуль векторной суммы не больше арифметической, поэтому результат не занижается.</li><li>Для приборов без данных применяется оценка ПУЭ 7.1.83: 0,4 мА на 1 А тока нагрузки.</li><li>L — суммарная длина всех фазных проводников за данным УЗО, а не длина трассы одной фазы.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не учитывает форму остаточного тока и выбор типа УЗО AC/A/F/B.</li><li>Не гарантирует отсутствия ложных срабатываний: фактические утечки проверяют измерением.</li><li>Не выбирает уставку УЗО и не проверяет селективность каскада УЗО.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="emkostnyy-tok-utechki.html">Оценка тока утечки по ПУЭ 7.1.83</a></li><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="kolcevoy-zazemlitel.html">Кольцевой заземлитель вокруг здания</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+var IDS=['c1','c2','c3','c4','c5'];
+function le(a,b){return a<=b*(1+1e-12);}
+function vrd(ok){return ok?'Выполняется':'Не выполняется';}
+function calc(){
+var idn=N(S('uzo')),l=P('l');
+if(isNaN(l))return err('Введите суммарную длину фазных проводников (0 — если утечку сети не учитывать).');
+if(l<0)return err('Длина фазных проводников не может быть отрицательной.');
+var known=0,est=0,nKnown=0,nEst=0;
+for(var k=0;k<IDS.length;k++){
+ var raw=String($(IDS[k]).value).trim();
+ if(raw==='')continue;
+ var v=N(raw);
+ if(isNaN(v))return err('Потребитель '+(k+1)+': введите число или оставьте поле пустым.');
+ if(v<0)return err('Потребитель '+(k+1)+': значение не может быть отрицательным.');
+ if(N(S(IDS[k]+'_unit'))===1){known+=v;nKnown++;}else{est+=0.4*v;nEst++;}
+}
+if(nKnown+nEst===0&&l===0)return err('Укажите хотя бы одного потребителя или длину фазных проводников.');
+var net=0.01*l,tot=known+est+net;
+if(!isFinite(tot))return err('Значения слишком велики для надёжного расчёта.');
+var pue=idn/3,iec=idn*3/10,se=idn/4,half=idn/2;
+var n;
+if(le(half,tot))n='Суммарная утечка не меньше 0,5·IΔn = '+fmt(half,4)+' мА: исправное УЗО может отключаться уже в нормальном режиме. Разделите нагрузку на несколько групп со своими УЗО.';
+else if(!le(tot,pue))n='Условие ПУЭ 7.1.83 не выполняется. Разделите нагрузку на несколько групп со своими УЗО или уточните утечки измерением. Повышать IΔn нельзя, если УЗО установлено для дополнительной защиты людей.';
+else n='Условие ПУЭ 7.1.83 выполняется'+(nEst||net>0?' по оценке':'')+'. Это не гарантирует отсутствия срабатываний: фактические утечки и форма остаточного тока определяются данными оборудования и измерением.';
+out(row('Утечка приборов по паспорту или замеру',fmt(known,5)+' мА ('+nKnown+' шт.)')+
+row('Утечка приборов по оценке ПУЭ (0,4 мА на 1 А)',fmt(est,5)+' мА ('+nEst+' шт.)')+
+row('Утечка сети (10 мкА на 1 м)',fmt(net,5)+' мА')+
+row('Суммарный ток утечки',fmt(tot,5)+' мА')+
+row('Доля от IΔn = '+fmt(idn,4)+' мА',fmt(100*tot/idn,4)+' %')+
+row('ПУЭ 7.1.83: не более ⅓·IΔn = '+fmt(pue,4)+' мА',vrd(le(tot,pue)))+
+row('IEC 60364-5-53, 531.3.2: не более 30 % IΔn = '+fmt(iec,4)+' мА',vrd(le(tot,iec)))+
+row('Рекомендация Schneider Electric: не более 0,25·IΔn = '+fmt(se,4)+' мА',vrd(le(tot,se)))+
+row('Статус',nEst?'Оценка: часть утечек принята по ПУЭ 7.1.83':(net>0?'Оценка: утечка сети принята по ПУЭ 7.1.83':'Расчёт по введённым значениям утечек'))+
+note(n));
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Кольцевой заземлитель вокруг здания — ВольтКальк</title>
+<meta name="description" content="Оценка сопротивления растеканию замкнутого горизонтального заземлителя, уложенного по периметру фундамента или вокруг здания, по приближённой формуле R ≈ 2ρ/L с численной проверкой её погрешности.">
+<link rel="canonical" href="https://macos2024.github.io/kolcevoy-zazemlitel.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Кольцевой заземлитель вокруг здания — ВольтКальк">
+<meta property="og:description" content="Оценка сопротивления растеканию замкнутого горизонтального заземлителя, уложенного по периметру фундамента или вокруг здания, по приближённой формуле R ≈ 2ρ/L с численной проверкой её погрешности.">
+<meta property="og:url" content="https://macos2024.github.io/kolcevoy-zazemlitel.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Кольцевой заземлитель вокруг здания","url":"https://macos2024.github.io/kolcevoy-zazemlitel.html","description":"Оценка сопротивления растеканию замкнутого горизонтального заземлителя, уложенного по периметру фундамента или вокруг здания, по приближённой формуле R ≈ 2ρ/L с численной проверкой её погрешности.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Кольцевой заземлитель вокруг здания","item":"https://macos2024.github.io/kolcevoy-zazemlitel.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Подходит ли формула для прямой полосы в траншее?","acceptedAnswer":{"@type":"Answer","text":"Нет. Источник приводит её для замкнутого контура по периметру здания. Для прямолинейного заземлителя сопротивление зависит ещё от глубины и ширины полосы, и для него используют другие формулы."}},{"@type":"Question","name":"Можно ли сложить кольцо и стержни как параллельные сопротивления?","acceptedAnswer":{"@type":"Answer","text":"Простое параллельное сложение может дать заниженное сопротивление: поля растекания близко расположенных электродов перекрываются. Для комбинированного заземлителя нужен проектный расчёт или измерение."}},{"@type":"Question","name":"Какое сопротивление нужно получить?","acceptedAnswer":{"@type":"Answer","text":"Требуемое значение задаёт проект по системе заземления и защитным устройствам. Калькулятор лишь сравнивает оценку с введённой целью."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Кольцевой заземлитель вокруг здания</h1>
+<p class="intro">Формула относится к <b>замкнутому контуру</b> из голого проводника в однородном грунте — по дну котлована под фундамент или вокруг существующего здания. Результат — оценка; готовый заземлитель обязательно измеряют.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Кольцевой заземлитель вокруг здания</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_grunt"><label for="grunt">Ориентир по грунту</label><div class="fw"><select id="grunt"><option value="50" selected>Плодородный влажный грунт (≈50 Ом·м)</option><option value="500">Сухой грунт / гравий (≈500 Ом·м)</option><option value="3000">Каменистый грунт / сухой песок (≈3000 Ом·м)</option></select></div></div><div class="f" id="f_rho"><label for="rho">Удельное сопротивление грунта ρ</label><div class="fw"><input id="rho" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">Ом·м</span></div><div class="hint">Лучше — по измерению или изысканиям; можно вписать своё значение</div></div><div class="f" id="f_zad"><label for="zad">Как задать длину контура</label><div class="fw"><select id="zad"><option value="ab" selected>Размеры прямоугольного контура a × b</option><option value="l">Длина замкнутого проводника L</option></select></div></div><div class="f" id="f_a"><label for="a">Сторона контура a</label><div class="fw"><input id="a" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_b"><label for="b">Сторона контура b</label><div class="fw"><input id="b" type="text" inputmode="decimal" autocomplete="off" value="8" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_l"><label for="l">Длина замкнутого проводника L</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="40" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_rt"><label for="rt">Заданная проектом цель</label><div class="fw"><input id="rt" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">Ом</span></div><div class="hint">Это не универсальная норма: значение задаётся проектом по системе заземления и защите</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Кольцевой заземлитель вокруг здания: как считается</h2>
+<div class="formula">R ≈ 2ρ / L&nbsp;&nbsp;&nbsp;L = 2 · (a + b) — для прямоугольного контура</div>
+<p>ρ — удельное сопротивление грунта, Ом·м; L — длина замкнутого проводника, м. Это приближение Schneider Electric для горизонтального заземлителя в виде кольца, уложенного по периметру котлована под фундамент. В поисковой выдаче формула источника свёрстана изображением и множитель 2 дословно не виден, поэтому его точность проверена независимо — численным расчётом (таблица ниже). Для существующих зданий тот же проводник укладывают вокруг наружных стен на глубину не менее 1 м.</p>
+<p><b>Условия укладки, на которых основана оценка.</b> Голый проводник должен быть в непосредственном контакте с грунтом, а не лежать в щебёночной или гравийной подготовке под бетон; при укладке в котлован — в грунте не менее чем на 50 см ниже этой подготовки. Ни заземлитель, ни вертикальные выпуски от него не должны касаться бетона фундамента.</p>
+<p><b>Кольцо и стержни.</b> Для вертикальных стержней тот же источник даёт R ≈ ρ/(n·L), где L — длина стержня (см. <a href="raschet-zazemleniya.html">расчёт заземления стержнями</a>). В формуле кольца L — длина всего контура, а коэффициент вдвое больше.</p>
+<table class="t"><tr><th scope="col">Длина контура L</th><th scope="col">ρ = 50 Ом·м</th><th scope="col">ρ = 100 Ом·м</th><th scope="col">ρ = 500 Ом·м</th></tr>
+<tr><td>20 м</td><td>5 Ом</td><td>10 Ом</td><td>50 Ом</td></tr>
+<tr><td>40 м</td><td>2,5 Ом</td><td>5 Ом</td><td>25 Ом</td></tr>
+<tr><td>60 м</td><td>1,67 Ом</td><td>3,33 Ом</td><td>16,67 Ом</td></tr></table>
+<p><b>В какую сторону ошибается формула.</b> Она не учитывает глубину укладки и толщину проводника, а сопротивление кольца растёт с его размером медленнее, чем 1/L. При проверке калькулятора 2ρ/L сравнили с численным расчётом прямоугольного контура в однородном грунте (метод моментов с зеркальным изображением; на круговом кольце он совпадает с классической формулой Дуайта в пределах 0,1 %). Проводник — от медного троса 25 мм² до полосы 40×4 мм, глубина 0,5–1 м, соотношение сторон от 1:1 до 3:1:</p>
+<table class="t"><tr><th scope="col">Длина контура L</th><th scope="col">Строгий расчёт относительно 2ρ/L</th></tr>
+<tr><td>20 м</td><td>от −15 до +5 %</td></tr>
+<tr><td>30 м</td><td>от −8 до +12 %</td></tr>
+<tr><td>40 м</td><td>от −3 до +17 %</td></tr>
+<tr><td>60 м</td><td>от +4 до +23 %</td></tr>
+<tr><td>100 м</td><td>от +12 до +31 %</td></tr>
+<tr><td>150 м</td><td>от +19 до +38 %</td></tr></table>
+<p>У маленького контура формула скорее завышает сопротивление, а у типичного дома с периметром от 40 м — <b>занижает</b>, и тем сильнее, чем длиннее контур. Поэтому калькулятор сравнивает с целью не только саму оценку, но и оценку, увеличенную на верхнюю границу этого занижения для ближайшей большей длины из таблицы расчёта. К прямоугольнику со сторонами длиннее 3:1 поправка не применяется: у вытянутого контура 30 × 1 м строгий расчёт даёт на 25–44 % больше формулы. В режиме «длина проводника» форма контура не задана, поэтому цель с учётом занижения калькулятор не подтверждает — для этого задайте стороны контура. Слоистость грунта, промерзание и высыхание сюда не входят: ρ берут по изысканиям или измерению, а готовый заземлитель проверяют прибором.</p>
+<h2>Кольцевой заземлитель вокруг здания: пример расчёта</h2>
+<p>Дом 12 × 8 м, контур по периметру: L = 2 · (12 + 8) = 40 м. При ρ = 100 Ом·м оценка R ≈ 2 · 100 / 40 = <b>5 Ом</b>; численный расчёт для того же контура даёт 4,9–5,7 Ом в зависимости от проводника и глубины. Чтобы получить 4 Ом в том же грунте, по формуле понадобился бы контур длиной 2 · 100 / 4 = <b>50 м</b>, а по численному расчёту — 51–60 м. В сухом грунте с ρ = 500 Ом·м тот же дом даст около <b>25 Ом</b>.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Подходит ли формула для прямой полосы в траншее?</h3><p>Нет. Источник приводит её для замкнутого контура по периметру здания. Для прямолинейного заземлителя сопротивление зависит ещё от глубины и ширины полосы, и для него используют другие формулы.</p><h3>Можно ли сложить кольцо и стержни как параллельные сопротивления?</h3><p>Простое параллельное сложение может дать заниженное сопротивление: поля растекания близко расположенных электродов перекрываются. Для комбинированного заземлителя нужен проектный расчёт или измерение.</p><h3>Какое сопротивление нужно получить?</h3><p>Требуемое значение задаёт проект по системе заземления и защитным устройствам. Калькулятор лишь сравнивает оценку с введённой целью.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enw/index.php?title=Installation_and_measurements_of_earth_electrodes&amp;oldid=29521" rel="nofollow noopener" target="_blank">Installation and measurements of earth electrodes</a> — Schneider Electric Electrical Installation Guide — Редакция редакция 15.08.2026, oldid=29521 — раздел Buried ring: приближённая формула сопротивления кольца по дну котлована (множитель 2 в поисковой выдаче не виден — проверен численным расчётом проекта), условия укладки кольцевого заземлителя, Influence of the type of soil — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Грунт однородный; значение ρ обосновано измерением или изысканиями.</li><li>Заземлитель — замкнутый контур из голого проводника в непосредственном контакте с грунтом.</li><li>Поправка на занижение формулы рассчитана для проводника от медного троса 25 мм² до полосы 40×4 мм, глубины 0,5–1 м и соотношения сторон до 3:1.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не учитывает глубину укладки, толщину проводника, слоистость грунта, промерзание и высыхание.</li><li>Поправка на занижение — результат численной проверки проекта для однородного грунта, а не данные источника; для более тонкого проводника, меньшей глубины или более вытянутого контура занижение больше.</li><li>Не рассчитывает совместную работу кольца со стержнями и фундаментными заземлителями.</li><li>Не определяет нормативно требуемое сопротивление: оно зависит от системы заземления и защитных устройств.</li><li>Результат не заменяет измерение готового заземлителя.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li><li><a href="sechenie-pen-provodnika.html">Сечение PEN-проводника до разделения (TN-C, TN-C-S)</a></li><li><a href="summarnyy-tok-utechki-uzo.html">Суммарный ток утечки нескольких потребителей на одном УЗО</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+var DMAX=[[15,0],[20,5],[25,9],[30,12],[40,17],[50,20],[60,23],[80,28],[100,31],[120,34],[150,38]];
+function dmax(L){for(var i=0;i<DMAX.length;i++){if(L<=DMAX[i][0]*(1+1e-12))return DMAX[i][1];}return null;}
+function sync(){var ab=S('zad')==='ab';hideF('a',!ab);hideF('b',!ab);hideF('l',ab);}
+function init(){$('grunt').addEventListener('change',function(){$('rho').value=S('grunt');});$('zad').addEventListener('change',sync);sync();}
+function calc(){
+var rho=P('rho'),rt=P('rt'),L,ab=S('zad')==='ab',far=false;
+if(isNaN(rho)||isNaN(rt))return err('Заполните удельное сопротивление грунта и цель проекта.');
+if(rho<=0||rt<=0)return err('Удельное сопротивление и цель должны быть больше нуля.');
+if(ab){var a=P('a'),b=P('b');
+ if(isNaN(a)||isNaN(b))return err('Введите обе стороны контура.');
+ if(a<=0||b<=0)return err('Стороны контура должны быть больше нуля.');
+ L=2*(a+b);far=Math.max(a,b)>3*Math.min(a,b)*(1+1e-12);}
+else{L=P('l');
+ if(isNaN(L))return err('Введите длину замкнутого проводника.');
+ if(L<=0)return err('Длина проводника должна быть больше нуля.');}
+var r=2*rho/L,need=2*rho/rt;
+if(!isFinite(r)||!isFinite(need)||!isFinite(L))return err('Значения слишком велики для надёжного расчёта.');
+var d=far?null:dmax(L),cmp,dt,n;
+if(far)dt='не оценивалось: стороны контура длиннее 3:1';
+else if(d===null)dt='не оценивалось: контур длиннее 150 м';
+else if(d===0)dt='нет: для контура до 15 м формула скорее завышает R';
+else dt='до '+d+' %';
+if(!ab&&d!==null)dt+=' — при сторонах не длиннее 3:1';
+if(r>rt*(1+1e-12))cmp='оценка выше заданной цели';
+else if(d===null)cmp='оценка не выше цели, но погрешность формулы для такого контура не оценивалась';
+else if(r*(1+d/100)>rt*(1+1e-12))cmp='оценка не выше цели, но запас меньше возможного занижения — цель не подтверждена';
+else if(!ab)cmp='оценка не выше цели, но форма контура не задана — чтобы учесть занижение формулы, задайте стороны';
+else cmp='не выше заданной цели и с учётом возможного занижения формулы';
+if(far)n='Для контура со сторонами длиннее 3:1 занижение формулы больше, чем в проверочной таблице, и калькулятор его не оценивает. ';
+else if(d===0)n='Для такого короткого контура формула скорее завышает сопротивление, то есть оценка с запасом. ';
+else if(d===null)n='Для контура длиннее 150 м занижение формулы может превышать 38 %, и калькулятор эту погрешность не оценивает. ';
+else n='Для контура такой длины формула может занижать сопротивление: по численной проверке для однородного грунта — до '+d+' %. Длина контура для цели по формуле поэтому тоже может оказаться недостаточной. ';
+if(!ab)n+='Поправка рассчитана для контура со сторонами не длиннее 3:1; в режиме длины форма контура не задана, поэтому цель с учётом занижения не подтверждается. ';
+out(row('Длина замкнутого контура L',fmt(L,4)+' м')+
+row('Оценочное сопротивление R ≈ 2ρ/L',fmt(r,4)+' Ом')+
+row('Возможное занижение формулы (однородный грунт)',dt)+
+row('Сравнение с целью',fmt(r,4)+' Ом — '+cmp)+
+row('Длина контура для цели '+fmt(rt,4)+' Ом по формуле',fmt(need,4)+' м')+
+row('Статус','Оценка, требуется измерение')+
+note(n+'Слоистость грунта, промерзание и высыхание в эту поправку не входят, поэтому готовый заземлитель измеряют.'));
+}
+
+</script>
+</body>
+</html>

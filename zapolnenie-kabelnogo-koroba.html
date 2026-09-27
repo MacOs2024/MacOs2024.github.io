@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Заполнение кабельного короба по ПУЭ 2.1.61 — ВольтКальк</title>
+<meta name="description" content="Геометрическая проверка заполнения короба и кабель-канала по ПУЭ 2.1.61: сумма сечений кабелей по наружным диаметрам не более 35% сечения глухого короба и 40% — короба с открываемой крышкой.">
+<link rel="canonical" href="https://macos2024.github.io/zapolnenie-kabelnogo-koroba.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Заполнение кабельного короба по ПУЭ 2.1.61 — ВольтКальк">
+<meta property="og:description" content="Геометрическая проверка заполнения короба и кабель-канала по ПУЭ 2.1.61: сумма сечений кабелей по наружным диаметрам не более 35% сечения глухого короба и 40% — короба с открываемой крышкой.">
+<meta property="og:url" content="https://macos2024.github.io/zapolnenie-kabelnogo-koroba.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Заполнение кабельного короба по ПУЭ 2.1.61","url":"https://macos2024.github.io/zapolnenie-kabelnogo-koroba.html","description":"Геометрическая проверка заполнения короба и кабель-канала по ПУЭ 2.1.61: сумма сечений кабелей по наружным диаметрам не более 35% сечения глухого короба и 40% — короба с открываемой крышкой.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Заполнение кабельного короба по ПУЭ 2.1.61","item":"https://macos2024.github.io/zapolnenie-kabelnogo-koroba.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Можно ли применить эти 35% и 40% к лотку?","acceptedAnswer":{"@type":"Answer","text":"Нет. ПУЭ 2.1.61 говорит о коробах. Для лотков, то есть открытых конструкций по 2.1.11, ПУЭ 2.1.60 разрешает прокладку пучками и в несколько слоёв без процента заполнения. В американском NEC проценты для лотков заданы только для случая, когда на лотке одни многожильные кабели управления и сигнализации (NFPA 70, 392.22(A)(2) и (A)(4): 50% для лестничных и вентилируемых лотков, 40% для лотков со сплошным дном, глубина в расчёте не более 150 мм); для силовых кабелей там другая методика. Эти числа не заменяют ПУЭ."}},{"@type":"Question","name":"Подтверждает ли процент заполнения допустимый ток?","acceptedAnswer":{"@type":"Answer","text":"Нет. При многослойной прокладке и пучках допустимые токи снижают коэффициентами по ПУЭ 2.1.62. Их подбирают по способу прокладки, числу нагруженных жил и расположению пучков — например, в калькуляторе поправочных коэффициентов."}},{"@type":"Question","name":"Как считать плоский кабель?","acceptedAnswer":{"@type":"Answer","text":"Калькулятор рассчитан на круглые кабели: ПУЭ считает площадь по наружному диаметру. Для плоского кабеля консервативно подставляйте большую сторону его сечения как диаметр — это допущение калькулятора, а не текст ПУЭ."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Заполнение кабельного короба по ПУЭ 2.1.61</h1>
+<p class="intro">ПУЭ 2.1.61 задаёт предел заполнения только для <b>коробов</b>: 35% сечения в свету для глухих и 40% для коробов с открываемыми крышками. Для открытых лотков ПУЭ процента заполнения не устанавливает.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Заполнение кабельного короба по ПУЭ 2.1.61</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_tip"><label for="tip">Тип короба по ПУЭ 2.1.10</label><div class="fw"><select id="tip"><option value="40" selected>С открываемой крышкой — предел 40%</option><option value="35">Глухой: сплошные стенки со всех сторон, без крышек — предел 35%</option></select></div></div><div class="f" id="f_w"><label for="w">Внутренняя ширина короба</label><div class="fw"><input id="w" type="text" inputmode="decimal" autocomplete="off" value="40" placeholder=""><span class="u">мм</span></div><div class="hint">Размер в свету, между стенками. Если в паспорте указаны наружные размеры, внутренние меньше на толщину стенок</div></div><div class="f" id="f_h"><label for="h">Внутренняя высота короба</label><div class="fw"><input id="h" type="text" inputmode="decimal" autocomplete="off" value="25" placeholder=""><span class="u">мм</span></div><div class="hint">Для короба с перегородками вводите размеры отсека, в котором лежат кабели</div></div><div class="f" id="f_n1"><label for="n1">Кабелей группы 1</label><div class="fw"><input id="n1" type="text" inputmode="decimal" autocomplete="off" value="4" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_d1"><label for="d1">Наружный диаметр кабеля группы 1</label><div class="fw"><input id="d1" type="text" inputmode="decimal" autocomplete="off" value="7" placeholder=""><span class="u">мм</span></div><div class="hint">По оболочке, как указано у изготовителя кабеля</div></div><div class="f" id="f_n2"><label for="n2">Кабелей группы 2</label><div class="fw"><input id="n2" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">шт.</span></div><div class="hint">Необязательно: кабели другого диаметра в том же коробе</div></div><div class="f" id="f_d2"><label for="d2">Наружный диаметр кабеля группы 2</label><div class="fw"><input id="d2" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="например, 5"><span class="u">мм</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Заполнение кабельного короба по ПУЭ 2.1.61: как считается</h2>
+<div class="formula">Sкороба = ширина · высота (в свету)&nbsp;&nbsp;&nbsp;Sкабелей = Σ n · π · d² / 4<br>Заполнение = Sкабелей / Sкороба · 100% ≤ 35% (глухой) или 40% (с открываемой крышкой)</div>
+<p>ПУЭ 2.1.61 разрешает прокладывать провода и кабели в коробах многослойно, упорядоченно или россыпью, но ограничивает сумму их сечений, рассчитанных по наружным диаметрам с изоляцией и наружными оболочками: не более <b>35%</b> сечения короба в свету для глухих коробов и не более <b>40%</b> — для коробов с открываемыми крышками.</p>
+<p>Какой предел брать, подсказывает ПУЭ 2.1.10: короба бывают глухими или с открываемыми крышками, со сплошными или перфорированными стенками и крышками, а глухие должны иметь только сплошные стенки со всех сторон и не иметь крышек. Кабель-канал со съёмной крышкой относится к коробам с открываемыми крышками.</p>
+<table class="t"><tr><th scope="col">Тип короба</th><th scope="col">Предел заполнения</th></tr>
+<tr><td>С открываемой крышкой</td><td>40% сечения в свету</td></tr>
+<tr><td>Глухой: сплошные стенки, без крышек</td><td>35% сечения в свету</td></tr></table>
+<p><b>Сечение в свету</b> — внутреннее: ширина и высота между стенками. Скругления углов, рёбра и защёлки крышки его уменьшают; если изготовитель указывает полезное сечение, ориентируйтесь на него.</p>
+<p><b>Лотки.</b> Лоток по ПУЭ 2.1.11 — открытая конструкция. Для лотков ПУЭ 2.1.60 допускает прокладку вплотную пучками различной формы, в том числе в несколько слоёв, со скреплением проводов и кабелей каждого пучка, но процента заполнения не задаёт. Поэтому лотки этот калькулятор не проверяет.</p>
+<p><b>Ток.</b> Процент заполнения — только геометрия. Допустимые длительные токи проводов и кабелей, проложенных пучками или многослойно, принимают со снижающими коэффициентами по ПУЭ 2.1.62, и этот расчёт их не определяет.</p>
+<h2>Заполнение кабельного короба по ПУЭ 2.1.61: пример расчёта</h2>
+<p>Кабель-канал с крышкой, внутреннее сечение 40 × 25 мм, четыре кабеля диаметром 7 мм. Сечение короба — 1000 мм², кабели занимают 4 · π · 7² / 4 ≈ 153,9 мм², то есть <b>15,39%</b> при пределе 40%. По пределу заполнения 40% в такой короб можно уложить до <b>10</b> кабелей этого диаметра: 400 / 38,48 ≈ 10,39. Для глухого короба того же сечения предел 35% дал бы не больше 9.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Можно ли применить эти 35% и 40% к лотку?</h3><p>Нет. ПУЭ 2.1.61 говорит о коробах. Для лотков, то есть открытых конструкций по 2.1.11, ПУЭ 2.1.60 разрешает прокладку пучками и в несколько слоёв без процента заполнения. В американском NEC проценты для лотков заданы только для случая, когда на лотке одни многожильные кабели управления и сигнализации (NFPA 70, 392.22(A)(2) и (A)(4): 50% для лестничных и вентилируемых лотков, 40% для лотков со сплошным дном, глубина в расчёте не более 150 мм); для силовых кабелей там другая методика. Эти числа не заменяют ПУЭ.</p><h3>Подтверждает ли процент заполнения допустимый ток?</h3><p>Нет. При многослойной прокладке и пучках допустимые токи снижают коэффициентами по ПУЭ 2.1.62. Их подбирают по способу прокладки, числу нагруженных жил и расположению пучков — например, в калькуляторе поправочных коэффициентов.</p><h3>Как считать плоский кабель?</h3><p>Калькулятор рассчитан на круглые кабели: ПУЭ считает площадь по наружному диаметру. Для плоского кабеля консервативно подставляйте большую сторону его сечения как диаметр — это допущение калькулятора, а не текст ПУЭ.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://docs.cntd.ru/document/1200001622" rel="nofollow noopener" target="_blank">ПУЭ. Глава 2.1. Электропроводки</a> — Правила устройства электроустановок / нормативная база Техэксперт — Редакция шестое издание — раздел 2.1.10 — короб; глухие короба, 2.1.11 — лоток, 2.1.60 — прокладка пучками на лотках, 2.1.61 — 35% и 40% сечения короба в свету, 2.1.62 — снижающие коэффициенты для пучков и многослойной прокладки — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Кабели круглые; площадь каждого считается по наружному диаметру с изоляцией и оболочкой, как требует ПУЭ 2.1.61.</li><li>Сечение короба в свету — произведение внутренних ширины и высоты.</li></ul><p><b>Границы применимости:</b></p><ul><li>Геометрическая проверка: не определяет допустимый длительный ток (ПУЭ 2.1.62), нагрев, допустимость совместной прокладки цепей и условия затяжки.</li><li>Лотки и другие открытые конструкции не проверяются: для них ПУЭ 2.1.60 процента заполнения не задаёт.</li><li>Скругления, рёбра и защёлки уменьшают сечение в свету; при наличии полезного сечения по паспорту ориентируйтесь на него.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="zapolnenie-montazhnoy-korobki.html">Заполнение монтажной коробки по NEC 314.16</a></li><li><a href="zapolnenie-truby-kabelem.html">Геометрическая проверка заполнения трубы по NEC</a></li><li><a href="koefficienty-prokladki.html">Поправочные коэффициенты для тока кабеля</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function opt(id){var el=$(id),s=el?String(el.value).trim():'';return s===''?null:N(s);}
+function calc(){
+var lim=N(S('tip')),w=P('w'),h=P('h'),n1=P('n1'),d1=P('d1');
+if([w,h,n1,d1].some(isNaN))return err('Заполните внутренние размеры короба, число и диаметр кабелей группы 1.');
+if(!(w>0&&h>0&&d1>0)||!isFinite(w)||!isFinite(h)||!isFinite(d1))return err('Размеры короба и диаметр кабеля должны быть больше нуля.');
+if(!Number.isSafeInteger(n1)||n1<1)return err('Число кабелей группы 1 — целое положительное число.');
+var n2=opt('n2'),d2=opt('d2');
+if(n2===null)n2=0;
+if(isNaN(n2)||!Number.isSafeInteger(n2)||n2<0)return err('Число кабелей группы 2 — целое неотрицательное число или пустое поле.');
+if(d2!==null&&isNaN(d2))return err('Диаметр кабеля группы 2 должен быть числом.');
+if(n2>0&&(d2===null||!(d2>0)||!isFinite(d2)))return err('Для группы 2 укажите наружный диаметр больше нуля.');
+var mn=Math.min(w,h);
+if(d1>mn||(n2>0&&d2>mn))return err('Кабель не помещается: его диаметр больше меньшей внутренней стороны короба.');
+var s=w*h,a1=Math.PI*d1*d1/4,a2=n2>0?Math.PI*d2*d2/4:0,tot=n1*a1+n2*a2,f=100*tot/s,allow=lim/100*s;
+if(![s,tot,f,allow].every(isFinite))return err('Размеры слишком велики для надёжного расчёта.');
+var ok=tot<=allow*(1+1e-12);
+var r=row('Сечение короба в свету',fmt(s,5)+' мм²')+
+row('Площадь кабелей по наружным диаметрам',fmt(tot,5)+' мм²')+
+row('Коэффициент заполнения',fmt(f,4)+' %')+
+row('Предел ПУЭ 2.1.61',lim+' %')+
+row('Допустимая площадь кабелей',fmt(allow,5)+' мм²');
+if(n2===0){
+ r+=row('Максимум кабелей этого диаметра',Math.floor(allow/a1*(1+1e-12))+' шт.');
+}else{
+ var rest=allow-tot;
+ r+=row(ok?'Резерв площади до предела':'Превышение предела',fmt(Math.abs(rest),5)+' мм²');
+ if(ok)r+=row('Ещё кабелей группы 1 до предела',Math.max(0,Math.floor(rest/a1*(1+1e-12)))+' шт.');
+}
+r+=row('Вердикт',ok?'Укладывается в предел ПУЭ 2.1.61':'Предел ПУЭ 2.1.61 превышен')+
+note('Проверка геометрическая: сумма площадей кабелей по наружным диаметрам против '+lim+'% сечения короба в свету. Допустимый длительный ток при многослойной прокладке снижают коэффициентами по ПУЭ 2.1.62 — их этот расчёт не определяет, как и допустимость совместной прокладки цепей и условия затяжки.');
+out(r);
+}
+
+</script>
+</body>
+</html>
