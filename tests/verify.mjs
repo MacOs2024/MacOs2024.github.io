@@ -1153,6 +1153,7 @@ await calculate("vybor-difavtomata.html", { p: "3,5", iz: "19", isc: "7", icn: "
 await calculate("vybor-difavtomata.html", { faza: "3", p: "12", u: "380", c: "0,9", iz: "25", isc: "3", icn: "4,5", nz: "fire", load: "b" }, ["Расчётный ток IB20,3 А", "Кандидат по номиналу In25 А", "20,3 ≤ 25 ≤ 25 А — выполняется", "4,5 ≥ 3 кА — выполняется", "Уставка IΔnне более 300 мА", "Минимальный тип по форме токаB", "СтатусБазовые условия выполняются"], "boundary");
 await calculate("vybor-difavtomata.html", { p: "1,5", u: "230", c: "0,8", load: "f" }, ["Расчётный ток IB8,15 А", "Кандидат по номиналу In10 А", "Минимальный тип по форме токаF", "СтатусНедостаточно данных"]);
 await calculate("vybor-difavtomata.html", { p: "1", load: "ac" }, ["Минимальный тип по форме токаAC"]);
+await calculate("vybor-difavtomata.html", { p: "7,4", iz: "40", isc: "3", icn: "6", load: "ev" }, ["Расчётный ток IB33,6 А", "Кандидат по номиналу In40 А", "40 ≤ 40 А — выполняется", "Защита зарядной точки EVУЗО типа B либо типа A с отключением при постоянной утечке более 6 мА", "СтатусБазовые условия выполняются", "п. 722.531.2.101", "RDC-DD по IEC 62955"]);
 await calculate("vybor-difavtomata.html", { p: "20" }, ["больше 63 А"], "boundary");
 await calculate("vybor-difavtomata.html", { p: "3,5", c: "1,2" }, ["cos φ должен быть"], "boundary");
 await calculate("vybor-difavtomata.html", { p: "3,5", iz: "19abc", isc: "1" }, ["Iz и ток КЗ должны быть числами"], "boundary");
@@ -1175,7 +1176,8 @@ await calculate("dlina-kabelya-po-toku-kz.html", {}, ["Ток срабатыва
 await calculate("dlina-kabelya-po-toku-kz.html", { l: "50" }, ["Фактическая длина L50 м", "Запас Lmax / L1,222", "СтатусУсловие метода выполняется"]);
 await calculate("dlina-kabelya-po-toku-kz.html", { l: "61,2" }, ["СтатусУсловие метода не выполняется"]);
 await calculate("dlina-kabelya-po-toku-kz.html", { u: "230", mat: "0.036", sph: "16", spe: "16", dev: "10", inn: "32" }, ["Ток срабатывания Ia320 А", "Удельное сопротивление ρ0,036 Ом·мм²/м", "Предельная длина Lmax127,78 м", "Предельное сопротивление петли 0,8·U₀ / Ia575 мОм"]);
-await calculate("dlina-kabelya-po-toku-kz.html", { sph: "16", spe: "10", dev: "20", inn: "25" }, ["Ток срабатывания Ia500 А (20·In", "Отношение сечений m = Sф / SPE1,6", "Предельная длина Lmax96,274 м", "352 мОм"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { sph: "16", spe: "10", dev: "20", inn: "25" }, ["Ток срабатывания Ia500 А (20·In", "Отношение сечений m = Sф / SPE1,6", "Предельная длина Lmax96,274 м", "352 мОм", "допускает и верхнюю границу 50·In"]);
+await calculate("dlina-kabelya-po-toku-kz.html", { l: "60" }, ["Запас Lmax / L1,019", "СтатусУсловие метода выполняется"]);
 await calculate("dlina-kabelya-po-toku-kz.html", { dev: "5", inn: "16" }, ["Ток срабатывания Ia80 А (5·In", "Предельная длина Lmax122,22 м"]);
 await calculate("dlina-kabelya-po-toku-kz.html", { dev: "im", im: "1000", sph: "50", spe: "25" }, ["Ток срабатывания Ia1200 А (Im + 20% допуска)", "Отношение сечений m = Sф / SPE2", "Предельная длина Lmax108,64 м", "146,7 мОм"]);
 await calculate("dlina-kabelya-po-toku-kz.html", { dev: "ia", ia: "100", sph: "1,5", spe: "1,5" }, ["Ток срабатывания Ia100 А (задан вручную)", "Предельная длина Lmax58,667 м", "1,76 Ом"]);
@@ -1213,6 +1215,23 @@ await calculate("dlina-kabelya-po-toku-kz.html", { dev: "im", im: "" }, ["Вве
   check(u.value === "220", "vybor-difavtomata: одна фаза не вернула 220 В");
   dom.window.close();
 }
+{
+  kind = "functional";
+  const dom = await load("vybor-difavtomata.html");
+  const { document } = dom.window;
+  setValues(document, { p: "7,4", load: "ev" });
+  document.getElementById("go").click();
+  await new Promise(resolve => dom.window.setTimeout(resolve, 0));
+  const res = document.getElementById("res").textContent;
+  check(/Защита зарядной точки EV/.test(res) && !/Минимальный тип по форме тока/.test(res),
+    "vybor-difavtomata: для EV тип B нельзя называть минимальным — допустим и тип A с отключением постоянной утечки 6 мА");
+  setValues(document, { load: "b" });
+  document.getElementById("go").click();
+  await new Promise(resolve => dom.window.setTimeout(resolve, 0));
+  check(!/722\.531\.2\.101/.test(document.getElementById("res").textContent),
+    "vybor-difavtomata: требование к зарядной точке EV выводится для привода или PV-инвертора");
+  dom.window.close();
+}
 
 // --- data_i.py: ток утечки группы, сечение PEN, зона срабатывания B/C/D,
 // ток КЗ петля фаза-PE (+ метод композиции), кольцевой заземлитель ---
@@ -1224,6 +1243,7 @@ await calculate("summarnyy-tok-utechki-uzo.html", { c1: "3,5", c2: "3,5", c2_uni
 await calculate("summarnyy-tok-utechki-uzo.html", { uzo: "10", c1: "2,5", c2: "2,5", c2_unit: "1", l: "0" }, ["Суммарный ток утечки5 мА", "ПУЭ 7.1.83: не более ⅓·IΔn = 3,333 мАНе выполняется", "не меньше 0,5·IΔn = 5 мА"], "boundary");
 await calculate("summarnyy-tok-utechki-uzo.html", { c1: "10", c1_unit: "1", c2: "", l: "0" }, ["Суммарный ток утечки10 мА", "СтатусРасчёт по введённым значениям утечек"]);
 await calculate("summarnyy-tok-utechki-uzo.html", { c1: "10", c1_unit: "0.4", c2: "", l: "0" }, ["Суммарный ток утечки4 мА", "СтатусОценка: часть утечек принята по ПУЭ 7.1.83"]);
+await calculate("summarnyy-tok-utechki-uzo.html", { c1: "1", c1_unit: "1", c2: "2", c2_unit: "1", l: "30" }, ["Утечка сети (10 мкА на 1 м)0,3 мА", "Суммарный ток утечки3,3 мА", "СтатусОценка: утечка сети принята по ПУЭ 7.1.83", "Условие ПУЭ 7.1.83 выполняется по оценке"]);
 await invalid("summarnyy-tok-utechki-uzo.html", { c1: "-1" }, "Потребитель 1: значение не может быть отрицательным");
 await invalid("summarnyy-tok-utechki-uzo.html", { c2: "abc" }, "Потребитель 2: введите число или оставьте поле пустым");
 await invalid("summarnyy-tok-utechki-uzo.html", { c1: "", c2: "", l: "0" }, "Укажите хотя бы одного потребителя");
@@ -1259,27 +1279,68 @@ await invalid("zona-srabatyvaniya-avtomata.html", { in: "160" }, "Номинал
 await invalid("zona-srabatyvaniya-avtomata.html", { ik: "" }, "Введите ток КЗ и номинал автомата");
 await invalid("zona-srabatyvaniya-avtomata.html", { ik: "1e308", in: "1e-308" }, "слишком велики");
 
-await calculate("tok-kz-petlya-faza-pe.html", {}, ["Сопротивление петли линии Zц (фаза + PE)0,54 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)340,7 А", "Порог гарантированного мгновенного расцепления Ia160 А (10·In)", "Запас Iкз / Ia2,13", "Предельная длина линии по этому условию63,89 м", "СтатусУсловие мгновенного расцепления выполняется"]);
-await calculate("tok-kz-petlya-faza-pe.html", { tip: "5" }, ["Порог гарантированного мгновенного расцепления Ia80 А (5·In)", "Предельная длина линии по этому условию127,8 м"]);
+await calculate("tok-kz-petlya-faza-pe.html", {}, ["Сопротивление петли линии Zц (фаза + PE)0,54 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)325,9 А", "Порог гарантированного мгновенного расцепления Ia160 А (10·In)", "Запас Iкз / Ia2,04", "Предельная длина линии по этому условию61,11 м", "СтатусУсловие мгновенного расцепления выполняется"]);
+await calculate("tok-kz-petlya-faza-pe.html", { tip: "5" }, ["Порог гарантированного мгновенного расцепления Ia80 А (5·In)", "Предельная длина линии по этому условию122,2 м"]);
+await calculate("tok-kz-petlya-faza-pe.html", { tip: "20" }, ["Порог гарантированного мгновенного расцепления Ia320 А (20·In)", "Запас Iкз / Ia1,02", "Предельная длина линии по этому условию30,56 м", "допускает и верхнюю границу 50·In"]);
 await calculate("tok-kz-petlya-faza-pe.html", { u: "225", sph: "4", spe: "4", l: "100" }, ["Сопротивление петли линии Zц (фаза + PE)1,125 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)160 А", "Предельная длина линии по этому условию100 м", "СтатусУсловие мгновенного расцепления выполняется"], "boundary");
 await calculate("tok-kz-petlya-faza-pe.html", { u: "225", sph: "4", spe: "4", l: "101" }, ["Ток КЗ в конце линии (0,8·U₀/Zц)158,4 А", "СтатусУсловие мгновенного расцепления не выполняется"], "boundary");
-await calculate("tok-kz-petlya-faza-pe.html", { mat: "al", sph: "16", spe: "16", l: "100", in: "63" }, ["Сопротивление петли линии Zц (фаза + PE)0,45 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)408,9 А", "Порог гарантированного мгновенного расцепления Ia630 А (10·In)", "Предельная длина линии по этому условию64,9 м", "СтатусУсловие мгновенного расцепления не выполняется"]);
-await calculate("tok-kz-petlya-faza-pe.html", { sph: "35", spe: "16", l: "100", in: "63" }, ["Сопротивление петли линии Zц (фаза + PE)0,2049 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)898 А", "Предельная длина линии по этому условию142,5 м", "СтатусУсловие мгновенного расцепления выполняется"]);
-await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "1", ik0_unit: "1000" }, ["Сопротивление сети до автомата U₀/I′0,23 Ом", "Ток КЗ в конце линии (метод композиции)298,7 А", "Напряжение в месте установки автомата при этом КЗ≈ 70,1 % U₀", "Предельная длина линии по этому условию67,08 м", "СтатусУсловие мгновенного расцепления выполняется", "было бы оптимистичным"]);
-await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "150", ik0_unit: "1" }, ["Ток КЗ в конце линии (метод композиции)110,9 А", "Предельная длина линии по этому условиюнет: ток КЗ на вводе не выше Ia", "СтатусУсловие мгновенного расцепления не выполняется"], "boundary");
+await calculate("tok-kz-petlya-faza-pe.html", { mat: "al", sph: "16", spe: "16", l: "100", in: "63" }, ["Сопротивление петли линии Zц (фаза + PE)0,45 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)391,1 А", "Порог гарантированного мгновенного расцепления Ia630 А (10·In)", "Предельная длина линии по этому условию62,08 м", "СтатусУсловие мгновенного расцепления не выполняется"]);
+await calculate("tok-kz-petlya-faza-pe.html", { sph: "35", spe: "16", l: "100", in: "63" }, ["Сопротивление петли линии Zц (фаза + PE)0,2049 Ом", "Ток КЗ в конце линии (0,8·U₀/Zц)858,9 А", "Предельная длина линии по этому условию136,3 м", "СтатусУсловие мгновенного расцепления выполняется"]);
+await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "1", ik0_unit: "1000", ik0src: "design" }, ["Сопротивление сети до автомата U₀/I′0,22 Ом", "Ток КЗ в конце линии (метод композиции)289,5 А", "Напряжение в месте установки автомата при этом КЗ≈ 71,1 % U₀", "Предельная длина линии по этому условию64,17 м", "СтатусУсловие мгновенного расцепления выполняется", "было бы оптимистичным"]);
+await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "1", ik0_unit: "1000" }, ["Ток КЗ в конце линии (метод композиции)289,5 А", "СтатусНедостаточно данных", "измерен без поправки на худшие условия"]);
+await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "150", ik0_unit: "1", ik0src: "design" }, ["Ток КЗ в конце линии (метод композиции)109,6 А", "Предельная длина линии по этому условиюнет: ток КЗ на вводе не выше Ia", "СтатусУсловие мгновенного расцепления не выполняется"], "boundary");
+await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "800", ik0_unit: "1", ik0src: "design" }, ["Сопротивление сети до автомата U₀/I′0,275 Ом", "Предельная длина линии по этому условию61,11 м"], "boundary");
+await calculate("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "400", ik0_unit: "1", ik0src: "design", l: "60" }, ["Сопротивление петли линии Zц (фаза + PE)1,08 Ом", "Ток КЗ в конце линии (метод композиции)135 А", "Предельная длина линии по этому условию45,83 м", "СтатусУсловие мгновенного расцепления не выполняется"]);
 await invalid("tok-kz-petlya-faza-pe.html", { l: "0" }, "Напряжение, длина линии и номинал должны быть больше нуля");
 await invalid("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "" }, "Введите ток однофазного КЗ в месте установки автомата");
 await invalid("tok-kz-petlya-faza-pe.html", { mode: "comp", ik0: "-1" }, "Ток КЗ в месте установки автомата должен быть больше нуля");
 await invalid("tok-kz-petlya-faza-pe.html", { u: "1e308", l: "1e-300" }, "слишком велики");
 
-await calculate("kolcevoy-zazemlitel.html", {}, ["Длина замкнутого контура L40 м", "Оценочное сопротивление R ≈ 2ρ/L5 Ом", "Сравнение с целью5 Ом — не выше заданной цели", "Длина контура для цели 10 Ом20 м", "СтатусОценка, требуется измерение"]);
-await calculate("kolcevoy-zazemlitel.html", { grunt: "500" }, ["Оценочное сопротивление R ≈ 2ρ/L25 Ом", "выше заданной цели", "Длина контура для цели 10 Ом100 м"]);
-await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "25", rho: "50", rt: "4" }, ["Длина замкнутого контура L25 м", "Оценочное сопротивление R ≈ 2ρ/L4 Ом", "Сравнение с целью4 Ом — не выше заданной цели", "Длина контура для цели 4 Ом25 м"], "boundary");
-await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "24", rho: "50", rt: "4" }, ["Оценочное сопротивление R ≈ 2ρ/L4,167 Ом", "Сравнение с целью4,167 Ом — выше заданной цели"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", {}, ["Длина замкнутого контура L40 м", "Оценочное сопротивление R ≈ 2ρ/L2,5 Ом", "Возможное занижение формулы (однородный грунт)до 17 %", "Сравнение с целью2,5 Ом — не выше заданной цели и с учётом возможного занижения формулы", "Длина контура для цели 10 Ом по формуле10 м", "СтатусОценка, требуется измерение"]);
+await calculate("kolcevoy-zazemlitel.html", { grunt: "500" }, ["Оценочное сопротивление R ≈ 2ρ/L25 Ом", "Сравнение с целью25 Ом — оценка выше заданной цели", "Длина контура для цели 10 Ом по формуле100 м"]);
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "25", rho: "50", rt: "4" }, ["Длина замкнутого контура L25 м", "Оценочное сопротивление R ≈ 2ρ/L4 Ом", "Возможное занижение формулы (однородный грунт)до 9 %", "Сравнение с целью4 Ом — оценка не выше цели, но запас меньше возможного занижения — цель не подтверждена", "Длина контура для цели 4 Ом по формуле25 м"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "24", rho: "50", rt: "4" }, ["Оценочное сопротивление R ≈ 2ρ/L4,167 Ом", "Сравнение с целью4,167 Ом — оценка выше заданной цели"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "15", rho: "50", rt: "6,8" }, ["Оценочное сопротивление R ≈ 2ρ/L6,667 Ом", "Возможное занижение формулы (однородный грунт)нет: для контура до 15 м формула скорее завышает R", "не выше заданной цели и с учётом возможного занижения формулы", "скорее завышает сопротивление"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "15,01", rho: "50", rt: "6,8" }, ["Возможное занижение формулы (однородный грунт)до 5 %", "запас меньше возможного занижения — цель не подтверждена"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { a: "12", b: "8", rho: "100", rt: "5,85" }, ["Оценочное сопротивление R ≈ 2ρ/L5 Ом", "Сравнение с целью5 Ом — не выше заданной цели и с учётом возможного занижения формулы"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { a: "12", b: "8", rho: "100", rt: "5,84" }, ["Сравнение с целью5 Ом — оценка не выше цели, но запас меньше возможного занижения — цель не подтверждена"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "150", rho: "100", rt: "5" }, ["Возможное занижение формулы (однородный грунт)до 38 %", "не выше заданной цели и с учётом возможного занижения формулы"], "boundary");
+await calculate("kolcevoy-zazemlitel.html", { zad: "l", l: "150,01", rho: "100", rt: "5" }, ["Возможное занижение формулы (однородный грунт)не оценивалось: контур длиннее 150 м", "погрешность формулы для такого контура не оценивалась", "может превышать 38 %"], "boundary");
 await invalid("kolcevoy-zazemlitel.html", { rho: "-1" }, "Удельное сопротивление и цель должны быть больше нуля");
 await invalid("kolcevoy-zazemlitel.html", { a: "0" }, "Стороны контура должны быть больше нуля");
 await invalid("kolcevoy-zazemlitel.html", { zad: "l", l: "" }, "Введите длину замкнутого проводника");
 await invalid("kolcevoy-zazemlitel.html", { rho: "1e308", zad: "l", l: "1e-300" }, "слишком велики");
+
+{
+  kind = "structural";
+  const text = file => fs.readFileSync(path.join(sourceDir, file), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  check(/питающиеся по однофазным ответвлениям от ВЛ/.test(text("sechenie-pen-provodnika.html")),
+    "sechenie-pen-provodnika: исключение ПУЭ 1.7.145 распространено на все частные дома — потеряно условие об однофазных ответвлениях от ВЛ");
+  check(/прогретый автомат/.test(text("zona-srabatyvaniya-avtomata.html")),
+    "zona-srabatyvaniya-avtomata: не сказано, что испытание при 1,45·In идёт сразу после 1,13·In, из нагретого состояния");
+  const loop = text("tok-kz-petlya-faza-pe.html");
+  check(!/уже не конвенциональный метод/.test(loop),
+    "tok-kz-petlya-faza-pe: подход калькулятора минимального тока КЗ объявлен «не конвенциональным методом»");
+  check(/I′ = 5·Ia/.test(loop), "tok-kz-petlya-faza-pe: нет условия, при котором методы дают одну предельную длину");
+  const ring = text("kolcevoy-zazemlitel.html");
+  check(!/как выше, так и ниже/.test(ring), "kolcevoy-zazemlitel: направление погрешности формулы скрыто");
+  check(/занижает/.test(ring) && /численн/.test(ring),
+    "kolcevoy-zazemlitel: не сказано, что для типичного дома формула занижает R, или не указан численный расчёт");
+}
+{
+  kind = "structural";
+  const dom = await load("tok-kz-petlya-faza-pe.html");
+  const { document, Event } = dom.window;
+  const visible = id => document.getElementById(`f_${id}`).style.display !== "none";
+  check(!visible("ik0") && !visible("ik0src"), "tok-kz-petlya-faza-pe: в конвенциональном режиме поля I′ должны быть скрыты");
+  const mode = document.getElementById("mode");
+  mode.value = "comp"; mode.dispatchEvent(new Event("change", { bubbles: true }));
+  check(visible("ik0") && visible("ik0src"), "tok-kz-petlya-faza-pe: в режиме композиции поля I′ должны быть видны");
+  check(Boolean(document.querySelector('a[href="dlina-kabelya-po-toku-kz.html"]')),
+    "tok-kz-petlya-faza-pe: нет ссылки на калькулятор максимальной длины линии");
+  dom.window.close();
+}
 
 {
   kind = "structural";
@@ -1295,8 +1356,15 @@ await invalid("kolcevoy-zazemlitel.html", { rho: "1e308", zad: "l", l: "1e-300" 
   check(/ПУЭ 7\.1\.73/.test(sel) && /таблиц[а-я]* селективности изготовителя/.test(sel), "selektivnost-uzo: нет ПУЭ 7.1.73 или оговорки о таблицах изготовителя");
   check(!/Селективность обеспечена|Селективно без оговорок/.test(sel), "selektivnost-uzo: категоричный вердикт селективности");
   const len = text("dlina-kabelya-po-toku-kz.html");
-  check(/граница самого калькулятора, а не цитата источника/.test(len), "dlina-kabelya-po-toku-kz: предел 120 мм² должен быть назван собственной границей калькулятора");
+  check(/источник считает такое приближение допустимым для сечений до 120 мм²/.test(len) && !/не цитата источника/.test(len),
+    "dlina-kabelya-po-toku-kz: предел 120 мм² взят у Schneider Electric (приближение без реактивного сопротивления), а не является собственной границей");
   check(!/0,1\s*с/.test(len), "dlina-kabelya-po-toku-kz: обещание конкретного времени отключения");
+  check(!/ровно предельное Z/.test(len), "dlina-kabelya-po-toku-kz: предел петли самой линии выдан за полное Z калькулятора минимального тока КЗ");
+  check(/I′ = 5·Ia/.test(len) && /оптимистичен/.test(len), "dlina-kabelya-po-toku-kz: не сказано, что при I′ < 5·Ia результат оптимистичен");
+  const dif = text("vybor-difavtomata.html");
+  check(/ГОСТ Р 50571\.7\.722-2017/.test(dif) && /722\.531\.2\.101/.test(dif),
+    "vybor-difavtomata: нет источника требования к УЗО зарядной точки EV");
+  check(!/По геометрии в такой короб/.test(duct), "zapolnenie-kabelnogo-koroba: предел ПУЭ выдан за геометрическую вместимость");
 }
 
 // --- data_j.py: многотарифный счётчик, нагрузка ввода дома, удлинитель на
