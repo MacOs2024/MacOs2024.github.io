@@ -1851,8 +1851,12 @@ await calculateWithout("obryv-pen.html", { set: "1", u0: "200", p1: "2,5", put: 
 await calculate("obryv-pen.html", { set: "1", u0: "200", p1: "2,501", put: "rz", rp: "8", r0: "8" }, ["Потенциал корпусов относительно удалённой земли50,01 В", "больше 50 В: ПУЭ 1.7.53"], "boundary");
 // Единицы: 2000 Вт — то же, что 2 кВт.
 await calculate("obryv-pen.html", { pa: "2000", pa_unit: "1", pb: "2", pc: "2" }, ["Смещение нейтрали нагрузки U_N′0 В"]);
-await calculate("obryv-pen.html", { u0: "1000" }, ["Смещение нейтрали нагрузки U_N′509,2 В"], "boundary");
-await invalid("obryv-pen.html", { u0: "1000,01" }, "не больше 1000 В");
+// Сети до 1 кВ: в трёхфазном режиме линейное √3·U₀ ≤ 1000 В, то есть U₀ ≤ 577,35 В;
+// смещение пропорционально U₀: 0,5092 · 577 = 293,8 В. У однофазного абонента — до 1000 В.
+await calculate("obryv-pen.html", { u0: "577" }, ["Смещение нейтрали нагрузки U_N′293,8 В (50,92 % U₀)", "Фаза C: напряжение на нагрузке800,7 В"], "boundary");
+await invalid("obryv-pen.html", { u0: "577,36" }, "U₀ не больше 577 В");
+await calculate("obryv-pen.html", { set: "1", u0: "1000" }, ["Потенциал N и PE абонента (корпусов) относительно нейтрали источника1000 В (100 % U₀)"], "boundary");
+await invalid("obryv-pen.html", { set: "1", u0: "1000,01" }, "U₀ не больше 1000 В");
 await invalid("obryv-pen.html", { pa: "", pb: "", pc: "" }, "Введите мощность нагрузки хотя бы одной фазы");
 await invalid("obryv-pen.html", { pa: "abc" }, "Фаза A: введите число или оставьте поле пустым");
 await invalid("obryv-pen.html", { pb: "-1" }, "Фаза B: мощность не может быть отрицательной");
