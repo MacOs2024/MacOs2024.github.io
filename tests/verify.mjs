@@ -95,7 +95,7 @@ const infoPages = ["privacy.html", "about.html"];
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
   .sort();
-check(htmlFiles.length === 116, `Ожидался 116 HTML-файлов, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 124, `Ожидался 124 HTML-файлов, найдено ${htmlFiles.length}`);
 
 // Совет закоротить заряженный конденсатор перемычкой, отвёрткой или
 // закороткой опасен: при запасённой энергии это даёт дугу и разбрызгивание
@@ -300,6 +300,9 @@ for (const file of htmlFiles) {
   }
   for (const anchor of document.querySelectorAll('a[href$=".html"]')) {
     const target = anchor.getAttribute("href");
+    // Внешний адрес источника тоже может оканчиваться на .html — это не
+    // локальный файл сайта, и проверять его существование на диске нельзя.
+    if (/^[a-z][a-z0-9+.-]*:/i.test(target)) continue;
     check(fs.existsSync(path.join(sourceDir, target)), `${file}: битая ссылка ${target}`);
   }
   dom.window.close();
@@ -1100,7 +1103,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 116, `В sitemap должно быть 116 URL (корень + about + 114 калькуляторов), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 124, `В sitemap должно быть 124 URL (корень + about + 122 калькулятора), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 
@@ -1473,6 +1476,451 @@ await calculate("rozetochnaya-gruppa.html", { tip: "svet", inom: "10", u: "220",
 await calculate("rozetochnaya-gruppa.html", { p1: "-100" }, ["не может быть отрицательной"], "boundary");
 await calculate("rozetochnaya-gruppa.html", { p1: "", p2: "" }, ["Введите мощность хотя бы одного прибора"], "boundary");
 await calculate("rozetochnaya-gruppa.html", { p1: "1000", cos: "1,2" }, ["cos φ должен быть в диапазоне от 0 до 1"], "boundary");
+
+// ===========================================================================
+// Партия №2: 8 новых калькуляторов «Заземление и защита» (data_k.py и
+// data_l.py). Два параллельных агента, затем сверка при интеграции и
+// независимая проверка — детали в ENGINEERING_AUDIT.md. Ниже их сценарии
+// как есть: сначала data_k.py, затем data_l.py.
+// ===========================================================================
+
+// --- data_k.py (партия №2): система TT, горизонтальный и вертикальный
+// заземлители, первое замыкание в системе IT. Ожидаемые значения посчитаны
+// отдельно от кода страниц (scratchpad batch2_k/expected_k.py, с правилами
+// округления fmt) и сверены вручную; погрешность формул заземлителей —
+// численным расчётом (mom2_lib.py, domain_check_n320.py). ---
+
+// Система TT. Эталон 1 — таблица 41.5 BS 7671: 1667 Ом для 30 мА.
+// Эталон 2 — пример Schneider EIG: при RA = 20 Ом допустимо IΔn ≤ 50/20 = 2,5 А.
+await calculate("zazemlenie-tt-uzo.html", {}, ["при токе IΔn: RA·IΔn0,9 В", "Наибольшее допустимое RA = 50 В / IΔn1667 Ом", "Наибольший допустимый IΔn при этом RA = 50 В / RA1,667 А", "Запас RA,max / RA55,56", "СтатусНедостаточно данных: RA измерено без сезонной поправки", "может вырасти в 55,6 раза"]);
+await calculate("zazemlenie-tt-uzo.html", { idn: "0.3", ra: "20", rasrc: "worst" }, ["RA·IΔn6 В", "RA = 50 В / IΔn166,7 Ом", "IΔn при этом RA = 50 В / RA2,5 А", "Запас RA,max / RA8,333", "СтатусУсловие RA·IΔn ≤ 50 В выполняется"]);
+await calculate("zazemlenie-tt-uzo.html", { idn: "0.3", ra: "200", rasrc: "worst" }, ["RA·IΔn60 В", "IΔn при этом RA = 50 В / RA250 мА", "Превышение RA / RA,max1,2", "СтатусУсловие RA·IΔn ≤ 50 В не выполняется"]);
+await calculate("zazemlenie-tt-uzo.html", { idn: "0.01", ra: "4000", rasrc: "worst" }, ["RA = 50 В / IΔn5000 Ом", "RA·IΔn40 В", "СтатусУсловие RA·IΔn ≤ 50 В выполняется"]);
+await calculate("zazemlenie-tt-uzo.html", { ra: "45" }, ["RA·IΔn1,35 В", "Запас RA,max / RA37,04", "может вырасти в 37 раз", "СтатусНедостаточно данных"]);
+// Граница включается: 50 В — «выполняется», чуть больше — «не выполняется»,
+// и число на границе не округляется до ровно 50 В.
+await calculate("zazemlenie-tt-uzo.html", { idn: "1", ra: "50", rasrc: "worst" }, ["RA·IΔn50 В", "RA = 50 В / IΔn50 Ом", "СтатусУсловие RA·IΔn ≤ 50 В выполняется"], "boundary");
+await calculate("zazemlenie-tt-uzo.html", { idn: "0.5", ra: "100", rasrc: "worst" }, ["RA = 50 В / IΔn100 Ом", "RA·IΔn50 В", "СтатусУсловие RA·IΔn ≤ 50 В выполняется"], "boundary");
+await calculate("zazemlenie-tt-uzo.html", { idn: "0.1", ra: "500", rasrc: "worst" }, ["RA·IΔn50 В", "Запас RA,max / RA1", "СтатусУсловие RA·IΔn ≤ 50 В выполняется"], "boundary");
+await calculate("zazemlenie-tt-uzo.html", { idn: "0.1", ra: "500,01", rasrc: "worst" }, ["RA·IΔn50,001 В", "Превышение RA / RA,max1,00002", "СтатусУсловие RA·IΔn ≤ 50 В не выполняется"], "boundary");
+await calculate("zazemlenie-tt-uzo.html", { ra: "1666,66", rasrc: "worst" }, ["RA·IΔn49,9998 В", "СтатусУсловие RA·IΔn ≤ 50 В выполняется"], "boundary");
+await calculate("zazemlenie-tt-uzo.html", { ra: "1666,67", rasrc: "worst" }, ["RA·IΔn50,0001 В", "СтатусУсловие RA·IΔn ≤ 50 В не выполняется"], "boundary");
+// Замер без сезонной поправки: превышение — вывод есть (в худший сезон RA
+// не меньше), запас — вывода нет, даже ровно на границе.
+await calculate("zazemlenie-tt-uzo.html", { ra: "2000" }, ["RA·IΔn60 В", "СтатусУсловие RA·IΔn ≤ 50 В не выполняется", "Уже по замеру"]);
+await calculate("zazemlenie-tt-uzo.html", { idn: "0.1", ra: "500" }, ["RA·IΔn50 В", "СтатусНедостаточно данных: RA измерено без сезонной поправки", "RA уже на пределе"], "boundary");
+await calculate("zazemlenie-tt-uzo.html", { dev: "ocpd", ra: "не-число" }, ["СтатусНедостаточно данных: для автомата или предохранителя условие RA·IΔn неприменимо", "ПУЭ 1.7.59", "411.5.2"]);
+await invalid("zazemlenie-tt-uzo.html", { ra: "0" }, "Сопротивление RA должно быть больше нуля");
+await invalid("zazemlenie-tt-uzo.html", { ra: "-30" }, "Сопротивление RA должно быть больше нуля");
+await invalid("zazemlenie-tt-uzo.html", { ra: "30 Ом" }, "Введите сопротивление RA");
+await invalid("zazemlenie-tt-uzo.html", { ra: "1e-320" }, "вне диапазона надёжного расчёта");
+
+// Горизонтальный заземлитель: формула volt-spb/Барыбина ρ/(2πL)·ln(L²/(d·t)).
+// Эталон 1: полоса 40 мм (d = 20 мм), L = 10 м, t = 0,7 м: 1,59155·ln 7142,9 = 14,12 Ом
+// (численный расчёт 13,22 Ом — формула с запасом). Эталон 2: пруток 10 мм,
+// L = 20 м, t = 0,5 м: 0,79577·ln 80000 = 8,984 Ом (численный расчёт 8,467 Ом).
+await calculate("gorizontalnyy-zazemlitel.html", {}, ["Эквивалентный диаметр d20 мм (0,5·b)", "R = ρ/(2πL)·ln(L²/(d·t))14,12 Ом", "завышает R на 3,3–8,5 %", "Сравнение с целью14,12 Ом — выше заданной цели уже при этом ρ", "СтатусНедостаточно данных: ρ без сезонной поправки"]);
+await calculate("gorizontalnyy-zazemlitel.html", { prof: "round", d: "10", l: "20", t: "0,5", rhosrc: "worst" }, ["Эквивалентный диаметр d10 мм", "R = ρ/(2πL)·ln(L²/(d·t))8,984 Ом", "Сравнение с целью8,984 Ом — не выше заданной цели", "СтатусОценка, требуется измерение"]);
+await calculate("gorizontalnyy-zazemlitel.html", { rho: "3000", rhosrc: "worst" }, ["R = ρ/(2πL)·ln(L²/(d·t))423,7 Ом", "Сравнение с целью423,7 Ом — выше заданной цели", "СтатусОценка, требуется измерение"]);
+await calculate("gorizontalnyy-zazemlitel.html", { prof: "round", d: "10", l: "20", t: "0,5", rt: "9" }, ["8,984 Ом — не выше цели при этом ρ, но в сухой или морозный сезон ρ выше", "до цели ρ может вырасти в 1,002 раза", "СтатусНедостаточно данных: ρ без сезонной поправки"]);
+await calculate("gorizontalnyy-zazemlitel.html", { prof: "round", d: "10", l: "20", t: "0,5", rt: "8,985", rhosrc: "worst" }, ["8,984 Ом — не выше заданной цели"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { prof: "round", d: "10", l: "20", t: "0,5", rt: "8,984", rhosrc: "worst" }, ["8,9841 Ом — выше заданной цели"], "boundary");
+// Область применимости: при L < 5·t формула перестаёт давать запас
+// (численно: L = 2·t — занижение до 2,1 %, L = 1,5·t — до 8 %).
+await calculate("gorizontalnyy-zazemlitel.html", { l: "3,5" }, ["R = ρ/(2πL)·ln(L²/(d·t))30,8 Ом"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { l: "3,49" }, ["Длина меньше 5·t = 3,5 м", "занижает"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { prof: "round", d: "16", l: "100", t: "1", rhosrc: "worst" }, ["R = ρ/(2πL)·ln(L²/(d·t))2,124 Ом", "не выше заданной цели"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { l: "100,01", t: "1" }, ["Длина больше 100 м"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { prof: "round", d: "5", l: "1,5", t: "0,3", rt: "100" }, ["Эквивалентный диаметр d5 мм", "R = ρ/(2πL)·ln(L²/(d·t))77,6 Ом"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { prof: "round", d: "4,99", l: "1,5", t: "0,3" }, ["Диаметр вне проверенной области 5–30 мм"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { prof: "round", d: "30,01" }, ["Диаметр вне проверенной области 5–30 мм"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { b: "60", l: "10", t: "2" }, ["Эквивалентный диаметр d30 мм (0,5·b)", "R = ρ/(2πL)·ln(L²/(d·t))11,81 Ом"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { b: "60,01" }, ["Ширина полосы вне проверенной области 10–60 мм"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { b: "9,99" }, ["Ширина полосы вне проверенной области 10–60 мм"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { t: "0,29", l: "5" }, ["Глубина укладки вне проверенной области 0,3–2 м"], "boundary");
+await calculate("gorizontalnyy-zazemlitel.html", { t: "2,01", l: "20" }, ["Глубина укладки вне проверенной области 0,3–2 м"], "boundary");
+await invalid("gorizontalnyy-zazemlitel.html", { rho: "0" }, "Все значения должны быть больше нуля");
+await invalid("gorizontalnyy-zazemlitel.html", { rt: "-10" }, "Все значения должны быть больше нуля");
+await invalid("gorizontalnyy-zazemlitel.html", { l: "десять" }, "Заполните ρ, размер проводника");
+
+// Вертикальный заземлитель. Эталон 1: стержень 16 мм, L = 3 м, t0 = 0,5 м:
+// T = 2 м, 5,3052·(ln 375 + ½·ln 2,2) = 33,53 Ом (численный расчёт 31,74 Ом).
+// Эталон 2 — пример из выдачи: уголок 50 мм длиной 2,5 м, верх на 0,7 м:
+// d = 0,0475 м, t = 1,95 м → 31,76 Ом. Эталон 3 — формула Дуайта (BS 7430)
+// для стержня от поверхности: 5,3052·(ln 1500 − 1) = 33,49 Ом.
+await calculate("vertikalnyy-zazemlitel.html", {}, ["Эквивалентный диаметр d16 мм", "Глубина середины электрода T = t₀ + L/22 м", "Оценочное сопротивление R33,53 Ом", "Для сравнения: грубая оценка ρ/L33,33 Ом", "завышает R на 2,4–11,7 %", "Сравнение с целью33,53 Ом — выше заданной цели уже при этом ρ", "СтатусНедостаточно данных: ρ без сезонной поправки"]);
+await calculate("vertikalnyy-zazemlitel.html", { prof: "angle", b: "50", l: "2,5", t0: "0,7", rt: "40", rhosrc: "worst" }, ["Эквивалентный диаметр d47,5 мм (0,95·b)", "T = t₀ + L/21,95 м", "Оценочное сопротивление R31,76 Ом", "грубая оценка ρ/L40 Ом", "Сравнение с целью31,76 Ом — не выше заданной цели", "СтатусОценка, требуется измерение", "0,93–0,946·b"]);
+await calculate("vertikalnyy-zazemlitel.html", { t0: "0" }, ["T = t₀ + L/21,5 м", "Оценочное сопротивление R34,36 Ом", "По формуле Дуайта для стержня от поверхности (BS 7430)33,49 Ом", "Расхождение двух формул2,58 %", "формула Дуайта — на 0,4–2,2 %"]);
+await calculate("vertikalnyy-zazemlitel.html", { prof: "strip", b: "40", l: "2", t0: "0,5", rt: "50", rhosrc: "worst" }, ["Эквивалентный диаметр d20 мм (0,5·b)", "Оценочное сопротивление R44,92 Ом", "грубая оценка ρ/L50 Ом", "не выше заданной цели", "0,6–0,64·b"]);
+await calculate("vertikalnyy-zazemlitel.html", { rt: "34" }, ["33,53 Ом — не выше цели при этом ρ", "до цели ρ может вырасти в 1,01 раза", "СтатусНедостаточно данных: ρ без сезонной поправки"]);
+await calculate("vertikalnyy-zazemlitel.html", { rt: "33,54", rhosrc: "worst" }, ["33,53 Ом — не выше заданной цели"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { rt: "33,53", rhosrc: "worst" }, ["33,535 Ом — выше заданной цели"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { d: "8", l: "1", t0: "0", rt: "100" }, ["Оценочное сопротивление R96,62 Ом", "(BS 7430)94,02 Ом", "Расхождение двух формул2,76 %"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { d: "7,99" }, ["Эквивалентный диаметр d = 7,99 мм вне проверенной области 8–60 мм"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { d: "60", l: "10", t0: "2" }, ["Оценочное сопротивление R9,84 Ом", "T = t₀ + L/27 м"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { d: "60,01" }, ["вне проверенной области 8–60 мм"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { prof: "angle", b: "63,16" }, ["Эквивалентный диаметр d = 60,002 мм вне проверенной области 8–60 мм"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { l: "0,99" }, ["Длина электрода вне проверенной области 1–10 м"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { l: "10,01" }, ["Длина электрода вне проверенной области 1–10 м"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { t0: "2,01" }, ["Заглубление верхнего конца больше 2 м"], "boundary");
+await invalid("vertikalnyy-zazemlitel.html", { t0: "-0,01" }, "Заглубление верхнего конца не может быть отрицательным");
+await invalid("vertikalnyy-zazemlitel.html", { rho: "-100" }, "должны быть больше нуля");
+await invalid("vertikalnyy-zazemlitel.html", { d: "16мм" }, "Заполните ρ, размер электрода");
+
+// Система IT. Эталон 1: ток в месте замыкания равен утроенному ёмкостному
+// току фазы: 3·314,16·10⁻⁶·220 = 0,2073 А. Эталон 2 — пример Schneider EIG:
+// 3500 Ом на фазу при 230 В — 66 мА в норме, 66·√3 ≈ 114 мА в неповреждённых
+// фазах, сумма ≈ 197 мА; C = 1/(ω·3500) = 0,90946 мкФ → 3·230/3500 = 197,1 мА.
+await calculate("zamykanie-na-zemlyu-it.html", {}, ["Id ≈ 3·ω·C·U₀207,3 мА", "Ёмкостное сопротивление сети 1/(3·ω·C)1061 Ом", "RA·Id2,073 В", "RA = 50 В / Id241,1 Ом", "Запас RA,max / RA24,11", "Сравнение с 50 В по оценкене выше 50 В", "СтатусОценка, требуется измерение"]);
+await calculate("zamykanie-na-zemlyu-it.html", { c: "0,90946", u0: "230" }, ["Id ≈ 3·ω·C·U₀197,1 мА", "RA·Id1,971 В"]);
+await calculate("zamykanie-na-zemlyu-it.html", { wires: "4" }, ["Id ≈ 4·ω·C·U₀276,5 мА", "1/(4·ω·C)795,8 Ом", "RA·Id2,765 В"]);
+await calculate("zamykanie-na-zemlyu-it.html", { c: "1000", c_unit: "1e-09" }, ["Id ≈ 3·ω·C·U₀207,3 мА"]);
+await calculate("zamykanie-na-zemlyu-it.html", { c: "10", ra: "30" }, ["Id ≈ 3·ω·C·U₀2,073 А", "RA·Id62,2 В", "Сравнение с 50 В по оценкевыше 50 В", "СтатусОценка, требуется измерение", "RA составляет 28,3 % ёмкостного сопротивления"]);
+await calculate("zamykanie-na-zemlyu-it.html", { ra: "318,3" }, ["RA·Id66 В", "RA составляет 30 %", "СтатусОценка, требуется измерение"], "boundary");
+await calculate("zamykanie-na-zemlyu-it.html", { ra: "318,4" }, ["RA больше 0,3 ёмкостного сопротивления сети 1/(3·ω·C) = 1061 Ом"], "boundary");
+await calculate("zamykanie-na-zemlyu-it.html", { u0: "577" }, ["Id ≈ 3·ω·C·U₀543,8 мА"], "boundary");
+await calculate("zamykanie-na-zemlyu-it.html", { u0: "578" }, ["U₀ больше 577 В"], "boundary");
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", rasrc: "worst" }, ["Ток первого замыкания Id200 мА", "RA·Id2 В", "RA = 50 В / Id250 Ом", "Запас RA,max / RA25", "СтатусУсловие RA·Id ≤ 50 В выполняется"]);
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "500", ra: "100", rasrc: "worst" }, ["RA·Id50 В", "СтатусУсловие RA·Id ≤ 50 В выполняется"], "boundary");
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "500", ra: "100,01", rasrc: "worst" }, ["RA·Id50,01 В", "Превышение RA / RA,max1,0001", "СтатусУсловие RA·Id ≤ 50 В не выполняется"], "boundary");
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "measured", id: "200", rasrc: "worst" }, ["СтатусНедостаточно данных: Id измерен при текущей конфигурации сети", "может вырасти в 25 раз"]);
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200" }, ["СтатусНедостаточно данных: RA измерено без сезонной поправки"]);
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "measured", id: "200" }, ["СтатусНедостаточно данных: Id измерен при текущей конфигурации сети; RA измерено без сезонной поправки"]);
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "measured", id: "500", ra: "100" }, ["RA·Id50 В", "СтатусНедостаточно данных", "Значение уже на пределе"], "boundary");
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "measured", id: "1", id_unit: "1", ra: "60" }, ["Ток первого замыкания Id1 А", "RA·Id60 В", "СтатусУсловие RA·Id ≤ 50 В не выполняется", "Уже по этим данным"]);
+// Оговорки ПУЭ 1.7.104 — цитатой с условиями и без вердикта по ним.
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "20", id_unit: "1", ra: "2", rasrc: "worst" }, ["RA = 50 В / Id2,5 Ом", "СтатусУсловие RA·Id ≤ 50 В выполняется", "«Как правило, не требуется принимать значение сопротивления заземляющего устройства менее 4 Ом»"]);
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", ra: "8", rasrc: "worst" }, ["RA больше 4 Ом", "до 10 Ом", "не превышает 100 кВ·А, в том числе суммарная мощность работающих параллельно"]);
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", ra: "12", rasrc: "worst" }, ["RA больше 10 Ом", "о большем значении пункт не говорит"]);
+await invalid("zamykanie-na-zemlyu-it.html", { ra: "0" }, "Сопротивление RA должно быть больше нуля");
+await invalid("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "-5" }, "Ток Id должен быть больше нуля");
+await invalid("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "" }, "Введите ток первого замыкания Id");
+await invalid("zamykanie-na-zemlyu-it.html", { c: "0" }, "Ёмкость и напряжение должны быть больше нуля");
+await invalid("zamykanie-na-zemlyu-it.html", { u0: "220 В" }, "Введите ёмкость проводника");
+
+// Рискованный вердикт отдельно: «выполняется» не выдаётся ни по замеру без
+// поправки, ни по оценке через ёмкость; по оценке нет и «не выполняется».
+{
+  const verdictOf = async (file, values) => {
+    kind = "boundary"; recordScenario(file);
+    const dom = await load(file); setValues(dom.window.document, values);
+    dom.window.document.getElementById("go").click();
+    await new Promise(resolve => dom.window.setTimeout(resolve, 0));
+    const res = dom.window.document.getElementById("res").textContent.replace(/\s+/g, " ");
+    dom.window.close();
+    return res;
+  };
+  for (const values of [{}, { ra: "1" }, { idn: "1", ra: "0,5" }, { idn: "0.1", ra: "500" }]) {
+    const res = await verdictOf("zazemlenie-tt-uzo.html", values);
+    check(!/Условие RA·IΔn ≤ 50 В выполняется/.test(res) && /Недостаточно данных/.test(res),
+      `zazemlenie-tt-uzo: по RA без сезонной поправки выдан вывод «выполняется» (${JSON.stringify(values)})`);
+  }
+  for (const values of [{}, { c: "10", ra: "30" }, { c: "0,01", ra: "1", rasrc: "worst" }, { wires: "4", c: "5", ra: "40" }]) {
+    const res = await verdictOf("zamykanie-na-zemlyu-it.html", values);
+    check(!/Условие RA·Id ≤ 50 В (не )?выполняется/.test(res) && /Оценка, требуется измерение/.test(res),
+      `zamykanie-na-zemlyu-it: по оценке через ёмкость выдан нормативный вердикт (${JSON.stringify(values)})`);
+  }
+  for (const values of [{ idmode: "measured", id: "1", ra: "1", rasrc: "worst" }, { idmode: "design", id: "1", ra: "1" }]) {
+    const res = await verdictOf("zamykanie-na-zemlyu-it.html", values);
+    check(!/Условие RA·Id ≤ 50 В выполняется/.test(res) && /Недостаточно данных/.test(res),
+      `zamykanie-na-zemlyu-it: по измеренному Id или RA без поправки выдан вывод «выполняется» (${JSON.stringify(values)})`);
+  }
+  for (const [file, values] of [
+    ["gorizontalnyy-zazemlitel.html", { rt: "100" }], ["vertikalnyy-zazemlitel.html", { rt: "100" }],
+  ]) {
+    const res = await verdictOf(file, values);
+    check(/Недостаточно данных: ρ без сезонной поправки/.test(res) && /в сухой или морозный сезон ρ выше/.test(res) && !/— не выше заданной цели/.test(res),
+      `${file}: по ρ без сезонной поправки выдано безоговорочное «не выше заданной цели»`);
+  }
+  for (const [file, values] of [
+    ["gorizontalnyy-zazemlitel.html", { l: "1,4" }], ["gorizontalnyy-zazemlitel.html", { l: "2,8" }],
+    ["vertikalnyy-zazemlitel.html", { l: "0,5" }],
+  ]) {
+    const res = await verdictOf(file, values);
+    check(!/Оценочное сопротивление/.test(res) && !/Статус/.test(res),
+      `${file}: вне проверенной области формулы выдана оценка (${JSON.stringify(values)})`);
+  }
+}
+
+// Структура: переключатели скрывают неприменимые поля, тексты держат
+// атрибуцию и цитаты, запрещённых формулировок статуса нет.
+{
+  kind = "structural";
+  const visible = (document, id) => document.getElementById(`f_${id}`).style.display !== "none";
+  const flip = (dom, id, value) => {
+    const el = dom.window.document.getElementById(id);
+    el.value = value; el.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  };
+  let dom = await load("zazemlenie-tt-uzo.html");
+  check(visible(dom.window.document, "idn") && visible(dom.window.document, "ra"), "zazemlenie-tt-uzo: в режиме УЗО поля IΔn и RA должны быть видны");
+  flip(dom, "dev", "ocpd");
+  check(!visible(dom.window.document, "idn") && !visible(dom.window.document, "ra") && !visible(dom.window.document, "rasrc"), "zazemlenie-tt-uzo: в режиме автомата поля RA·IΔn должны быть скрыты");
+  dom.window.close();
+  dom = await load("gorizontalnyy-zazemlitel.html");
+  check(visible(dom.window.document, "b") && !visible(dom.window.document, "d"), "gorizontalnyy-zazemlitel: для полосы должно быть видно только поле b");
+  flip(dom, "prof", "round");
+  check(!visible(dom.window.document, "b") && visible(dom.window.document, "d"), "gorizontalnyy-zazemlitel: для прутка должно быть видно только поле d");
+  dom.window.close();
+  dom = await load("vertikalnyy-zazemlitel.html");
+  check(visible(dom.window.document, "d") && !visible(dom.window.document, "b"), "vertikalnyy-zazemlitel: для стержня должно быть видно только поле d");
+  flip(dom, "prof", "angle");
+  check(!visible(dom.window.document, "d") && visible(dom.window.document, "b"), "vertikalnyy-zazemlitel: для уголка должно быть видно только поле b");
+  dom.window.close();
+  dom = await load("zamykanie-na-zemlyu-it.html");
+  check(!visible(dom.window.document, "id") && visible(dom.window.document, "c") && visible(dom.window.document, "wires"), "zamykanie-na-zemlyu-it: в режиме оценки должны быть видны C и проводники, Id скрыт");
+  flip(dom, "idmode", "design");
+  check(visible(dom.window.document, "id") && !visible(dom.window.document, "c") && !visible(dom.window.document, "wires") && !visible(dom.window.document, "u0"), "zamykanie-na-zemlyu-it: в режиме проекта должен быть виден только Id");
+  dom.window.close();
+
+  const text = file => fs.readFileSync(path.join(sourceDir, file), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  const script = file => (fs.readFileSync(path.join(sourceDir, file), "utf8").match(/<script>([\s\S]*?)<\/script>\s*<\/body>/) ?? ["", ""])[1];
+  for (const file of ["zazemlenie-tt-uzo.html", "gorizontalnyy-zazemlitel.html", "vertikalnyy-zazemlitel.html", "zamykanie-na-zemlyu-it.html"]) {
+    check(!/Проходит|Соответствует нормам|[Бб]езопасно(?![а-яё])/.test(script(file)), `${file}: запрещённая формулировка статуса в расчёте`);
+  }
+  const tt = text("zazemlenie-tt-uzo.html");
+  check(/Ia — ток срабатывания защитного устройства/.test(tt) && /наиболее удалённого электроприёмника/.test(tt), "zazemlenie-tt-uzo: определения Ra и Ia ПУЭ 1.7.59 не приведены целиком");
+  check(/ГОСТ Р 50571\.4\.41-2022/.test(tt) && /целиком не виден/.test(tt), "zazemlenie-tt-uzo: не сказано, по какой редакции считается и что текст новой редакции не сверен");
+  check(/Schneider Electric указывает, что для временных электроустановок/.test(tt), "zazemlenie-tt-uzo: 25 В должно быть приписано Schneider Electric, а не МЭК 60364-7-705");
+  check(!/60364-7-705/.test(tt), "zazemlenie-tt-uzo: 25 В приписано МЭК 60364-7-705, хотя в выдаче поиска это не видно");
+  const hor = text("gorizontalnyy-zazemlitel.html");
+  check(/L ≥ 5·t/.test(hor) && /занижать R/.test(hor) && /численн/.test(hor), "gorizontalnyy-zazemlitel: не показано, где и в какую сторону ошибается формула");
+  check(/kolcevoy-zazemlitel\.html/.test(fs.readFileSync(path.join(sourceDir, "gorizontalnyy-zazemlitel.html"), "utf8")), "gorizontalnyy-zazemlitel: нет ссылки на кольцевой заземлитель");
+  const ver = text("vertikalnyy-zazemlitel.html");
+  check(/0,95/.test(ver) && /0,93–0,946·b/.test(ver) && /BS 7430/.test(ver) && /ρ\/\(n·L\)/.test(ver), "vertikalnyy-zazemlitel: нет проверки коэффициента уголка, формулы Дуайта или сравнения с ρ/(n·L)");
+  const it = text("zamykanie-na-zemlyu-it.html");
+  check(it.includes("«Как правило, не требуется принимать значение сопротивления заземляющего устройства менее 4 Ом. Допускается сопротивление заземляющего устройства до 10 Ом, если соблюдено приведенное выше условие, а мощность генераторов или трансформаторов не превышает 100 кВ·А, в том числе суммарная мощность генераторов или трансформаторов, работающих параллельно»"),
+    "zamykanie-na-zemlyu-it: оговорки ПУЭ 1.7.104 процитированы неточно");
+  check(/411\.6\.3\.1/.test(it) && /411\.6\.4/.test(it) && /не рассчитывает/.test(it), "zamykanie-na-zemlyu-it: не сказано про контроль изоляции и второе замыкание");
+  check(/в 4 раза/.test(it) && /Bender/.test(it), "zamykanie-na-zemlyu-it: нет множителя 4 для 3L+N или направления ошибки из-за сопротивления изоляции");
+}
+
+// ===========================================================================
+// Партия №2, generator/data_l.py: уравнивание потенциалов, двойной
+// стержневой молниеотвод, УЗИП на вводе, обрыв PEN. Эталоны посчитаны
+// отдельным скриптом (scratchpad batch2_l/ref_values.py) и вручную, а не
+// кодом страниц; округление — как в fmt(): 4 значащие цифры, запятая.
+// ===========================================================================
+
+// Сценарий с запретом: фрагменты present обязаны быть, absent — нет.
+// Нужен для рискованных вердиктов: проверить, что при недостатке данных
+// страница не выдаёт «минимум» или «зона есть».
+async function calculateWithout(file, values, present, absent, scenarioKind = "functional") {
+  kind = scenarioKind; recordScenario(file);
+  const dom = await load(file); setValues(dom.window.document, values);
+  dom.window.document.getElementById("go").click();
+  await new Promise(resolve => dom.window.setTimeout(resolve, 0));
+  const result = dom.window.document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+  for (const fragment of present) check(result.includes(fragment), `${file}: ожидалось «${fragment}», получено «${result}»`);
+  for (const fragment of absent) check(!result.includes(fragment), `${file}: при ${JSON.stringify(values)} не должно быть «${fragment}», получено «${result}»`);
+  check(!/NaN|Infinity|undefined|·10\^/.test(result), `${file}: NaN/Infinity/экспонента в результате «${result}»`);
+  dom.window.close();
+}
+
+// --- 17. sechenie-provodnika-uravnivaniya: ПУЭ 1.7.137, 1.7.138, 1.7.127 ---
+// Эталон 1 (вручную): наибольший PE 16 мм² Cu → 16/2 = 8 мм², больше 6 и меньше 25 → 8, по ряду 10.
+await calculate("sechenie-provodnika-uravnivaniya.html", {}, ["Половина наибольшего PE (ПУЭ 1.7.137)8 мм² меди", "Предел «не более 25 мм² по меди»не достигнут", "Минимум в любом случае (ПУЭ 1.7.137)6 мм² меди", "Определяющее условиеполовина наибольшего PE", "Принять по стандартному ряду10 мм²", "СтатусМинимум по ПУЭ 1.7.137: 8 мм² меди (по ряду — 10 мм²)"]);
+// Эталон 2: 95 мм² → 47,5 > 25: больше 25 мм², как правило, не требуется.
+await calculate("sechenie-provodnika-uravnivaniya.html", { smax: "95" }, ["Половина наибольшего PE (ПУЭ 1.7.137)47,5 мм² меди", "достигнут: больше 25 мм², как правило, не требуется", "Определяющее условиепредел 25 мм² по меди", "СтатусМинимум по ПУЭ 1.7.137: 25 мм² меди", "«как правило» оставляют проекту право"]);
+// Эталон 3: 10 мм² → 5 < 6: минимум в любом случае.
+await calculate("sechenie-provodnika-uravnivaniya.html", { smax: "10" }, ["Определяющее условиеминимум в любом случае", "СтатусМинимум по ПУЭ 1.7.137: 6 мм² меди"]);
+// Граница минимума 6 мм²: 12 → ровно 6 (оба условия), 12,01 → 6,005 → по ряду 10.
+await calculate("sechenie-provodnika-uravnivaniya.html", { smax: "12" }, ["Определяющее условиеполовина наибольшего PE, минимум в любом случае", "Принять по стандартному ряду6 мм²", "СтатусМинимум по ПУЭ 1.7.137: 6 мм² меди"], "boundary");
+await calculate("sechenie-provodnika-uravnivaniya.html", { smax: "12,01" }, ["Минимальное сечение6,005 мм² меди", "Принять по стандартному ряду10 мм²", "СтатусМинимум по ПУЭ 1.7.137: 6,005 мм² меди (по ряду — 10 мм²)"], "boundary");
+// Граница предела 25 мм²: 50 → ровно 25, предел не достигнут; 50,02 → 25,01, предел достигнут.
+await calculate("sechenie-provodnika-uravnivaniya.html", { smax: "50" }, ["Половина наибольшего PE (ПУЭ 1.7.137)25 мм² меди", "Предел «не более 25 мм² по меди»не достигнут", "Определяющее условиеполовина наибольшего PE"], "boundary");
+await calculate("sechenie-provodnika-uravnivaniya.html", { smax: "50,02" }, ["Половина наибольшего PE (ПУЭ 1.7.137)25,01 мм² меди", "Предел «не более 25 мм² по меди»достигнут", "Определяющее условиепредел 25 мм² по меди", "СтатусМинимум по ПУЭ 1.7.137: 25 мм² меди"], "boundary");
+// Алюминий: 16 мм² → 8 < 16 → минимум 16; половина ровно 25 мм² ещё определена, 25,01 — уже нет.
+await calculate("sechenie-provodnika-uravnivaniya.html", { smax: "16", mpe: "al", mb: "al" }, ["Половина наибольшего PE (ПУЭ 1.7.137)8 мм² алюминия", "не достигнут: алюминий проводит хуже меди", "Минимум в любом случае (ПУЭ 1.7.137)16 мм² алюминия", "СтатусМинимум по ПУЭ 1.7.137: 16 мм² алюминия"]);
+await calculate("sechenie-provodnika-uravnivaniya.html", { smax: "50", mpe: "al", mb: "al" }, ["СтатусМинимум по ПУЭ 1.7.137: 25 мм² алюминия"], "boundary");
+await calculateWithout("sechenie-provodnika-uravnivaniya.html", { smax: "50,02", mpe: "al", mb: "al" }, ["не применён: равноценное сечение алюминия ПУЭ не задаёт", "С запасом, без предела25,01 мм² алюминия; по ряду — 35 мм²", "СтатусНедостаточно данных: равноценное 25 мм² меди сечение алюминия ПУЭ не задаёт; с запасом — 35 мм² алюминия"], ["Минимум по ПУЭ"], "boundary");
+// Разные металлы: минимум не выдаётся (рискованный вердикт), только «Недостаточно данных».
+await calculateWithout("sechenie-provodnika-uravnivaniya.html", { mb: "fe" }, ["Минимум в любом случае (ПУЭ 1.7.137)50 мм² стали", "По проводимости — не меньше, чем8 мм² меди", "СтатусНедостаточно данных: проводник уравнивания стальной, PE из меди"], ["Минимум по ПУЭ", "Минимальное сечение"]);
+await calculateWithout("sechenie-provodnika-uravnivaniya.html", { mpe: "cu", mb: "al" }, ["Минимум в любом случае (ПУЭ 1.7.137)16 мм² алюминия", "СтатусНедостаточно данных: PE медный, проводник уравнивания алюминиевый"], ["Минимум по ПУЭ", "Минимальное сечение"]);
+// PE алюминиевый 70 мм², проводник медный: половина 35, по меди предел 25 → с запасом 25 мм² меди.
+await calculateWithout("sechenie-provodnika-uravnivaniya.html", { smax: "70", mpe: "al", mb: "cu" }, ["Половина наибольшего PE (ПУЭ 1.7.137)35 мм² алюминия", "С запасом: то же сечение из меди25 мм² меди", "СтатусНедостаточно данных: PE алюминиевый, проводник медный", "с запасом — 25 мм² меди"], ["Минимум по ПУЭ"]);
+// Дополнительная система, две открытые части 2,5 и 4 мм² (эталон вручную): меньший PE 2,5; вне кабеля без защиты — 4.
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop2" }, ["Меньшее из сечений PE (ПУЭ 1.7.138)2,5 мм² меди", "Минимум для проводника вне кабеля (ПУЭ 1.7.127)4 мм² меди", "Определяющее условиеминимум 1.7.127", "СтатусМинимум по ПУЭ 1.7.138: 4 мм² меди"]);
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop2", lay: "cab" }, ["не применяется: проводник в составе кабеля", "Определяющее условиеменьший из PE", "СтатусМинимум по ПУЭ 1.7.138: 2,5 мм² меди"]);
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop2", s1: "10", s2: "6", lay: "cab" }, ["Меньшее из сечений PE (ПУЭ 1.7.138)6 мм² меди", "СтатусМинимум по ПУЭ 1.7.138: 6 мм² меди"]);
+// Открытая и сторонняя часть, PE 2,5 мм²: половина 1,25; в кабеле → по ряду 1,5; с защитой → 2,5; без → 4.
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop1", lay: "cab" }, ["Половина сечения PE открытой части (ПУЭ 1.7.138)1,25 мм² меди", "Принять по стандартному ряду1,5 мм²", "СтатусМинимум по ПУЭ 1.7.138: 1,25 мм² меди (по ряду — 1,5 мм²)"]);
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop1", lay: "mz" }, ["Минимум для проводника вне кабеля (ПУЭ 1.7.127)2,5 мм² меди", "СтатусМинимум по ПУЭ 1.7.138: 2,5 мм² меди"]);
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop1", lay: "nz" }, ["СтатусМинимум по ПУЭ 1.7.138: 4 мм² меди"]);
+// Граница минимума 4 мм² без механической защиты: PE 8 → 4 (оба условия); 8,01 → 4,005 → по ряду 6.
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop1", s1: "8", lay: "nz" }, ["Определяющее условиеполовина PE открытой части, минимум 1.7.127", "СтатусМинимум по ПУЭ 1.7.138: 4 мм² меди"], "boundary");
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop1", s1: "8,01", lay: "nz" }, ["Минимальное сечение4,005 мм² меди", "СтатусМинимум по ПУЭ 1.7.138: 4,005 мм² меди (по ряду — 6 мм²)"], "boundary");
+// Алюминий в дополнительной системе: в кабеле 16/2 = 8 → по ряду 10; отдельно — 16 мм² (1.7.127).
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop1", s1: "16", mpe: "al", mb: "al", lay: "cab" }, ["СтатусМинимум по ПУЭ 1.7.138: 8 мм² алюминия (по ряду — 10 мм²)"]);
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop1", s1: "16", mpe: "al", mb: "al", lay: "nz" }, ["Минимум для проводника вне кабеля (ПУЭ 1.7.127)16 мм² алюминия", "СтатусМинимум по ПУЭ 1.7.138: 16 мм² алюминия"]);
+await calculateWithout("sechenie-provodnika-uravnivaniya.html", { sys: "dop2", mb: "fe" }, ["для стали отдельно не задан", "СтатусНедостаточно данных"], ["Минимум по ПУЭ"]);
+await calculate("sechenie-provodnika-uravnivaniya.html", { sys: "dop1", s1: "600", lay: "cab" }, ["Принять по стандартному рядусвыше 240 мм² — вне стандартного ряда", "СтатусМинимум по ПУЭ 1.7.138: 300 мм² меди, вне стандартного ряда"], "boundary");
+await invalid("sechenie-provodnika-uravnivaniya.html", { smax: "abc" }, "Введите наибольшее сечение защитного проводника");
+await invalid("sechenie-provodnika-uravnivaniya.html", { smax: "0" }, "Сечение должно быть больше нуля");
+await invalid("sechenie-provodnika-uravnivaniya.html", { sys: "dop1", s1: "-2" }, "Сечение должно быть больше нуля");
+await invalid("sechenie-provodnika-uravnivaniya.html", { sys: "dop2", s2: "" }, "Введите сечения PE обеих открытых проводящих частей");
+
+// --- 19. dvoynoy-molnieotvod: СО 153-34.21.122-2003, п. 3.3.2.3, табл. 3.4 и 3.6 ---
+// Эталон 1 (вручную): h = 20, 0,99: h0 = r0 = 16; Lmax = 95; Lc = 45; L = 60 → hc = 16·35/50 = 11,2;
+// hx = 8 → rcx = 16·3,2/11,2 = 4,571; rx = 8.
+await calculate("dvoynoy-molnieotvod.html", {}, ["Высота зоны у молниеотвода h₀ (табл. 3.4)16 м", "Радиус зоны у земли r₀ (табл. 3.4)16 м", "Предельное расстояние Lmax (табл. 3.6)95 м", "Расстояние без провеса зоны Lc (табл. 3.6)45 м", "Высота зоны посередине hc11,2 м", "rcx4,571 м (ширина 9,143 м)", "rx8 м", "СтатусОценка по СО 153: на высоте 8 м зона между молниеотводами не разорвана"]);
+// Эталон 2 — проект АЗС ZandZ: L = 62,92, hx = 6,84 → hc = 10,27, rcx = 5,34 (у нас 5,339).
+await calculate("dvoynoy-molnieotvod.html", { l: "62,92", hx: "6,84" }, ["Высота зоны посередине hc10,27 м", "rcx5,339 м", "rx9,16 м"]);
+// Эталон 3 — учебный расчёт подстанции: h = 29,7 → Lc = 66,83, Lmax = 141,07 (при 4 знаках 141,1).
+await calculate("dvoynoy-molnieotvod.html", { h: "29,7", l: "50", hx: "0" }, ["Предельное расстояние Lmax (табл. 3.6)141,1 м", "Расстояние без провеса зоны Lc (табл. 3.6)66,83 м", "L = 50 м ≤ Lc — граница зоны без провеса", "Высота зоны посередине hc23,76 м"]);
+// Надёжность 0,9 (5,75h и 2,5h, h0 = 0,85h, r0 = 1,2h) и 0,999 (4,25h и 2,25h, h0 = 0,7h, r0 = 0,6h).
+await calculate("dvoynoy-molnieotvod.html", { h: "10", nad: "0.9", l: "40", hx: "3" }, ["h₀ (табл. 3.4)8,5 м", "r₀ (табл. 3.4)12 м", "Lmax (табл. 3.6)57,5 м", "Lc (табл. 3.6)25 м", "Высота зоны посередине hc4,577 м", "rcx4,134 м"]);
+await calculate("dvoynoy-molnieotvod.html", { h: "25", nad: "0.999", l: "60", hx: "5" }, ["h₀ (табл. 3.4)17,5 м", "Lmax (табл. 3.6)106,3 м", "Lc (табл. 3.6)56,25 м", "Высота зоны посередине hc16,19 м", "rcx10,37 м"]);
+// Средние строки 30–100 м и верхние 100–150 м.
+await calculate("dvoynoy-molnieotvod.html", { h: "50", l: "150", hx: "10" }, ["r₀ (табл. 3.4)38,57 м", "Lmax (табл. 3.6)233,9 м", "Lc (табл. 3.6)102,4 м", "Высота зоны посередине hc25,53 м", "rcx23,46 м"]);
+await calculate("dvoynoy-molnieotvod.html", { h: "120", nad: "0.999", l: "200", hx: "20" }, ["h₀ (табл. 3.4)75,6 м", "r₀ (табл. 3.4)55,2 м", "Lmax (табл. 3.6)480 м", "Lc (табл. 3.6)180 м", "Высота зоны посередине hc70,56 м"]);
+// h = 100 м — берётся более осторожная строка 100–150 м табл. 3.6: Lmax = 4,5h, Lc = 1,5h.
+await calculate("dvoynoy-molnieotvod.html", { h: "100", l: "300", hx: "10" }, ["Lmax (табл. 3.6)450 м", "Lc (табл. 3.6)150 м", "Высота зоны посередине hc40 м"], "boundary");
+await calculate("dvoynoy-molnieotvod.html", { h: "150", l: "300", hx: "10" }, ["h₀ (табл. 3.4)112,5 м", "Lmax (табл. 3.6)675 м", "Высота зоны посередине hc93,75 м"], "boundary");
+await invalid("dvoynoy-molnieotvod.html", { h: "150,01" }, "до 150 м");
+// Граница Lc: при L = Lc провеса нет, при L чуть больше — есть.
+await calculate("dvoynoy-molnieotvod.html", { l: "45" }, ["L = 45 м ≤ Lc — граница зоны без провеса", "Высота зоны посередине hc16 м", "rcx8 м"], "boundary");
+await calculate("dvoynoy-molnieotvod.html", { l: "45,01" }, ["Lc < L = 45,01 м ≤ Lmax — граница зоны провисает", "rcx7,998 м"], "boundary");
+// Граница Lmax: при L = Lmax зона посередине опускается до земли; за ней — два одиночных.
+await calculateWithout("dvoynoy-molnieotvod.html", { l: "95", hx: "0" }, ["Высота зоны посередине hc0 м", "нет — hx ≥ hc", "СтатусОценка по СО 153: на высоте 0 м посередине между молниеотводами зоны нет (hx ≥ hc)"], ["не разорвана"], "boundary");
+await calculateWithout("dvoynoy-molnieotvod.html", { l: "95,01", hx: "0" }, ["L = 95,01 м > Lmax — общей зоны нет", "Радиус зоны каждого молниеотвода на высоте 0 м16 м", "СтатусОценка по СО 153: L > Lmax — общей зоны нет, молниеотводы считаются одиночными"], ["hc", "не разорвана"], "boundary");
+// Граница hx = hc: объект высотой hc посередине не защищён; на 1 см ниже — зона есть.
+await calculateWithout("dvoynoy-molnieotvod.html", { hx: "11,2" }, ["нет — hx ≥ hc", "rx4,8 м", "зоны нет (hx ≥ hc)"], ["не разорвана"], "boundary");
+await calculate("dvoynoy-molnieotvod.html", { hx: "11,19" }, ["rcx0,01429 м", "rx4,81 м", "зона между молниеотводами не разорвана"], "boundary");
+await calculate("dvoynoy-molnieotvod.html", { hx: "16" }, ["rcxнет — hx ≥ hc", "rxнет — hx ≥ h₀", "зоны нет (hx ≥ hc)"], "boundary");
+await invalid("dvoynoy-molnieotvod.html", { h: "abc" }, "Заполните высоту молниеотводов");
+await invalid("dvoynoy-molnieotvod.html", { h: "0" }, "Высота молниеотвода должна быть больше нуля");
+await invalid("dvoynoy-molnieotvod.html", { l: "-5" }, "Расстояние между молниеотводами должно быть больше нуля");
+await invalid("dvoynoy-molnieotvod.html", { hx: "-1" }, "Высота объекта не может быть отрицательной");
+
+// --- 21. vybor-uzip: IEC 60364-5-53, раздел 534 (по вторичным источникам) ---
+// Эталон 1 (вручную): TN-C-S, 220 В, без молниезащиты, кабель: класс II, Uc ≥ 1,1·220 = 242, N–PE ≥ 220, Up ≤ 2,5 − 0,5 = 2 кВ.
+await calculate("vybor-uzip.html", {}, ["Класс испытаний УЗИП на вводеII (тип 2)", "Импульсный ток Iimp (10/350) на вид защитыне требуется для класса II", "Номинальный разрядный ток In (8/20) на вид защитыне менее 5 кА", "Uc, фаза – PE и фаза – Nне менее 1,1·U₀ = 242 В", "Uc, N – PEне менее U₀ = 220 В", "не выше 2,5 кВ — стойкость оборудования категории II", "Up с учётом проводников: 0,5 м × ≈1 кВ/мне выше 2 кВ", "СтатусОценка минимальных требований: класс II, In ≥ 5 кА, Uc ≥ 242 В, Up ≤ 2 кВ"]);
+// Рискованный вердикт: при молниезащите без расчёта Iimp — «Недостаточно данных», 12,5 кА сам не подставляется.
+await calculateWithout("vybor-uzip.html", { lps: "yes" }, ["Класс испытаний УЗИП на вводеI (тип 1)", "недостаточно данных: по расчёту IEC 62305; 12,5 кА — только если ток установить нельзя", "СтатусНедостаточно данных: Iimp устанавливают расчётом по IEC 62305"], ["Оценка минимальных требований", "не менее 12,5 кА"]);
+await calculate("vybor-uzip.html", { lps: "yes", iimp: "25" }, ["не менее 25 кА — по расчёту IEC 62305", "СтатусОценка минимальных требований: класс I, Iimp ≥ 25 кА, In ≥ 5 кА, Uc ≥ 242 В, Up ≤ 2 кВ"]);
+// Эталон 2 (BS 7671, «4 times 12.5 kA»): TT, три фазы, Iimp 12,5 → разрядник N–PE 50 кА; In N–PE 20 кА.
+await calculate("vybor-uzip.html", { sys: "tt", lps: "yes", iimp: "12,5" }, ["Iimp разрядника N–PE в схеме «3+1»не менее 50 кА — сумма токов четырёх проводников", "In разрядника N–PE в схеме «3+1»не менее 20 кА", "Uc, фаза – Nне менее 1,1·U₀ = 242 В", "Uc, N – PEне менее U₀ = 220 В"]);
+await calculate("vybor-uzip.html", { sys: "tt", faz: "1", lps: "yes", iimp: "12,5" }, ["не менее 25 кА — сумма токов двух проводников", "In разрядника N–PE в схеме «3+1»не менее 10 кА"]);
+await calculateWithout("vybor-uzip.html", { sys: "tt" }, ["In разрядника N–PE в схеме «3+1»не менее 20 кА"], ["Iimp разрядника"]);
+// IT: по Schneider (рис. J23) фаза – PE 1,1·U = 1,1·√3·230 = 438,2 В; N – PE 1,1·U₀ = 253 В.
+await calculate("vybor-uzip.html", { sys: "itn", u0: "230" }, ["Uc, фаза – Nне менее 1,1·U₀ = 253 В", "Uc, фаза – PEне менее 1,1·U = 438,2 В", "Uc, N – PEне менее 1,1·U₀ = 253 В", "Uc ≥ 438,2 В"]);
+await calculate("vybor-uzip.html", { sys: "it" }, ["Uc, фаза – PEне менее 1,1·U = 419,2 В", "Uc ≥ 419,2 В"]);
+await calculate("vybor-uzip.html", { sys: "tnc" }, ["Uc, фаза – PENне менее 1,1·U₀ = 242 В"]);
+// Воздушный ввод без молниезащиты: класс не выбирается.
+await calculateWithout("vybor-uzip.html", { vvod: "vl" }, ["не определён: при воздушном вводе без молниезащиты нужна оценка риска", "СтатусНедостаточно данных: класс УЗИП для воздушного ввода определяет оценка риска по IEC 62305-2"], ["II (тип 2)", "Оценка минимальных требований"]);
+// Границы: проводники 0,5 м и 0,51 м; 2,5 м — уровень недостижим, 2,49 м — ещё 0,01 кВ.
+await calculate("vybor-uzip.html", { lp: "0,5" }, ["0,5 м — не больше рекомендуемых 0,5 м", "Up ≤ 2 кВ"], "boundary");
+await calculate("vybor-uzip.html", { lp: "0,51" }, ["0,51 м — больше рекомендуемых 0,5 м", "не выше 1,99 кВ", "Up ≤ 1,99 кВ; проводники длиннее рекомендуемых 0,5 м"], "boundary");
+await calculateWithout("vybor-uzip.html", { lp: "2,5" }, ["недостижим: проводники слишком длинные", "СтатусОценка: при проводниках 2,5 м уровень защиты 2,5 кВ недостижим"], ["Оценка минимальных требований"], "boundary");
+await calculate("vybor-uzip.html", { lp: "2,49" }, ["не выше 0,01 кВ"], "boundary");
+// Граница 10 м до оборудования.
+await calculateWithout("vybor-uzip.html", { dist: "10" }, ["10 м — в пределах 10 м"], ["дополнительный УЗИП"], "boundary");
+await calculate("vybor-uzip.html", { dist: "10,01" }, ["10,01 м — больше 10 м: нужен дополнительный УЗИП у оборудования", "; у оборудования нужен дополнительный УЗИП", "до удвоенного Up"], "boundary");
+// Границы U₀: 200…250 В включительно.
+await calculate("vybor-uzip.html", { u0: "250" }, ["1,1·U₀ = 275 В"], "boundary");
+await calculate("vybor-uzip.html", { u0: "200" }, ["1,1·U₀ = 220 В"], "boundary");
+await invalid("vybor-uzip.html", { u0: "250,01" }, "U₀ от 200 до 250 В");
+await invalid("vybor-uzip.html", { u0: "199,99" }, "U₀ от 200 до 250 В");
+await invalid("vybor-uzip.html", { u0: "abc" }, "Введите номинальное фазное напряжение");
+await invalid("vybor-uzip.html", { lps: "yes", iimp: "abc" }, "Iimp по расчёту должен быть числом или пустым полем");
+await invalid("vybor-uzip.html", { lps: "yes", iimp: "0" }, "Iimp должен быть больше нуля");
+await invalid("vybor-uzip.html", { lp: "0" }, "Длины должны быть больше нуля");
+await invalid("vybor-uzip.html", { dist: "-1" }, "Длины должны быть больше нуля");
+
+// --- 23. obryv-pen: метод двух узлов (теорема Миллмана) ---
+// Эталон 1 (вручную): две одинаковые фазы, полный обрыв — последовательно на U_л = √3·220 = 381,1 В,
+// по 190,5 В на каждой; смещение |(Ua + Ub)/2| = U₀/2 = 110 В; фаза C без нагрузки видит 1,5·U₀ = 330 В.
+await calculate("obryv-pen.html", { pa: "2", pb: "2", pc: "" }, ["Смещение нейтрали нагрузки U_N′110 В (50 % U₀)", "Фаза A: напряжение на нагрузке190,5 В (86,6 % U₀)", "Фаза B: напряжение на нагрузке190,5 В", "Фаза C: нагрузки нет, фаза – нейтраль нагрузки330 В (150 % U₀)", "Отклонение от U₀ на нагруженных фазах (справочно)−13,4 %", "Потенциал корпусов (PE после обрыва) относительно нейтрали источника110 В", "СтатусОценка аварийного режима: корпуса под потенциалом 110 В, на нагруженных фазах 190,5 В"]);
+// Эталон 2: симметричная нагрузка — смещения нет, но статус не называет режим безопасным.
+await calculateWithout("obryv-pen.html", { pa: "2", pb: "2", pc: "2" }, ["Смещение нейтрали нагрузки U_N′0 В (0 % U₀)", "Фаза A: напряжение на нагрузке220 В (100 % U₀)", "Отклонение от U₀ на нагруженных фазах (справочно)0 %", "СтатусОценка аварийного режима: смещения нет только при строго симметричной нагрузке", "безопасным это не делает"], ["Безопасно", "безопасен", "Соответствует"]);
+// Эталон 3: нагружена одна фаза, полный обрыв — тока нет, нейтраль и корпуса под фазным потенциалом 220 В.
+await calculate("obryv-pen.html", { pa: "2", pb: "", pc: "" }, ["Смещение нейтрали нагрузки U_N′220 В (100 % U₀)", "Фаза A: напряжение на нагрузке0 В (0 % U₀)", "Фаза B: нагрузки нет, фаза – нейтраль нагрузки381,1 В (173,2 % U₀)", "Отклонение от U₀ на нагруженной фазе (справочно)−100 %", "СтатусОценка аварийного режима: корпуса под потенциалом 220 В", "на нагруженной фазе 0 В"]);
+// Нагрузка по умолчанию 3/1/0,5 кВт (скрипт ref_values.py): смещение 112 В, фазы 112 / 277,6 / 305,3 В.
+await calculate("obryv-pen.html", {}, ["Смещение нейтрали нагрузки U_N′112 В (50,92 % U₀)", "Фаза B: напряжение на нагрузке277,6 В (126,2 % U₀)", "Фаза C: напряжение на нагрузке305,3 В (138,8 % U₀)", "от −49,08 % до +38,78 %", "СтатусОценка аварийного режима: корпуса под потенциалом 112 В, на нагруженных фазах от 112 до 305,3 В"]);
+// Режим «через повторное заземление» Rп = 30, R₀ = 4: смещение 85,1 В, корпуса относительно земли 85,1·30/34 = 75,09 В.
+await calculate("obryv-pen.html", { put: "rz" }, ["Смещение нейтрали нагрузки U_N′85,1 В", "Фаза A: напряжение на нагрузке137,4 В", "Фаза B: напряжение на нагрузке260,6 В", "Фаза C: напряжение на нагрузке283,1 В", "Потенциал корпусов относительно удалённой земли75,09 В", "Ток через повторное заземление2,503 А", "больше 50 В: ПУЭ 1.7.53"]);
+await calculate("obryv-pen.html", { pa: "3", pb: "", pc: "", put: "rz" }, ["Смещение нейтрали нагрузки U_N′149,2 В", "Фаза A: напряжение на нагрузке70,8 В", "Потенциал корпусов относительно удалённой земли131,6 В", "Ток через повторное заземление4,388 А"]);
+// Однофазный абонент без повторного заземления: тока нет, корпуса под фазным потенциалом.
+await calculate("obryv-pen.html", { set: "1" }, ["Ток нагрузки0 А — пути для тока нет", "Напряжение на нагрузке0 В (0 % U₀)", "Потенциал N и PE абонента (корпусов) относительно нейтрали источника220 В (100 % U₀)", "СтатусОценка аварийного режима: корпуса под потенциалом 220 В, нагрузка получает 0 В", "Однофазный абонент: ток нагрузки может вернуться к источнику только через землю"]);
+// Эталон IET (Wiring Matters, «Broken PEN»): 230 В, 7 кВт, заземлитель 2,1 Ом → 230·2,1/(230²/7000 + 2,1) = 50,01 В.
+await calculate("obryv-pen.html", { set: "1", u0: "230", p1: "7", put: "rz", rp: "2,1", r0: "0" }, ["Ток нагрузки23,82 А", "Напряжение на нагрузке180 В", "Потенциал корпусов относительно удалённой земли50,01 В"]);
+// Граница 50 В (ПУЭ 1.7.53: «превышает 50 В»). Числа подобраны так, чтобы 50 В получались точно и в
+// двоичной арифметике: 200 В, 2,5 кВт → R = 16 Ом; ток 200/(16 + 8 + 8) = 6,25 А; 6,25 · 8 = 50 В.
+await calculateWithout("obryv-pen.html", { set: "1", u0: "200", p1: "2,5", put: "rz", rp: "8", r0: "8" }, ["Ток нагрузки6,25 А", "Напряжение на нагрузке100 В", "Потенциал корпусов относительно удалённой земли50 В", "не выше 50 В, но безопасным это не делает"], ["больше 50 В"], "boundary");
+await calculate("obryv-pen.html", { set: "1", u0: "200", p1: "2,501", put: "rz", rp: "8", r0: "8" }, ["Потенциал корпусов относительно удалённой земли50,01 В", "больше 50 В: ПУЭ 1.7.53"], "boundary");
+// Единицы: 2000 Вт — то же, что 2 кВт.
+await calculate("obryv-pen.html", { pa: "2000", pa_unit: "1", pb: "2", pc: "2" }, ["Смещение нейтрали нагрузки U_N′0 В"]);
+await calculate("obryv-pen.html", { u0: "1000" }, ["Смещение нейтрали нагрузки U_N′509,2 В"], "boundary");
+await invalid("obryv-pen.html", { u0: "1000,01" }, "не больше 1000 В");
+await invalid("obryv-pen.html", { pa: "", pb: "", pc: "" }, "Введите мощность нагрузки хотя бы одной фазы");
+await invalid("obryv-pen.html", { pa: "abc" }, "Фаза A: введите число или оставьте поле пустым");
+await invalid("obryv-pen.html", { pb: "-1" }, "Фаза B: мощность не может быть отрицательной");
+await invalid("obryv-pen.html", { u0: "0" }, "Напряжение должно быть больше нуля");
+await invalid("obryv-pen.html", { put: "rz", rp: "0" }, "Сопротивление повторного заземления должно быть больше нуля");
+await invalid("obryv-pen.html", { put: "rz", r0: "-1" }, "не может быть отрицательным");
+await invalid("obryv-pen.html", { put: "rz", rp: "abc" }, "Введите сопротивление повторного заземления");
+await invalid("obryv-pen.html", { set: "1", p1: "" }, "Введите мощность нагрузки абонента");
+
+// Видимость полей: скрытый режим не должен оставлять лишних полей, а
+// каждый переключатель — показывать то, от чего зависит расчёт (правило 7).
+{
+  kind = "structural";
+  const vis = (document, id) => document.getElementById(`f_${id}`).style.display !== "none";
+  const change = (dom, id, value) => {
+    const el = dom.window.document.getElementById(id);
+    el.value = value; el.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  };
+  let dom = await load("sechenie-provodnika-uravnivaniya.html");
+  let d = dom.window.document;
+  check(vis(d, "smax") && !vis(d, "s1") && !vis(d, "s2") && !vis(d, "lay"), "sechenie-provodnika-uravnivaniya: в основной системе видно только наибольшее сечение PE");
+  change(dom, "sys", "dop2");
+  check(!vis(d, "smax") && vis(d, "s1") && vis(d, "s2") && vis(d, "lay"), "sechenie-provodnika-uravnivaniya: для двух открытых частей нужны оба PE и способ прокладки");
+  change(dom, "sys", "dop1");
+  check(vis(d, "s1") && !vis(d, "s2") && vis(d, "lay"), "sechenie-provodnika-uravnivaniya: для открытой и сторонней части — один PE");
+  dom.window.close();
+  dom = await load("vybor-uzip.html"); d = dom.window.document;
+  check(!vis(d, "iimp") && vis(d, "vvod") && !vis(d, "faz"), "vybor-uzip: без молниезащиты поле Iimp скрыто, ввод виден, число фаз скрыто вне TT");
+  change(dom, "lps", "yes");
+  check(vis(d, "iimp") && !vis(d, "vvod"), "vybor-uzip: при молниезащите видно Iimp, ввод не влияет на класс и скрыт");
+  change(dom, "sys", "tt");
+  check(vis(d, "faz"), "vybor-uzip: для TT число фаз влияет на разрядник N–PE и должно быть видно");
+  dom.window.close();
+  dom = await load("obryv-pen.html"); d = dom.window.document;
+  check(vis(d, "pa") && vis(d, "pb") && vis(d, "pc") && !vis(d, "p1") && !vis(d, "rp") && !vis(d, "r0"), "obryv-pen: в трёхфазном режиме без пути через землю видны только три нагрузки");
+  change(dom, "set", "1"); change(dom, "put", "rz");
+  check(!vis(d, "pa") && vis(d, "p1") && vis(d, "rp") && vis(d, "r0"), "obryv-pen: у однофазного абонента одна нагрузка, при повторном заземлении видны Rп и R₀");
+  dom.window.close();
+}
+
+// Семантика: то, что источник не подтверждает, не выдаётся за норму.
+{
+  kind = "structural";
+  const text = file => fs.readFileSync(path.join(sourceDir, file), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  const bond = text("sechenie-provodnika-uravnivaniya.html");
+  check(/Применение проводников большего сечения, как правило, не требуется/.test(bond),
+    "sechenie-provodnika-uravnivaniya: потеряно «как правило» из ПУЭ 1.7.137");
+  check(/однозначно установить не удалось/.test(bond),
+    "sechenie-provodnika-uravnivaniya: правило половины наибольшего PE приписано ГОСТ Р 50571.5.54 без оговорки");
+  check(/эквивалентности по проводимости/.test(bond) && /Недостаточно данных/.test(bond),
+    "sechenie-provodnika-uravnivaniya: нет основания пересчёта металлов или оговорки «Недостаточно данных»");
+  const rod = text("dvoynoy-molnieotvod.html");
+  check(/3\.3\.2\.3/.test(rod) && /табл\. 3\.6/.test(rod) && !/3\.3\.2\.2/.test(rod) && !/табл(ица|\.) 3\.5/.test(rod),
+    "dvoynoy-molnieotvod: номер пункта и таблицы двойного стержневого молниеотвода — 3.3.2.3 и 3.6, а не 3.3.2.2 и 3.5");
+  check(/РД 34\.21\.122-87/.test(rod) && /в СО 153 его нет/.test(rod),
+    "dvoynoy-molnieotvod: правило попарной проверки rcx > 0 приписано СО 153 — оно из РД 34.21.122-87");
+  check(/категорию объекта не определяет/.test(rod),
+    "dvoynoy-molnieotvod: не сказано, что калькулятор не определяет категорию объекта");
+  const spd = text("vybor-uzip.html");
+  check(/дословно не виден/.test(spd) && !/подходит/.test(spd),
+    "vybor-uzip: требования раздела 534 выданы за дословно сверенные или страница обещает, что УЗИП «подходит»");
+  const pen = text("obryv-pen.html");
+  check(/100 % времени интервала в одну неделю/.test(pen) && /справочно/.test(pen),
+    "obryv-pen: формулировка ГОСТ 32144-2013 неточна или отклонения выданы за нормативный вердикт");
+  check(/питающиеся|однофазных ответвлений от ВЛ/.test(pen),
+    "obryv-pen: исключение ПУЭ 1.7.145 процитировано без условия об однофазных ответвлениях от ВЛ");
+}
 
 // Coverage guard считает фактически выполненные сценарии. Простое load()
 // больше не выдаётся за проверку формулы. Минимум один сценарий предотвращает

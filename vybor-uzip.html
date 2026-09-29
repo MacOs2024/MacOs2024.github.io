@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Выбор УЗИП на вводе: класс, Iimp, In, Uc и Up — ВольтКальк</title>
+<meta name="description" content="Минимальные требования к УЗИП на вводе электроустановки по IEC 60364-5-53, раздел 534: класс испытаний I или II, импульсный ток Iimp, номинальный разрядный ток In, наибольшее рабочее напряжение Uc по системе заземления и уровень защиты Up с учётом проводников подключения.">
+<link rel="canonical" href="https://macos2024.github.io/vybor-uzip.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Выбор УЗИП на вводе: класс, Iimp, In, Uc и Up — ВольтКальк">
+<meta property="og:description" content="Минимальные требования к УЗИП на вводе электроустановки по IEC 60364-5-53, раздел 534: класс испытаний I или II, импульсный ток Iimp, номинальный разрядный ток In, наибольшее рабочее напряжение Uc по системе заземления и уровень защиты Up с учётом проводников подключения.">
+<meta property="og:url" content="https://macos2024.github.io/vybor-uzip.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Выбор УЗИП на вводе: класс, Iimp, In, Uc и Up","url":"https://macos2024.github.io/vybor-uzip.html","description":"Минимальные требования к УЗИП на вводе электроустановки по IEC 60364-5-53, раздел 534: класс испытаний I или II, импульсный ток Iimp, номинальный разрядный ток In, наибольшее рабочее напряжение Uc по системе заземления и уровень защиты Up с учётом проводников подключения.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Выбор УЗИП на вводе: класс, Iimp, In, Uc и Up","item":"https://macos2024.github.io/vybor-uzip.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Нужен ли УЗИП в частном доме?","acceptedAnswer":{"@type":"Answer","text":"Это решают по оценке риска по IEC 60364-4-44, раздел 443, и IEC 62305-2. Калькулятор показывает только минимальные требования к УЗИП на вводе, если его ставят."}},{"@type":"Question","name":"Почему при молниеприёмнике на крыше нужен класс I?","acceptedAnswer":{"@type":"Answer","text":"Молниезащита отводит ток молнии в заземлитель, и часть этого тока через главную заземляющую шину уходит в проводники питающей линии. УЗИП класса I испытан импульсом формы 10/350 мкс и рассчитан на такой ток, УЗИП класса II — нет."}},{"@type":"Question","name":"Что значит 12,5 кА на вид защиты?","acceptedAnswer":{"@type":"Answer","text":"Это минимальный импульсный ток Iimp формы 10/350 на каждый вид защиты УЗИП класса I, который берут, только если ток нельзя установить расчётом по IEC 62305. В схеме «3+1» через разрядник N–PE проходит сумма токов всех проводников, поэтому в трёхфазной сети он должен выдерживать 4 · 12,5 = 50 кА."}},{"@type":"Question","name":"Почему важна длина проводов к УЗИП?","acceptedAnswer":{"@type":"Answer","text":"При импульсе на индуктивности проводников подключения падает около 1 кВ на метр, и это напряжение добавляется к уровню защиты Up. Если суммарная длина больше 0,5 м, оборудование получает заметно больше, чем обещает паспорт УЗИП."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Выбор УЗИП на вводе: класс, Iimp, In, Uc и Up</h1>
+<p class="intro">Калькулятор не выбирает конкретный аппарат и не решает, нужен ли УЗИП: это задача оценки риска. Он показывает <b>минимальные требования</b> к УЗИП на вводе при введённых данных. Не путайте с УЗО: его подбирает <a href="vybor-uzo.html">калькулятор выбора УЗО</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Выбор УЗИП на вводе: класс, Iimp, In, Uc и Up</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_sys"><label for="sys">Система заземления</label><div class="fw"><select id="sys"><option value="tnc">TN-C</option><option value="tns" selected>TN-S или TN-C-S (после разделения PEN)</option><option value="tt">TT</option><option value="itn">IT с распределённой нейтралью</option><option value="it">IT без нейтрали</option></select></div></div><div class="f" id="f_faz"><label for="faz">Сеть</label><div class="fw"><select id="faz"><option value="3" selected>Трёхфазная</option><option value="1">Однофазная</option></select></div><div class="hint">Для TT от этого зависит ток разрядника N–PE в схеме «3+1»</div></div><div class="f" id="f_u0"><label for="u0">Номинальное фазное напряжение U₀</label><div class="fw"><input id="u0" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_lps"><label for="lps">Внешняя молниезащита здания</label><div class="fw"><select id="lps"><option value="no" selected>Нет</option><option value="yes">Есть: молниеприёмники, токоотводы, заземлитель</option></select></div></div><div class="f" id="f_vvod"><label for="vvod">Ввод питания</label><div class="fw"><select id="vvod"><option value="cab" selected>Кабельный (подземный)</option><option value="vl">Воздушный: ВЛ или СИП</option></select></div></div><div class="f" id="f_iimp"><label for="iimp">Iimp по расчёту IEC 62305 на вид защиты</label><div class="fw"><input id="iimp" type="text" inputmode="decimal" autocomplete="off" value="" placeholder="пусто — расчёта нет"><span class="u">кА</span></div><div class="hint">Импульсный ток 10/350 на фазный проводник по расчёту распределения тока молнии</div></div><div class="f" id="f_lp"><label for="lp">Длина проводников подключения УЗИП a + b</label><div class="fw"><input id="lp" type="text" inputmode="decimal" autocomplete="off" value="0,5" placeholder=""><span class="u">м</span></div><div class="hint">От точки подключения к фазе до УЗИП и от УЗИП до шины PE; рекомендуется не больше 0,5 м</div></div><div class="f" id="f_dist"><label for="dist">Длина кабеля от УЗИП до защищаемого оборудования</label><div class="fw"><input id="dist" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">м</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Выбор УЗИП на вводе: как считается</h2>
+<div class="formula">Класс на вводе: I — при внешней молниезащите, II — без неё<br>Iimp — по расчёту IEC 62305 (12,5 кА на вид защиты — только если ток установить нельзя)&nbsp;&nbsp;&nbsp;In ≥ 5 кА (8/20)<br>Uc — по табл. 534.2 для системы заземления&nbsp;&nbsp;&nbsp;Up + ΔU ≤ 2,5 кВ, ΔU ≈ 1 кВ на 1 м проводников</div>
+<p><b>Что это за требования.</b> Раздел 534 стандарта IEC 60364-5-53 (редакция 2019 года с изменением 1 от 2020 года) задаёт минимальные параметры устройств защиты от импульсных перенапряжений. Нужен ли УЗИП вообще, решают по IEC 60364-4-44 (раздел 443) и оценке риска; калькулятор этого не определяет и аппарат не выбирает. Текст раздела 534 в поисковой выдаче дословно не виден: требования сверены по руководству Schneider Electric, по пересказу ГОСТ Р 50571.5.53-2013 (МЭК 60364-5-53:2002) и по BS 7671, где раздел 534 изложен так же. Поэтому результат — оценка минимальных требований, а не нормативный вердикт.</p>
+<p><b>Класс испытаний.</b> Если у здания есть внешняя молниезащита, часть тока молнии через главную заземляющую шину уходит в питающую линию, и на вводе ставят УЗИП, испытанный по классу I (тип 1): он рассчитан на импульс 10/350 мкс. Без внешней молниезащиты на вводе ставят УЗИП класса II. Для воздушного ввода часть руководств тоже рекомендует класс I, если линия подвержена прямым ударам; в видимом тексте норм такого безусловного требования нет. Поэтому при воздушном вводе без молниезащиты калькулятор класс не выбирает и выводит «Недостаточно данных»: решение за оценкой риска по IEC 62305-2.</p>
+<p><b>Токи.</b> Импульсный ток Iimp УЗИП класса I определяют расчётом распределения тока молнии по IEC 62305; только если установить его нельзя, берут не менее 12,5 кА на каждый вид защиты. Калькулятор это значение сам не подставляет: без расчётного Iimp статус — «Недостаточно данных». Номинальный разрядный ток In УЗИП на вводе — не менее 5 кА формы 8/20 на каждый вид защиты. В системе TT калькулятор считает схему «3+1» (тип соединения 2), которую применяют перед УЗО: между фазами и N — варисторы, между N и PE — разрядник, через который проходит сумма токов. Для него In — не менее 20 кА в трёхфазной и 10 кА в однофазной сети, а Iimp — сумма токов всех проводников, например 4 · 12,5 = 50 кА в трёхфазной сети.</p>
+<p><b>Наибольшее длительное рабочее напряжение Uc</b> выбирают по таблице 534.2 в зависимости от системы заземления и того, между какими проводниками включён УЗИП. Калькулятор берёт значения рисунка J23 руководства Schneider Electric, составленного по этой таблице (U — линейное напряжение, U = √3·U₀):</p>
+<table class="t"><tr><th scope="col">УЗИП включён между</th><th scope="col">TN</th><th scope="col">TT</th><th scope="col">IT</th></tr>
+<tr><td>фазой и N</td><td>1,1·U₀</td><td>1,1·U₀</td><td>1,1·U₀</td></tr>
+<tr><td>фазой и PE (PEN)</td><td>1,1·U₀</td><td>1,1·U₀</td><td>1,1·U</td></tr>
+<tr><td>N и PE</td><td>U₀</td><td>U₀</td><td>1,1·U₀</td></tr></table>
+<p>Для IT между фазой и PE часть источников приводит √3·U₀ без запаса 10 %; калькулятор берёт большее значение Schneider — 1,1·U. Для TN-C вид защиты «фаза – PEN» принят как «фаза – PE».</p>
+<p><b>Уровень защиты Up.</b> Для установок 230/400 В обычно принимают Up не выше 2,5 кВ — стойкости оборудования категории II. Но к Up на зажимах оборудования добавляется падение напряжения на проводниках подключения УЗИП: по Schneider Electric импульс 8 кА формы 8/20 даёт около 1 кВ на метр, поэтому суммарную длину проводников a + b ограничивают 0,5 м — и тогда добавка около 500 В. Калькулятор показывает, каким должен быть Up, чтобы сумма не превысила 2,5 кВ. Это оценка: реальное падение зависит от тока и формы импульса.</p>
+<p><b>Расстояние до оборудования.</b> Если кабель от УЗИП до защищаемого оборудования длиннее 10 м, из-за колебаний напряжение на оборудовании может достигать удвоенного Up; тогда рядом с оборудованием ставят дополнительный УЗИП, согласованный с вводным. Внешнюю молниезащиту здания считают отдельно — например, зону <a href="dvoynoy-molnieotvod.html">двойного стержневого молниеотвода</a>.</p>
+<h2>Выбор УЗИП на вводе: пример расчёта</h2>
+<p>Частный дом с системой TN-C-S, U₀ = 220 В, кабельный ввод, внешней молниезащиты нет. На вводе — УЗИП класса II: In не менее 5 кА на вид защиты, Uc между фазой и PE не менее 1,1 · 220 = <b>242 В</b>, между N и PE — не менее 220 В. При проводниках подключения 0,5 м уровень защиты Up должен быть не выше 2,5 − 0,5 = <b>2 кВ</b>.</p>
+<p>Если на доме есть молниеприёмник с токоотводами, на вводе нужен УЗИП класса I, а его Iimp определяют расчётом по IEC 62305. Без введённого расчётного Iimp калькулятор выведет «Недостаточно данных»: 12,5 кА на вид защиты допускаются, только если ток установить нельзя. При расчётном Iimp 12,5 кА в трёхфазной сети TT разрядник N–PE схемы «3+1» должен выдерживать 4 · 12,5 = <b>50 кА</b>.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Нужен ли УЗИП в частном доме?</h3><p>Это решают по оценке риска по IEC 60364-4-44, раздел 443, и IEC 62305-2. Калькулятор показывает только минимальные требования к УЗИП на вводе, если его ставят.</p><h3>Почему при молниеприёмнике на крыше нужен класс I?</h3><p>Молниезащита отводит ток молнии в заземлитель, и часть этого тока через главную заземляющую шину уходит в проводники питающей линии. УЗИП класса I испытан импульсом формы 10/350 мкс и рассчитан на такой ток, УЗИП класса II — нет.</p><h3>Что значит 12,5 кА на вид защиты?</h3><p>Это минимальный импульсный ток Iimp формы 10/350 на каждый вид защиты УЗИП класса I, который берут, только если ток нельзя установить расчётом по IEC 62305. В схеме «3+1» через разрядник N–PE проходит сумма токов всех проводников, поэтому в трёхфазной сети он должен выдерживать 4 · 12,5 = 50 кА.</p><h3>Почему важна длина проводов к УЗИП?</h3><p>При импульсе на индуктивности проводников подключения падает около 1 кВ на метр, и это напряжение добавляется к уровню защиты Up. Если суммарная длина больше 0,5 м, оборудование получает заметно больше, чем обещает паспорт УЗИП.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://webstore.iec.ch/en/publication/63543" rel="nofollow noopener" target="_blank">IEC 60364-5-53. Low-voltage electrical installations — Part 5-53: Selection and erection of electrical equipment — Devices for protection for safety, isolation, switching, control and monitoring</a> — International Electrotechnical Commission (IEC) — Редакция Ed. 4.0 (2019) с изменением 1 (2020); текст раздела 534 в выдаче поиска не виден — раздел 534 — выбор и монтаж УЗИП — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Selection_of_a_Type_1_SPD" rel="nofollow noopener" target="_blank">Selection of a Type 1 SPD</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел Iimp не менее 12,5 кА (10/350) на ветвь по IEC 60364-5-534, тип 1 — для зданий с молниезащитой — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Common_characteristics_of_SPDs_according_to_the_installation_characteristics" rel="nofollow noopener" target="_blank">Common characteristics of SPDs according to the installation characteristics</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел рис. J23 — минимальные Uc по табл. 534.2, Up 2,5 кВ — категория II для 230/400 В — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Connection_of_Surge_Protection_Device" rel="nofollow noopener" target="_blank">Connection of Surge Protection Device</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел длина проводников подключения не более 50 см, 8 кА 8/20 — около 1000 В на метр — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200105240" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.5.53-2013/МЭК 60364-5-53:2002. Электроустановки низковольтные. Часть 5-53. Выбор и монтаж электрооборудования. Отделение, коммутация и управление</a> — Росстандарт — Редакция от 06.09.2013, на основе МЭК 60364-5-53:2002; сверено по пересказу выдачи — раздел 534: In не менее 5 кА 8/20 на каждый вид защиты, тип соединения 2: In N–PE не менее 20 кА (3ф) и 10 кА (1ф) — обращение 27.09.2026</li><li><a href="https://electrical-engineering-portal.com/surge-protective-devices-spds-rcd" rel="nofollow noopener" target="_blank">Best practice for using surge protective devices (SPDs) and RCDs together</a> — Electrical Engineering Portal — Редакция онлайн-статья на дату обращения; изложение BS 7671 — раздел Iimp N–PE для трёхфазной схемы CT2 — 50 кА = 4 · 12,5 кА — обращение 27.09.2026</li><li><a href="https://www.weidmueller.com/int/products/electronics/lightning_and_surge_protection/installation_guidance.jsp" rel="nofollow noopener" target="_blank">Installation information and requirements — lightning and surge protection</a> — Weidmüller — Редакция онлайн-руководство на дату обращения — раздел защитное расстояние больше 10 м — до 2·Up на оборудовании, нужен дополнительный УЗИП — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Сеть 230/400 В: U₀ от 200 до 250 В; стойкость оборудования категории II — 2,5 кВ.</li><li>УЗИП устанавливается на вводе или рядом с ним; для TT — схема «3+1» (тип соединения 2).</li><li>Uc — по рис. J23 Schneider Electric, составленному по табл. 534.2; для IT между фазой и PE взято большее из найденных значений.</li><li>Падение напряжения на проводниках подключения — около 1 кВ на метр (Schneider Electric, импульс 8 кА формы 8/20).</li></ul><p><b>Границы применимости:</b></p><ul><li>Не определяет, нужен ли УЗИП: это решает оценка риска по IEC 60364-4-44 (раздел 443) и IEC 62305-2.</li><li>Не рассчитывает Iimp по IEC 62305 — его вводит пользователь.</li><li>Не выбирает конкретный УЗИП и не проверяет согласование ступеней, резервную защиту и отключающую способность.</li><li>Текст раздела 534 дословно не сверен; значения — по пересказу вторичных источников.</li><li>Для чувствительного оборудования категории I нужна дополнительная ступень защиты у оборудования — она не рассчитывается.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="dvoynoy-molnieotvod.html">Зона защиты двойного стержневого молниеотвода</a></li><li><a href="sechenie-provodnika-uravnivaniya.html">Сечение проводников уравнивания потенциалов</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function sync(){var lps=S('lps')==='yes';hideF('vvod',lps);hideF('iimp',!lps);hideF('faz',S('sys')!=='tt');}
+function init(){$('lps').addEventListener('change',sync);$('sys').addEventListener('change',sync);sync();}
+function volt(x){return fmt(x,4)+' В';}
+function calc(){
+var u0=P('u0'),lp=P('lp'),d=P('dist'),sys=S('sys'),lps=S('lps')==='yes',vl=S('vvod')==='vl',tri=S('faz')==='3',it=sys==='it'||sys==='itn';
+if(isNaN(u0))return err('Введите номинальное фазное напряжение U₀.');
+if(u0<200*(1-1e-12)||gt(u0,250))return err('Калькулятор рассчитан на сети 230/400 В: U₀ от 200 до 250 В. Для другого напряжения меняются и Uc, и допустимый уровень защиты.');
+if(isNaN(lp)||isNaN(d))return err('Введите длину проводников подключения УЗИП и длину кабеля до оборудования.');
+if(lp<=0||d<=0)return err('Длины должны быть больше нуля.');
+var ii=NaN;
+if(lps){var raw=String($('iimp').value).trim();
+ if(raw!==''){ii=P('iimp');
+  if(isNaN(ii))return err('Iimp по расчёту должен быть числом или пустым полем.');
+  if(ii<=0)return err('Iimp должен быть больше нуля.');}}
+var u11=1.1*u0,u1l=1.1*Math.sqrt(3)*u0,um=2.5-lp,ok=um>1e-9;
+var h=row('Класс испытаний УЗИП на вводе',lps?'I (тип 1): у здания есть внешняя молниезащита':(vl?'не определён: при воздушном вводе без молниезащиты нужна оценка риска':'II (тип 2)'));
+h+=row('Импульсный ток Iimp (10/350) на вид защиты',!lps?(vl?'зависит от класса':'не требуется для класса II'):(isNaN(ii)?'недостаточно данных: по расчёту IEC 62305; 12,5 кА — только если ток установить нельзя':'не менее '+fmt(ii,4)+' кА — по расчёту IEC 62305'));
+h+=row('Номинальный разрядный ток In (8/20) на вид защиты','не менее 5 кА');
+if(sys==='tt'){
+ if(lps)h+=row('Iimp разрядника N–PE в схеме «3+1»',isNaN(ii)?'недостаточно данных':'не менее '+fmt((tri?4:2)*ii,4)+' кА — сумма токов '+(tri?'четырёх':'двух')+' проводников');
+ h+=row('In разрядника N–PE в схеме «3+1»','не менее '+(tri?20:10)+' кА');}
+var UC={tnc:[['фаза – PEN','1,1·U₀ = '+volt(u11)]],
+ tns:[['фаза – PE и фаза – N','1,1·U₀ = '+volt(u11)],['N – PE','U₀ = '+volt(u0)]],
+ tt:[['фаза – N','1,1·U₀ = '+volt(u11)],['N – PE','U₀ = '+volt(u0)]],
+ itn:[['фаза – N','1,1·U₀ = '+volt(u11)],['фаза – PE','1,1·U = '+volt(u1l)],['N – PE','1,1·U₀ = '+volt(u11)]],
+ it:[['фаза – PE','1,1·U = '+volt(u1l)]]}[sys];
+for(var k=0;k<UC.length;k++)h+=row('Uc, '+UC[k][0],'не менее '+UC[k][1]);
+h+=row('Уровень защиты Up без учёта проводников','не выше 2,5 кВ — стойкость оборудования категории II');
+h+=row('Up с учётом проводников: '+fmt(lp,4)+' м × ≈1 кВ/м',ok?'не выше '+fmt(um,4)+' кВ':'недостижим: проводники слишком длинные');
+h+=row('Проводники подключения a + b',fmt(lp,4)+' м — '+(le(lp,0.5)?'не больше рекомендуемых 0,5 м':'больше рекомендуемых 0,5 м'));
+h+=row('Кабель до защищаемого оборудования',fmt(d,4)+' м — '+(le(d,10)?'в пределах 10 м':'больше 10 м: нужен дополнительный УЗИП у оборудования'));
+var st;
+if(!lps&&vl)st='Недостаточно данных: класс УЗИП для воздушного ввода определяет оценка риска по IEC 62305-2';
+else if(lps&&isNaN(ii))st='Недостаточно данных: Iimp устанавливают расчётом по IEC 62305';
+else if(!ok)st='Оценка: при проводниках '+fmt(lp,4)+' м уровень защиты 2,5 кВ недостижим — сократите проводники';
+else st='Оценка минимальных требований: класс '+(lps?'I, Iimp ≥ '+fmt(ii,4)+' кА':'II')+', In ≥ 5 кА, Uc ≥ '+volt(it?u1l:u11)+', Up ≤ '+fmt(um,4)+' кВ'+(le(lp,0.5)?'':'; проводники длиннее рекомендуемых 0,5 м')+(gt(d,10)?'; у оборудования нужен дополнительный УЗИП':'');
+var n='Требования раздела 534 IEC 60364-5-53 приведены по пересказу вторичных источников — Schneider Electric, ГОСТ Р 50571.5.53-2013, BS 7671: дословно текст стандарта в выдаче поиска не виден. ';
+if(lps)n+='При внешней молниезащите часть тока молнии через главную заземляющую шину уходит в питающую линию, поэтому на вводе нужен УЗИП класса I. '+(isNaN(ii)?'Iimp определяют расчётом распределения тока молнии по IEC 62305; 12,5 кА на вид защиты допускаются, только если ток установить нельзя, поэтому калькулятор это значение сам не подставляет. ':'');
+else if(vl)n+='Для воздушного ввода часть руководств рекомендует класс I при риске прямого удара в линию; безусловного требования в видимом тексте норм нет — решает оценка риска. ';
+if(sys==='tt')n+='Для TT взята схема «3+1» (тип соединения 2), которую применяют перед УЗО: разрядник N–PE пропускает сумму токов всех проводников. ';
+if(it)n+='Uc между фазой и PE для IT взято по Schneider Electric — 1,1·U; часть источников даёт √3·U₀, калькулятор выбирает большее. ';
+n+='Up с учётом проводников — оценка: Schneider Electric приводит около 1 кВ на метр при импульсе 8 кА формы 8/20. Нужен ли УЗИП вообще, решают по IEC 60364-4-44 (раздел 443) и оценке риска; калькулятор этого не определяет и конкретный аппарат не выбирает.';
+if(gt(d,10))n+=' При кабеле длиннее 10 м колебания могут поднять напряжение на оборудовании до удвоенного Up.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

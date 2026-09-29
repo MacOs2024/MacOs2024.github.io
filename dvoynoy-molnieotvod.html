@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Зона защиты двойного стержневого молниеотвода — ВольтКальк</title>
+<meta name="description" content="Зона защиты двух стержневых молниеотводов одинаковой высоты по СО 153-34.21.122-2003 (п. 3.3.2.3, табл. 3.6): предельные расстояния Lmax и Lc, высота зоны hc посередине, полуширина rcx и радиус rx на высоте объекта.">
+<link rel="canonical" href="https://macos2024.github.io/dvoynoy-molnieotvod.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Зона защиты двойного стержневого молниеотвода — ВольтКальк">
+<meta property="og:description" content="Зона защиты двух стержневых молниеотводов одинаковой высоты по СО 153-34.21.122-2003 (п. 3.3.2.3, табл. 3.6): предельные расстояния Lmax и Lc, высота зоны hc посередине, полуширина rcx и радиус rx на высоте объекта.">
+<meta property="og:url" content="https://macos2024.github.io/dvoynoy-molnieotvod.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Зона защиты двойного стержневого молниеотвода","url":"https://macos2024.github.io/dvoynoy-molnieotvod.html","description":"Зона защиты двух стержневых молниеотводов одинаковой высоты по СО 153-34.21.122-2003 (п. 3.3.2.3, табл. 3.6): предельные расстояния Lmax и Lc, высота зоны hc посередине, полуширина rcx и радиус rx на высоте объекта.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Зона защиты двойного стержневого молниеотвода","item":"https://macos2024.github.io/dvoynoy-molnieotvod.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему посередине зона ниже, чем у самих молниеотводов?","acceptedAnswer":{"@type":"Answer","text":"Разряды, идущие в промежуток между стержнями, перехватываются хуже, чем у самих стержней. Поэтому при расстоянии больше Lc граница зоны посередине опускается до высоты hc, а при расстоянии, равном Lmax, — до земли."}},{"@type":"Question","name":"Что будет, если расстояние между молниеотводами больше Lmax?","acceptedAnswer":{"@type":"Answer","text":"По СО 153-34.21.122-2003 такие стержни не образуют общей зоны и рассматриваются как два одиночных молниеотвода. Промежуток между их конусами защиты не защищён."}},{"@type":"Question","name":"Какая категория молниезащиты нужна моему объекту?","acceptedAnswer":{"@type":"Answer","text":"Калькулятор этого не определяет. Категории I–III — понятие РД 34.21.122-87, а СО 153-34.21.122-2003 оперирует надёжностью защиты. Требуемую надёжность и тип молниезащиты задаёт проект по виду и значимости объекта."}},{"@type":"Question","name":"Можно ли так же посчитать три и более молниеотвода?","acceptedAnswer":{"@type":"Answer","text":"Попарная проверка соседних молниеотводов с условием, что полуширина зоны посередине больше нуля, — правило РД 34.21.122-87, в СО 153 его нет. Каждую пару калькулятор посчитает, но вывод о защите всей группы — задача проекта."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Зона защиты двойного стержневого молниеотвода</h1>
+<p class="intro">Расчёт для <b>двух</b> стержневых молниеотводов одинаковой высоты до 150 м по СО 153-34.21.122-2003. Одиночный стержень считает <a href="molniezashchita.html">калькулятор зоны защиты стержневого молниеотвода</a>. Категорию объекта и требуемую надёжность калькулятор не определяет — их задаёт проект.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Зона защиты двойного стержневого молниеотвода</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_h"><label for="h">Высота каждого молниеотвода h</label><div class="fw"><input id="h" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_nad"><label for="nad">Надёжность защиты</label><div class="fw"><select id="nad"><option value="0.9">0,9</option><option value="0.99" selected>0,99</option><option value="0.999">0,999</option></select></div><div class="hint">Надёжность задаёт проект; калькулятор её не выбирает</div></div><div class="f" id="f_l"><label for="l">Расстояние между молниеотводами L</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="60" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_hx"><label for="hx">Высота защищаемого объекта hx</label><div class="fw"><input id="hx" type="text" inputmode="decimal" autocomplete="off" value="8" placeholder=""><span class="u">м</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Зона защиты двойного стержневого молниеотвода: как считается</h2>
+<div class="formula">h₀, r₀ — по табл. 3.4, как у одиночного стержня&nbsp;&nbsp;&nbsp;Lmax, Lc — по табл. 3.6<br>L ≤ Lc: hc = h₀&nbsp;&nbsp;&nbsp;Lc &lt; L ≤ Lmax: hc = h₀ · (Lmax − L) / (Lmax − Lc)<br>rx = r₀ · (h₀ − hx) / h₀&nbsp;&nbsp;&nbsp;rcx = r₀ · (hc − hx) / hc</div>
+<p>СО 153-34.21.122-2003, п. 3.3.2.3: молниеотвод считается двойным, когда расстояние между стержневыми молниеприёмниками L не превышает предельной величины Lmax; иначе оба рассматриваются как одиночные. Внешние области зоны — полуконусы с размерами h₀ и r₀, как у одиночного стержня (табл. 3.4). Внутренняя область между стержнями задаётся высотой hc посередине: при L ≤ Lc граница зоны не провисает и hc = h₀, при большем расстоянии провисает тем сильнее, чем ближе L к Lmax, а при L = Lmax опускается до земли. На высоте объекта hx полуширина зоны посередине — rcx, у самих молниеотводов — rx.</p>
+<p>Предельные расстояния — эмпирические формулы табл. 3.6 для молниеотводов высотой до 150 м:</p>
+<table class="t"><tr><th scope="col">Надёжность</th><th scope="col">h, м</th><th scope="col">Lmax</th><th scope="col">Lc</th></tr>
+<tr><td>0,9</td><td>до 30</td><td>5,75h</td><td>2,5h</td></tr>
+<tr><td>0,9</td><td>30–100</td><td>[5,75 − 3,57·10⁻³(h − 30)]h</td><td>2,5h</td></tr>
+<tr><td>0,9</td><td>100–150</td><td>5,5h</td><td>2,5h</td></tr>
+<tr><td>0,99</td><td>до 30</td><td>4,75h</td><td>2,25h</td></tr>
+<tr><td>0,99</td><td>30–100</td><td>[4,75 − 3,57·10⁻³(h − 30)]h</td><td>[2,25 − 0,01007(h − 30)]h</td></tr>
+<tr><td>0,99</td><td>100–150</td><td>4,5h</td><td>1,5h</td></tr>
+<tr><td>0,999</td><td>до 30</td><td>4,25h</td><td>2,25h</td></tr>
+<tr><td>0,999</td><td>30–100</td><td>[4,25 − 3,57·10⁻³(h − 30)]h</td><td>[2,25 − 0,01007(h − 30)]h</td></tr>
+<tr><td>0,999</td><td>100–150</td><td>4,0h</td><td>1,5h</td></tr></table>
+<p><b>Как сверялась таблица.</b> Номер раздела и таблицы виден в поисковой выдаче, а сам текст таблицы 3.6 — нет. Коэффициенты сверены по вторичным источникам — методическим пособиям и расчётам проектов — и по двум числовым примерам: проекту молниезащиты АЗС (h = 20 м, надёжность 0,99, L = 62,92 м: Lc = 45 м, hc = 10,27 м, rcx = 5,34 м на высоте 6,84 м) и расчёту подстанции (h = 29,7 м: Lc = 66,83 м, Lmax = 141,07 м). Значения Lmax в строках 100–150 м согласуются со средними строками: на h = 100 м те дают 5,5001h, 4,5001h и 4,0001h. Поэтому у страницы статус оценки. На h = 100 м калькулятор берёт строку 100–150 м: там Lc меньше — 1,5h против 1,545h, — и зона получается не шире.</p>
+<p><b>Надёжность, категории и зоны А и Б.</b> СО 153 задаёт зоны через надёжность защиты — вероятность того, что разряд не прорвётся в объект, целиком помещённый в зону. Категории молниезащиты I–III и зоны А и Б — понятия прежней инструкции РД 34.21.122-87, где зонам А и Б приписана ориентировочная надёжность 0,995 и 0,95. Точного соответствия между категориями РД и надёжностями 0,9, 0,99 и 0,999 из СО 153 калькулятор не устанавливает и категорию объекта не определяет: требуемую надёжность задаёт проект.</p>
+<p><b>Несколько молниеотводов.</b> Перечень типовых зон СО 153 включает одиночные и двойные стержневые и тросовые молниеотводы и замкнутый тросовый; отдельного правила для многократного стержневого молниеотвода в нём нет. Правило «зона многократного молниеотвода — зона попарно взятых соседних стержней, условие защищённости rcx &gt; 0 для каждой пары» относится к РД 34.21.122-87 с его формулами зон А и Б. Калькулятор считает одну пару по СО 153 и вывода о защищённости всей группы не делает — для неё нужен проект.</p>
+<h2>Зона защиты двойного стержневого молниеотвода: пример расчёта</h2>
+<p>Два молниеотвода по 20 м на расстоянии 60 м, надёжность 0,99. По табл. 3.4: h₀ = r₀ = 0,8 · 20 = 16 м. По табл. 3.6: Lmax = 4,75 · 20 = 95 м, Lc = 2,25 · 20 = 45 м. Так как 45 &lt; 60 ≤ 95, молниеотвод двойной, и высота зоны посередине hc = 16 · (95 − 60) / (95 − 45) = <b>11,2 м</b>. На высоте 8 м полуширина зоны посередине rcx = 16 · (11,2 − 8) / 11,2 ≈ <b>4,571 м</b>, у самих молниеотводов rx = 16 · (16 − 8) / 16 = <b>8 м</b>.</p>
+<p>Здание высотой 12 м между этими молниеотводами посередине уже не защищено: 12 ≥ 11,2. Чтобы поднять hc до 12 м при тех же стержнях, их нужно сблизить: из hc = 16 · (95 − L) / 50 ≥ 12 следует L ≤ 57,5 м.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему посередине зона ниже, чем у самих молниеотводов?</h3><p>Разряды, идущие в промежуток между стержнями, перехватываются хуже, чем у самих стержней. Поэтому при расстоянии больше Lc граница зоны посередине опускается до высоты hc, а при расстоянии, равном Lmax, — до земли.</p><h3>Что будет, если расстояние между молниеотводами больше Lmax?</h3><p>По СО 153-34.21.122-2003 такие стержни не образуют общей зоны и рассматриваются как два одиночных молниеотвода. Промежуток между их конусами защиты не защищён.</p><h3>Какая категория молниезащиты нужна моему объекту?</h3><p>Калькулятор этого не определяет. Категории I–III — понятие РД 34.21.122-87, а СО 153-34.21.122-2003 оперирует надёжностью защиты. Требуемую надёжность и тип молниезащиты задаёт проект по виду и значимости объекта.</p><h3>Можно ли так же посчитать три и более молниеотвода?</h3><p>Попарная проверка соседних молниеотводов с условием, что полуширина зоны посередине больше нуля, — правило РД 34.21.122-87, в СО 153 его нет. Каждую пару калькулятор посчитает, но вывод о защите всей группы — задача проекта.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://meganorm.ru/Data2/1/4294815/4294815349.htm" rel="nofollow noopener" target="_blank">СО 153-34.21.122-2003. Инструкция по устройству молниезащиты зданий, сооружений и промышленных коммуникаций</a> — Минэнерго России — Редакция утверждена приказом от 30.06.2003 № 280 — раздел 3.3.2.1, табл. 3.4 — h₀ и r₀, 3.3.2.3, табл. 3.6 — Lmax, Lc, hc, rcx; текст таблицы в выдаче не виден, коэффициенты сверены по вторичным источникам — обращение 27.09.2026</li><li><a href="https://sudact.ru/law/prikaz-minenergo-rf-ot-30062003-n-280/instruktsiia-po-ustroistvu-molniezashchity-zdanii/3/3.3/3.3.2/3.3.2.3/" rel="nofollow noopener" target="_blank">3.3.2.3. Зоны защиты двойного стержневого молниеотвода</a> — Приказ Минэнерго РФ от 30.06.2003 № 280; публикация sudact.ru — Редакция СО 153-34.21.122-2003 — раздел двойной — при L ≤ Lmax, иначе одиночные, таблица 3.6 — обращение 27.09.2026</li><li><a href="https://zandz.com/ru/biblioteka/proektirovanie/proekt_molniezashchity_i_zazemleniya_avtozapravochnoj_stancii/" rel="nofollow noopener" target="_blank">Проект молниезащиты и заземления автозаправочной станции (АЗС)</a> — ZandZ.com, библиотека проектов — Редакция онлайн-публикация на дату обращения — раздел hc = (Lmax − L)·h₀/(Lmax − Lc), h = 20 м, 0,99: L = 62,92 м, Lc = 45 м, hc = 10,27 м, rcx = 16·(10,27 − 6,84)/10,27 = 5,34 м — обращение 27.09.2026</li><li><a href="https://studfile.net/preview/9251881/page:25/" rel="nofollow noopener" target="_blank">7.7 Расчет молниезащиты подстанции</a> — StudFiles, учебный расчёт — Редакция онлайн-публикация на дату обращения — раздел Lc = 2,25·29,7 = 66,83 м, Lmax = 4,75·29,7 = 141,07 м — обращение 27.09.2026</li><li><a href="https://base.garant.ru/3924068/3e22e51c74db8e0b182fad67b502e640/" rel="nofollow noopener" target="_blank">РД 34.21.122-87. Инструкция по устройству молниезащиты зданий и сооружений. Приложение 3. Зоны защиты молниеотводов</a> — Минэнерго СССР; публикация ГАРАНТ — Редакция утверждена Главтехуправлением Минэнерго СССР 12.10.1987; предшественник СО 153-34.21.122-2003, использована только для сравнения терминов — раздел многократный стержневой молниеотвод: rcx &gt; 0 для всех попарно взятых молниеотводов, зоны А и Б — ориентировочная надёжность 0,995 и 0,95 — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Два стержневых молниеотвода одинаковой высоты h ≤ 150 м.</li><li>h₀ и r₀ — по табл. 3.4, Lmax и Lc — по табл. 3.6 СО 153-34.21.122-2003; на h = 100 м для табл. 3.6 берётся строка 100–150 м как более осторожная.</li><li>Надёжность защиты задаёт проект.</li></ul><p><b>Границы применимости:</b></p><ul><li>Молниеотводы разной высоты, тросовые и сетчатые молниеприёмники не рассчитываются.</li><li>Группа из трёх и более молниеотводов не рассчитывается: правила для неё в СО 153 нет.</li><li>Форма горизонтального сечения зоны в плане не строится; вписывается ли объект в зону, проверяет проект.</li><li>Категорию объекта и требуемую надёжность калькулятор не определяет.</li><li>Текст табл. 3.6 дословно не сверен; коэффициенты — по вторичным источникам и числовым примерам.</li><li>Не рассчитываются токоотводы, заземлитель, разделительные расстояния и защита от вторичных воздействий молнии.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="molniezashchita.html">Зона защиты стержневого молниеотвода</a></li><li><a href="vybor-uzip.html">Выбор УЗИП на вводе: класс, Iimp, In, Uc и Up</a></li><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function t34(h,nad){var h0,r0;
+if(nad==='0.9'){h0=0.85*h;r0=(h<=100?1.2:(1.2-0.001*(h-100)))*h;}
+else if(nad==='0.99'){if(h<=30){h0=0.8*h;r0=0.8*h;}else if(h<=100){h0=0.8*h;r0=(0.8-0.00143*(h-30))*h;}else{h0=(0.8-0.001*(h-100))*h;r0=0.7*h;}}
+else{if(h<=30){h0=0.7*h;r0=0.6*h;}else if(h<=100){h0=(0.7-0.000714*(h-30))*h;r0=(0.6-0.00143*(h-30))*h;}else{h0=(0.65-0.001*(h-100))*h;r0=(0.5-0.002*(h-100))*h;}}
+return [h0,r0];}
+function t36(h,nad){var a,b,lo,hi;
+if(nad==='0.9'){a=5.75;b=5.5;lo=2.5;hi=2.5;}else if(nad==='0.99'){a=4.75;b=4.5;lo=2.25;hi=1.5;}else{a=4.25;b=4.0;lo=2.25;hi=1.5;}
+if(h<=30)return [a*h,lo*h];
+if(h<100)return [(a-3.57e-3*(h-30))*h,(nad==='0.9'?2.5:2.25-0.01007*(h-30))*h];
+return [b*h,hi*h];}
+function calc(){
+var h=P('h'),L=P('l'),hx=P('hx'),nad=S('nad');
+if([h,L,hx].some(isNaN))return err('Заполните высоту молниеотводов, расстояние между ними и высоту объекта.');
+if(h<=0)return err('Высота молниеотвода должна быть больше нуля.');
+if(gt(h,150))return err('Формулы таблиц 3.4 и 3.6 СО 153-34.21.122-2003 применимы для молниеотводов высотой до 150 м. Для более высоких нужна специальная методика.');
+if(L<=0)return err('Расстояние между молниеотводами должно быть больше нуля.');
+if(hx<0)return err('Высота объекта не может быть отрицательной.');
+var z=t34(h,nad),h0=z[0],r0=z[1],w=t36(h,nad),lmax=w[0],lc=w[1];
+var rx=ge(hx,h0)?NaN:r0*(h0-hx)/h0,hxs=fmt(hx,4)+' м';
+var hh=row('Высота зоны у молниеотвода h₀ (табл. 3.4)',fmt(h0,4)+' м')+row('Радиус зоны у земли r₀ (табл. 3.4)',fmt(r0,4)+' м')+
+ row('Предельное расстояние Lmax (табл. 3.6)',fmt(lmax,4)+' м')+row('Расстояние без провеса зоны Lc (табл. 3.6)',fmt(lc,4)+' м');
+var tail='Правило попарной проверки нескольких молниеотводов (rcx > 0) взято из РД 34.21.122-87, в СО 153 его нет; категорию объекта калькулятор не определяет.';
+if(gt(L,lmax)){
+ return out(hh+row('Режим зоны','L = '+fmt(L,4)+' м > Lmax — общей зоны нет')+
+ row('Радиус зоны каждого молниеотвода на высоте '+hxs,isNaN(rx)?'нет — hx ≥ h₀':fmt(rx,4)+' м')+
+ row('Статус','Оценка по СО 153: L > Lmax — общей зоны нет, молниеотводы считаются одиночными')+
+ note('По п. 3.3.2.3 молниеотвод считается двойным, только если расстояние между стержнями не превышает Lmax; иначе оба рассматриваются как одиночные, и промежуток между их конусами не защищён. Сблизьте стержни или поднимите их. '+tail));
+}
+var flat=le(L,lc),hc=flat?h0:h0*(lmax-L)/(lmax-lc),mid=!ge(hx,hc),rcx=mid?r0*(hc-hx)/hc:NaN;
+var n='Внешние области зоны — полуконусы одиночного молниеотвода (табл. 3.4), внутренняя — с высотой hc посередине (п. 3.3.2.3, табл. 3.6 СО 153-34.21.122-2003). ';
+if(mid)n+='Объект защищён с принятой надёжностью, только если целиком помещается в зону: сравните его размеры в плане с полушириной rcx посередине и радиусом rx у молниеотводов — форму сечения калькулятор не строит. ';
+else n+='На высоте hx ≥ hc сечение зоны разорвано: посередине между молниеотводами объект этой высоты не защищён'+(isNaN(rx)?'.':', даже если у самих молниеотводов зона ещё есть.')+' ';
+out(hh+row('Режим зоны',flat?'L = '+fmt(L,4)+' м ≤ Lc — граница зоны без провеса':'Lc < L = '+fmt(L,4)+' м ≤ Lmax — граница зоны провисает')+
+row('Высота зоны посередине hc',fmt(hc,4)+' м')+
+row('Полуширина зоны посередине на высоте '+hxs+', rcx',mid?fmt(rcx,4)+' м (ширина '+fmt(2*rcx,4)+' м)':'нет — hx ≥ hc')+
+row('Радиус зоны у молниеотвода на высоте '+hxs+', rx',isNaN(rx)?'нет — hx ≥ h₀':fmt(rx,4)+' м')+
+row('Статус',mid?'Оценка по СО 153: на высоте '+hxs+' зона между молниеотводами не разорвана':'Оценка по СО 153: на высоте '+hxs+' посередине между молниеотводами зоны нет (hx ≥ hc)')+
+note(n+tail));
+}
+
+</script>
+</body>
+</html>

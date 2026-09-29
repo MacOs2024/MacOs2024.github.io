@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Заземление в системе TT: условие RA·IΔn ≤ 50 В — ВольтКальк</title>
+<meta name="description" content="Проверка защиты при повреждении в системе TT: напряжение RA·IΔn на открытых проводящих частях не выше 50 В по ПУЭ 1.7.59 и МЭК 60364-4-41, п. 411.5.3. Наибольшее допустимое сопротивление заземления для уставки УЗО, запас и сезонная поправка.">
+<link rel="canonical" href="https://macos2024.github.io/zazemlenie-tt-uzo.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Заземление в системе TT: условие RA·IΔn ≤ 50 В — ВольтКальк">
+<meta property="og:description" content="Проверка защиты при повреждении в системе TT: напряжение RA·IΔn на открытых проводящих частях не выше 50 В по ПУЭ 1.7.59 и МЭК 60364-4-41, п. 411.5.3. Наибольшее допустимое сопротивление заземления для уставки УЗО, запас и сезонная поправка.">
+<meta property="og:url" content="https://macos2024.github.io/zazemlenie-tt-uzo.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Заземление в системе TT: условие RA·IΔn ≤ 50 В","url":"https://macos2024.github.io/zazemlenie-tt-uzo.html","description":"Проверка защиты при повреждении в системе TT: напряжение RA·IΔn на открытых проводящих частях не выше 50 В по ПУЭ 1.7.59 и МЭК 60364-4-41, п. 411.5.3. Наибольшее допустимое сопротивление заземления для уставки УЗО, запас и сезонная поправка.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Заземление в системе TT: условие RA·IΔn ≤ 50 В","item":"https://macos2024.github.io/zazemlenie-tt-uzo.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему в системе TT обязательно УЗО, а не просто автомат?","acceptedAnswer":{"@type":"Answer","text":"Ток замыкания на корпус в системе TT идёт через заземлитель дома и заземление источника, и сопротивление этого пути обычно слишком велико, чтобы автомат сработал быстро. ПУЭ 1.7.59 требует для системы TT автоматического отключения питания с обязательным применением УЗО. МЭК 60364-4-41 допускает вместо УЗО устройство защиты от сверхтока только при надёжно обеспеченном малом полном сопротивлении петли замыкания — это отдельная проверка, её калькулятор не выполняет."}},{"@type":"Question","name":"Для УЗО 30 мА предел 1667 Ом — значит, заземлитель может быть плохим?","acceptedAnswer":{"@type":"Answer","text":"Формально условие RA·IΔn ≤ 50 В выполняется до 1667 Ом, но предел — не цель. BS 7671 предупреждает, что сопротивление заземлителя больше 200 Ом может быть нестабильным, а в сухой или морозный сезон оно растёт в разы. Если корпус щита защищён только вводным УЗО на 100 или 300 мА, предел будет 500 или 166,7 Ом."}},{"@type":"Question","name":"Что входит в RA?","acceptedAnswer":{"@type":"Answer","text":"По МЭК 60364-4-41 RA — сумма сопротивлений заземлителя и защитного проводника до открытых проводящих частей. ПУЭ 1.7.59 уточняет: при защите одним УЗО нескольких электроприёмников учитывают заземляющий проводник наиболее удалённого из них."}},{"@type":"Question","name":"Замер RA сделан весной. Можно ли считать условие выполненным?","acceptedAnswer":{"@type":"Answer","text":"Нет. Весной грунт влажный, и сопротивление заземлителя ниже, чем в засуху или мороз. По замеру без сезонной поправки калькулятор показывает, во сколько раз RA может вырасти до предела, но вывода «выполняется» не делает. Для вывода нужен замер в период наибольшего сопротивления грунта или расчёт с сезонным коэффициентом. Если RA уже по весеннему замеру выше предела, условие не выполняется."}},{"@type":"Question","name":"На вводе УЗО 300 мА, на группах 30 мА. Какое IΔn вводить?","acceptedAnswer":{"@type":"Answer","text":"То, которое защищает проверяемые открытые проводящие части. Для приборов на групповых линиях — 30 мА, для корпуса вводного щита и всего, что защищено только вводным УЗО, — 300 мА. Проверяют оба случая; определяющим обычно оказывается вводное УЗО."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Заземление в системе TT: условие RA·IΔn ≤ 50 В</h1>
+<p class="intro">В системе TT ток замыкания на корпус возвращается к источнику через землю, и его ограничивает сопротивление заземлителя дома. Отключение выполняет УЗО, а напряжение на корпусах при токе IΔn не должно превышать <b>50 В</b>. Введите уставку УЗО и сопротивление RA и укажите, откуда оно известно.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Заземление в системе TT: условие RA·IΔn ≤ 50 В</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_dev"><label for="dev">Чем защищены открытые проводящие части</label><div class="fw"><select id="dev"><option value="rcd" selected>УЗО или дифавтомат</option><option value="ocpd">Только автомат или предохранитель, без УЗО</option></select></div></div><div class="f" id="f_idn"><label for="idn">Номинальный отключающий дифференциальный ток IΔn того УЗО, которое защищает эти части</label><div class="fw"><select id="idn"><option value="0.01">10 мА</option><option value="0.03" selected>30 мА</option><option value="0.1">100 мА</option><option value="0.3">300 мА</option><option value="0.5">500 мА</option><option value="1">1 А</option></select></div><div class="hint">Если на вводе стоит селективное УЗО типа S на 100–300 мА, а на группах — 30 мА, корпус щита и всё, что защищено только вводным УЗО, проверяют по IΔn вводного</div></div><div class="f" id="f_ra"><label for="ra">Сопротивление RA: заземлитель и защитный проводник до самой удалённой открытой проводящей части</label><div class="fw"><input id="ra" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">Ом</span></div></div><div class="f" id="f_rasrc"><label for="rasrc">Откуда известно RA</label><div class="fw"><select id="rasrc"><option value="season" selected>Замер без сезонной поправки, например во влажный сезон</option><option value="worst">Для худших условий: расчёт с сезонной поправкой или замер в сухой или морозный период</option></select></div><div class="hint">Сопротивление заземлителя меняется по сезонам; вывод на весь год делают по RA для худших условий</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Заземление в системе TT: как считается</h2>
+<div class="formula">RA · IΔn ≤ 50 В&nbsp;&nbsp;&nbsp;RA,max = 50 В / IΔn</div>
+<p><b>ПУЭ 1.7.59.</b> Система TT допускается только в тех случаях, когда условия электробезопасности в системе TN не могут быть обеспечены. Для защиты при косвенном прикосновении в такой электроустановке выполняют автоматическое отключение питания с обязательным применением УЗО, и должно соблюдаться условие Ra·Ia ≤ 50 В, где Ia — ток срабатывания защитного устройства, Ra — суммарное сопротивление заземлителя и заземляющего проводника, а при применении УЗО для защиты нескольких электроприёмников — заземляющего проводника наиболее удалённого электроприёмника.</p>
+<p><b>МЭК 60364-4-41, п. 411.5.3.</b> Если для защиты при повреждении применено УЗО, выполняются два условия: время отключения по п. 411.3.2.2 или 411.3.2.4 и RA·IΔn ≤ 50 В, где RA — сумма сопротивлений заземлителя и защитного проводника открытых проводящих частей, IΔn — номинальный отключающий дифференциальный ток УЗО. Калькулятор проверяет второе условие. Для УЗО ток срабатывания Ia из ПУЭ — это IΔn: при нём отключение гарантировано.</p>
+<p><b>Редакции.</b> Условие сверено по тексту МЭК 60364-4-41:2005 — на нём основан ГОСТ Р 50571.3-2009. С 01.10.2022 в России действует ГОСТ Р 50571.4.41-2022 (МЭК 60364-4-41:2017, то есть с изменением 1). По выдаче поиска изменение касается прежде всего времени отключения: требования распространены на конечные цепи до 63 А с розетками. Текст п. 411.5.3 новой редакции в выдаче целиком не виден, но британский BS 7671:2018+A1:2020 в той же нумерации сохраняет условие RA·IΔn ≤ 50 В.</p>
+<table class="t"><tr><th scope="col">IΔn</th><th scope="col">RA,max = 50 В / IΔn</th></tr>
+<tr><td>10 мА</td><td>5000 Ом</td></tr>
+<tr><td>30 мА</td><td>1667 Ом</td></tr>
+<tr><td>100 мА</td><td>500 Ом</td></tr>
+<tr><td>300 мА</td><td>166,7 Ом</td></tr>
+<tr><td>500 мА</td><td>100 Ом</td></tr>
+<tr><td>1 А</td><td>50 Ом</td></tr></table>
+<p>Значение 1667 Ом для УЗО 30 мА совпадает с таблицей 41.5 BS 7671. Но предел — не цель: BS 7671 предупреждает, что сопротивление заземлителя больше 200 Ом может быть нестабильным.</p>
+<p><b>Сезон.</b> RA меняется в течение года. По Schneider Electric на глубине около 1 м сопротивление заземлителя в умеренном климате меняется в 1–3 раза между влажной зимой и сухим летом, а промёрзший грунт повышает удельное сопротивление на порядки. МЭК 60364-5-54 требует выбирать тип и глубину заложения заземлителя так, чтобы высыхание и промерзание грунта не увеличивали его сопротивление выше требуемого. Поэтому по замеру без сезонной поправки калькулятор не делает вывода «выполняется», а показывает, во сколько раз RA может вырасти до предела. Если RA уже по замеру больше предела, условие не выполняется: в худший сезон RA не меньше.</p>
+<p><b>Несколько УЗО.</b> Условие относится к тому УЗО, которое защищает данные открытые проводящие части. Если на вводе стоит селективное УЗО типа S на 100–300 мА, а на группах — 30 мА, то для частей на групповых линиях берут IΔn групповых УЗО, а корпус щита и всё, что защищено только вводным УЗО, проверяют по IΔn вводного. Согласование ступеней — на странице <a href="selektivnost-uzo.html">селективности УЗО</a>.</p>
+<p><b>Что не проверяется.</b> Время отключения по таблице 41.1 и выбор типа и уставки УЗО здесь не рассчитываются — см. <a href="vybor-uzo.html">предварительный выбор УЗО</a> и <a href="summarnyy-tok-utechki-uzo.html">суммарный ток утечки</a>: слишком малый IΔn при больших естественных утечках приводит к ложным отключениям. Для автомата или предохранителя без УЗО условие RA·IΔn неприменимо: МЭК 60364-4-41 (п. 411.5.2) допускает в TT защиту устройством от сверхтока, только если надёжно обеспечено малое полное сопротивление петли Zs, — это другое условие, и калькулятор его не рассчитывает.</p>
+<p><b>Особые установки.</b> Schneider Electric указывает, что для временных электроустановок, например строительных площадок, и для сельскохозяйственных и садоводческих помещений значение 50 В заменяется на 25 В — допустимое RA тогда вдвое меньше. Калькулятор считает общий случай — 50 В.</p>
+<p>Сопротивление самого заземлителя оценивают по его размерам: <a href="vertikalnyy-zazemlitel.html">вертикальный электрод</a>, <a href="gorizontalnyy-zazemlitel.html">горизонтальная полоса</a>, <a href="kolcevoy-zazemlitel.html">кольцевой контур</a> или <a href="raschet-zazemleniya.html">несколько стержней</a>; готовый заземлитель измеряют.</p>
+<h2>Заземление в системе TT: пример расчёта</h2>
+<p>Дача в системе TT, УЗО 30 мА на вводе, RA измерено весной — 45 Ом. RA·IΔn = 45 · 0,03 = <b>1,35 В</b>; наибольшее допустимое RA = 50 / 0,03 ≈ <b>1667 Ом</b>, запас 1667 / 45 ≈ 37. По весеннему замеру вывод на весь год не делается: запас намного больше разброса в 1–3 раза, который Schneider Electric приводит для глубины около 1 м, но промерзание повышает сопротивление сильнее — нужен замер в сухой или морозный период либо сезонная поправка.</p>
+<p>Щит в металлическом корпусе защищён только вводным селективным УЗО 300 мА, RA для худших условий — 200 Ом: 200 · 0,3 = <b>60 В</b> больше 50 В, условие не выполняется. Предел для этого УЗО — 50 / 0,3 ≈ 166,7 Ом. Для сравнения, пример Schneider Electric: при RA = 20 Ом допустимо IΔn ≤ 50 / 20 = 2,5 А, и стандартное УЗО 300 мА отключит повреждение.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему в системе TT обязательно УЗО, а не просто автомат?</h3><p>Ток замыкания на корпус в системе TT идёт через заземлитель дома и заземление источника, и сопротивление этого пути обычно слишком велико, чтобы автомат сработал быстро. ПУЭ 1.7.59 требует для системы TT автоматического отключения питания с обязательным применением УЗО. МЭК 60364-4-41 допускает вместо УЗО устройство защиты от сверхтока только при надёжно обеспеченном малом полном сопротивлении петли замыкания — это отдельная проверка, её калькулятор не выполняет.</p><h3>Для УЗО 30 мА предел 1667 Ом — значит, заземлитель может быть плохим?</h3><p>Формально условие RA·IΔn ≤ 50 В выполняется до 1667 Ом, но предел — не цель. BS 7671 предупреждает, что сопротивление заземлителя больше 200 Ом может быть нестабильным, а в сухой или морозный сезон оно растёт в разы. Если корпус щита защищён только вводным УЗО на 100 или 300 мА, предел будет 500 или 166,7 Ом.</p><h3>Что входит в RA?</h3><p>По МЭК 60364-4-41 RA — сумма сопротивлений заземлителя и защитного проводника до открытых проводящих частей. ПУЭ 1.7.59 уточняет: при защите одним УЗО нескольких электроприёмников учитывают заземляющий проводник наиболее удалённого из них.</p><h3>Замер RA сделан весной. Можно ли считать условие выполненным?</h3><p>Нет. Весной грунт влажный, и сопротивление заземлителя ниже, чем в засуху или мороз. По замеру без сезонной поправки калькулятор показывает, во сколько раз RA может вырасти до предела, но вывода «выполняется» не делает. Для вывода нужен замер в период наибольшего сопротивления грунта или расчёт с сезонным коэффициентом. Если RA уже по весеннему замеру выше предела, условие не выполняется.</p><h3>На вводе УЗО 300 мА, на группах 30 мА. Какое IΔn вводить?</h3><p>То, которое защищает проверяемые открытые проводящие части. Для приборов на групповых линиях — 30 мА, для корпуса вводного щита и всего, что защищено только вводным УЗО, — 300 мА. Проверяют оба случая; определяющим обычно оказывается вводное УЗО.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://base.garant.ru/3923497/527e9918c43708943f2731cd1ab5367a/" rel="nofollow noopener" target="_blank">ПУЭ. Глава 1.7. Заземление и защитные меры электробезопасности</a> — Минэнерго России; текст по публикации ГАРАНТ — Редакция 7-е издание, утв. приказом Минэнерго России от 08.07.2002 № 204 — раздел 1.7.59 — система TT, обязательное применение УЗО, условие Ra·Ia ≤ 50 В и определения Ra и Ia — обращение 27.09.2026</li><li><a href="https://cdn.standards.iteh.ai/samples/10887/b410f7c10853465e9e7f293d9e18fd98/IEC-60364-4-41-2005.pdf" rel="nofollow noopener" target="_blank">IEC 60364-4-41. Low-voltage electrical installations — Part 4-41: Protection for safety — Protection against electric shock</a> — International Electrotechnical Commission (IEC) — Редакция Ed. 5.0 (2005); формулировки сверены по фрагменту стандарта в выдаче поиска — раздел 411.5.3 — RA·IΔn ≤ 50 В и время отключения по 411.3.2.2 или 411.3.2.4, 411.5.2 — устройство защиты от сверхтока в TT только при надёжно обеспеченном малом Zs — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200193070" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.4.41-2022/МЭК 60364-4-41:2017. Электроустановки низковольтные. Часть 4-41. Защита для обеспечения безопасности. Защита от поражения электрическим током</a> — Росстандарт — Редакция утверждён приказом от 08.09.2022 № 897-ст, введён с 01.10.2022 взамен ГОСТ Р 50571.3-2009 — раздел действующая редакция; по выдаче поиска изменения касаются времени отключения и дополнительной защиты УДТ, текст п. 411.5.3 в выдаче не виден — расчёт по формулировке МЭК 60364-4-41:2005 — обращение 27.09.2026</li><li><a href="https://electrical.theiet.org/wiring-matters/years/2021/87-september-2021/tt-earthing-considerations/" rel="nofollow noopener" target="_blank">TT earthing considerations (BS 7671:2018+A1:2020)</a> — IET, Wiring Matters — Редакция сентябрь 2021 — раздел 411.5.3 — RA × IΔn ≤ 50 V, таблица 41.5 — 1667 Ом для 30 мА, примечание 2 к таблице 41.5 — сопротивление заземлителя выше 200 Ом может быть нестабильным — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/TT_system_-_Principle" rel="nofollow noopener" target="_blank">TT system - Principle</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел IΔn ≤ 50/RA; пример RA = 20 Ом → IΔn ≤ 2,5 А, 25 В вместо 50 В для временных электроустановок и сельскохозяйственных помещений — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Installation_and_measurements_of_earth_electrodes" rel="nofollow noopener" target="_blank">Installation and measurements of earth electrodes</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел сезонное изменение сопротивления в 1–3 раза на глубине около 1 м, промёрзший грунт повышает удельное сопротивление на порядки — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200108284" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.5.54-2013/МЭК 60364-5-54:2011. Электроустановки низковольтные. Часть 5-54. Заземляющие устройства, защитные проводники и защитные проводники уравнивания потенциалов</a> — Росстандарт — Редакция 2013, на основе МЭК 60364-5-54:2011 (в выдаче упомянута и редакция 2024 года) — раздел 542 — тип и глубина заложения заземлителя: высыхание и промерзание грунта не должны увеличивать сопротивление выше требуемого — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Автоматическое отключение выполняет УЗО, которое защищает проверяемые открытые проводящие части; его IΔn задан выбором.</li><li>RA — сумма сопротивлений заземлителя и защитного проводника до самой удалённой открытой проводящей части.</li><li>Предельное напряжение прикосновения — 50 В переменного тока, общий случай ПУЭ 1.7.59 и МЭК 60364-4-41.</li><li>Вывод «выполняется» делается только по RA для худших условий; по замеру без сезонной поправки показывается допустимый рост RA.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не проверяет время отключения по таблице 41.1, тип УЗО, селективность и естественные утечки.</li><li>Не рассчитывает защиту автоматом или предохранителем без УЗО — для неё нужно отдельное условие по полному сопротивлению петли Zs.</li><li>Не учитывает особых установок с пониженным пределом 25 В.</li><li>Сопротивление заземлителя не рассчитывает: его оценивают по размерам на страницах заземлителей и подтверждают измерением.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="vertikalnyy-zazemlitel.html">Вертикальный заземлитель: стержень, труба, уголок</a></li><li><a href="gorizontalnyy-zazemlitel.html">Горизонтальный заземлитель: полоса или пруток</a></li><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="summarnyy-tok-utechki-uzo.html">Суммарный ток утечки нескольких потребителей на одном УЗО</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function fx(x,lim){for(var p=4;p<=12;p++){if(x===lim||Number(x.toPrecision(p))!==lim)return fmt(x,p);}return fmt(x,12);}
+function raz(x){var s=fmt(x,3);if(s==='1'&&x!==1)s=fx(x,1);if(/[,·]/.test(s))return s+' раза';var n=Math.abs(Math.round(x))%100,m=n%10;return s+((m>=2&&m<=4&&(n<12||n>14))?' раза':' раз');}
+
+function le(a,b){return a<=b*(1+1e-12);}
+function sync(){var r=S('dev')==='rcd';hideF('idn',!r);hideF('ra',!r);hideF('rasrc',!r);}
+function init(){$('dev').addEventListener('change',sync);sync();}
+function calc(){
+if(S('dev')!=='rcd')return out(row('Статус','Недостаточно данных: для автомата или предохранителя условие RA·IΔn неприменимо')+
+ note('ПУЭ 1.7.59 требует в системе TT автоматического отключения питания с обязательным применением УЗО. МЭК 60364-4-41 (п. 411.5.2) допускает вместо УЗО устройство защиты от сверхтока, только если надёжно обеспечено малое полное сопротивление петли замыкания Zs: такую защиту проверяют по Zs и току срабатывания аппарата, а не по RA·IΔn. Это условие калькулятор не рассчитывает; сопротивление заземлителя дома обычно слишком велико, чтобы автомат отключил замыкание на корпус быстро.'));
+var idn=N(S('idn')),ra=P('ra');
+if(isNaN(ra))return err('Введите сопротивление RA.');
+if(ra<=0)return err('Сопротивление RA должно быть больше нуля.');
+var u=ra*idn,rmax=50/idn,imax=50/ra,k=rmax/ra;
+if(!isFinite(u)||!isFinite(imax)||!isFinite(k))return err('Значение RA вне диапазона надёжного расчёта.');
+var ok=le(u,50),worst=S('rasrc')==='worst',st,n;
+if(!ok)st='Условие RA·IΔn ≤ 50 В не выполняется';
+else if(worst)st='Условие RA·IΔn ≤ 50 В выполняется';
+else st='Недостаточно данных: RA измерено без сезонной поправки';
+if(!ok)n=(worst?'':'Уже по замеру: в сухой или морозный сезон RA не меньше измеренного. ')+'Напряжение на открытых проводящих частях при токе IΔn больше 50 В. Снизьте RA — дополнительными электродами или контуром — либо примените УЗО с меньшим IΔn, если это допускают его назначение и естественные утечки линий.';
+else if(worst)n='При RA для худших условий напряжение на открытых проводящих частях при токе IΔn не превышает 50 В.';
+else n='RA измерено без поправки на сезон, поэтому вывод на весь год не делается. '+(k<=1+1e-9?'RA уже на пределе: любой сезонный рост нарушит условие. ':'До предела RA может вырасти в '+raz(k)+'. ')+'Schneider Electric указывает, что на глубине около 1 м сопротивление заземлителя в умеренном климате меняется между влажной зимой и сухим летом в 1–3 раза, а промёрзший грунт повышает удельное сопротивление на порядки. Для вывода нужно RA для худших условий: замер в сухой или морозный период либо расчёт с сезонной поправкой.';
+n+=' Условие относится к УЗО, которое защищает эти открытые проводящие части: при нескольких УЗО его проверяют для каждого. Время отключения по таблице 41.1 МЭК 60364-4-41 и выбор типа УЗО здесь не проверяются.';
+out(row('Напряжение на открытых проводящих частях при токе IΔn: RA·IΔn',fx(u,50)+' В')+
+row('Наибольшее допустимое RA = 50 В / IΔn',fmt(rmax,4)+' Ом')+
+row('Наибольший допустимый IΔn при этом RA = 50 В / RA',si(imax,'А'))+
+row(ok?'Запас RA,max / RA':'Превышение RA / RA,max',fx(ok?k:1/k,1))+
+row('Статус',st)+
+note(n));
+}
+
+</script>
+</body>
+</html>
