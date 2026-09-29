@@ -298,12 +298,17 @@ for (const file of htmlFiles) {
       Boolean(control.closest("label"));
     check(hasName, `${file}: поле ${control.id || control.className || control.tagName} не связано с подписью`);
   }
-  for (const anchor of document.querySelectorAll('a[href$=".html"]')) {
-    const target = anchor.getAttribute("href");
-    // Внешний адрес источника тоже может оканчиваться на .html — это не
-    // локальный файл сайта, и проверять его существование на диске нельзя.
-    if (/^[a-z][a-z0-9+.-]*:/i.test(target)) continue;
-    check(fs.existsSync(path.join(sourceDir, target)), `${file}: битая ссылка ${target}`);
+  for (const anchor of document.querySelectorAll("a[href]")) {
+    const href = anchor.getAttribute("href");
+    // Ссылка на собственный домен проверяется как локальная страница; чужой
+    // адрес источника (даже с .html на конце) — не файл сайта. Якорь и
+    // параметры отбрасываются: «x.html#раздел» тоже ведёт на x.html.
+    const own = href.match(/^https:\/\/macos2024\.github\.io\/([^?#]*)/i);
+    let target = null;
+    if (own) target = own[1] || "index.html";
+    else if (!/^[a-z][a-z0-9+.-]*:/i.test(href) && !href.startsWith("#")) target = href.split(/[?#]/)[0];
+    if (!target || !target.endsWith(".html")) continue;
+    check(fs.existsSync(path.join(sourceDir, target)), `${file}: битая ссылка ${href}`);
   }
   dom.window.close();
 }
@@ -1549,9 +1554,9 @@ await invalid("gorizontalnyy-zazemlitel.html", { l: "десять" }, "Запо�
 // d = 0,0475 м, t = 1,95 м → 31,76 Ом. Эталон 3 — формула Дуайта (BS 7430)
 // для стержня от поверхности: 5,3052·(ln 1500 − 1) = 33,49 Ом.
 await calculate("vertikalnyy-zazemlitel.html", {}, ["Эквивалентный диаметр d16 мм", "Глубина середины электрода T = t₀ + L/22 м", "Оценочное сопротивление R33,53 Ом", "Для сравнения: грубая оценка ρ/L33,33 Ом", "завышает R на 2,4–11,7 %", "Сравнение с целью33,53 Ом — выше заданной цели уже при этом ρ", "СтатусОценка, требуется измерение", "Даже без сезонной поправки оценка выше цели"]);
-await calculate("vertikalnyy-zazemlitel.html", { prof: "angle", b: "50", l: "2,5", t0: "0,7", rt: "40", rhosrc: "worst" }, ["Эквивалентный диаметр d47,5 мм (0,95·b)", "T = t₀ + L/21,95 м", "Оценочное сопротивление R31,76 Ом", "грубая оценка ρ/L40 Ом", "Сравнение с целью31,76 Ом — не выше заданной цели", "СтатусОценка, требуется измерение", "0,93–0,946·b"]);
+await calculate("vertikalnyy-zazemlitel.html", { prof: "angle", b: "50", l: "2,5", t0: "0,7", rt: "40", rhosrc: "worst" }, ["Эквивалентный диаметр d47,5 мм (0,95·b)", "T = t₀ + L/21,95 м", "Оценочное сопротивление R31,76 Ом", "грубая оценка ρ/L40 Ом", "Сравнение с целью31,76 Ом — не выше заданной цели", "СтатусОценка, требуется измерение", "0,92–0,946·b"]);
 await calculate("vertikalnyy-zazemlitel.html", { t0: "0" }, ["T = t₀ + L/21,5 м", "Оценочное сопротивление R34,36 Ом", "По формуле Дуайта для стержня от поверхности (BS 7430)33,49 Ом", "Расхождение двух формул2,58 %", "формула Дуайта — на 0,4–2,2 %"]);
-await calculate("vertikalnyy-zazemlitel.html", { prof: "strip", b: "40", l: "2", t0: "0,5", rt: "50", rhosrc: "worst" }, ["Эквивалентный диаметр d20 мм (0,5·b)", "Оценочное сопротивление R44,92 Ом", "грубая оценка ρ/L50 Ом", "не выше заданной цели", "0,6–0,64·b"]);
+await calculate("vertikalnyy-zazemlitel.html", { prof: "strip", b: "40", l: "2", t0: "0,5", rt: "50", rhosrc: "worst" }, ["Эквивалентный диаметр d20 мм (0,5·b)", "Оценочное сопротивление R44,92 Ом", "грубая оценка ρ/L50 Ом", "не выше заданной цели", "эквивалентный диаметр больше 0,5·b"]);
 await calculate("vertikalnyy-zazemlitel.html", { rt: "34" }, ["33,53 Ом — не выше цели при этом ρ", "до цели ρ может вырасти в 1,01 раза", "СтатусНедостаточно данных: ρ без сезонной поправки"]);
 await calculate("vertikalnyy-zazemlitel.html", { rt: "33,54", rhosrc: "worst" }, ["33,53 Ом — не выше заданной цели"], "boundary");
 await calculate("vertikalnyy-zazemlitel.html", { rt: "33,53", rhosrc: "worst" }, ["33,535 Ом — выше заданной цели"], "boundary");
@@ -1580,8 +1585,9 @@ await calculate("zamykanie-na-zemlyu-it.html", { ra: "318,3" }, ["RA·Id66 В", 
 await calculate("zamykanie-na-zemlyu-it.html", { ra: "318,4" }, ["RA больше 0,3 ёмкостного сопротивления сети 1/(3·ω·C) = 1061 Ом"], "boundary");
 await calculate("zamykanie-na-zemlyu-it.html", { u0: "577" }, ["Id ≈ 3·ω·C·U₀543,8 мА"], "boundary");
 await calculate("zamykanie-na-zemlyu-it.html", { u0: "578" }, ["U₀ больше 577 В"], "boundary");
-await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", rasrc: "worst" }, ["Ток первого замыкания Id200 мА", "RA·Id2 В", "RA = 50 В / Id250 Ом", "Запас RA,max / RA25", "СтатусУсловие RA·Id ≤ 50 В выполняется"]);
-await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "500", ra: "100", rasrc: "worst" }, ["RA·Id50 В", "СтатусУсловие RA·Id ≤ 50 В выполняется"], "boundary");
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", rasrc: "worst", pist: "le100" }, ["Ток первого замыкания Id200 мА", "RA·Id2 В", "RA = 50 В / Id250 Ом", "Запас RA,max / RA25", "СтатусУсловие RA·Id ≤ 50 В выполняется"]);
+// Граница 50 В при RA не больше 4 Ом, чтобы вывод не зависел от оговорок ПУЭ 1.7.104: 12,5 А · 4 Ом = 50 В.
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "12,5", id_unit: "1", ra: "4", rasrc: "worst" }, ["RA·Id50 В", "RA = 50 В / Id4 Ом", "СтатусУсловие RA·Id ≤ 50 В выполняется"], "boundary");
 await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "500", ra: "100,01", rasrc: "worst" }, ["RA·Id50,01 В", "Превышение RA / RA,max1,0001", "СтатусУсловие RA·Id ≤ 50 В не выполняется"], "boundary");
 await calculate("zamykanie-na-zemlyu-it.html", { idmode: "measured", id: "200", rasrc: "worst" }, ["СтатусНедостаточно данных: Id измерен при текущей конфигурации сети", "может вырасти в 25 раз"]);
 await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200" }, ["СтатусНедостаточно данных: RA измерено без сезонной поправки"]);
@@ -1687,7 +1693,7 @@ await invalid("zamykanie-na-zemlyu-it.html", { u0: "220 В" }, "Введите �
   check(/L ≥ 5·t/.test(hor) && /занижать R/.test(hor) && /численн/.test(hor), "gorizontalnyy-zazemlitel: не показано, где и в какую сторону ошибается формула");
   check(/kolcevoy-zazemlitel\.html/.test(fs.readFileSync(path.join(sourceDir, "gorizontalnyy-zazemlitel.html"), "utf8")), "gorizontalnyy-zazemlitel: нет ссылки на кольцевой заземлитель");
   const ver = text("vertikalnyy-zazemlitel.html");
-  check(/0,95/.test(ver) && /0,93–0,946·b/.test(ver) && /BS 7430/.test(ver) && /ρ\/\(n·L\)/.test(ver), "vertikalnyy-zazemlitel: нет проверки коэффициента уголка, формулы Дуайта или сравнения с ρ/(n·L)");
+  check(/0,95/.test(ver) && /0,92–0,946·b/.test(ver) && /BS 7430/.test(ver) && /ρ\/\(n·L\)/.test(ver), "vertikalnyy-zazemlitel: нет проверки коэффициента уголка, формулы Дуайта или сравнения с ρ/(n·L)");
   const it = text("zamykanie-na-zemlyu-it.html");
   check(it.includes("«Как правило, не требуется принимать значение сопротивления заземляющего устройства менее 4 Ом. Допускается сопротивление заземляющего устройства до 10 Ом, если соблюдено приведенное выше условие, а мощность генераторов или трансформаторов не превышает 100 кВ·А, в том числе суммарная мощность генераторов или трансформаторов, работающих параллельно»"),
     "zamykanie-na-zemlyu-it: оговорки ПУЭ 1.7.104 процитированы неточно");
@@ -1857,10 +1863,11 @@ await calculate("obryv-pen.html", { pa: "3", pb: "", pc: "", put: "rz" }, ["См
 await calculate("obryv-pen.html", { set: "1" }, ["Ток нагрузки0 А — пути для тока нет", "Напряжение на нагрузке0 В (0 % U₀)", "Потенциал N и PE абонента (корпусов) относительно нейтрали источника220 В (100 % U₀)", "СтатусОценка аварийного режима: корпуса под потенциалом 220 В, нагрузка получает 0 В", "Однофазный абонент: ток нагрузки может вернуться к источнику только через землю"]);
 // Эталон IET (Wiring Matters, «Broken PEN»): 230 В, 7 кВт, заземлитель 2,1 Ом → 230·2,1/(230²/7000 + 2,1) = 50,01 В.
 await calculate("obryv-pen.html", { set: "1", u0: "230", p1: "7", put: "rz", rp: "2,1", r0: "0" }, ["Ток нагрузки23,82 А", "Напряжение на нагрузке180 В", "Потенциал корпусов относительно удалённой земли50,01 В"]);
-// Граница 50 В (ПУЭ 1.7.53: «превышает 50 В»). Числа подобраны так, чтобы 50 В получались точно и в
-// двоичной арифметике: 200 В, 2,5 кВт → R = 16 Ом; ток 200/(16 + 8 + 8) = 6,25 А; 6,25 · 8 = 50 В.
-await calculateWithout("obryv-pen.html", { set: "1", u0: "200", p1: "2,5", put: "rz", rp: "8", r0: "8" }, ["Ток нагрузки6,25 А", "Напряжение на нагрузке100 В", "Потенциал корпусов относительно удалённой земли50 В", "не выше 50 В, но безопасным это не делает"], ["больше 50 В"], "boundary");
-await calculate("obryv-pen.html", { set: "1", u0: "200", p1: "2,501", put: "rz", rp: "8", r0: "8" }, ["Потенциал корпусов относительно удалённой земли50,01 В", "больше 50 В: ПУЭ 1.7.53"], "boundary");
+// Граница 50 В (ПУЭ 1.7.53: «превышает 50 В») проверяется по верхней оценке напряжения прикосновения —
+// полному смещению U_N′ относительно нейтрали источника. 100 В, 1,25 кВт → R = 8 Ом; Rп + R₀ = 8 Ом:
+// ток 100/16 = 6,25 А, U_N′ = 6,25 · 8 = 50 В точно и в двоичной арифметике.
+await calculateWithout("obryv-pen.html", { set: "1", u0: "100", p1: "1,25", put: "rz", rp: "4", r0: "4" }, ["Ток нагрузки6,25 А", "Напряжение на нагрузке50 В", "Потенциал N и PE абонента (корпусов) относительно нейтрали источника50 В (50 % U₀)", "Потенциал корпусов относительно удалённой земли25 В", "не выше 50 В даже относительно нейтрали источника, но безопасным это не делает"], ["больше 50 В"], "boundary");
+await calculate("obryv-pen.html", { set: "1", u0: "100", p1: "1,251", put: "rz", rp: "4", r0: "4" }, ["Потенциал N и PE абонента (корпусов) относительно нейтрали источника50,02 В", "Потенциал корпусов относительно удалённой земли25,01 В", "напряжение может достигать 50,02 В (относительно удалённой земли — 25,01 В), больше 50 В: ПУЭ 1.7.53"], "boundary");
 // Единицы: 2000 Вт — то же, что 2 кВт.
 await calculate("obryv-pen.html", { pa: "2000", pa_unit: "1", pb: "2", pc: "2" }, ["Смещение нейтрали нагрузки U_N′0 В"]);
 // Сети до 1 кВ: в трёхфазном режиме линейное √3·U₀ ≤ 1000 В, то есть U₀ ≤ 577,35 В;
@@ -1944,9 +1951,46 @@ await invalid("obryv-pen.html", { set: "1", p1: "" }, "Введите мощно
 // независимого проверяющего). Ожидаемые строки посчитаны отдельно.
 await calculate("zazemlenie-tt-uzo.html", { ra: "1667", rasrc: "worst" }, ["Наибольшее допустимое RA = 50 В / IΔn1666,7 Ом", "Наибольший допустимый IΔn при этом RA = 50 В / RA29,99 мА", "СтатусУсловие RA·IΔn ≤ 50 В не выполняется"], "boundary");
 await calculate("zazemlenie-tt-uzo.html", { idn: "0.3", ra: "166,67", rasrc: "worst" }, ["Наибольшее допустимое RA = 50 В / IΔn166,667 Ом", "Наибольший допустимый IΔn при этом RA = 50 В / RA299,99 мА", "СтатусУсловие RA·IΔn ≤ 50 В не выполняется"], "boundary");
-await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "30", ra: "1667", rasrc: "worst" }, ["Наибольшее допустимое RA = 50 В / Id1666,7 Ом", "СтатусУсловие RA·Id ≤ 50 В не выполняется"], "boundary");
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "30", ra: "1667", rasrc: "worst" }, ["RA = 50 В / Id1666,7 Ом", "СтатусУсловие RA·Id ≤ 50 В не выполняется"], "boundary");
 // Порог 50 В на обрыве PEN: 200 В, 2,50001 кВт, Rп = R₀ = 8 Ом → 50,0001 В, а не «50 В … больше 50 В».
-await calculate("obryv-pen.html", { set: "1", u0: "200", p1: "2,50001", put: "rz", rp: "8", r0: "8" }, ["Потенциал корпусов относительно удалённой земли50,0001 В", "50,0001 В, больше 50 В"], "boundary");
+await calculate("obryv-pen.html", { set: "1", u0: "100", p1: "1,25001", put: "rz", rp: "4", r0: "4" }, ["Потенциал N и PE абонента (корпусов) относительно нейтрали источника50,0002 В", "может достигать 50,0002 В (относительно удалённой земли — 25 В), больше 50 В"], "boundary");
+
+// Находки независимого проверяющего партии №2 (ожидаемые строки посчитаны отдельно).
+// IT, ПУЭ 1.7.104: сопротивление больше 4 Ом допускается только до 10 Ом и только при мощности
+// источника до 100 кВ·А — иначе вывода «выполняется» нет, даже если RA·Id ≤ 50 В.
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", ra: "4", rasrc: "worst" }, ["RA·Id0,8 В", "ПУЭ 1.7.104: 4 и 10 ОмRA не больше 4 Ом", "СтатусУсловие RA·Id ≤ 50 В выполняется"], "boundary");
+await calculateWithout("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", ra: "4,01", rasrc: "worst" }, ["СтатусНедостаточно данных: RA больше 4 Ом, а мощность источника не задана (ПУЭ 1.7.104)"], ["Условие RA·Id ≤ 50 В выполняется"], "boundary");
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", ra: "8", rasrc: "worst", pist: "le100" }, ["ПУЭ 1.7.104: 4 и 10 Омбольше 4 Ом, но не больше 10 Ом — допускается", "СтатусУсловие RA·Id ≤ 50 В выполняется", "этот допуск выполнен"]);
+await calculateWithout("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", ra: "8", rasrc: "worst", pist: "gt100" }, ["СтатусНедостаточно данных: RA больше 4 Ом при мощности источника больше 100 кВ·А (ПУЭ 1.7.104)", "допуск до 10 Ом к такому источнику не относится"], ["Условие RA·Id ≤ 50 В выполняется"]);
+await calculate("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", ra: "10", rasrc: "worst", pist: "le100" }, ["СтатусУсловие RA·Id ≤ 50 В выполняется"], "boundary");
+await calculateWithout("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", ra: "10,01", rasrc: "worst", pist: "le100" }, ["СтатусНедостаточно данных: RA больше 10 Ом (ПУЭ 1.7.104)", "больше 10 Ом: такого значения пункт прямо не допускает"], ["Условие RA·Id ≤ 50 В выполняется"], "boundary");
+await calculateWithout("zamykanie-na-zemlyu-it.html", { idmode: "design", id: "200", ra: "20", rasrc: "worst", pist: "le100" }, ["RA·Id4 В", "СтатусНедостаточно данных: RA больше 10 Ом (ПУЭ 1.7.104)"], ["Условие RA·Id ≤ 50 В выполняется"]);
+// Обрыв PEN: верхняя оценка напряжения прикосновения — полное смещение U_N′ (между корпусом и
+// металлом, связанным с исправным PEN), а не потенциал относительно удалённой земли.
+// 230 В, 2 кВт, Rп = R₀ = 10 Ом: R = 26,45 Ом, ток 230/46,45 = 4,952 А, U_N′ = 99,03 В, земля 49,52 В.
+await calculateWithout("obryv-pen.html", { set: "1", u0: "230", p1: "2", put: "rz", rp: "10", r0: "10" }, ["Потенциал N и PE абонента (корпусов) относительно нейтрали источника99,03 В (43,06 % U₀)", "Потенциал корпусов относительно удалённой земли49,52 В", "может достигать 99,03 В (относительно удалённой земли — 49,52 В), больше 50 В"], ["не выше 50 В"]);
+// Двойной молниеотвод: сближение стержней не спасает широкое здание — при L ≤ Lc на высоте 12 м
+// полуширина rcx = 16·(16 − 12)/16 = 4 м. Отображение у границы Lmax = 4,75·29,7 = 141,075 м.
+await calculate("dvoynoy-molnieotvod.html", { l: "45", hx: "12" }, ["rcx4 м (ширина 8 м)"]);
+await calculate("dvoynoy-molnieotvod.html", { h: "29,7", l: "141,1", hx: "0" }, ["L = 141,1 м > Lmax", "Lmax (табл. 3.6)141,07 м"], "boundary");
+// УЗИП и уравнивание: число у порога показывается по ту же сторону порога, что и точное.
+await calculate("vybor-uzip.html", { lp: "0,50001" }, ["0,50001 м — больше рекомендуемых 0,5 м"], "boundary");
+await calculate("vybor-uzip.html", { dist: "10,0001" }, ["10,0001 м — больше 10 м: нужен дополнительный УЗИП у оборудования либо УЗИП с Up не выше половины стойкости оборудования"], "boundary");
+await calculate("sechenie-provodnika-uravnivaniya.html", { smax: "50,00002", mpe: "al", mb: "al" }, ["Половина наибольшего PE (ПУЭ 1.7.137)25,00001 мм² алюминия", "СтатусНедостаточно данных"], "boundary");
+{
+  kind = "structural";
+  const text = file => fs.readFileSync(path.join(sourceDir, file), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  const rod = text("dvoynoy-molnieotvod.html");
+  check(!/L ≤ 57,5/.test(rod) && /поместится только объект шириной до 8 м/.test(rod),
+    "dvoynoy-molnieotvod: пример снова предлагает сблизить стержни, хотя зона на высоте здания остаётся узкой");
+  const pen = text("obryv-pen.html");
+  check(!/удалённой земли — (его )?верхняя оценка/.test(pen) && /верхняя оценка — U/.test(pen),
+    "obryv-pen: верхней оценкой напряжения прикосновения должно быть полное смещение U_N′, а не потенциал относительно удалённой земли");
+  const single = text("molniezashchita.html");
+  check(/в сто раз строже/.test(single) && !/в тысячу раз/.test(single),
+    "molniezashchita: 0,999 против 0,9 — это допуск в 100 раз строже (0,1 % против 10 %), а не в 1000");
+}
 
 // Сверка при интеграции партии №2. Надёжность молниезащиты по СО 153 —
 // это не категория объекта: по таблице 2.1 обычным объектам соответствуют
