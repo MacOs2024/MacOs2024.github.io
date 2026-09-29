@@ -2002,6 +2002,23 @@ await calculate("sechenie-provodnika-uravnivaniya.html", { smax: "50,00002", mpe
     "molniezashchita: 0,999 против 0,9 — это допуск в 100 раз строже (0,1 % против 10 %), а не в 1000");
 }
 
+// TT, особые установки (замечание P1 бота-ревьюера): для временных, сельскохозяйственных и
+// садоводческих установок предел 25 В (Schneider Electric), вид установки выбирает пользователь.
+// 300 мА, RA 100 Ом: 30 В > 25 В — не выполняется, хотя по 50 В выполнялось бы; RA,max = 25/0,3 = 83,33 Ом.
+await calculateWithout("zazemlenie-tt-uzo.html", { ul: "25", idn: "0.3", ra: "100", rasrc: "worst" }, ["RA·IΔn30 В", "Наибольшее допустимое RA = 25 В / IΔn83,33 Ом", "Наибольший допустимый IΔn при этом RA = 25 В / RA250 мА", "СтатусУсловие RA·IΔn ≤ 25 В не выполняется", "Предел 25 В для временных"], ["Условие RA·IΔn ≤ 25 В выполняется", "≤ 50 В"]);
+await calculate("zazemlenie-tt-uzo.html", { idn: "0.3", ra: "100", rasrc: "worst" }, ["СтатусУсловие RA·IΔn ≤ 50 В выполняется", "выберите её вид"]);
+await calculate("zazemlenie-tt-uzo.html", { ul: "25", idn: "0.1", ra: "250", rasrc: "worst" }, ["RA·IΔn25 В", "СтатусУсловие RA·IΔn ≤ 25 В выполняется"], "boundary");
+await calculate("zazemlenie-tt-uzo.html", { ul: "25", idn: "0.1", ra: "250,01", rasrc: "worst" }, ["RA·IΔn25,001 В", "Наибольший допустимый IΔn при этом RA = 25 В / RA99,996 мА", "СтатусУсловие RA·IΔn ≤ 25 В не выполняется"], "boundary");
+{
+  kind = "structural";
+  const dom = await load("zazemlenie-tt-uzo.html");
+  const d = dom.window.document;
+  check(d.getElementById("f_ul").style.display !== "none", "zazemlenie-tt-uzo: при УЗО должен быть виден выбор вида электроустановки");
+  const dev = d.getElementById("dev"); dev.value = "ocpd"; dev.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  check(d.getElementById("f_ul").style.display === "none", "zazemlenie-tt-uzo: в режиме автомата вид установки не влияет на расчёт и должен быть скрыт");
+  dom.window.close();
+}
+
 // Сверка при интеграции партии №2. Надёжность молниезащиты по СО 153 —
 // это не категория объекта: по таблице 2.1 обычным объектам соответствуют
 // уровни I–IV с надёжностью 0,98/0,95/0,90/0,80, и подпись «0,9 — обычные
