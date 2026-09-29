@@ -1565,6 +1565,11 @@ await calculate("vertikalnyy-zazemlitel.html", { d: "7,99" }, ["Эквивале
 await calculate("vertikalnyy-zazemlitel.html", { d: "60", l: "10", t0: "2" }, ["Оценочное сопротивление R9,84 Ом", "T = t₀ + L/27 м"], "boundary");
 await calculate("vertikalnyy-zazemlitel.html", { d: "60,01" }, ["вне проверенной области 8–60 мм"], "boundary");
 await calculate("vertikalnyy-zazemlitel.html", { prof: "angle", b: "63,16" }, ["Эквивалентный диаметр d = 60,002 мм вне проверенной области 8–60 мм"], "boundary");
+// Коэффициент 0,95 проверен для уголков 40–63 мм (замечание бота-ревьюера): уже 40 мм — вне области.
+// Эталон на границе: b = 40 → d = 38 мм, T = 2 м: 5,3052·(ln(6/0,038) + ½·ln 2,2) = 28,95 Ом.
+await calculate("vertikalnyy-zazemlitel.html", { prof: "angle", b: "40" }, ["Эквивалентный диаметр d38 мм (0,95·b)", "Оценочное сопротивление R28,95 Ом"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { prof: "angle", b: "39,99" }, ["Ширина полки уголка меньше 40 мм — вне проверенной области"], "boundary");
+await calculate("vertikalnyy-zazemlitel.html", { prof: "angle", b: "10" }, ["Ширина полки уголка меньше 40 мм"], "boundary");
 await calculate("vertikalnyy-zazemlitel.html", { l: "0,99" }, ["Длина электрода вне проверенной области 1–10 м"], "boundary");
 await calculate("vertikalnyy-zazemlitel.html", { l: "10,01" }, ["Длина электрода вне проверенной области 1–10 м"], "boundary");
 await calculate("vertikalnyy-zazemlitel.html", { t0: "2,01" }, ["Заглубление верхнего конца больше 2 м"], "boundary");
