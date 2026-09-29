@@ -382,7 +382,7 @@ faqs=[
  ("Почему калькулятор не выдаёт «селективно» без оговорок?",
   "Предельные времена стандарта заданы в отдельных испытательных точках и сами по себе не доказывают селективность при любом токе утечки. Правило «кратность 3 и выдержка» — необходимая основа, а окончательное подтверждение даёт изготовитель."),
 ],
-related=["vybor-difavtomata", "vybor-uzo", "emkostnyy-tok-utechki"],
+related=["vybor-difavtomata", "vybor-uzo", "emkostnyy-tok-utechki", "zazemlenie-tt-uzo"],
 review_status="agent-reviewed",
 sources=[
  dict(title="Coordination of residual current protective devices",

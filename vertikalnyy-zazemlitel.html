@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Вертикальный заземлитель: стержень, труба, уголок</title>
+<meta name="description" content="Оценка сопротивления растеканию одиночного вертикального заземлителя — круглого стержня, трубы, уголка или полосы — с учётом заглубления верхнего конца по формуле метода зеркального отображения с численной проверкой; для стержня от поверхности — сравнение с формулой Дуайта в записи BS 7430.">
+<link rel="canonical" href="https://macos2024.github.io/vertikalnyy-zazemlitel.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Вертикальный заземлитель: стержень, труба, уголок">
+<meta property="og:description" content="Оценка сопротивления растеканию одиночного вертикального заземлителя — круглого стержня, трубы, уголка или полосы — с учётом заглубления верхнего конца по формуле метода зеркального отображения с численной проверкой; для стержня от поверхности — сравнение с формулой Дуайта в записи BS 7430.">
+<meta property="og:url" content="https://macos2024.github.io/vertikalnyy-zazemlitel.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Вертикальный заземлитель: стержень, труба, уголок","url":"https://macos2024.github.io/vertikalnyy-zazemlitel.html","description":"Оценка сопротивления растеканию одиночного вертикального заземлителя — круглого стержня, трубы, уголка или полосы — с учётом заглубления верхнего конца по формуле метода зеркального отображения с численной проверкой; для стержня от поверхности — сравнение с формулой Дуайта в записи BS 7430.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Вертикальный заземлитель: стержень, труба, уголок","item":"https://macos2024.github.io/vertikalnyy-zazemlitel.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему у уголка d = 0,95·b, а у полосы 0,5·b?","acceptedAnswer":{"@type":"Answer","text":"Для длинного электрода сечение любой формы заменяют кругом с таким же эквивалентным радиусом. Методические материалы по расчёту заземлителей дают для уголка 0,95·b, для полосы 0,5·b. Двумерный расчёт показал для реальных уголков 0,92–0,946·b, это меняет сопротивление меньше чем на 1 %, а у полос с реальной толщиной эквивалентный диаметр больше 0,5·b, так что 0,5·b даёт запас."}},{"@type":"Question","name":"Зачем заглублять верх электрода?","acceptedAnswer":{"@type":"Answer","text":"Верхний слой грунта сильнее всего пересыхает и промерзает. Schneider Electric указывает, что уже на глубине около 1 м сопротивление меняется по сезонам в 1–3 раза, а промерзание повышает удельное сопротивление на порядки. Заглубление уводит электрод в более стабильный грунт; в однородном грунте выигрыш от него невелик."}},{"@type":"Question","name":"Почему формула Дуайта и формула с заглублением дают разные числа для стержня от поверхности?","acceptedAnswer":{"@type":"Answer","text":"Формула с заглублением берёт потенциал в середине электрода, где он наибольший, а формула Дуайта — средний потенциал вдоль электрода. Поэтому первая получается на 2–4,2 % больше. Численная проверка показывает, что обе завышают сопротивление, а формула Дуайта точнее — на 0,4–2,2 %."}},{"@type":"Question","name":"Можно ли по этому расчёту подобрать число стержней?","acceptedAnswer":{"@type":"Answer","text":"Нет. Сопротивление группы больше, чем сопротивление одного электрода, делённое на их число: поля растекания перекрываются. Для группы нужны коэффициенты использования или проектный расчёт, а готовый заземлитель измеряют."}},{"@type":"Question","name":"Откуда взять ρ?","acceptedAnswer":{"@type":"Answer","text":"По результатам изысканий или замера. Значение, измеренное во влажный период или взятое из таблицы, отмечайте как значение без сезонной поправки: тогда калькулятор не сравнивает оценку с целью окончательно, а показывает, во сколько раз ρ может вырасти до цели. Если оценка выше цели уже при таком ρ, вывод от сезона не зависит."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Вертикальный заземлитель: стержень, труба, уголок</h1>
+<p class="intro">Один электрод в однородном грунте: калькулятор учитывает <b>форму сечения</b> через эквивалентный диаметр и <b>заглубление верхнего конца</b>. Группы электродов и коэффициенты использования здесь не рассчитываются. Результат — оценка; готовый заземлитель измеряют.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Вертикальный заземлитель: стержень, труба, уголок</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_rho"><label for="rho">Удельное сопротивление грунта ρ</label><div class="fw"><input id="rho" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">Ом·м</span></div><div class="hint">По изысканиям или замеру</div></div><div class="f" id="f_rhosrc"><label for="rhosrc">Откуда известно ρ</label><div class="fw"><select id="rhosrc"><option value="season" selected>Замер или справочное значение без сезонной поправки</option><option value="worst">Расчётное для худшего сезона: изыскания или замер с сезонной поправкой</option></select></div></div><div class="f" id="f_prof"><label for="prof">Сечение электрода</label><div class="fw"><select id="prof"><option value="round" selected>Круглый стержень или труба — наружный диаметр d</option><option value="angle">Уголок равнополочный — ширина полки b, d = 0,95·b</option><option value="strip">Полоса — ширина b, d = 0,5·b</option></select></div></div><div class="f" id="f_d"><label for="d">Наружный диаметр d</label><div class="fw"><input id="d" type="text" inputmode="decimal" autocomplete="off" value="16" placeholder=""><span class="u">мм</span></div></div><div class="f" id="f_b"><label for="b">Ширина полки уголка или полосы b</label><div class="fw"><input id="b" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">мм</span></div><div class="hint">Уголок — от 40 до 63 мм: для такой ширины проверен коэффициент 0,95</div></div><div class="f" id="f_l"><label for="l">Длина электрода L</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">м</span></div></div><div class="f" id="f_t0"><label for="t0">Заглубление верхнего конца t₀</label><div class="fw"><input id="t0" type="text" inputmode="decimal" autocomplete="off" value="0.5" placeholder=""><span class="u">м</span></div><div class="hint">0 — электрод забит от поверхности земли; обычно верх находится на дне траншеи</div></div><div class="f" id="f_rt"><label for="rt">Заданная проектом цель</label><div class="fw"><input id="rt" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">Ом</span></div><div class="hint">Это не универсальная норма: значение задаётся проектом по системе заземления и защите</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Вертикальный заземлитель: как считается</h2>
+<div class="formula">R = ρ / (2π·L) · [ln(2L/d) + ½·ln((4T + L) / (4T − L))]&nbsp;&nbsp;&nbsp;T = t₀ + L/2<br>Стержень от поверхности (Дуайт, BS 7430): R = ρ / (2π·L) · [ln(8L/d) − 1]</div>
+<p>ρ — удельное сопротивление грунта, Ом·м; L — длина электрода, м; d — диаметр или эквивалентный диаметр, м; t₀ — заглубление верхнего конца, T — глубина середины электрода, м. Первая формула приведена в методике расчёта заземления «ВОЛЬТ-СПБ» — в записи через десятичные логарифмы с множителем 0,366. Методика ссылается на справочник под редакцией Ю. Г. Барыбина (табл. 7.9), но текст самого справочника не сверен, поэтому основание расчёта здесь — вывод формулы и численная проверка ниже, а не ссылка. Формула — это потенциал в середине электрода с равномерно распределённым током плюс вклад его зеркального изображения над поверхностью земли, делённые на ток: собственное поле даёт ρ/(2π·L)·ln(2L/d), изображение, середина которого на расстоянии 2T, — ρ/(4π·L)·ln((4T + L)/(4T − L)). Поэтому T — глубина середины электрода; так же T определено в расчётах ZandZ и в типовом примере для уголка: t = 0,7 + 2,5/2 = 1,95 м. Вторая формула — для стержня, забитого от поверхности, в записи BS 7430.</p>
+<p><b>Форма сечения.</b> Для трубы и круглого стержня d — наружный диаметр. Для уголка вместо диаметра подставляют ширину полки b с коэффициентом 0,95, для полосы — 0,5·b. Коэффициенты проверены двумерным расчётом эквивалентного радиуса сечения: для уголков 40–63 мм с полкой 4–6 мм получено 0,92–0,946·b — разница с 0,95 меняет сопротивление меньше чем на 1 %, а даже для предельно тонкой полки (0,88·b) — примерно на 1,5 %; сама формула завышает R сильнее, так что оценка остаётся с запасом. Уголок уже 40 мм и шире 63 мм (0,95·b больше 60 мм) калькулятор не считает: для них коэффициент не проверялся. У полосы с реальной толщиной эквивалентный диаметр больше 0,5·b (для 40×4 мм — около 0,6·b), так что 0,5·b даёт запас.</p>
+<p><b>В какую сторону ошибаются формулы.</b> Обе проверены численным расчётом методом моментов с точным ядром трубчатого проводника и зеркальным изображением в однородном полупространстве; сам метод сверен с независимым расчётом, воспроизводящим точные решения для сферы и вытянутого сфероида. Диаметр 8–60 мм, заглубление верха 0–2 м:</p>
+<table class="t"><tr><th scope="col">Длина L</th><th scope="col">Формула с заглублением</th><th scope="col">Дуайт, t₀ = 0</th></tr>
+<tr><td>1 м</td><td>от +3,8 до +11,7 %</td><td>от +1,0 до +2,1 %</td></tr>
+<tr><td>2 м</td><td>от +3,2 до +9,7 %</td><td>от +0,8 до +1,7 %</td></tr>
+<tr><td>3 м</td><td>от +3,0 до +8,6 %</td><td>от +0,6 до +1,5 %</td></tr>
+<tr><td>5 м</td><td>от +2,7 до +7,3 %</td><td>от +0,5 до +1,2 %</td></tr>
+<tr><td>10 м</td><td>от +2,4 до +5,9 %</td><td>от +0,4 до +0,9 %</td></tr></table>
+<p>Обе формулы завышают сопротивление — оценка с запасом. Формула с заглублением грубее: она берёт потенциал в середине электрода, где он наибольший, и сильнее ошибается у коротких толстых и глубоко заглублённых электродов. Для стержня от поверхности (t₀ = 0) калькулятор показывает обе формулы и их расхождение — от 2 до 4,2 %; для сравнения с целью берётся более осторожная формула с заглублением. Вне проверенной области — длина меньше 1 или больше 10 м, эквивалентный диаметр вне 8–60 мм, заглубление больше 2 м — калькулятор не считает.</p>
+<p><b>Чем отличается от расчёта стержнями.</b> <a href="raschet-zazemleniya.html">Расчёт заземления стержнями</a> использует грубое R ≈ ρ/(n·L) без диаметра и глубины. Для одного электрода калькулятор показывает ρ/L для сравнения: в проверенной области оно отличается от численного расчёта от −23 до +95 %. Группы электродов, коэффициенты использования и соединительная полоса здесь не рассчитываются: поля растекания электродов перекрываются, и сопротивление группы больше, чем R одного, делённое на их число. Полосу отдельно считает страница <a href="gorizontalnyy-zazemlitel.html">горизонтального заземлителя</a>.</p>
+<p><b>Сезон и цель.</b> ρ меняется в течение года: по Schneider Electric на глубине около 1 м сопротивление заземлителя в умеренном климате меняется в 1–3 раза между влажной зимой и сухим летом, а промерзание повышает ρ на порядки. МЭК 60364-5-54 требует выбирать тип и глубину заложения заземлителя так, чтобы высыхание и промерзание грунта не увеличивали сопротивление выше требуемого. Поэтому по ρ без сезонной поправки калькулятор не сравнивает оценку с целью окончательно; если оценка выше цели уже при таком ρ, вывод от сезона не зависит. Требуемое значение задаёт проект — например, условие <a href="zazemlenie-tt-uzo.html">RA·IΔn ≤ 50 В в системе TT</a> или <a href="zamykanie-na-zemlyu-it.html">RA·Id ≤ 50 В в системе IT</a>.</p>
+<h2>Вертикальный заземлитель: пример расчёта</h2>
+<p>Стальной стержень диаметром 16 мм и длиной 3 м, верх на дне траншеи глубиной 0,5 м, ρ = 100 Ом·м. T = 0,5 + 3/2 = 2 м; ln(2 · 3 / 0,016) = ln 375 ≈ 5,927; ½·ln((8 + 3) / (8 − 3)) = ½·ln 2,2 ≈ 0,394; R ≈ 100 / (2π · 3) · 6,321 ≈ 5,305 · 6,321 ≈ <b>33,53 Ом</b>. Численный расчёт даёт 31,74 Ом — формула завышает на 5,7 %. Грубая оценка ρ/L — 33,33 Ом.</p>
+<p>Уголок 50×50×5 мм длиной 2,5 м, верх на глубине 0,7 м: d = 0,95 · 50 = 47,5 мм, T = 1,95 м, R ≈ 100 / (2π · 2,5) · (ln 105,3 + ½·ln(10,3 / 5,3)) ≈ 6,366 · 4,989 ≈ <b>31,76 Ом</b>; численный расчёт для реального сечения уголка — 29,48 Ом. Тот же стержень 16 мм, забитый от поверхности: формула с заглублением — 34,36 Ом, формула Дуайта — 33,49 Ом, численный расчёт — 33,21 Ом.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему у уголка d = 0,95·b, а у полосы 0,5·b?</h3><p>Для длинного электрода сечение любой формы заменяют кругом с таким же эквивалентным радиусом. Методические материалы по расчёту заземлителей дают для уголка 0,95·b, для полосы 0,5·b. Двумерный расчёт показал для реальных уголков 0,92–0,946·b, это меняет сопротивление меньше чем на 1 %, а у полос с реальной толщиной эквивалентный диаметр больше 0,5·b, так что 0,5·b даёт запас.</p><h3>Зачем заглублять верх электрода?</h3><p>Верхний слой грунта сильнее всего пересыхает и промерзает. Schneider Electric указывает, что уже на глубине около 1 м сопротивление меняется по сезонам в 1–3 раза, а промерзание повышает удельное сопротивление на порядки. Заглубление уводит электрод в более стабильный грунт; в однородном грунте выигрыш от него невелик.</p><h3>Почему формула Дуайта и формула с заглублением дают разные числа для стержня от поверхности?</h3><p>Формула с заглублением берёт потенциал в середине электрода, где он наибольший, а формула Дуайта — средний потенциал вдоль электрода. Поэтому первая получается на 2–4,2 % больше. Численная проверка показывает, что обе завышают сопротивление, а формула Дуайта точнее — на 0,4–2,2 %.</p><h3>Можно ли по этому расчёту подобрать число стержней?</h3><p>Нет. Сопротивление группы больше, чем сопротивление одного электрода, делённое на их число: поля растекания перекрываются. Для группы нужны коэффициенты использования или проектный расчёт, а готовый заземлитель измеряют.</p><h3>Откуда взять ρ?</h3><p>По результатам изысканий или замера. Значение, измеренное во влажный период или взятое из таблицы, отмечайте как значение без сезонной поправки: тогда калькулятор не сравнивает оценку с целью окончательно, а показывает, во сколько раз ρ может вырасти до цели. Если оценка выше цели уже при таком ρ, вывод от сезона не зависит.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.volt-spb.ru/calc/method/" rel="nofollow noopener" target="_blank">Методика расчёта заземления</a> — ООО «ВОЛЬТ-СПБ»; методика ссылается на «Справочник по проектированию электрических сетей и электрооборудования» под ред. Ю. Г. Барыбина (1991), табл. 7.9 — текст справочника не сверен — Редакция онлайн-страница на дату обращения — раздел вертикальный электрод: 0,366·ρ/L·(lg(2L/d) + 0,5·lg((4t + L)/(4t − L))) — обращение 27.09.2026</li><li><a href="https://zandz.com/ru/raschet_zazemleniya/" rel="nofollow noopener" target="_blank">Расчёт заземления</a> — ZandZ.com — Редакция онлайн-страница на дату обращения — раздел T — расстояние от поверхности земли до середины заземлителя — обращение 27.09.2026</li><li><a href="https://www.info-sys.ru/downloads/comm0005.pdf" rel="nofollow noopener" target="_blank">2. Расчёт заземлителей. Удельное сопротивление грунта</a> — Методический материал на сайте info-sys.ru — Редакция PDF на дату обращения — раздел уголок: эквивалентный диаметр ≈ 0,95·b, полоса: эквивалентный диаметр b/2 — обращение 27.09.2026</li><li><a href="https://electrical-engineering-portal.com/earth-electrode-systems" rel="nofollow noopener" target="_blank">Measurements and Calculations Of Earth Electrode Systems (BS 7430)</a> — Electrical Engineering Portal — Редакция онлайн-статья на дату обращения — раздел стержень: R = ρ/(2πL)·(ln(8L/d) − 1), d — диаметр стержня — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Installation_and_measurements_of_earth_electrodes" rel="nofollow noopener" target="_blank">Installation and measurements of earth electrodes</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел сезонное изменение сопротивления в 1–3 раза на глубине около 1 м, промёрзший грунт повышает удельное сопротивление на порядки — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200108284" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.5.54-2013/МЭК 60364-5-54:2011. Электроустановки низковольтные. Часть 5-54. Заземляющие устройства, защитные проводники и защитные проводники уравнивания потенциалов</a> — Росстандарт — Редакция 2013, на основе МЭК 60364-5-54:2011 (в выдаче упомянута и редакция 2024 года) — раздел 542 — тип и глубина заложения заземлителя: высыхание и промерзание грунта не должны увеличивать сопротивление выше требуемого — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Грунт однородный; электрод один, вертикальный и эквипотенциальный.</li><li>Сечение заменяется кругом эквивалентного диаметра: труба и стержень — наружный d, уголок — 0,95·b (проверено для уголков 40–63 мм), полоса — 0,5·b.</li><li>Область, проверенная численно: 1 ≤ L ≤ 10 м, 8 ≤ d ≤ 60 мм, 0 ≤ t₀ ≤ 2 м; в ней формула с заглублением завышает R на 2,4–11,7 %.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не рассчитывает группы электродов, коэффициенты использования и соединительную полосу.</li><li>Не учитывает слоистость грунта, промерзание, высыхание и сопротивление соединений.</li><li>Не определяет нормативно требуемое сопротивление: оно зависит от системы заземления и защитных устройств.</li><li>Результат не заменяет измерение готового заземлителя.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li><li><a href="gorizontalnyy-zazemlitel.html">Горизонтальный заземлитель: полоса или пруток</a></li><li><a href="zazemlenie-tt-uzo.html">Заземление в системе TT: условие RA·IΔn ≤ 50 В</a></li><li><a href="zamykanie-na-zemlyu-it.html">Первое замыкание на землю в системе IT: RA·Id ≤ 50 В</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function sx(x,lim,unit){var P=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н']];for(var i=0;i<P.length;i++){if(Math.abs(x)>=P[i][0])return fx(x/P[i][0],lim/P[i][0])+' '+P[i][1]+unit;}return fx(x/1e-12,lim/1e-12)+' п'+unit;}
+function raz(x){var s=fmt(x,3);if(s==='1'&&x!==1)s=fx(x,1);if(/[,·]/.test(s))return s+' раза';var n=Math.abs(Math.round(x))%100,m=n%10;return s+((m>=2&&m<=4&&(n<12||n>14))?' раза':' раз');}
+
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function sync(){var r=S('prof')==='round';hideF('d',!r);hideF('b',r);}
+function init(){$('prof').addEventListener('change',sync);sync();}
+function calc(){
+var pr=S('prof'),rho=P('rho'),sz=P(pr==='round'?'d':'b'),L=P('l'),t0=P('t0'),rt=P('rt');
+if([rho,sz,L,t0,rt].some(isNaN))return err('Заполните ρ, размер электрода, длину, заглубление и цель проекта.');
+if(rho<=0||sz<=0||L<=0||rt<=0)return err('ρ, размер, длина и цель должны быть больше нуля.');
+if(t0<0)return err('Заглубление верхнего конца не может быть отрицательным.');
+var k=pr==='angle'?0.95:(pr==='strip'?0.5:1),d=k*sz;
+if(!ge(d,8)||!le(d,60))return err('Эквивалентный диаметр d = '+fmt(d,6)+' мм вне проверенной области 8–60 мм.');
+if(pr==='angle'&&!ge(sz,40))return err('Ширина полки уголка меньше 40 мм — вне проверенной области: коэффициент 0,95 проверен для уголков 40–63 мм.');
+if(!ge(L,1)||!le(L,10))return err('Длина электрода вне проверенной области 1–10 м.');
+if(!le(t0,2))return err('Заглубление верхнего конца больше 2 м — вне проверенной численно области.');
+var dm=d/1000,T=t0+L/2,c=rho/(2*Math.PI*L),R=c*(Math.log(2*L/dm)+0.5*Math.log((4*T+L)/(4*T-L)));
+if(!isFinite(R))return err('Значения вне диапазона надёжного расчёта.');
+var h=row('Эквивалентный диаметр d',fmt(d,4)+' мм'+(pr==='angle'?' (0,95·b)':(pr==='strip'?' (0,5·b)':'')))+
+row('Глубина середины электрода T = t₀ + L/2',fmt(T,4)+' м')+
+row('Оценочное сопротивление R',fmt(R,4)+' Ом');
+if(t0===0){var Rd=c*(Math.log(8*L/dm)-1);
+ h+=row('По формуле Дуайта для стержня от поверхности (BS 7430)',fmt(Rd,4)+' Ом')+row('Расхождение двух формул',fmt(100*(R/Rd-1),3)+' %');}
+h+=row('Для сравнения: грубая оценка ρ/L',fmt(rho/L,4)+' Ом')+
+row('Погрешность формулы (однородный грунт)','завышает R на 2,4–11,7 %'+(t0===0?'; формула Дуайта — на 0,4–2,2 %':''));
+var worst=S('rhosrc')==='worst',ok=le(R,rt),cmp,st,n;
+if(worst){cmp=ok?'не выше заданной цели':'выше заданной цели';st='Оценка, требуется измерение';}
+else{cmp=ok?'не выше цели при этом ρ, но в сухой или морозный сезон ρ выше':'выше заданной цели уже при этом ρ';st=ok?'Недостаточно данных: ρ без сезонной поправки':'Оценка, требуется измерение';}
+n='По численной проверке для однородного грунта формула завышает сопротивление на 2,4–11,7 % во всей области, которую пропускает калькулятор, — сильнее у коротких толстых и глубоко заглублённых электродов. ';
+if(t0===0)n+='Для стержня от поверхности формула Дуайта точнее — она завышает R лишь на 0,4–2,2 %; для сравнения с целью взята более осторожная формула с заглублением. ';
+if(pr==='angle')n+='Коэффициент 0,95 проверен двумерным расчётом: для уголков 40–63 мм с полкой 4–6 мм получено 0,92–0,946·b, это меняет R меньше чем на 1 %, а сама формула завышает R сильнее. ';
+if(pr==='strip')n+='У полосы с реальной толщиной эквивалентный диаметр больше 0,5·b, так что 0,5·b даёт дополнительный запас. ';
+if(!worst)n+=ok?(rt/R<=1+1e-9?'ρ без сезонной поправки, а оценка уже на уровне цели: любой сезонный рост ρ её превысит. ':'ρ без сезонной поправки: до цели ρ может вырасти в '+raz(rt/R)+'. ')+'По Schneider Electric на глубине около 1 м сопротивление заземлителя в умеренном климате меняется в 1–3 раза между влажной зимой и сухим летом, а промерзание повышает ρ на порядки. ':'Даже без сезонной поправки оценка выше цели. ';
+n+='Сопротивление группы электродов больше, чем R одного, делённое на их число: поля растекания перекрываются — эту задачу калькулятор не решает.';
+out(h+row('Сравнение с целью',fx(R,rt)+' Ом — '+cmp)+
+row('Статус',st)+
+note(n));
+}
+
+</script>
+</body>
+</html>

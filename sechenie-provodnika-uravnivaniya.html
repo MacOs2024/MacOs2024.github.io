@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Сечение проводников уравнивания потенциалов — ВольтКальк</title>
+<meta name="description" content="Минимальное сечение проводников основной (ПУЭ 1.7.137) и дополнительной (ПУЭ 1.7.138) системы уравнивания потенциалов по сечению защитных проводников PE, с минимумами ПУЭ 1.7.127 для проводников вне кабеля и сравнением с ГОСТ Р 50571.5.54.">
+<link rel="canonical" href="https://macos2024.github.io/sechenie-provodnika-uravnivaniya.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Сечение проводников уравнивания потенциалов — ВольтКальк">
+<meta property="og:description" content="Минимальное сечение проводников основной (ПУЭ 1.7.137) и дополнительной (ПУЭ 1.7.138) системы уравнивания потенциалов по сечению защитных проводников PE, с минимумами ПУЭ 1.7.127 для проводников вне кабеля и сравнением с ГОСТ Р 50571.5.54.">
+<meta property="og:url" content="https://macos2024.github.io/sechenie-provodnika-uravnivaniya.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Сечение проводников уравнивания потенциалов","url":"https://macos2024.github.io/sechenie-provodnika-uravnivaniya.html","description":"Минимальное сечение проводников основной (ПУЭ 1.7.137) и дополнительной (ПУЭ 1.7.138) системы уравнивания потенциалов по сечению защитных проводников PE, с минимумами ПУЭ 1.7.127 для проводников вне кабеля и сравнением с ГОСТ Р 50571.5.54.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Сечение проводников уравнивания потенциалов","item":"https://macos2024.github.io/sechenie-provodnika-uravnivaniya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему для основной системы не требуется больше 25 мм²?","acceptedAnswer":{"@type":"Answer","text":"ПУЭ 1.7.137 требует половину наибольшего сечения защитного проводника, пока она не превышает 25 мм² по меди или равноценное сечение из другого металла, и оговаривает, что проводники большего сечения, как правило, не требуются. Слова «как правило» оставляют проекту право потребовать больше в обоснованных случаях."}},{"@type":"Question","name":"Можно ли выполнить уравнивание стальной полосой?","acceptedAnswer":{"@type":"Answer","text":"Можно, но для основной системы не тоньше 50 мм² стали по ПУЭ 1.7.137. Кроме того, по проводимости сталь должна быть не хуже требуемого сечения PE: ПУЭ 1.7.126 требует для защитных проводников из других материалов эквивалентности по проводимости. Удельное сопротивление стали зависит от марки, поэтому такой пересчёт калькулятор не выполняет и выводит «Недостаточно данных»."}},{"@type":"Question","name":"Какой защитный проводник считать наибольшим?","acceptedAnswer":{"@type":"Answer","text":"Наибольший из защитных проводников электроустановки — как правило, PE питающей линии вводного щита, у остальных линий сечения меньше. Если он ещё не выбран, его подбирают по сечению фазной жилы по ПУЭ 1.7.126 и таблице 1.7.5."}},{"@type":"Question","name":"Совпадают ли требования ПУЭ и ГОСТ Р 50571.5.54?","acceptedAnswer":{"@type":"Answer","text":"Минимумы 6 мм² меди, 16 мм² алюминия и 50 мм² стали и предел 25 мм² меди совпадают. Есть ли в ГОСТ Р 50571.5.54-2013 правило половины наибольшего защитного проводника, по доступным фрагментам текста однозначно установить не удалось; калькулятор считает по ПУЭ, и его минимум в любом случае не меньше."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Сечение проводников уравнивания потенциалов</h1>
+<p class="intro">Проводник основной системы соединяет главную заземляющую шину со сторонними проводящими частями здания, проводник дополнительной — корпуса оборудования и трубы в одном помещении. Сечение определяется по <b>защитным проводникам PE</b>; если PE ещё не выбран, его по фазной жиле подбирает <a href="sechenie-pe-provodnika.html">калькулятор сечения PE</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Сечение проводников уравнивания потенциалов</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_sys"><label for="sys">Система уравнивания потенциалов</label><div class="fw"><select id="sys"><option value="osn" selected>Основная: проводник от ГЗШ к сторонним проводящим частям (ПУЭ 1.7.137)</option><option value="dop2">Дополнительная: между двумя открытыми проводящими частями (ПУЭ 1.7.138)</option><option value="dop1">Дополнительная: между открытой и сторонней проводящей частью (ПУЭ 1.7.138)</option></select></div></div><div class="f" id="f_smax"><label for="smax">Наибольшее сечение защитного проводника электроустановки</label><div class="fw"><input id="smax" type="text" inputmode="decimal" autocomplete="off" value="16" placeholder=""><span class="u">мм²</span></div><div class="hint">Как правило, это PE питающей линии вводного щита: у остальных линий сечения меньше</div></div><div class="f" id="f_s1"><label for="s1">Сечение PE открытой проводящей части</label><div class="fw"><input id="s1" type="text" inputmode="decimal" autocomplete="off" value="2,5" placeholder=""><span class="u">мм²</span></div><div class="hint">Для двух открытых частей — PE первой из них</div></div><div class="f" id="f_s2"><label for="s2">Сечение PE второй открытой проводящей части</label><div class="fw"><input id="s2" type="text" inputmode="decimal" autocomplete="off" value="4" placeholder=""><span class="u">мм²</span></div></div><div class="f" id="f_mpe"><label for="mpe">Материал защитных проводников PE</label><div class="fw"><select id="mpe"><option value="cu" selected>Медь</option><option value="al">Алюминий</option></select></div></div><div class="f" id="f_mb"><label for="mb">Материал проводника уравнивания потенциалов</label><div class="fw"><select id="mb"><option value="cu" selected>Медь</option><option value="al">Алюминий</option><option value="fe">Сталь</option></select></div><div class="hint">Если металлы разные, сечение пересчитывают по проводимости (ПУЭ 1.7.126); калькулятор этого не делает и ответит «Недостаточно данных»</div></div><div class="f" id="f_lay"><label for="lay">Прокладка проводника дополнительной системы</label><div class="fw"><select id="lay"><option value="cab">В составе кабеля или в общей оболочке с фазными проводниками</option><option value="mz">Отдельно, с механической защитой</option><option value="nz" selected>Отдельно, без механической защиты</option></select></div><div class="hint">Для проводника вне кабеля ПУЭ 1.7.138 отсылает к минимумам 1.7.127</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Сечение проводников уравнивания потенциалов: как считается</h2>
+<div class="formula">Основная система (ПУЭ 1.7.137): S ≥ max( min(S<sub>PE наиб</sub> / 2; 25 мм² Cu); 6 мм² Cu / 16 мм² Al / 50 мм² Fe )<br>Дополнительная (ПУЭ 1.7.138): две открытые части — S ≥ min(S<sub>PE1</sub>; S<sub>PE2</sub>); открытая и сторонняя — S ≥ S<sub>PE</sub> / 2<br>Вне кабеля (ПУЭ 1.7.127): не менее 2,5 мм² с механической защитой и 4 мм² без неё, алюминий — не менее 16 мм²</div>
+<p><b>Основная система.</b> ПУЭ 1.7.137: сечение проводников основной системы уравнивания потенциалов должно быть не менее половины наибольшего сечения защитного проводника электроустановки, если сечение проводника уравнивания потенциалов при этом не превышает 25 мм² по меди или равноценное ему из других материалов. Применение проводников большего сечения, как правило, не требуется. В любом случае сечение — не менее 6 мм² для меди, 16 мм² для алюминия и 50 мм² для стали. Наибольший защитный проводник обычно принадлежит питающей линии вводного щита; его сечение по фазной жиле определяет <a href="sechenie-pe-provodnika.html">калькулятор сечения PE</a>.</p>
+<p><b>Дополнительная система.</b> ПУЭ 1.7.138: при соединении двух открытых проводящих частей — не менее сечения меньшего из защитных проводников, подключённых к этим частям; при соединении открытой и сторонней проводящей части — не менее половины сечения защитного проводника, подключённого к открытой части. Проводники, не входящие в состав кабеля, должны соответствовать 1.7.127: не менее 2,5 мм² при наличии механической защиты и 4 мм² при её отсутствии; отдельно проложенные алюминиевые — не менее 16 мм². Минимумы 2,5 и 4 мм² калькулятор применяет к меди, 16 мм² — к алюминию.</p>
+<table class="t"><tr><th scope="col">Наибольший PE, медь</th><th scope="col">Половина</th><th scope="col">Минимум по ПУЭ 1.7.137</th><th scope="col">По стандартному ряду</th></tr>
+<tr><td>10 мм²</td><td>5 мм²</td><td>6 мм² — минимум в любом случае</td><td>6 мм²</td></tr>
+<tr><td>16 мм²</td><td>8 мм²</td><td>8 мм²</td><td>10 мм²</td></tr>
+<tr><td>35 мм²</td><td>17,5 мм²</td><td>17,5 мм²</td><td>25 мм²</td></tr>
+<tr><td>95 мм²</td><td>47,5 мм²</td><td>25 мм² — больше, как правило, не требуется</td><td>25 мм²</td></tr></table>
+<p><b>Другой металл.</b> Как считать «равноценное» 25 мм² меди сечение, ПУЭ 1.7.137 не говорит. Для защитных проводников из других материалов ПУЭ 1.7.126 требует эквивалентности по проводимости, и ГОСТ Р 50571.5.54 формулирует требования к дополнительному уравниванию тоже через проводимость. Но для пересчёта нужно удельное сопротивление конкретного проводника, а у стали оно заметно зависит от марки. Поэтому калькулятор металлы не пересчитывает: если PE и проводник уравнивания из разных металлов или проводник стальной, он показывает требование в металле PE и минимум для выбранного металла, а статус — «Недостаточно данных». Опирается он только на очевидное: алюминий и сталь проводят хуже меди. Отсюда два значения «с запасом»: если PE алюминиевый, а проводник уравнивания медный, достаточно того же сечения из меди; если оба алюминиевые, а половина наибольшего PE больше 25 мм², калькулятор не применяет предел, раз равноценное 25 мм² меди сечение алюминия не определено. Для сравнения: руководство Schneider Electric принимает для основной системы ту же половину наибольшего PE, но ограничивает её 25 мм² меди или 35 мм² алюминия и требует не меньше 6 мм² меди или 10 мм² алюминия, — это практика руководства Schneider Electric, а не ПУЭ.</p>
+<p><b>ПУЭ и ГОСТ Р 50571.5.54.</b> Расчёт ведётся по ПУЭ 7-го издания. ГОСТ Р 50571.5.54-2013 (МЭК 60364-5-54:2011) в п. 544.1.1 задаёт для проводников, присоединяемых к главной заземляющей шине, те же минимумы — 6 мм² меди, 16 мм² алюминия, 50 мм² стали — и оговаривает, что больше 25 мм² меди или эквивалентного сечения не требуется. Есть ли в этом пункте правило «не менее половины наибольшего защитного проводника», по поисковой выдаче однозначно установить не удалось: пересказы текста противоречат друг другу, а дословно пункт не виден. Если правила там нет, ГОСТ мягче ПУЭ; если есть — совпадает с ним. В обоих случаях минимум по ПУЭ не меньше. Для дополнительной системы ГОСТ (п. 544.2) требует проводимости не меньше, чем у меньшего PE или у PE половинного сечения; для проводников из одного металла это то же, что сечения по ПУЭ 1.7.138. Выпущена и редакция ГОСТ Р 50571.5.54-2024 на основе МЭК 60364-5-54:2021; её п. 544.1.1 дословно сверить тоже не удалось.</p>
+<h2>Сечение проводников уравнивания потенциалов: пример расчёта</h2>
+<p>Частный дом, наибольший защитный проводник — медный PE 16 мм² питающей линии вводного щита. Половина — 8 мм²: это больше минимума 6 мм² и меньше 25 мм². Проводник основной системы от главной заземляющей шины к водопроводу и газовой трубе — не менее <b>8 мм²</b> меди, по стандартному ряду — <b>10 мм²</b>.</p>
+<p>В ванной корпус стиральной машины с PE 2,5 мм² соединяют со стальной ванной — сторонней проводящей частью. Половина PE — 1,25 мм², но отдельный проводник без механической защиты по ПУЭ 1.7.127 не может быть тоньше <b>4 мм²</b> меди; в защитной трубе — не тоньше 2,5 мм². Если соединяются два корпуса с PE 2,5 и 4 мм², проводник в составе кабеля должен быть не меньше меньшего из них — <b>2,5 мм²</b>.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему для основной системы не требуется больше 25 мм²?</h3><p>ПУЭ 1.7.137 требует половину наибольшего сечения защитного проводника, пока она не превышает 25 мм² по меди или равноценное сечение из другого металла, и оговаривает, что проводники большего сечения, как правило, не требуются. Слова «как правило» оставляют проекту право потребовать больше в обоснованных случаях.</p><h3>Можно ли выполнить уравнивание стальной полосой?</h3><p>Можно, но для основной системы не тоньше 50 мм² стали по ПУЭ 1.7.137. Кроме того, по проводимости сталь должна быть не хуже требуемого сечения PE: ПУЭ 1.7.126 требует для защитных проводников из других материалов эквивалентности по проводимости. Удельное сопротивление стали зависит от марки, поэтому такой пересчёт калькулятор не выполняет и выводит «Недостаточно данных».</p><h3>Какой защитный проводник считать наибольшим?</h3><p>Наибольший из защитных проводников электроустановки — как правило, PE питающей линии вводного щита, у остальных линий сечения меньше. Если он ещё не выбран, его подбирают по сечению фазной жилы по ПУЭ 1.7.126 и таблице 1.7.5.</p><h3>Совпадают ли требования ПУЭ и ГОСТ Р 50571.5.54?</h3><p>Минимумы 6 мм² меди, 16 мм² алюминия и 50 мм² стали и предел 25 мм² меди совпадают. Есть ли в ГОСТ Р 50571.5.54-2013 правило половины наибольшего защитного проводника, по доступным фрагментам текста однозначно установить не удалось; калькулятор считает по ПУЭ, и его минимум в любом случае не меньше.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://zandz.com/ru/pravila_zazemleniya/pue_razdel_17_3/" rel="nofollow noopener" target="_blank">ПУЭ, глава 1.7. Заземление и защитные меры электробезопасности, пп. 1.7.120–1.7.177</a> — Правила устройства электроустановок; текст по публикации ZandZ.com — Редакция 7-е издание — раздел 1.7.126 — эквивалентность по проводимости, 1.7.127 — минимумы для проводников вне кабеля, 1.7.137 — основная система, 1.7.138 — дополнительная система — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200108284" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.5.54-2013/МЭК 60364-5-54:2011. Электроустановки низковольтные. Часть 5-54. Заземляющие устройства, защитные проводники и защитные проводники уравнивания потенциалов</a> — Росстандарт — Редакция от 06.09.2013; текст п. 544.1.1 в выдаче дословно не виден — сверено по пересказу — раздел 544.1.1 — минимумы 6/16/50 мм² и предел 25 мм² меди; правило половины наибольшего PE не подтверждено, 544.2 — дополнительное уравнивание через проводимость — обращение 27.09.2026</li><li><a href="https://zandz.com/ru/pravila_zazemleniya/gost_r_50571_5_54_2013_2/" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.5.54-2024/МЭК 60364-5-54:2021. Электроустановки низковольтные. Часть 5-54. Заземляющие устройства и защитные проводники</a> — Росстандарт; текст по публикации ZandZ.com — Редакция 2024 г., на основе МЭК 60364-5-54:2021; сверено по пересказу выдачи — раздел 544.2 — проводимость проводника между открытой и сторонней частью не ниже проводимости PE половинного сечения — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Equipotential_conductor" rel="nofollow noopener" target="_blank">Equipotential conductor</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел основная система: половина наибольшего PE, не более 25 мм² Cu или 35 мм² Al, не менее 6 мм² Cu или 10 мм² Al, дополнительная система: половина PE, между двумя открытыми частями — меньший PE — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Расчёт ведётся по ПУЭ 7-го издания, пп. 1.7.137, 1.7.138 и 1.7.127.</li><li>Минимумы 1.7.127 для проводника вне кабеля: 2,5 и 4 мм² — медь, 16 мм² — алюминий.</li><li>Сечение пересчитывается только внутри одного металла; для разных металлов нужна эквивалентность по проводимости (ПУЭ 1.7.126), которую калькулятор не вычисляет.</li><li>Результат округляется вверх до стандартного ряда сечений до 240 мм².</li></ul><p><b>Границы применимости:</b></p><ul><li>Не проверяет термическую стойкость проводника уравнивания к току КЗ.</li><li>Не определяет, какие части нужно присоединять к основной и дополнительной системе.</li><li>Не пересчитывает сечения между медью, алюминием и сталью: для разных металлов выводит «Недостаточно данных» или значение с запасом.</li><li>Не определяет наибольшее сечение PE — его берут из проекта или подбирают по фазной жиле.</li><li>Наличие правила половины наибольшего PE в ГОСТ Р 50571.5.54 дословно не сверено.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="sechenie-pe-provodnika.html">Сечение защитного проводника PE</a></li><li><a href="sechenie-pen-provodnika.html">Сечение PEN-проводника до разделения (TN-C, TN-C-S)</a></li><li><a href="obryv-pen.html">Обрыв нуля (PEN): перекос фаз и напряжение на корпусах</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+var RYAD=[1.5,2.5,4,6,10,16,25,35,50,70,95,120,150,185,240];
+var GEN={cu:'меди',al:'алюминия',fe:'стали'};
+function up(x){for(var i=0;i<RYAD.length;i++){if(RYAD[i]>=x*(1-1e-12))return RYAD[i];}return 0;}
+function gt(a,b){return a>b*(1+1e-12);}
+function mm(x,met){return fmt(x,4)+' мм²'+(met?' '+GEN[met]:'');}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function ryad(x){var r=up(x);return r?mm(r):'свыше 240 мм² — вне стандартного ряда';}
+function sync(){var m=S('sys');hideF('smax',m!=='osn');hideF('s1',m==='osn');hideF('s2',m!=='dop2');hideF('lay',m==='osn');}
+function init(){$('sys').addEventListener('change',sync);sync();}
+function calc(){
+var m=S('sys'),osn=m==='osn',mpe=S('mpe'),mb=S('mb'),same=mpe===mb,base,h;
+if(osn){var smax=P('smax');
+ if(isNaN(smax))return err('Введите наибольшее сечение защитного проводника электроустановки.');
+ if(smax<=0)return err('Сечение должно быть больше нуля.');
+ base=smax/2;h=row('Половина наибольшего PE (ПУЭ 1.7.137)',fx(base,25)+' мм² '+GEN[mpe]);}
+else{var s1=P('s1'),s2=m==='dop2'?P('s2'):s1;
+ if(isNaN(s1)||isNaN(s2))return err(m==='dop2'?'Введите сечения PE обеих открытых проводящих частей.':'Введите сечение PE открытой проводящей части.');
+ if(s1<=0||s2<=0)return err('Сечение должно быть больше нуля.');
+ base=m==='dop2'?Math.min(s1,s2):s1/2;
+ h=row(m==='dop2'?'Меньшее из сечений PE (ПУЭ 1.7.138)':'Половина сечения PE открытой части (ПУЭ 1.7.138)',mm(base,mpe));}
+if(!isFinite(base))return err('Значения слишком велики для надёжного расчёта.');
+var lay=S('lay'),fl,flRow,pt=osn?'1.7.137':'1.7.138',cap=osn&&gt(base,25),st,n;
+if(osn){fl={cu:6,al:16,fe:50}[mb];flRow=row('Минимум в любом случае (ПУЭ 1.7.137)',mm(fl,mb));}
+else if(lay==='cab'){fl=0;flRow=row('Минимум для проводника вне кабеля (ПУЭ 1.7.127)','не применяется: проводник в составе кабеля');}
+else{fl=mb==='al'?16:(mb==='cu'?(lay==='mz'?2.5:4):0);
+ flRow=row('Минимум для проводника вне кабеля (ПУЭ 1.7.127)',mb==='fe'?'для стали отдельно не задан':mm(fl,mb));}
+n=osn?'ПУЭ 1.7.137: сечение проводников основной системы — не менее половины наибольшего сечения защитного проводника электроустановки, если оно при этом не превышает 25 мм² по меди или равноценное ему из других материалов; проводники большего сечения, как правило, не требуются; в любом случае — не менее 6 мм² меди, 16 мм² алюминия, 50 мм² стали. ':'ПУЭ 1.7.138: между двумя открытыми проводящими частями — не менее сечения меньшего из подключённых к ним PE, между открытой и сторонней — не менее половины PE открытой части; проводник вне кабеля — не тоньше минимумов 1.7.127. ';
+if(same&&!(mb==='al'&&cap)){
+ var eff=cap?25:base,req=Math.max(eff,fl),r=up(req),why=[];
+ if(osn)h+=row(mb==='cu'?'Предел «не более 25 мм² по меди»':'Предел «25 мм² по меди или равноценное»',cap?'достигнут: больше 25 мм², как правило, не требуется':(mb==='cu'?'не достигнут':'не достигнут: алюминий проводит хуже меди, и равноценное сечение больше 25 мм²'));
+ if(eff>=req*(1-1e-12))why.push(cap?'предел 25 мм² по меди':(osn?'половина наибольшего PE':(m==='dop2'?'меньший из PE':'половина PE открытой части')));
+ if(fl>=req*(1-1e-12))why.push(osn?'минимум в любом случае':'минимум 1.7.127');
+ h+=flRow+row('Определяющее условие',why.join(', '))+row('Минимальное сечение',mm(req,mb))+row('Принять по стандартному ряду',ryad(req));
+ st='Минимум по ПУЭ '+pt+': '+mm(req,mb)+(r?(r!==req?' (по ряду — '+mm(r)+')':''):', вне стандартного ряда');
+ if(cap)n+='Слова «как правило» оставляют проекту право потребовать больше 25 мм² в обоснованных случаях. ';
+}else if(same){
+ h+=row('Предел «25 мм² по меди или равноценное»','не применён: равноценное сечение алюминия ПУЭ не задаёт')+flRow+row('С запасом, без предела',mm(base,'al')+'; по ряду — '+ryad(base));
+ st='Недостаточно данных: равноценное 25 мм² меди сечение алюминия ПУЭ не задаёт; с запасом — '+ryad(base)+' алюминия';
+ n+='Алюминий проводит хуже меди, поэтому равноценное 25 мм² меди сечение больше 25 мм², но насколько — ПУЭ не говорит. Предел не применён, значение дано с запасом. ';
+}else if(mpe==='al'&&mb==='cu'){
+ var safe=Math.max(osn?Math.min(base,25):base,fl);
+ h+=flRow+row('С запасом: то же сечение из меди',mm(safe,'cu')+'; по ряду — '+ryad(safe));
+ st='Недостаточно данных: PE алюминиевый, проводник медный — точный минимум требует пересчёта по проводимости; с запасом — '+ryad(safe)+' меди';
+ n+='ПУЭ 1.7.126 требует для защитных проводников из других материалов эквивалентности по проводимости. Медь проводит лучше алюминия, поэтому то же сечение из меди заведомо не хуже требуемого — это значение с запасом. ';
+}else{
+ var need=osn&&mpe==='cu'?Math.min(base,25):base;
+ h+=flRow+row('По проводимости — не меньше, чем',mm(need,mpe)+(osn&&mpe==='al'&&cap?' (без предела 25 мм² по меди — с запасом)':''));
+ st='Недостаточно данных: '+(mb==='fe'?'проводник уравнивания стальной, PE из '+GEN[mpe]:'PE медный, проводник уравнивания алюминиевый')+' — сечение пересчитывают по проводимости, а удельное сопротивление конкретного проводника калькулятору не известно';
+ n+='ПУЭ 1.7.126 требует для защитных проводников из других материалов эквивалентности по проводимости; для пересчёта нужны удельные сопротивления конкретных проводников, у стали оно зависит от марки. Поэтому точный минимум калькулятор не выдаёт. ';
+}
+n+='Термическая стойкость к току КЗ этим правилом не проверяется.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

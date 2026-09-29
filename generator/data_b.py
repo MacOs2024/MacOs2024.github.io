@@ -104,7 +104,8 @@ note('Номинальный ток УЗО должен быть не меньш
 ''',
 about="""<p>УЗО сравнивает токи в активных проводниках и отключает цепь при остаточном токе. Для дополнительной защиты людей применяют высокочувствительные УЗО с IΔn не более 30 мА; для защиты от пожара из-за токов утечки — не более 300 мА в предусмотренных стандартом случаях.</p>
 <p>Тип выбирают по форме остаточного тока: AC — синусоидальный переменный; A дополнительно видит пульсирующий постоянный; F предназначен для однофазных частотно-регулируемых приводов; B также видит сглаженный постоянный ток и нужен для ряда трёхфазных приводов, PV и EV.</p>
-<div class="formula">In(УЗО) ≥ In(координирующей защиты)&nbsp;&nbsp;&nbsp;IΔn ≤ 30 мА — дополнительная защита</div>""",
+<div class="formula">In(УЗО) ≥ In(координирующей защиты)&nbsp;&nbsp;&nbsp;IΔn ≤ 30 мА — дополнительная защита</div>
+<p>В системе TT от уставки УЗО зависит ещё и допустимое сопротивление заземления: условие RA·IΔn ≤ 50 В проверяет <a href="zazemlenie-tt-uzo.html">расчёт заземления в системе TT</a>. УЗИП — устройство защиты от импульсных перенапряжений — другой аппарат: его минимальные параметры на вводе показывает <a href="vybor-uzip.html">калькулятор выбора УЗИП</a>.</p>""",
 example="""<p>Для линии с автоматом 16 А и однофазной электронной нагрузкой исходный кандидат — УЗО <b>16 А или выше, не более 30 мА, тип A</b>. Если по каталогу выбран аппарат 25 А, это допустимо, но не является обязательной «следующей ступенью».</p>""",
 faqs=[
  ("УЗО или дифавтомат?",
@@ -112,7 +113,7 @@ faqs=[
  ("УЗО срабатывает «само по себе». Почему?",
   "Суммарная естественная утечка длинных линий и старой техники может подбираться к уставке (штатное срабатывание — от 0,5·IΔn). Разделите нагрузку на несколько УЗО или найдите прибор-виновник поочерёдным отключением."),
 ],
-related=["vybor-avtomata", "sechenie-kabelya", "raschet-zazemleniya", "emkostnyy-tok-utechki"],
+related=["vybor-avtomata", "sechenie-kabelya", "raschet-zazemleniya", "emkostnyy-tok-utechki", "zazemlenie-tt-uzo"],
 review_status="agent-reviewed",
 sources=[
  dict(title="Additional protection: High sensitivity RCDs", organization="Schneider Electric Electrical Installation Guide", edition="онлайн-редакция от 05.08.2026", sections=["High sensitivity RCDs", "IEC 60364-4-41 applications"], accessed="11.08.2026", url="https://www.electrical-installation.org/enwiki/Additional_protection%3A_High_sensitivity_RCDs"),
@@ -263,7 +264,7 @@ intro="Введите удельное сопротивление грунта, 
 kw="заземление контур стержни сопротивление грунт 30 ом",
 fields=[
  dict(type="select", id="grunt", label="Ориентир по грунту", opts=[("50","Плодородный влажный грунт (≈50 Ом·м)"),("500","Сухой грунт / гравий (≈500 Ом·м)"),("3000","Каменистый грунт / сухой песок (≈3000 Ом·м)")], val="50"),
- dict(id="rho", label="Удельное сопротивление грунта ρ", unit="Ом·м", val="100", hint="Можно вписать своё значение по данным изысканий"),
+ dict(id="rho", label="Удельное сопротивление грунта ρ", unit="Ом·м", val="50", hint="Можно вписать своё значение по данным изысканий"),
  dict(id="l", label="Длина электрода L", unit="м", val="2.5"),
  dict(id="n", label="Количество стержней n", unit="шт", val="2"),
  dict(id="a", label="Расстояние между стержнями", unit="м", val="10.1", hint="Для формулы должно быть больше 4·L — запас строже, чем указывает источник"),
@@ -297,7 +298,7 @@ faqs=[
  ("Можно ли использовать арматуру и трубы отопления?",
   "Материал, размеры, коррозионную стойкость и соединения выбирают по действующим нормам и условиям грунта. Калькулятор этого не проверяет."),
 ],
-related=["vybor-uzo", "sechenie-kabelya", "soprotivlenie-provoda", "molniezashchita"],
+related=["vybor-uzo", "sechenie-kabelya", "soprotivlenie-provoda", "molniezashchita", "vertikalnyy-zazemlitel"],
 review_status="estimate",
 sources=[
  dict(title="Installation and measurements of earth electrodes", organization="Schneider Electric Electrical Installation Guide", edition="редакция 15.08.2026, oldid=29521", sections=["Earthing rods: шаг в 2–3 глубины забивки", "Influence of the type of soil", "Measurement of the earth-electrode resistance"], accessed="17.08.2026", url="https://www.electrical-installation.org/enw/index.php?title=Installation_and_measurements_of_earth_electrodes&oldid=29521"),

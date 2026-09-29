@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Обрыв нуля (PEN): перекос фаз и напряжение на корпусах</title>
+<meta name="description" content="Оценка аварийного режима при обрыве PEN до нагрузки: смещение нейтрали методом двух узлов (теорема Миллмана), напряжение на нагрузке каждой фазы и потенциал корпусов, присоединённых к PE после точки обрыва, — в трёхфазной сети и у однофазного абонента.">
+<link rel="canonical" href="https://macos2024.github.io/obryv-pen.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Обрыв нуля (PEN): перекос фаз и напряжение на корпусах">
+<meta property="og:description" content="Оценка аварийного режима при обрыве PEN до нагрузки: смещение нейтрали методом двух узлов (теорема Миллмана), напряжение на нагрузке каждой фазы и потенциал корпусов, присоединённых к PE после точки обрыва, — в трёхфазной сети и у однофазного абонента.">
+<meta property="og:url" content="https://macos2024.github.io/obryv-pen.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Обрыв нуля (PEN): перекос фаз и напряжение на корпусах","url":"https://macos2024.github.io/obryv-pen.html","description":"Оценка аварийного режима при обрыве PEN до нагрузки: смещение нейтрали методом двух узлов (теорема Миллмана), напряжение на нагрузке каждой фазы и потенциал корпусов, присоединённых к PE после точки обрыва, — в трёхфазной сети и у однофазного абонента.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Обрыв нуля (PEN): перекос фаз и напряжение на корпусах","item":"https://macos2024.github.io/obryv-pen.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему при обрыве нуля одни приборы сгорают, а другие не работают?","acceptedAnswer":{"@type":"Answer","text":"Нейтраль нагрузки смещается к наиболее нагруженной фазе. На этой фазе напряжение падает, а на слабо нагруженных растёт и может приблизиться к линейному 380 В. Приборы на перегруженной фазе работают при пониженном напряжении, а на недогруженных выходят из строя от перенапряжения."}},{"@type":"Question","name":"Опасен ли обрыв PEN, если нагрузка фаз одинаковая?","acceptedAnswer":{"@type":"Answer","text":"Да. Смещения нет только при строго одинаковых нагрузках фаз, а любое включение или отключение прибора его создаёт. У однофазного абонента или при нагрузке одной фазы корпуса получают потенциал, близкий к фазному."}},{"@type":"Question","name":"Спасает ли повторное заземление?","acceptedAnswer":{"@type":"Answer","text":"Оно уменьшает смещение нейтрали и потенциал корпусов относительно земли, но не устраняет их: напряжение делится между нагрузкой, повторным заземлением и заземлением нейтрали источника. Сопротивления заземлений меняются со временем года, поэтому результат калькулятора — оценка."}},{"@type":"Question","name":"Почему калькулятор считает приборы сопротивлениями?","acceptedAnswer":{"@type":"Answer","text":"Это простейшая модель: сопротивление берётся по мощности при номинальном напряжении, как у нагревателей и ламп накаливания. Электроника с импульсными блоками питания держит мощность постоянной, двигатели ведут себя иначе, а сгоревший от перенапряжения прибор меняет всю картину. Поэтому числа — оценка аварийного режима, а не прогноз."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Проводка и защита</nav>
+<h1>Обрыв нуля (PEN): перекос фаз и напряжение на корпусах</h1>
+<p class="intro">Нагрузка каждой фазы задаётся мощностью при номинальном напряжении и считается <b>постоянным сопротивлением</b>. Результат — оценка аварийного режима, а не нормативный вердикт: обрыв PEN опасен при любой нагрузке.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Обрыв нуля (PEN): перекос фаз и напряжение на корпусах</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_set"><label for="set">Сеть</label><div class="fw"><select id="set"><option value="3" selected>Трёхфазная четырёхпроводная: обрыв общего PEN до нагрузки</option><option value="1">Однофазный абонент: обрыв PEN ответвления</option></select></div></div><div class="f" id="f_u0"><label for="u0">Номинальное фазное напряжение U₀</label><div class="fw"><input id="u0" type="text" inputmode="decimal" autocomplete="off" value="220" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_pa"><label for="pa">Нагрузка фазы A (L1)</label><div class="fw"><input id="pa" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder="пусто — нагрузки нет"><select id="pa_unit" class="u" aria-label="Единицы: Нагрузка фазы A (L1)"><option value="1000" selected>кВт</option><option value="1">Вт</option></select></div><div class="hint">Мощность включённых приборов при номинальном напряжении; пустое поле — фаза без нагрузки</div></div><div class="f" id="f_pb"><label for="pb">Нагрузка фазы B (L2)</label><div class="fw"><input id="pb" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder="пусто — нагрузки нет"><select id="pb_unit" class="u" aria-label="Единицы: Нагрузка фазы B (L2)"><option value="1000" selected>кВт</option><option value="1">Вт</option></select></div></div><div class="f" id="f_pc"><label for="pc">Нагрузка фазы C (L3)</label><div class="fw"><input id="pc" type="text" inputmode="decimal" autocomplete="off" value="0,5" placeholder="пусто — нагрузки нет"><select id="pc_unit" class="u" aria-label="Единицы: Нагрузка фазы C (L3)"><option value="1000" selected>кВт</option><option value="1">Вт</option></select></div></div><div class="f" id="f_p1"><label for="p1">Нагрузка однофазного абонента</label><div class="fw"><input id="p1" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><select id="p1_unit" class="u" aria-label="Единицы: Нагрузка однофазного абонента"><option value="1000" selected>кВт</option><option value="1">Вт</option></select></div></div><div class="f" id="f_put"><label for="put">Путь между нейтралью нагрузки и нейтралью источника после обрыва</label><div class="fw"><select id="put"><option value="none" selected>Нет: полный обрыв, повторного заземления нет</option><option value="rz">Через повторное заземление и заземление нейтрали источника</option></select></div></div><div class="f" id="f_rp"><label for="rp">Сопротивление повторного заземления у нагрузки Rп</label><div class="fw"><input id="rp" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">Ом</span></div><div class="hint">ПУЭ 1.7.103: каждое повторное заземление ВЛ 380/220 В — не более 30 Ом; лучше подставить измеренное. Трубы и другие параллельные пути в землю входят сюда же</div></div><div class="f" id="f_r0"><label for="r0">Сопротивление заземления нейтрали источника R₀</label><div class="fw"><input id="r0" type="text" inputmode="decimal" autocomplete="off" value="4" placeholder=""><span class="u">Ом</span></div><div class="hint">ПУЭ 1.7.101: не более 4 Ом при линейном 380 В; 0 — если им пренебрегают</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Обрыв нуля (PEN): как считается</h2>
+<div class="formula">U<sub>N′</sub> = (U<sub>A</sub>·Y<sub>A</sub> + U<sub>B</sub>·Y<sub>B</sub> + U<sub>C</sub>·Y<sub>C</sub>) / (Y<sub>A</sub> + Y<sub>B</sub> + Y<sub>C</sub> + Y<sub>N</sub>)<br>U<sub>A</sub> = U₀∠0°, U<sub>B</sub> = U₀∠−120°, U<sub>C</sub> = U₀∠+120°&nbsp;&nbsp;&nbsp;Y = P / U₀²&nbsp;&nbsp;&nbsp;Y<sub>N</sub> = 1 / (R<sub>п</sub> + R₀) или 0<br>Напряжение на нагрузке фазы: |U<sub>ф</sub> − U<sub>N′</sub>|&nbsp;&nbsp;&nbsp;Корпуса относительно нейтрали источника: |U<sub>N′</sub>| — верхняя оценка напряжения прикосновения; относительно удалённой земли: |U<sub>N′</sub>| · R<sub>п</sub> / (R<sub>п</sub> + R₀)</div>
+<p><b>Метод.</b> После обрыва PEN нейтраль нагрузки отрывается от нейтрали источника, и её потенциал находят методом двух узлов — по теореме Миллмана: фазные напряжения, взвешенные по проводимостям нагрузок, делятся на сумму проводимостей. Y<sub>N</sub> — проводимость пути, который остался между нейтралью нагрузки и нейтралью источника: через повторное заземление у нагрузки R<sub>п</sub> и заземление нейтрали источника R₀. Если такого пути нет, Y<sub>N</sub> = 0 — полный обрыв. Нейтраль смещается к наиболее нагруженной фазе: на ней напряжение падает, на слабо нагруженных растёт вплоть до линейного.</p>
+<p><b>Три контрольных случая.</b> При строго симметричной нагрузке смещения нет. При двух одинаково нагруженных фазах и полном обрыве обе нагрузки оказываются последовательно на линейном напряжении: при U₀ = 220 В каждая получает √3 · 220 / 2 ≈ 190,5 В, а нейтраль смещается на 110 В. При нагрузке только одной фазы тока нет вовсе, и нейтраль нагрузки через эту нагрузку получает полный фазный потенциал.</p>
+<p><b>Корпуса в TN-C-S.</b> После точки обрыва PE соединён с нейтралью нагрузки, поэтому все открытые проводящие части, присоединённые к PE, получают потенциал смещённой нейтрали. Относительно нейтрали источника это U<sub>N′</sub>. Относительно удалённой земли при повторном заземлении — U<sub>N′</sub> · R<sub>п</sub> / (R<sub>п</sub> + R₀): ток, ушедший в землю через повторное заземление, возвращается через заземление нейтрали источника, и напряжение делится между ними. Напряжение прикосновения зависит ещё от того, чего касается человек: в зоне растекания заземлителя оно меньше потенциала относительно удалённой земли, при касании трубы или конструкции, связанной с удалённой землёй, — близко к нему, а при касании металла, связанного с исправным PEN, — соседней электроустановки, опоры, труб соседей — достигает полного смещения U<sub>N′</sub>: нейтраль источника сама уходит ниже потенциала земли на ток, умноженный на R₀. Поэтому верхняя оценка — U<sub>N′</sub>, и с условным пределом 50 В калькулятор сравнивает именно её; вывода о безопасности он не делает.</p>
+<p><b>Однофазный абонент.</b> Если оборвался PEN однофазного ответвления, ток нагрузки может вернуться к источнику только через землю. Без повторного заземления тока нет, приборы не работают, а N и PE абонента — и с ними корпуса — через включённую нагрузку получают потенциал, близкий к фазному. С повторным заземлением нагрузка, R<sub>п</sub> и R₀ образуют делитель. IET приводит пример: при нагрузке 7 кВт напряжение прикосновения ниже 50 В обеспечивает заземлитель 2,1 Ом; делитель 230 · 2,1 / (230² / 7000 + 2,1) даёт 50,01 В.</p>
+<p><b>Допущения модели.</b> Нагрузка фазы — постоянное сопротивление R = U₀² / P при номинальном напряжении: так ведут себя нагреватели и лампы накаливания. Импульсные блоки питания и другая электроника держат мощность постоянной и при пониженном напряжении берут больший ток, двигатели при понижении тормозятся, а при повышенном напряжении пробиваются защитные варисторы приборов, и картина меняется. Сопротивление проводов и реактивная составляющая нагрузки не учитываются.</p>
+<p><b>Что говорят нормы.</b> Обрыв PEN — аварийный режим, порогов для него нормы не дают. ПУЭ 1.7.145 не допускает включать коммутационные аппараты в цепь PEN; исключение — ввод однофазных ответвлений от ВЛ в индивидуальные жилые, дачные и садовые дома, где допускается одновременно отключать все проводники, если PEN разделён на PE и N до вводного аппарата. ПУЭ 1.7.102 требует повторных заземлений PEN на вводах ВЛ в электроустановки с автоматическим отключением питания, 1.7.103 ограничивает их сопротивление — каждое не более 30 Ом при линейном 380 В. ПУЭ 1.7.53 требует защиты при косвенном прикосновении, если напряжение превышает 50 В переменного тока; для потенциала корпусов это условный предел — тот же, что в ПУЭ 1.7.59 и 1.7.104, — а не граница безопасного. ГОСТ 32144-2013, п. 4.2.2, ограничивает медленные отклонения напряжения в точке передачи 10 % номинального в течение 100 % времени интервала в одну неделю; это норма качества для нормального режима, поэтому отклонения здесь показаны справочно.</p>
+<p>Ток в нулевом проводе при <b>исправном</b> нуле считает <a href="tok-v-nule-perekos.html">калькулятор тока в нулевом проводе при перекосе фаз</a>, требования к самому PEN — <a href="sechenie-pen-provodnika.html">калькулятор сечения PEN-проводника</a>.</p>
+<h2>Обрыв нуля (PEN): пример расчёта</h2>
+<p>Трёхфазный ввод 220/380 В, нагрузка фаз 3, 1 и 0,5 кВт, PEN оборвался, повторного заземления нет. Сопротивления нагрузок: 220² / 3000 ≈ 16,13 Ом, 48,4 Ом и 96,8 Ом. Метод двух узлов даёт смещение нейтрали <b>112 В</b>: нагруженная фаза A получает всего 112 В, фазы B и C — <b>277,6 В</b> и <b>305,3 В</b>, на 26 и 39 % выше номинального. Все корпуса, присоединённые к PE после точки обрыва, оказываются под потенциалом 112 В.</p>
+<p>С повторным заземлением 30 Ом и заземлением нейтрали источника 4 Ом смещение уменьшается до 85,1 В, потенциал корпусов относительно удалённой земли — 75,09 В, фазы B и C получают 260,6 и 283,1 В. Опасность остаётся: между корпусом и металлом, связанным с исправным PEN, — до 85,1 В, больше 50 В.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему при обрыве нуля одни приборы сгорают, а другие не работают?</h3><p>Нейтраль нагрузки смещается к наиболее нагруженной фазе. На этой фазе напряжение падает, а на слабо нагруженных растёт и может приблизиться к линейному 380 В. Приборы на перегруженной фазе работают при пониженном напряжении, а на недогруженных выходят из строя от перенапряжения.</p><h3>Опасен ли обрыв PEN, если нагрузка фаз одинаковая?</h3><p>Да. Смещения нет только при строго одинаковых нагрузках фаз, а любое включение или отключение прибора его создаёт. У однофазного абонента или при нагрузке одной фазы корпуса получают потенциал, близкий к фазному.</p><h3>Спасает ли повторное заземление?</h3><p>Оно уменьшает смещение нейтрали и потенциал корпусов относительно земли, но не устраняет их: напряжение делится между нагрузкой, повторным заземлением и заземлением нейтрали источника. Сопротивления заземлений меняются со временем года, поэтому результат калькулятора — оценка.</p><h3>Почему калькулятор считает приборы сопротивлениями?</h3><p>Это простейшая модель: сопротивление берётся по мощности при номинальном напряжении, как у нагревателей и ламп накаливания. Электроника с импульсными блоками питания держит мощность постоянной, двигатели ведут себя иначе, а сгоревший от перенапряжения прибор меняет всю картину. Поэтому числа — оценка аварийного режима, а не прогноз.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://studme.org/99648/tehnika/smeschenie_neytrali" rel="nofollow noopener" target="_blank">Смещение нейтрали. Соотношения между линейными и фазными напряжениями в нагрузке, соединённой в звезду</a> — Теория электрических цепей, учебное пособие; публикация studme.org — Редакция онлайн-публикация на дату обращения — раздел напряжение между нейтралями источника и приёмника — напряжение смещения нейтрали, метод двух узлов для несимметричной звезды — обращение 27.09.2026</li><li><a href="https://electrical-engineering-portal.com/floating-neutral-impacts-in-power-distribution" rel="nofollow noopener" target="_blank">Floating Neutral Impacts in Power Distribution</a> — Electrical Engineering Portal — Редакция онлайн-статья на дату обращения — раздел смещение нейтрали (V1Y1 + V2Y2 + V3Y3)/(Y1 + Y2 + Y3 + Yn), плавающая нейтраль смещается к наиболее нагруженной фазе — обращение 27.09.2026</li><li><a href="https://electrical.theiet.org/wiring-matters/years/2021/84-march-2021/broken-pen/" rel="nofollow noopener" target="_blank">Broken PEN</a> — IET Wiring Matters — Редакция Issue 84, март 2021 — раздел потенциал N, PE и корпусов определяется делителем «нагрузка — оставшиеся пути в землю», 7 кВт: заземлитель 2,1 Ом — напряжение прикосновения ниже 50 В — обращение 27.09.2026</li><li><a href="https://pue-7.ru/%D0%BE%D0%B1%D1%89%D0%B8%D0%B5-%D1%82%D1%80%D0%B5%D0%B1%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F-2/" rel="nofollow noopener" target="_blank">ПУЭ, глава 1.7. Общие требования</a> — Правила устройства электроустановок; текст по публикации pue-7.ru — Редакция 7-е издание — раздел 1.7.53 — защита при косвенном прикосновении, если напряжение превышает 50 В переменного тока — обращение 27.09.2026</li><li><a href="https://zandz.com/ru/pravila_zazemleniya/pue_razdel_17_2/" rel="nofollow noopener" target="_blank">ПУЭ, глава 1.7. Заземление и защитные меры электробезопасности, пп. 1.7.80–1.7.119</a> — Правила устройства электроустановок; текст по публикации ZandZ.com — Редакция 7-е издание — раздел 1.7.101 — R₀ не более 2, 4 и 8 Ом, 1.7.102 — повторные заземления PEN на вводах ВЛ, 1.7.103 — каждое повторное заземление не более 15, 30 и 60 Ом — обращение 27.09.2026</li><li><a href="https://zandz.com/ru/pravila_zazemleniya/pue_razdel_17_3/" rel="nofollow noopener" target="_blank">ПУЭ, глава 1.7. Заземление и защитные меры электробезопасности, пп. 1.7.120–1.7.177</a> — Правила устройства электроустановок; текст по публикации ZandZ.com — Редакция 7-е издание — раздел 1.7.145 — коммутационные аппараты в цепи PEN — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200104301" rel="nofollow noopener" target="_blank">ГОСТ 32144-2013. Электрическая энергия. Совместимость технических средств электромагнитная. Нормы качества электрической энергии в системах электроснабжения общего назначения</a> — Межгосударственный стандарт; Росстандарт — Редакция от 22.07.2013 — раздел 4.2.2 — отклонения напряжения не более 10 % в течение 100 % времени интервала в одну неделю — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Трёхфазная четырёхпроводная сеть с симметричными фазными напряжениями источника U₀; обрыв PEN до нагрузки, фазные проводники целы.</li><li>Электроустановки до 1 кВ: в трёхфазном режиме U₀ не больше 1000/√3 ≈ 577 В, у однофазного абонента — не больше 1000 В.</li><li>Нагрузка фазы — постоянное активное сопротивление R = U₀² / P при номинальном напряжении.</li><li>После обрыва нейтраль нагрузки связана с нейтралью источника только через повторное заземление Rп и заземление нейтрали R₀, включённые последовательно; трубы и другие параллельные пути в землю входят в Rп.</li></ul><p><b>Границы применимости:</b></p><ul><li>Электроника с постоянной мощностью, двигатели, реактивная нагрузка и пробой варисторов при перенапряжении не моделируются.</li><li>Сопротивление фазных проводников и трансформатора не учитывается.</li><li>Напряжение прикосновения зависит от того, чего касается человек; верхняя оценка — полное смещение нейтрали U_N′, с условным пределом 50 В сравнивается она.</li><li>Не оценивает, сработает ли реле напряжения или другое защитное устройство.</li><li>Результат — оценка аварийного режима, а не нормативный вердикт.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="sechenie-pen-provodnika.html">Сечение PEN-проводника до разделения (TN-C, TN-C-S)</a></li><li><a href="tok-v-nule-perekos.html">Ток в нулевом проводе при перекосе фаз</a></li><li><a href="sechenie-provodnika-uravnivaniya.html">Сечение проводников уравнивания потенциалов</a></li><li><a href="vybor-uzip.html">Выбор УЗИП на вводе: класс, Iimp, In, Uc и Up</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+var K=Math.sqrt(3)/2,RE=[1,-0.5,-0.5],IM=[0,-K,K],PH=['A','B','C'];
+function gt(a,b){return a>b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function sync(){var one=S('set')==='1',rz=S('put')==='rz';hideF('pa',one);hideF('pb',one);hideF('pc',one);hideF('p1',!one);hideF('rp',!rz);hideF('r0',!rz);}
+function init(){$('set').addEventListener('change',sync);$('put').addEventListener('change',sync);sync();}
+function pw(id,name){var raw=String($(id).value).trim();if(raw==='')return 0;var v=P(id);
+ if(isNaN(v))return name+': введите число или оставьте поле пустым.';if(v<0)return name+': мощность не может быть отрицательной.';return v;}
+function pct(x,u0){return fmt(100*x/u0,4)+' % U₀';}
+function dev(x,u0){var d=100*(x/u0-1);if(Math.abs(d)<1e-9)d=0;return (d>0?'+':(d<0?'−':''))+fmt(Math.abs(d),4)+' %';}
+function calc(){
+var one=S('set')==='1',rz=S('put')==='rz',u0=P('u0'),k;
+if(isNaN(u0))return err('Введите номинальное фазное напряжение U₀.');
+if(u0<=0)return err('Напряжение должно быть больше нуля.');
+if(gt(u0,one?1000:1000/Math.sqrt(3)))return err(one?'Калькулятор рассчитан на электроустановки до 1 кВ: U₀ не больше 1000 В.':'Калькулятор рассчитан на электроустановки до 1 кВ: в трёхфазной сети линейное напряжение √3·U₀ не больше 1000 В, то есть U₀ не больше 577 В.');
+var ids=one?['p1']:['pa','pb','pc'],nm=one?['Нагрузка абонента']:['Фаза A','Фаза B','Фаза C'],p=[0,0,0];
+for(k=0;k<ids.length;k++){var v=pw(ids[k],nm[k]);if(typeof v==='string')return err(v);p[k]=v;}
+if(!(p[0]+p[1]+p[2]>0))return err(one?'Введите мощность нагрузки абонента.':'Введите мощность нагрузки хотя бы одной фазы.');
+var rp=0,r0=0,yn=0;
+if(rz){rp=P('rp');r0=P('r0');
+ if(isNaN(rp)||isNaN(r0))return err('Введите сопротивление повторного заземления и заземления нейтрали источника.');
+ if(rp<=0)return err('Сопротивление повторного заземления должно быть больше нуля.');
+ if(r0<0)return err('Сопротивление заземления нейтрали источника не может быть отрицательным.');
+ yn=1/(rp+r0);}
+var y=[],sy=yn,sr=0,si=0;
+for(k=0;k<3;k++){y.push(p[k]/(u0*u0));sy+=y[k];sr+=y[k]*RE[k];si+=y[k]*IM[k];}
+var nr=u0*sr/sy,ni=u0*si/sy,un=Math.sqrt(nr*nr+ni*ni);
+if(!isFinite(un))return err('Значения слишком велики для надёжного расчёта.');
+if(un<u0*1e-9){un=0;nr=0;ni=0;}
+var vv=[];for(k=0;k<3;k++){var dr=u0*RE[k]-nr,di=u0*IM[k]-ni,m=Math.sqrt(dr*dr+di*di);vv.push(m<u0*1e-9?0:m);}
+var ue=rz?un*rp/(rp+r0):un,h='',st;
+if(!one){
+ var lo=Infinity,hi=-Infinity,nl=0;
+ h+=row('Смещение нейтрали нагрузки U_N′',fmt(un,4)+' В ('+pct(un,u0)+')');
+ for(k=0;k<3;k++){
+  h+=row('Фаза '+PH[k]+(p[k]>0?': напряжение на нагрузке':': нагрузки нет, фаза – нейтраль нагрузки'),fmt(vv[k],4)+' В ('+pct(vv[k],u0)+')');
+  if(p[k]>0){lo=Math.min(lo,vv[k]);hi=Math.max(hi,vv[k]);nl++;}}
+ var same=fmt(lo,4)===fmt(hi,4);
+ h+=row('Отклонение от U₀ '+(nl>1?'на нагруженных фазах':'на нагруженной фазе')+' (справочно)',same?dev(lo,u0):'от '+dev(lo,u0)+' до '+dev(hi,u0));
+ h+=row('Потенциал корпусов (PE после обрыва) относительно нейтрали источника',fx(un,50)+' В');
+ if(rz)h+=row('Потенциал корпусов относительно удалённой земли',fmt(ue,4)+' В')+row('Ток через повторное заземление',fmt(un/(rp+r0),4)+' А');
+ st=un===0?'Оценка аварийного режима: смещения нет только при строго симметричной нагрузке':'Оценка аварийного режима: корпуса под потенциалом '+fx(un,50)+' В, '+(nl>1?'на нагруженных фазах ':'на нагруженной фазе ')+(same?fmt(lo,4)+' В':'от '+fmt(lo,4)+' до '+fmt(hi,4)+' В');
+}else{
+ h+=row('Ток нагрузки',fmt(vv[0]*y[0],4)+' А'+(rz?'':' — пути для тока нет'));
+ h+=row('Напряжение на нагрузке',fmt(vv[0],4)+' В ('+pct(vv[0],u0)+')');
+ h+=row('Потенциал N и PE абонента (корпусов) относительно нейтрали источника',fx(un,50)+' В ('+pct(un,u0)+')');
+ if(rz)h+=row('Потенциал корпусов относительно удалённой земли',fmt(ue,4)+' В');
+ st='Оценка аварийного режима: корпуса под потенциалом '+fx(un,50)+' В, нагрузка получает '+fmt(vv[0],4)+' В';
+}
+var n=one?'Однофазный абонент: ток нагрузки может вернуться к источнику только через землю. ':'Метод двух узлов: нейтраль нагрузки смещается к наиболее нагруженной фазе. ';
+if(!rz)n+=one?'Без повторного заземления тока нет: приборы не работают, а N, PE и корпуса через включённую нагрузку получают фазный потенциал. ':'Повторного заземления нет: нейтраль нагрузки ничем не связана с нейтралью источника. ';
+else n+='Ток через повторное заземление возвращается к источнику через землю и заземление его нейтрали, и напряжение делится между ними. ';
+if(gt(un,50))n+='Между корпусами и металлом, связанным с исправным PEN, — соседней электроустановкой, опорой, трубами, — напряжение может достигать '+fx(un,50)+' В'+(rz?' (относительно удалённой земли — '+fmt(ue,4)+' В)':'')+', больше 50 В: ПУЭ 1.7.53 требует защиты при косвенном прикосновении, если напряжение превышает 50 В переменного тока. ';
+else n+='Напряжение на корпусах не выше 50 В даже относительно нейтрали источника, но безопасным это не делает: оно меняется с нагрузкой и сопротивлением заземлений, а сам режим аварийный. ';
+n+='Напряжение прикосновения зависит от того, чего ещё касается человек: верхняя оценка — полное смещение нейтрали U_N′, потенциал относительно удалённой земли '+(rz?'меньше':'такой же')+'. Модель считает приборы постоянными сопротивлениями: электроника с постоянной мощностью, двигатели и пробой варисторов при перенапряжении дают другую картину. Отклонения от U₀ — справочно: ГОСТ 32144-2013 нормирует ±10 % для медленных изменений напряжения в нормальном режиме, а не для аварии.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
