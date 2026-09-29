@@ -237,7 +237,8 @@ if(typeof init==='function')init();
 });
 
 
-function fx(x,lim){for(var p=4;p<=12;p++){if(x===lim||Number(x.toPrecision(p))!==lim)return fmt(x,p);}return fmt(x,12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function sx(x,lim,unit){var P=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н']];for(var i=0;i<P.length;i++){if(Math.abs(x)>=P[i][0])return fx(x/P[i][0],lim/P[i][0])+' '+P[i][1]+unit;}return fx(x/1e-12,lim/1e-12)+' п'+unit;}
 function raz(x){var s=fmt(x,3);if(s==='1'&&x!==1)s=fx(x,1);if(/[,·]/.test(s))return s+' раза';var n=Math.abs(Math.round(x))%100,m=n%10;return s+((m>=2&&m<=4&&(n<12||n>14))?' раза':' раз');}
 
 function ge(a,b){return a>=b*(1-1e-12);}
