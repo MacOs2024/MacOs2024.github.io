@@ -288,6 +288,33 @@ test.describe('Вёрстка', () => {
     expect(errors).toEqual([]);
   });
 
+  test('результат расчёта по умолчанию не шире экрана', async ({ page }) => {
+    // Блок результата появляется только после нажатия «Рассчитать», и
+    // длинные подписи строк или числа без пробелов могут раздвинуть страницу
+    // на узком экране. Проверка при загрузке этого не видит.
+    // Больше сотни страниц с расчётом не укладываются в общий лимит 30 с.
+    test.setTimeout(300_000);
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.goto('/');
+    const urls = await page.locator('.ccard').evaluateAll(nodes =>
+      nodes.map(node => node.getAttribute('href')));
+    let calculated = 0;
+    for (const url of urls) {
+      await page.goto(url, { waitUntil: 'domcontentloaded' });
+      const go = page.locator('#go');
+      if (!(await go.count())) continue;
+      await go.click();
+      await expect(page.locator('#res'), `${url}: нет результата после расчёта`).toHaveClass(/\bon\b/);
+      calculated += 1;
+      const overflow = await page.evaluate(() =>
+        document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow, `${url}: после расчёта страница шире экрана на ${overflow}px`).toBeLessThanOrEqual(0);
+    }
+    expect(calculated, 'расчёт выполнен меньше чем на 100 страницах').toBeGreaterThanOrEqual(100);
+    expect(errors).toEqual([]);
+  });
+
   test('нет JS-ошибок при загрузке и расчёте', async ({ page }) => {
     const jsErrors = [];
     page.on('pageerror', e => jsErrors.push(e.message));
