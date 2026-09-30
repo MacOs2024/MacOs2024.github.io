@@ -14,15 +14,16 @@ from data_i import CALCS_I
 from data_j import CALCS_J
 from data_k import CALCS_K
 from data_l import CALCS_L
+from data_n import CALCS_N
 from audit_metadata import apply_audit_metadata
 
-CALCS = CALCS_A + CALCS_B + CALCS_C + CALCS_D + CALCS_E + CALCS_F + CALCS_G + CALCS_H + CALCS_I + CALCS_J + CALCS_K + CALCS_L
+CALCS = CALCS_A + CALCS_B + CALCS_C + CALCS_D + CALCS_E + CALCS_F + CALCS_G + CALCS_H + CALCS_I + CALCS_J + CALCS_K + CALCS_L + CALCS_N
 apply_audit_metadata(CALCS)
 
 # notice-страницы остаются по своему URL, но ничего не вычисляют: калькулятор
 # снят с публикации. В каталог и sitemap они не попадают.
-PAGES = 123          # всего генерируемых страниц-разделов
-CALCULATORS = 122    # из них с работающим расчётом
+PAGES = 128          # всего генерируемых страниц-разделов
+CALCULATORS = 127    # из них с работающим расчётом
 assert len(CALCS) == PAGES, "Ожидалось %d страниц, получено %d" % (PAGES, len(CALCS))
 real = [c for c in CALCS if not c.get("notice")]
 assert len(real) == CALCULATORS, "Ожидалось %d калькуляторов, получено %d" % (CALCULATORS, len(real))

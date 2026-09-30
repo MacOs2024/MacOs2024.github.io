@@ -95,7 +95,7 @@ const infoPages = ["privacy.html", "about.html"];
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
   .sort();
-check(htmlFiles.length === 124, `Ожидался 124 HTML-файлов, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 129, `Ожидался 129 HTML-файлов, найдено ${htmlFiles.length}`);
 
 // Совет закоротить заряженный конденсатор перемычкой, отвёрткой или
 // закороткой опасен: при запасённой энергии это даёт дугу и разбрызгивание
@@ -1108,7 +1108,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 124, `В sitemap должно быть 124 URL (корень + about + 122 калькулятора), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 129, `В sitemap должно быть 129 URL (корень + about + 127 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 
@@ -2073,6 +2073,194 @@ await calculate("zazemlenie-tt-uzo.html", { ul: "25", idn: "0.1", ra: "250,01", 
     const hit = text(file).match(/Статус\s*[—:-]\s*(не\s+)?проходит/i);
     check(!hit, `${file}: в тексте статус «${hit?.[0]}» — запрещённая форма`);
   }
+}
+
+// --- Партия №3, data_n.py ---
+// ===========================================================================
+// «Электродвигатели и приводы»: автомат для двигателя, пуск через
+// автотрансформатор, уставка теплового реле, индивидуальная компенсация,
+// синхронная скорость и скольжение. Эталоны посчитаны отдельным скриптом
+// (scratchpad batch3/ref.py) и вручную — расчёт приведён в комментариях;
+// округление как в fmt(): 4 значащие цифры, запятая.
+// ===========================================================================
+
+// --- avtomat-dlya-dvigatelya: ГОСТ IEC 60898-1-2020 (B/C/D), K по ABB ---
+// Эталон 1: Iн = 10 А, Kп = 6 → Iп = 60 А; бросок 2·Iп = 120 А; C16: 120/16 = 7,5 — между 5 и 10 → зона разброса;
+// наименьший номинал 120/5 = 24 А.
+await calculateWithout("avtomat-dlya-dvigatelya.html", {}, ["Пусковой ток Iп = Kп·Iн60 А", "Наибольший бросок в первый полупериод, 2·Iп120 А", "Кратность броска к номиналу автомата7,5", "Зона мгновенного расцепления Cсвыше 5·In до 10·In (80…160 А)", "Наименьший номинал, при котором бросок не выше 5·In24 А", "Мгновенный расцепитель при пускеможет отключить", "СтатусРиск ложного отключения при пуске: бросок в зоне разброса мгновенного расцепителя", "автомат защиты двигателя"], ["Статус Оценка", "СтатусОценка"]);
+// Эталон 2: без броска 60/16 = 3,75 ≤ 5 → мгновенный не сработает; кривой нет → «Недостаточно данных»; 60/5 = 12 А.
+await calculateWithout("avtomat-dlya-dvigatelya.html", { asym: "1" }, ["Кратность броска к номиналу автомата3,75", "Наименьший номинал, при котором бросок не выше 5·In12 А", "Мгновенный расцепитель при пускене отключит: бросок не выше нижней границы зоны 5·In", "Тепловой расцепитель при пускенет данных", "СтатусНедостаточно данных: от мгновенного расцепления пуск отстроен", "Бросок первого полупериода не учтён"], ["Наибольший бросок", "СтатусОценка"]);
+// D16: 7,5 ≤ 10 → мгновенный отстроен; 120/10 = 12 А; без кривой — рискованный вердикт запрещён.
+await calculateWithout("avtomat-dlya-dvigatelya.html", { tip: "D" }, ["свыше 10·In до 20·In (160…320 А)", "Наименьший номинал, при котором бросок не выше 10·In12 А", "СтатусНедостаточно данных", "Граница 20·In для D должна подтверждаться паспортом"], ["СтатусОценка", "Автомат отключится"]);
+// По кривой изготовителя: tп = 5 с < 8 с → укладывается; 5 = 5 → отключит; 5 < 5,01 → укладывается.
+await calculateWithout("avtomat-dlya-dvigatelya.html", { tip: "D", tcur: "8" }, ["Тепловой расцепитель при пускене отключит из холодного состояния: время пуска 5 с меньше времени по кривой 8 с", "СтатусОценка: пуск не попадает в зону мгновенного расцепления и укладывается во введённую кривую изготовителя"], ["бросок первого полупериода не учтён", "автомат защиты двигателя"]);
+await calculate("avtomat-dlya-dvigatelya.html", { tip: "D", tcur: "5" }, ["отключит: время пуска 5 с не меньше времени по кривой 5 с", "СтатусТепловой расцепитель отключит при пуске по введённой кривой изготовителя"], "boundary");
+await calculate("avtomat-dlya-dvigatelya.html", { tip: "D", tcur: "5,01" }, ["СтатусОценка: пуск не попадает в зону мгновенного расцепления"], "boundary");
+await calculate("avtomat-dlya-dvigatelya.html", { tip: "D", tcur: "8", asym: "1" }, ["СтатусОценка: пуск не попадает в зону мгновенного расцепления и укладывается во введённую кривую изготовителя; бросок первого полупериода не учтён"]);
+// Нижняя граница C: 80/16 = 5 → ещё вне зоны; 80,1/16 = 5,006 → в зоне; наименьший номинал 16 и 16,02 А.
+await calculate("avtomat-dlya-dvigatelya.html", { asym: "1", kp: "8" }, ["Кратность броска к номиналу автомата5", "бросок не выше 5·In16 А", "СтатусНедостаточно данных"], "boundary");
+await calculate("avtomat-dlya-dvigatelya.html", { asym: "1", kp: "8,01" }, ["Кратность броска к номиналу автомата5,006", "бросок не выше 5·In16,02 А", "СтатусРиск ложного отключения при пуске"], "boundary");
+// Верхняя граница C с броском: 2·80/16 = 10 → гарантированно отключит; 2·79,9/16 = 9,988 → зона разброса.
+await calculate("avtomat-dlya-dvigatelya.html", { kp: "8" }, ["Кратность броска к номиналу автомата10", "отключит: бросок не ниже 10·In", "СтатусАвтомат отключится при пуске"], "boundary");
+await calculate("avtomat-dlya-dvigatelya.html", { kp: "7,99" }, ["Кратность броска к номиналу автомата9,988", "СтатусРиск ложного отключения при пуске"], "boundary");
+// In = 16 < Iн = 20 → не подходит, даже если остальное считается.
+await calculate("avtomat-dlya-dvigatelya.html", { im: "20" }, ["СтатусНе подходит: номинал автомата In меньше номинального тока двигателя", "Условие IB ≤ In не выполнено"]);
+// K (ABB, 8…14·In), In = 10: без броска 60/10 = 6 ≤ 8; с броском 12 — между 8 и 14.
+await calculate("avtomat-dlya-dvigatelya.html", { tip: "K", inb: "10", asym: "1" }, ["Зона мгновенного расцепления K (по данным ABB)свыше 8·In до 14·In (80…140 А)", "Кратность броска к номиналу автомата6", "СтатусНедостаточно данных", "Характеристика K не входит в МЭК 60898"]);
+await calculate("avtomat-dlya-dvigatelya.html", { tip: "K", inb: "10" }, ["Кратность броска к номиналу автомата12", "Наименьший номинал, при котором бросок не выше 8·In15 А", "СтатусРиск ложного отключения при пуске"]);
+// D против D без паспорта: 2·17,5·10/10 = 35 → для D (до 20) отключит, для D50 (до 50) — зона разброса.
+await calculate("avtomat-dlya-dvigatelya.html", { tip: "D", kp: "17,5", inb: "10" }, ["Кратность броска к номиналу автомата35", "СтатусАвтомат отключится при пуске"]);
+await calculate("avtomat-dlya-dvigatelya.html", { tip: "D50", kp: "17,5", inb: "10" }, ["свыше 10·In до 50·In (100…500 А)", "СтатусРиск ложного отключения при пуске", "взята 50·In"]);
+// B16 без броска: 60/16 = 3,75 — между 3 и 5; наименьший номинал 60/3 = 20 А.
+await calculate("avtomat-dlya-dvigatelya.html", { tip: "B", asym: "1" }, ["Кратность броска к номиналу автомата3,75", "Наименьший номинал, при котором бросок не выше 3·In20 А", "СтатусРиск ложного отключения при пуске"]);
+await invalid("avtomat-dlya-dvigatelya.html", { im: "abc" }, "Заполните номинальный ток двигателя");
+await invalid("avtomat-dlya-dvigatelya.html", { tcur: "пять" }, "Время отключения по кривой изготовителя — число в секундах");
+await invalid("avtomat-dlya-dvigatelya.html", { tcur: "0" }, "Время отключения по кривой изготовителя должно быть больше нуля");
+await invalid("avtomat-dlya-dvigatelya.html", { kp: "0,5" }, "Кратность пускового тока Iп/Iн не может быть меньше 1");
+await invalid("avtomat-dlya-dvigatelya.html", { tp: "0" }, "Время пуска должно быть больше нуля");
+await invalid("avtomat-dlya-dvigatelya.html", { inb: "160" }, "Номинал больше 125 А");
+
+// --- avtotransformatornyy-pusk: ток сети k²·Iп, двигателя k·Iп, момент k²·Mп ---
+// Эталон 1: Iн = 50 А, Kп = 7 → 350 А, Mп = 2·Mн. Отвод 0,65: 0,4225·350 = 147,875 → 147,9 А (2,958·Iн);
+// 0,65·350 = 227,5 А; 0,4225·2 = 0,845·Mн > 0,5 → оценка. Звезда-треугольник: 350/3 = 116,7 А, 2/3 = 0,6667.
+await calculate("avtotransformatornyy-pusk.html", {}, ["Способ пускаАвтотрансформатор, отвод 65 %", "Пусковой ток сети147,9 А (2,958·Iн)", "Пусковой ток двигателя за автотрансформатором, k·Iп227,5 А", "Пусковой момент0,845·Mн (42,25 % от прямого пуска)", "Для сравнения: прямой пуск350 А, 2·Mн", "Для сравнения: звезда-треугольник116,7 А, 0,6667·Mн", "СтатусОценка: пусковой момент больше момента нагрузки при трогании"]);
+// Эталон 2: отвод 0,5 → 0,25·350 = 87,5 А, 0,25·2 = 0,5·Mн = моменту нагрузки → не тронется (рискованный вердикт).
+await calculateWithout("avtotransformatornyy-pusk.html", { met: "at50" }, ["Пусковой ток сети87,5 А (1,75·Iн)", "Пусковой момент0,5·Mн (25 % от прямого пуска)", "СтатусМомента не хватит для трогания: пусковой момент 0,5·Mн не больше момента нагрузки 0,5·Mн"], ["СтатусОценка"], "boundary");
+await calculate("avtotransformatornyy-pusk.html", { met: "at50", mc: "0,49" }, ["Пусковой момент0,5·Mн", "Момент нагрузки при трогании0,49·Mн", "СтатусОценка"], "boundary");
+// Отвод 0,8: 0,64·350 = 224 А (4,48·Iн), 0,8·350 = 280 А, 0,64·2 = 1,28.
+await calculate("avtotransformatornyy-pusk.html", { met: "at80" }, ["отвод 80 %", "Пусковой ток сети224 А (4,48·Iн)", "k·Iп280 А", "Пусковой момент1,28·Mн (64 % от прямого пуска)"]);
+// Свой отвод 0,7: 0,49·350 = 171,5 А, 0,7·350 = 245 А, 0,98·Mн.
+await calculate("avtotransformatornyy-pusk.html", { met: "atk", k: "0,7" }, ["отвод 70 %", "Пусковой ток сети171,5 А (3,43·Iн)", "k·Iп245 А", "Пусковой момент0,98·Mн (49 % от прямого пуска)"]);
+await calculateWithout("avtotransformatornyy-pusk.html", { met: "yd" }, ["Способ пускаЗвезда-треугольник", "Пусковой ток сети116,7 А (2,333·Iн)", "Пусковой момент0,6667·Mн (33,33 % от прямого пуска)", "400Δ/690Y", "СтатусОценка"], ["k·Iп", "Для сравнения: звезда-треугольник"]);
+await calculateWithout("avtotransformatornyy-pusk.html", { met: "yd", mc: "0,7" }, ["СтатусМомента не хватит для трогания: пусковой момент 0,6667·Mн не больше момента нагрузки 0,7·Mн"], ["СтатусОценка"]);
+await calculateWithout("avtotransformatornyy-pusk.html", { met: "dol" }, ["Пусковой ток сети350 А (7·Iн)", "Пусковой момент2·Mн (100 % от прямого пуска)"], ["Для сравнения: прямой пуск", "k·Iп"]);
+// Сеть 80 %: ток 147,875·0,8 = 118,3 А, двигатель 227,5·0,8 = 182 А, момент 0,845·0,64 = 0,5408; 1/0,64 = 1,5625 → 1,563.
+await calculate("avtotransformatornyy-pusk.html", { u: "80" }, ["Пусковой ток сети118,3 А", "k·Iп182 А", "Пусковой момент0,5408·Mн", "уменьшает ток в 1,25 раза"]);
+await invalid("avtotransformatornyy-pusk.html", { mc: "x" }, "Заполните ток двигателя");
+await invalid("avtotransformatornyy-pusk.html", { met: "atk", k: "1" }, "Отвод автотрансформатора k — доля напряжения сети");
+await invalid("avtotransformatornyy-pusk.html", { met: "atk", k: "abc" }, "Введите отвод автотрансформатора k");
+await invalid("avtotransformatornyy-pusk.html", { u: "120" }, "Напряжение сети при пуске задаётся в процентах");
+await invalid("avtotransformatornyy-pusk.html", { mp: "0" }, "Кратность пускового момента должна быть больше нуля");
+await invalid("avtotransformatornyy-pusk.html", { mc: "-1" }, "Момент нагрузки не может быть отрицательным");
+
+// --- ustavka-teplovogo-rele: классы 10A/10/20/30 при 7,2·Ir (ГОСТ IEC 60947-4-1) ---
+// Эталон 1: Iн = 10 А, прямой пуск 6·Iн = 60 А, кратность 6 ≤ 7,2, tп = 3 с ≤ 4 с (нижняя граница класса 10) → выдерживает;
+// наименьший класс: 10A (2 с) — нет, 10 (4 с) — да.
+await calculate("ustavka-teplovogo-rele.html", {}, ["Ток через реле при номинальной нагрузке10 А", "Диапазон реле9…13 А", "Уставка Ir10 А", "Ток через реле при пуске60 А", "Кратность пускового тока к уставке6", "за время больше 4 с и не больше 10 с", "Наименьший класс, гарантирующий пуск10Статус", "СтатусОценка: реле класса 10 выдерживает пуск из холодного состояния"]);
+await calculateWithout("ustavka-teplovogo-rele.html", { cls: "10A" }, ["за время больше 2 с и не больше 10 с", "СтатусНедостаточно данных: при этой кратности и времени пуска нужна время-токовая кривая реле"], ["СтатусОценка", "NEC"]);
+await calculateWithout("ustavka-teplovogo-rele.html", { tp: "5" }, ["Наименьший класс, гарантирующий пуск20Статус", "СтатусНедостаточно данных"], ["СтатусОценка"]);
+await calculate("ustavka-teplovogo-rele.html", { tp: "5", cls: "20" }, ["СтатусОценка: реле класса 20 выдерживает пуск из холодного состояния"]);
+// Эталон 2: 7,2·Iн, tп = 12 с > 10 с (верхняя граница класса 10) → отключит; для класса 30 (9…30 с) — нужна кривая.
+await calculate("ustavka-teplovogo-rele.html", { kp: "7,2", tp: "12" }, ["Кратность пускового тока к уставке7,2", "Наименьший класс, гарантирующий пускни один из классов 10A–30: пуск дольше 9 с", "СтатусРеле класса 10 отключит двигатель при пуске"], "boundary");
+await calculateWithout("ustavka-teplovogo-rele.html", { kp: "7,2", tp: "12", cls: "30" }, ["СтатусНедостаточно данных"], ["отключит двигатель при пуске", "СтатусОценка"]);
+await calculate("ustavka-teplovogo-rele.html", { tp: "9", cls: "30" }, ["СтатусОценка: реле класса 30 выдерживает пуск"], "boundary");
+await calculate("ustavka-teplovogo-rele.html", { tp: "9,01", cls: "30" }, ["ни один из классов 10A–30", "СтатусНедостаточно данных"], "boundary");
+await calculateWithout("ustavka-teplovogo-rele.html", { kp: "7,21", tp: "3" }, ["Кратность пускового тока к уставке7,21", "СтатусНедостаточно данных"], ["Наименьший класс", "СтатусОценка"], "boundary");
+// Звезда-треугольник, реле в фазе обмотки: 26/√3 = 15,011 → 15,01 А; на «звезде» 6·26/3 = 52 А; 52/15,011 = 3,464.
+await calculate("ustavka-teplovogo-rele.html", { im: "26", sch: "ydp", rmin: "12", rmax: "18", tp: "5" }, ["Ток через реле при номинальной нагрузке, Iн/√315,01 А", "Уставка Ir15,01 А", "Ток через реле при пуске (ступень «звезда»)52 А", "Кратность пускового тока к уставке3,464", "СтатусНедостаточно данных", "уставка — Iн/√3 ≈ 0,58·Iн"]);
+await calculate("ustavka-teplovogo-rele.html", { im: "26", sch: "ydp", rmin: "12", rmax: "18", tp: "5", cls: "20" }, ["СтатусОценка: реле класса 20 выдерживает пуск"]);
+// Звезда-треугольник, реле в линии: Ir = 26 А (верх диапазона 18…26), на «звезде» 52/26 = 2.
+await calculate("ustavka-teplovogo-rele.html", { im: "26", sch: "ydl", rmin: "18", rmax: "26" }, ["Уставка Ir26 А", "Кратность пускового тока к уставке2", "СтатусОценка: реле класса 10 выдерживает пуск"], "boundary");
+await calculateWithout("ustavka-teplovogo-rele.html", { rmin: "11", rmax: "14" }, ["Уставка Irвне диапазона реле", "СтатусРеле не подходит: требуемая уставка 10 А вне диапазона"], ["СтатусОценка"]);
+// NEC 430.32(A)(1): 125 % → 12,5 А, уставка — нижняя граница 11 А; кратность 60/11 = 5,455.
+await calculate("ustavka-teplovogo-rele.html", { base: "nec", rmin: "11", rmax: "14" }, ["Наибольшая уставка по NEC 430.32(A)(1), 125 %12,5 А", "Уставка Ir11 А — нижняя граница диапазона, в пределах NEC", "Кратность пускового тока к уставке5,455", "СтатусОценка: реле класса 10 выдерживает пуск", "американская норма"]);
+await calculate("ustavka-teplovogo-rele.html", { base: "nec", sf: "lo", rmin: "12", rmax: "14" }, ["Наибольшая уставка по NEC 430.32(A)(1), 115 %11,5 А", "СтатусРеле не подходит: в диапазоне нет уставки от 10 до 11,5 А"]);
+await calculate("ustavka-teplovogo-rele.html", { base: "nec", sf: "lo", rmin: "11,5", rmax: "14" }, ["Уставка Ir11,5 А — нижняя граница диапазона, в пределах NEC", "СтатусОценка"], "boundary");
+await invalid("ustavka-teplovogo-rele.html", { im: "x" }, "Заполните ток двигателя, диапазон реле");
+await invalid("ustavka-teplovogo-rele.html", { rmin: "15", rmax: "13" }, "Нижняя граница диапазона реле больше верхней");
+await invalid("ustavka-teplovogo-rele.html", { kp: "0" }, "Кратность пускового тока не может быть меньше 1");
+await invalid("ustavka-teplovogo-rele.html", { tp: "-1" }, "Время пуска должно быть больше нуля");
+
+// --- kompensaciya-dvigatelya: Qc ≤ 0,9·√3·U·I₀ (Schneider EIG) ---
+// Эталон 1: 15 кВт, η 0,9 → P₁ = 16,67 кВт; tg φ = 0,5268/0,85 = 0,6197 → Q₁ = 10,33 кВАр; Iн = 16667/(√3·400·0,85) = 28,3 А;
+// √3·400·10 = 6,928 кВАр, предел 0,9·6,928 = 6,235; Qc = 5: Q₂ = 5,329, cos φ₂ = 16,67/√(16,67² + 5,329²) = 0,9525; 0,85/0,9525 = 0,8924.
+await calculate("kompensaciya-dvigatelya.html", {}, ["Потребляемая активная мощность P₁ = P/η16,67 кВт", "Реактивная мощность двигателя при номинальной нагрузке10,33 кВАр", "Номинальный ток по введённым данным28,3 А", "Реактивная мощность холостого хода ≈ √3·U·I₀6,928 кВАр", "Предел Qc ≤ 0,9·√3·U·I₀6,235 кВАр", "Заданная Qc5 кВАр", "cos φ после компенсации при номинальной нагрузке0,9525", "cos φ₁/cos φ₂0,8924", "СтатусQc в пределах 0,9·√3·U·I₀ по Schneider EIG"]);
+// Эталон 2: Qc = 7 > 6,235 → риск; Q₂ = 3,329, cos φ₂ = 0,9806.
+await calculateWithout("kompensaciya-dvigatelya.html", { qc: "7" }, ["cos φ после компенсации при номинальной нагрузке0,9806", "cos φ₁/cos φ₂0,8668", "СтатусQc больше предела 0,9·√3·U·I₀: риск самовозбуждения после отключения", "через отдельный контактор"], ["в пределах"]);
+// Предел 6,23538 не округляется через введённое значение.
+await calculate("kompensaciya-dvigatelya.html", { qc: "6,235" }, ["Предел Qc ≤ 0,9·√3·U·I₀6,2354 кВАр", "Заданная Qc6,235 кВАр", "СтатусQc в пределах"], "boundary");
+await calculate("kompensaciya-dvigatelya.html", { qc: "6,236" }, ["Предел Qc ≤ 0,9·√3·U·I₀6,235 кВАр", "Заданная Qc6,236 кВАр", "СтатусQc больше предела"], "boundary");
+// Подбор до 0,95: 16,67·(0,6197 − 0,3287) = 4,851 кВАр ≤ предела.
+await calculateWithout("kompensaciya-dvigatelya.html", { mode: "pick" }, ["Нужно для cos φ = 0,954,851 кВАр", "Принять Qc4,851 кВАр", "cos φ после компенсации при номинальной нагрузке0,95", "СтатусQc в пределах"], ["ограничено"]);
+// Подбор до 0,99: нужно 16,67·(0,6197 − 0,1425) = 7,954 > 6,235 → ограничено, cos φ₂ = 0,9711.
+await calculate("kompensaciya-dvigatelya.html", { mode: "pick", ct: "0,99" }, ["Нужно для cos φ = 0,997,954 кВАр", "Принять Qc6,235 кВАр — ограничено пределом", "cos φ после компенсации при номинальной нагрузке0,9711", "cos φ₁/cos φ₂0,8753", "СтатусЦелевой cos φ у зажимов недостижим"]);
+// Перекомпенсация: I₀ = 25 А → предел 15,59; Qc = 12 > Q₁ = 10,33 → Q₂ = −1,671, cos φ₂ = 0,995 опережающий.
+await calculate("kompensaciya-dvigatelya.html", { i0: "25", qc: "12" }, ["Предел Qc ≤ 0,9·√3·U·I₀15,59 кВАр", "cos φ после компенсации при номинальной нагрузке0,995 (опережающий — перекомпенсация)", "cos φ₁/cos φ₂0,8543", "СтатусQc в пределах"]);
+await invalid("kompensaciya-dvigatelya.html", { i0: "30" }, "Ток холостого хода должен быть меньше номинального тока двигателя: по введённым P, η, cos φ и U он равен 28,3 А");
+await invalid("kompensaciya-dvigatelya.html", { p: "x" }, "Заполните мощность, КПД, cos φ");
+await invalid("kompensaciya-dvigatelya.html", { c1: "1" }, "cos φ двигателя задаётся в долях");
+await invalid("kompensaciya-dvigatelya.html", { eta: "1,2" }, "КПД задаётся в долях");
+await invalid("kompensaciya-dvigatelya.html", { mode: "pick", ct: "0,8" }, "Целевой cos φ должен быть больше исходного");
+await invalid("kompensaciya-dvigatelya.html", { qc: "abc" }, "Введите мощность конденсаторов");
+await invalid("kompensaciya-dvigatelya.html", { u: "6000" }, "до 1000 В");
+
+// --- skolzhenie-dvigatelya: n₀ = 60·f/p, s = (n₀ − n)/n₀, f₂ = s·f, M = P/ω ---
+// Эталон 1: 50 Гц, 1450 об/мин → 3000/1450 = 2,07 → p = 2, n₀ = 1500; s = 50/1500 = 3,333 %; f₂ = 1,667 Гц;
+// M = 15000/(2π·1450/60) = 98,79 Н·м.
+await calculate("skolzhenie-dvigatelya.html", {}, ["Число пар полюсов p (определено по скорости)2", "Число полюсов 2p4", "Синхронная скорость n₀ = 60·f/p1500 об/мин", "Скольжение s = (n₀ − n)/n₀3,333 %", "Частота тока ротора f₂ = s·f1,667 Гц", "Номинальный момент M = P/ω98,79 Н·м"]);
+// Эталон 2: p = 3 вручную, 960 об/мин: n₀ = 1000, s = 4 %, f₂ = 2 Гц, M = 7500/(2π·16) = 74,6 Н·м.
+await calculateWithout("skolzhenie-dvigatelya.html", { mode: "man", p: "3", n: "960", pw: "7,5" }, ["Число пар полюсов p3", "1000 об/мин", "Скольжение s = (n₀ − n)/n₀4 %", "Частота тока ротора f₂ = s·f2 Гц", "Номинальный момент M = P/ω74,6 Н·м"], ["определено по скорости"]);
+// 60 Гц, 1750: 3600/1750 = 2,06 → p = 2, n₀ = 1800, s = 2,778 %, M = 15000/(2π·1750/60) = 81,85.
+await calculate("skolzhenie-dvigatelya.html", { f: "60", n: "1750" }, ["1800 об/мин", "Скольжение s = (n₀ − n)/n₀2,778 %", "Номинальный момент M = P/ω81,85 Н·м"]);
+await calculate("skolzhenie-dvigatelya.html", { n: "2900", pw: "3" }, ["Число пар полюсов p (определено по скорости)1", "3000 об/мин", "3,333 %", "Номинальный момент M = P/ω9,879 Н·м"]);
+// Режим вручную влияет на расчёт: p = 1 при 1450 → s = 1550/3000 = 51,67 %.
+await calculate("skolzhenie-dvigatelya.html", { mode: "man", p: "1" }, ["Число пар полюсов p1", "3000 об/мин", "Скольжение s = (n₀ − n)/n₀51,67 %"]);
+await calculate("skolzhenie-dvigatelya.html", { mode: "man", p: "2", n: "1499,9", pw: "1" }, ["Скольжение s = (n₀ − n)/n₀0,006667 %", "Частота тока ротора f₂ = s·f0,003333 Гц", "Номинальный момент M = P/ω6,367 Н·м"], "boundary");
+await invalid("skolzhenie-dvigatelya.html", { mode: "man", p: "2", n: "1500" }, "не меньше синхронной n₀ = 1500 об/мин");
+await invalid("skolzhenie-dvigatelya.html", { n: "1500" }, "равна синхронной при p = 2");
+await invalid("skolzhenie-dvigatelya.html", { n: "3100" }, "выше синхронной даже при одной паре полюсов");
+await invalid("skolzhenie-dvigatelya.html", { mode: "man", p: "2,5" }, "целое число от 1");
+await invalid("skolzhenie-dvigatelya.html", { n: "abc" }, "Заполните частоту сети");
+await invalid("skolzhenie-dvigatelya.html", { f: "500" }, "400 Гц");
+
+// Структурные проверки партии №3: запрещённые формы статуса, видимость
+// полей по режиму, ссылки на существующие страницы вместо дублирования,
+// входящие ссылки на новые страницы из существующих.
+{
+  kind = "structural";
+  const batch3 = ["avtomat-dlya-dvigatelya", "avtotransformatornyy-pusk", "ustavka-teplovogo-rele", "kompensaciya-dvigatelya", "skolzhenie-dvigatelya"];
+  const visible = file => fs.readFileSync(path.join(sourceDir, file), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  for (const slug of batch3) {
+    const html = fs.readFileSync(path.join(sourceDir, `${slug}.html`), "utf8");
+    check(!/проходит|безопасн|соответствует норм/i.test(visible(`${slug}.html`)) && !/проходит|безопасн|соответствует норм/i.test(html.match(/<script>([\s\S]*?)<\/script>\s*<\/body>/)?.[1] ?? ""),
+      `${slug}: запрещённые слова «проходит», «безопасно», «соответствует нормам»`);
+    check(/обращение 30\.09\.2026/.test(html), `${slug}: в карточке источника нет даты обращения`);
+  }
+  const registry = fs.readFileSync(path.join(sourceDir, "ENGINEERING_AUDIT.md"), "utf8");
+  const expectedStatus = { "avtomat-dlya-dvigatelya": "Оценка, не нормативный вердикт", "avtotransformatornyy-pusk": "Оценка, не нормативный вердикт",
+    "ustavka-teplovogo-rele": "Оценка, не нормативный вердикт", "kompensaciya-dvigatelya": "Сверено с источником и тестами", "skolzhenie-dvigatelya": "Сверено с источником и тестами" };
+  for (const [slug, label] of Object.entries(expectedStatus)) {
+    const card = fs.readFileSync(path.join(sourceDir, `${slug}.html`), "utf8").match(/<section class="src">([\s\S]*?)<\/section>/)?.[1] ?? "";
+    check(card.includes(label) && card.includes("Границы применимости") && !/Проверил:/.test(card),
+      `${slug}: карточка источника — ожидался статус «${label}», границы применимости и никакого выдуманного проверяющего`);
+    check(registry.includes(`\`${slug}\``), `ENGINEERING_AUDIT.md: нет записи о ${slug}`);
+  }
+  check(/href="zona-srabatyvaniya-avtomata\.html"/.test(fs.readFileSync(path.join(sourceDir, "avtomat-dlya-dvigatelya.html"), "utf8")),
+    "avtomat-dlya-dvigatelya: нет ссылки на страницу зоны срабатывания B/C/D");
+  check(/href="power-factor-compensation\.html"/.test(fs.readFileSync(path.join(sourceDir, "kompensaciya-dvigatelya.html"), "utf8")),
+    "kompensaciya-dvigatelya: нет ссылки на общую страницу компенсации");
+  const inbound = { "zona-srabatyvaniya-avtomata": "avtomat-dlya-dvigatelya", "prosadka-pri-puske": "avtotransformatornyy-pusk",
+    "zvezda-treugolnik": "ustavka-teplovogo-rele", "power-factor-compensation": "kompensaciya-dvigatelya", "kondensator-dvigatelya": "skolzhenie-dvigatelya" };
+  for (const [from, to] of Object.entries(inbound)) {
+    const block = fs.readFileSync(path.join(sourceDir, `${from}.html`), "utf8").match(/<section class="related">([\s\S]*?)<\/section>/)?.[1] ?? "";
+    check(block.includes(`href="${to}.html"`), `${from}: в «Смотрите также» нет ссылки на ${to}`);
+  }
+  const shown = async (file, sel, value, id) => {
+    const dom = await load(file); const d = dom.window.document;
+    const el = d.getElementById(sel); el.value = value; el.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+    const vis = d.getElementById(`f_${id}`).style.display !== "none"; dom.window.close(); return vis;
+  };
+  check(!(await shown("avtotransformatornyy-pusk.html", "met", "at65", "k")) && await shown("avtotransformatornyy-pusk.html", "met", "atk", "k"),
+    "avtotransformatornyy-pusk: поле k должно быть видно только для своего отвода");
+  check(!(await shown("ustavka-teplovogo-rele.html", "base", "iec", "sf")) && await shown("ustavka-teplovogo-rele.html", "base", "nec", "sf"),
+    "ustavka-teplovogo-rele: коэффициент сервиса влияет только в режиме NEC и должен быть скрыт иначе");
+  check(!(await shown("kompensaciya-dvigatelya.html", "mode", "pick", "qc")) && await shown("kompensaciya-dvigatelya.html", "mode", "pick", "ct"),
+    "kompensaciya-dvigatelya: в режиме подбора поле Qc скрыто, целевой cos φ виден");
+  check(await shown("kompensaciya-dvigatelya.html", "mode", "check", "qc") && !(await shown("kompensaciya-dvigatelya.html", "mode", "check", "ct")),
+    "kompensaciya-dvigatelya: в режиме проверки поле Qc видно, целевой cos φ скрыт");
+  check(!(await shown("skolzhenie-dvigatelya.html", "mode", "auto", "p")) && await shown("skolzhenie-dvigatelya.html", "mode", "man", "p"),
+    "skolzhenie-dvigatelya: поле p видно только в ручном режиме");
 }
 
 // Coverage guard считает фактически выполненные сценарии. Простое load()
