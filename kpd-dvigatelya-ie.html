@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>КПД электродвигателя по классам IE2–IE4 и экономия</title>
+<meta name="description" content="Минимальный номинальный КПД трёхфазного асинхронного двигателя 50 Гц по классам IE2, IE3 и IE4 (IEC 60034-30-1, таблицы Регламента ЕС 2019/1781) для 2, 4 и 6 полюсов, потери и годовая экономия энергии и денег при замене двигателя.">
+<link rel="canonical" href="https://macos2024.github.io/kpd-dvigatelya-ie.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="КПД электродвигателя по классам IE2–IE4 и экономия">
+<meta property="og:description" content="Минимальный номинальный КПД трёхфазного асинхронного двигателя 50 Гц по классам IE2, IE3 и IE4 (IEC 60034-30-1, таблицы Регламента ЕС 2019/1781) для 2, 4 и 6 полюсов, потери и годовая экономия энергии и денег при замене двигателя.">
+<meta property="og:url" content="https://macos2024.github.io/kpd-dvigatelya-ie.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"КПД электродвигателя по классам IE2–IE4 и экономия","url":"https://macos2024.github.io/kpd-dvigatelya-ie.html","description":"Минимальный номинальный КПД трёхфазного асинхронного двигателя 50 Гц по классам IE2, IE3 и IE4 (IEC 60034-30-1, таблицы Регламента ЕС 2019/1781) для 2, 4 и 6 полюсов, потери и годовая экономия энергии и денег при замене двигателя.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"КПД электродвигателя по классам IE2–IE4 и экономия","item":"https://macos2024.github.io/kpd-dvigatelya-ie.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Где взять КПД своего двигателя?","acceptedAnswer":{"@type":"Answer","text":"На шильдике и в паспорте двигателя с классом IE указан номинальный КПД, часто и класс. Минимум класса — нижняя граница, реальный КПД бывает выше."}},{"@type":"Question","name":"Почему экономия получается небольшой?","acceptedAnswer":{"@type":"Answer","text":"Разница КПД соседних классов у двигателей средней мощности — 1–2 процентных пункта. Экономия заметна при долгой работе с полной нагрузкой: насосы, вентиляторы, компрессоры, работающие большую часть года."}},{"@type":"Question","name":"Что делать, если мощность двигателя не из таблицы?","acceptedAnswer":{"@type":"Answer","text":"Таблица задаёт КПД для стандартных мощностей. Для промежуточной мощности калькулятор не интерполирует и выводит «Недостаточно данных»: возьмите КПД из паспорта двигателя."}},{"@type":"Question","name":"Работает ли таблица для 60 Гц и восьмиполюсных двигателей?","acceptedAnswer":{"@type":"Answer","text":"Нет. Калькулятор содержит значения для 50 Гц и 2, 4, 6 полюсов. Для 60 Гц и 8 полюсов у стандарта отдельные значения."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>КПД электродвигателя по классам IE2–IE4 и экономия</h1>
+<p class="intro">Класс энергоэффективности IE задаёт <b>минимальный номинальный КПД</b> двигателя данной мощности и числа полюсов. Калькулятор берёт его из таблицы, считает потери старого и нового двигателя и экономию за год. Стоимость энергии по мощности — в <a href="stoimost-elektroenergii.html">калькуляторе стоимости электроэнергии</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — КПД электродвигателя по классам IE2–IE4 и экономия</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_p"><label for="p">Номинальная мощность двигателя</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="11" placeholder=""><span class="u">кВт</span></div><div class="hint">Строка таблицы: 0,12; 0,18; 0,2; 0,25; 0,37; 0,4; 0,55; 0,75; 1,1; 1,5; 2,2; 3; 4; 5,5; 7,5; 11; 15; 18,5; 22; 30; 37; 45; 55; 75; 90; 110; 132; 160 кВт или 200–1000 кВт</div></div><div class="f" id="f_pol"><label for="pol">Число полюсов</label><div class="fw"><select id="pol"><option value="2">2 (около 3000 об/мин)</option><option value="4" selected>4 (около 1500 об/мин)</option><option value="6">6 (около 1000 об/мин)</option></select></div></div><div class="f" id="f_cold"><label for="cold">КПД старого двигателя</label><div class="fw"><select id="cold"><option value="ie2" selected>Минимум класса IE2</option><option value="ie3">Минимум класса IE3</option><option value="ie4">Минимум класса IE4</option><option value="own">Задать по паспорту или замеру (например, для IE1 и старше)</option></select></div></div><div class="f" id="f_etaold"><label for="etaold">КПД старого двигателя</label><div class="fw"><input id="etaold" type="text" inputmode="decimal" autocomplete="off" value="86" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_cnew"><label for="cnew">Класс нового двигателя</label><div class="fw"><select id="cnew"><option value="ie2">IE2</option><option value="ie3" selected>IE3</option><option value="ie4">IE4</option></select></div></div><div class="f" id="f_h"><label for="h">Время работы в год на номинальной мощности</label><div class="fw"><input id="h" type="text" inputmode="decimal" autocomplete="off" value="4000" placeholder=""><span class="u">ч</span></div><div class="hint">Если двигатель недогружен, пересчитайте часы в эквивалентные при номинальной мощности; в году 8760 ч</div></div><div class="f" id="f_tar"><label for="tar">Тариф</label><div class="fw"><input id="tar" type="text" inputmode="decimal" autocomplete="off" value="7" placeholder=""><span class="u">₽/кВт·ч</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>КПД электродвигателя по классам IE2–IE4 и экономия: как считается</h2>
+<div class="formula">P<sub>потр</sub> = P / η,&nbsp;&nbsp;потери = P / η − P<br>ΔP = P / η<sub>стар</sub> − P / η<sub>нов</sub>,&nbsp;&nbsp;ΔW = ΔP · t,&nbsp;&nbsp;экономия = ΔW · тариф</div>
+<p><b>Классы IE.</b> IEC 60034-30-1 (в России — ГОСТ IEC 60034-30-1-2016) делит трёхфазные двигатели с питанием от сети на классы: IE1 — стандартный, IE2 — высокий, IE3 — премиальный, IE4 — сверхпремиальный КПД. Для каждого класса, мощности от 0,12 до 1000 кВт и числа полюсов стандарт задаёт <b>минимальный номинальный КПД</b>. Те же значения для 50 Гц приведены в таблицах 1–3 приложения I Регламента (ЕС) 2019/1781 — по этому тексту и сверена таблица калькулятора.</p>
+<table class="t"><tr><th scope="col">P, кВт</th><th scope="col">IE2, 4 полюса</th><th scope="col">IE3, 4 полюса</th><th scope="col">IE4, 4 полюса</th></tr><tr><td>0,75</td><td>79,6</td><td>82,5</td><td>85,7</td></tr><tr><td>1,5</td><td>82,8</td><td>85,3</td><td>88,2</td></tr><tr><td>4</td><td>86,6</td><td>88,6</td><td>91,1</td></tr><tr><td>7,5</td><td>88,7</td><td>90,4</td><td>92,6</td></tr><tr><td>11</td><td>89,8</td><td>91,4</td><td>93,3</td></tr><tr><td>22</td><td>91,6</td><td>93,0</td><td>94,5</td></tr><tr><td>55</td><td>93,5</td><td>94,6</td><td>95,7</td></tr><tr><td>75</td><td>94,0</td><td>95,0</td><td>96,0</td></tr><tr><td>110</td><td>94,5</td><td>95,4</td><td>96,3</td></tr><tr><td>200–1000</td><td>95,1</td><td>96,0</td><td>96,7</td></tr></table>
+<p>Выше — фрагмент таблицы для четырёхполюсных двигателей; калькулятор знает все 29 строк мощности для 2, 4 и 6 полюсов. Для мощностей от 200 до 1000 кВт значение одно.</p>
+<p><b>Промежуточные мощности.</b> Если мощность двигателя не совпадает со строкой таблицы, калькулятор не интерполирует, а показывает соседние строки и статус «Недостаточно данных»: у стандарта для таких мощностей своё правило, которое здесь не воспроизводится.</p>
+<p><b>Почему нет IE1.</b> Таблицы IE1 в Регламенте ЕС нет, а полная таблица IEC 60034-30-1 для IE1 в доступных источниках не сверена. Для старого двигателя класса IE1 или без класса введите КПД по паспорту.</p>
+<p><b>Экономия.</b> Двигатель с КПД η потребляет P/η, где P — мощность на валу. Разность потребления старого и нового двигателя, умноженная на часы работы, — экономия энергии. Расчёт ведётся по минимальным КПД классов на номинальной нагрузке, поэтому это оценка: реальный КПД бывает выше минимального, а при неполной нагрузке — другим.</p>
+<h2>КПД электродвигателя по классам IE2–IE4 и экономия: пример расчёта</h2>
+<p>Четырёхполюсный двигатель 11 кВт класса IE2 (минимум 89,8 %) меняют на IE3 (91,4 %). Потребление: 11 / 0,898 ≈ 12,25 кВт и 11 / 0,914 ≈ 12,04 кВт, разница <b>0,2144 кВт</b>. За 4000 часов — около <b>858 кВт·ч</b>, при тарифе 7 ₽ — около <b>6000 ₽</b> в год.</p>
+<p>Старый двухполюсный двигатель 7,5 кВт с паспортным КПД 86 % меняют на IE4 (91,7 %): разница потребления 8,721 − 8,179 ≈ 0,542 кВт, за 6000 часов — около 3253 кВт·ч.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Где взять КПД своего двигателя?</h3><p>На шильдике и в паспорте двигателя с классом IE указан номинальный КПД, часто и класс. Минимум класса — нижняя граница, реальный КПД бывает выше.</p><h3>Почему экономия получается небольшой?</h3><p>Разница КПД соседних классов у двигателей средней мощности — 1–2 процентных пункта. Экономия заметна при долгой работе с полной нагрузкой: насосы, вентиляторы, компрессоры, работающие большую часть года.</p><h3>Что делать, если мощность двигателя не из таблицы?</h3><p>Таблица задаёт КПД для стандартных мощностей. Для промежуточной мощности калькулятор не интерполирует и выводит «Недостаточно данных»: возьмите КПД из паспорта двигателя.</p><h3>Работает ли таблица для 60 Гц и восьмиполюсных двигателей?</h3><p>Нет. Калькулятор содержит значения для 50 Гц и 2, 4, 6 полюсов. Для 60 Гц и 8 полюсов у стандарта отдельные значения.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.legislation.gov.uk/eur/2019/1781/annex/I/2020-01-31?view=plain" rel="nofollow noopener" target="_blank">Commission Regulation (EU) 2019/1781 laying down ecodesign requirements for electric motors and variable speed drives, Annex I</a> — Европейская комиссия; текст по публикации legislation.gov.uk — Редакция от 01.10.2019; таблицы 1–3 видны в выдаче поиска построчно — раздел таблица 1 — минимальный КПД IE2, 50 Гц, таблица 2 — IE3, таблица 3 — IE4 — обращение 30.09.2026</li><li><a href="https://library.e.abb.com/public/db64d153e3c346938e18916e66fb1d0d/9AKK107319%20EN%2005-2018_20848_ABB_Technical_note_IEC_60034_30_1.pdf" rel="nofollow noopener" target="_blank">IEC 60034-30-1. Rotating electrical machines — Part 30-1: Efficiency classes of line operated AC motors (IE code)</a> — International Electrotechnical Commission (IEC) — Редакция Ed. 1.0 (2014-03); в выдаче видна и Ed. 2.0 (2025-12), её таблицы не сверены — раздел классы IE1–IE4, мощности 0,12–1000 кВт, 2/4/6/8 полюсов; значения по технической записке ABB, IE1 полностью не сверен — обращение 30.09.2026</li><li><a href="https://docs.cntd.ru/document/1200145769" rel="nofollow noopener" target="_blank">ГОСТ IEC 60034-30-1-2016. Машины электрические вращающиеся. Часть 30-1. Классы КПД двигателей переменного тока, работающих от сети (код IE)</a> — Межгосударственный стандарт; Росстандарт — Редакция введён 01.03.2018 (по выдаче поиска); текст таблиц не сверен — раздел межгосударственная редакция IEC 60034-30-1 — обращение 30.09.2026</li><li><a href="https://www.nea.gov.sg/docs/default-source/cmd-documents/energy-efficiency/ie4-table.pdf" rel="nofollow noopener" target="_blank">The efficiencies in the table below are applicable to IE4 motors</a> — National Environment Agency (NEA), Сингапур — Редакция PDF на дату обращения; строки 75–250 кВт видны в пересказе выдачи — раздел IE4, 50 Гц, 75–200 кВт — сверка строк таблицы 3 Регламента — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>КПД старого и нового двигателя — минимальные значения классов по таблицам для 50 Гц либо заданное значение.</li><li>Двигатель работает на номинальной мощности указанное число часов в год.</li><li>Мощность должна совпадать со строкой таблицы; для 200–1000 кВт действует одна строка.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не интерполирует КПД для промежуточных мощностей.</li><li>Не содержит IE1, 8-полюсных двигателей и 60 Гц.</li><li>Не учитывает частичную нагрузку, работу от ПЧ и стоимость самой замены.</li><li>Таблицы сверены по Регламенту (ЕС) 2019/1781 в выдаче поиска; редакция IEC 60034-30-1:2025 не сверена.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li><li><a href="stoimost-elektroenergii.html">Расход и стоимость электроэнергии</a></li><li><a href="podbor-chastotnogo-preobrazovatelya.html">Подбор частотного преобразователя по току двигателя</a></li><li><a href="moshchnost-nasosa.html">Мощность насоса по расходу и напору</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+var PW=[0.12, 0.18, 0.2, 0.25, 0.37, 0.4, 0.55, 0.75, 1.1, 1.5, 2.2, 3, 4, 5.5, 7.5, 11, 15, 18.5, 22, 30, 37, 45, 55, 75, 90, 110, 132, 160, 200],T={"ie2": {"2": [53.6, 60.4, 61.9, 64.8, 69.5, 70.4, 74.1, 77.4, 79.6, 81.3, 83.2, 84.6, 85.8, 87.0, 88.1, 89.4, 90.3, 90.9, 91.3, 92.0, 92.5, 92.9, 93.2, 93.8, 94.1, 94.3, 94.6, 94.8, 95.0], "4": [59.1, 64.7, 65.9, 68.5, 72.7, 73.5, 77.1, 79.6, 81.4, 82.8, 84.3, 85.5, 86.6, 87.7, 88.7, 89.8, 90.6, 91.2, 91.6, 92.3, 92.7, 93.1, 93.5, 94.0, 94.2, 94.5, 94.7, 94.9, 95.1], "6": [50.6, 56.6, 58.2, 61.6, 67.6, 68.8, 73.1, 75.9, 78.1, 79.8, 81.8, 83.3, 84.6, 86.0, 87.2, 88.7, 89.7, 90.4, 90.9, 91.7, 92.2, 92.7, 93.1, 93.7, 94.0, 94.3, 94.6, 94.8, 95.0]}, "ie3": {"2": [60.8, 65.9, 67.2, 69.7, 73.8, 74.6, 77.8, 80.7, 82.7, 84.2, 85.9, 87.1, 88.1, 89.2, 90.1, 91.2, 91.9, 92.4, 92.7, 93.3, 93.7, 94.0, 94.3, 94.7, 95.0, 95.2, 95.4, 95.6, 95.8], "4": [64.8, 69.9, 71.1, 73.5, 77.3, 78.0, 80.8, 82.5, 84.1, 85.3, 86.7, 87.7, 88.6, 89.6, 90.4, 91.4, 92.1, 92.6, 93.0, 93.6, 93.9, 94.2, 94.6, 95.0, 95.2, 95.4, 95.6, 95.8, 96.0], "6": [57.7, 63.9, 65.4, 68.6, 73.5, 74.4, 77.2, 78.9, 81.0, 82.5, 84.3, 85.6, 86.8, 88.0, 89.1, 90.3, 91.2, 91.7, 92.2, 92.9, 93.3, 93.7, 94.1, 94.6, 94.9, 95.1, 95.4, 95.6, 95.8]}, "ie4": {"2": [66.5, 70.8, 71.9, 74.3, 78.1, 78.9, 81.5, 83.5, 85.2, 86.5, 88.0, 89.1, 90.0, 90.9, 91.7, 92.6, 93.3, 93.7, 94.0, 94.5, 94.8, 95.0, 95.3, 95.6, 95.8, 96.0, 96.2, 96.3, 96.5], "4": [69.8, 74.7, 75.8, 77.9, 81.1, 81.7, 83.9, 85.7, 87.2, 88.2, 89.5, 90.4, 91.1, 91.9, 92.6, 93.3, 93.9, 94.2, 94.5, 94.9, 95.2, 95.4, 95.7, 96.0, 96.1, 96.3, 96.4, 96.6, 96.7], "6": [64.9, 70.1, 71.4, 74.1, 78.0, 78.7, 80.9, 82.7, 84.5, 85.9, 87.4, 88.6, 89.5, 90.5, 91.3, 92.3, 92.9, 93.4, 93.7, 94.2, 94.5, 94.8, 95.1, 95.4, 95.6, 95.8, 96.0, 96.2, 96.3]}};
+
+var CN={ie2:'IE2',ie3:'IE3',ie4:'IE4'};
+function sync(){hideF('etaold',S('cold')!=='own');}
+function init(){$('cold').addEventListener('change',sync);sync();}
+function idx(p){if(ge(p,200)&&le(p,1000))return PW.length-1;for(var i=0;i<PW.length-1;i++)if(Math.abs(p-PW[i])<=PW[i]*1e-9)return i;return -1;}
+function pw(i){return i===PW.length-1?'200–1000 кВт':fmt(PW[i])+' кВт';}
+function calc(){
+var p=P('p'),pol=S('pol'),cold=S('cold'),cnew=S('cnew'),h=P('h'),tar=P('tar'),own=cold==='own';
+if(isNaN(p)||isNaN(h)||isNaN(tar))return err('Введите мощность, время работы и тариф.');
+if(p<=0)return err('Мощность должна быть больше нуля.');
+if(!ge(p,0.12)||!le(p,1000))return err('IEC 60034-30-1 классифицирует двигатели от 0,12 до 1000 кВт; для '+fmt(p)+' кВт таблицы нет.');
+if(h<0||h>8760)return err('Время работы в год — от 0 до 8760 ч.');
+if(tar<0)return err('Тариф не может быть отрицательным.');
+var eo;
+if(own){eo=P('etaold');if(isNaN(eo))return err('Введите КПД старого двигателя.');if(eo<=0||eo>=100)return err('КПД задаётся в процентах: больше 0 и меньше 100.');}
+var i=idx(p),pl=pol==='6'?'6 полюсов':pol+' полюса';
+if(i<0){var lo=0;while(lo<PW.length-2&&PW[lo+1]<p)lo++;var hi=lo+1;
+ return out(row('Мощность',fmt(p)+' кВт — такой строки в таблице нет')+
+ row('Ближайшие строки таблицы',pw(lo)+' и '+pw(hi))+
+ row('Минимальный КПД '+CN[cnew]+' для них, '+pl,fmt(T[cnew][pol][lo],3)+' % и '+fmt(T[cnew][pol][hi],3)+' %')+
+ row('Статус','Недостаточно данных: мощности '+fmt(p)+' кВт нет в таблице IEC 60034-30-1 — интерполяция не выполняется')+
+ note('Таблица задаёт минимальный КПД для стандартных мощностей. Для промежуточных мощностей IEC 60034-30-1 даёт отдельное правило, которое калькулятор не воспроизводит: возьмите КПД из паспорта двигателя или ближайшую строку таблицы как ориентир.'));}
+if(!own)eo=T[cold][pol][i];
+var en=T[cnew][pol][i],pio=p/(eo/100),pin=p/(en/100),dp=pio-pin,de=dp*h,rub=de*tar;
+if(![pio,pin,de,rub].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var better=en>eo+1e-9,st;
+var r=row('Строка таблицы',pw(i)+', '+pl+', 50 Гц')+
+ row(own?'КПД старого двигателя (задан)':'Минимальный КПД '+CN[cold],fmt(eo,4)+' %')+
+ row('Минимальный КПД '+CN[cnew],fmt(en,4)+' %')+
+ row('Потребляемая мощность: старый / новый',fmt(pio)+' / '+fmt(pin)+' кВт')+
+ row('Потери: старый / новый',fmt(pio-p)+' / '+fmt(pin-p)+' кВт');
+if(better){r+=row('Снижение потребляемой мощности',fmt(dp)+' кВт')+row('Экономия энергии за год',fmt(de)+' кВт·ч')+row('Экономия за год',fmt(rub)+' ₽');
+ st='Оценка: экономия около '+fmt(de)+' кВт·ч в год при работе на номинальной мощности';}
+else st='Оценка: новый двигатель по минимальному КПД класса '+CN[cnew]+' не лучше старого — экономии нет';
+var n='Минимальный КПД класса — нижняя граница: реальный КПД двигателя может быть выше, его берут из паспорта. При неполной нагрузке КПД другой, поэтому часы работы нужно приводить к номинальной мощности. Таблицы — IEC 60034-30-1 для 50 Гц, по тексту Регламента (ЕС) 2019/1781. IE1 не табулирован: полная таблица в доступных источниках не сверена — задайте КПД старого двигателя по паспорту.';
+if(own)n+=' КПД старого двигателя задан вами, а не таблицей.';
+out(r+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

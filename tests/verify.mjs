@@ -95,7 +95,7 @@ const infoPages = ["privacy.html", "about.html"];
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
   .sort();
-check(htmlFiles.length === 124, `Ожидался 124 HTML-файлов, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 129, `Ожидался 129 HTML-файлов, найдено ${htmlFiles.length}`);
 
 // Совет закоротить заряженный конденсатор перемычкой, отвёрткой или
 // закороткой опасен: при запасённой энергии это даёт дугу и разбрызгивание
@@ -1108,7 +1108,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 124, `В sitemap должно быть 124 URL (корень + about + 122 калькулятора), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 129, `В sitemap должно быть 129 URL (корень + about + 127 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 
@@ -2073,6 +2073,196 @@ await calculate("zazemlenie-tt-uzo.html", { ul: "25", idn: "0.1", ra: "250,01", 
     const hit = text(file).match(/Статус\s*[—:-]\s*(не\s+)?проходит/i);
     check(!hit, `${file}: в тексте статус «${hit?.[0]}» — запрещённая форма`);
   }
+}
+
+// ===========================================================================
+// --- Партия №3, data_m.py ---
+// Электродвигатели и приводы: подбор ПЧ по току, тормозной резистор ЧРП,
+// КПД по классам IE2–IE4, приведённый момент инерции, клиноремённая
+// передача. Ожидаемые значения посчитаны отдельным скриптом (scratchpad
+// m/ref.py, m/ref2.py) с округлением как у toPrecision (половина — вверх), а
+// не кодом страниц; расчёт показан в комментариях. Значения КПД классов
+// выписаны вручную из таблиц 1–3 Регламента (ЕС) 2019/1781, а не из
+// data_m.py.
+// ===========================================================================
+
+// --- 1. podbor-chastotnogo-preobrazovatelya: практика Danfoss / ABB ---
+// Эталон 1: постоянный момент, 15 А → HD ≥ 15 А, кратковременно 15·1,5 = 22,5 А.
+await calculate("podbor-chastotnogo-preobrazovatelya.html", {}, ["Выход ПЧ для этой сети3 × 380–480 В", "Напряжение двигателя400 В — в пределах выхода ПЧ", "Требуемый кратковременный ток22,5 А (150 % на 60 с)", "Минимальный номинальный ток ПЧ в режиме HD15 А", "СтатусОценка: номинальный ток ПЧ в режиме HD — не меньше 15 А"]);
+// Эталон 2: вентилятор — ND, 110 %: 15·1,1 = 16,5 А.
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { load: "fan" }, ["нормальная перегрузка (ND): 110 % тока ПЧ на 60 с", "Требуемый кратковременный ток16,5 А (110 % на 60 с)", "Минимальный номинальный ток ПЧ в режиме ND15 А", "СтатусОценка: номинальный ток ПЧ в режиме ND — не меньше 15 А", "момент растёт с квадратом скорости"]);
+// Эталон 3: тяжёлый пуск 180 % на 30 с: 15·1,8 = 27 А; ток ПЧ HD ≥ 15·180/150 = 18 А.
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { load: "heavy", kp: "180", tp: "30" }, ["Требуемый кратковременный ток27 А (180 % на 30 с)", "Минимальный номинальный ток ПЧ в режиме HD18 А", "СтатусОценка: номинальный ток ПЧ в режиме HD — не меньше 18 А", "150 % его тока покрывали требуемые 180 %"]);
+// Рискованный вердикт: перегрузка дольше 60 с — без «Оценка», с запасом 15·2 = 30 А.
+await calculateWithout("podbor-chastotnogo-preobrazovatelya.html", { load: "heavy", kp: "200", tp: "90" }, ["С запасом: номинальный ток ПЧ, если перегрузку считать длительной30 А", "СтатусНедостаточно данных: перегрузка дольше 60 с — нужна кривая перегрузки конкретного ПЧ; с запасом номинальный ток не меньше 30 А"], ["Оценка:"]);
+// Напряжение двигателя вне класса: 230 В при сети 380–480 В — вывода нет.
+await calculateWithout("podbor-chastotnogo-preobrazovatelya.html", { um: "230" }, ["Напряжение двигателя230 В — вне выхода ПЧ 380–480 В", "СтатусНедостаточно данных: напряжение двигателя 230 В вне выходного диапазона ПЧ 380–480 В"], ["Оценка:"]);
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { set: "1x240", um: "230", im: "8,5" }, ["Выход ПЧ для этой сети3 × 200–240 В от однофазной сети", "Минимальный номинальный ток ПЧ в режиме HD8,5 А", "Однофазный вход допускается только у ПЧ"]);
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { set: "3x240", um: "230", im: "8,5" }, ["Выход ПЧ для этой сети3 × 200–240 В", "СтатусОценка: номинальный ток ПЧ в режиме HD — не меньше 8,5 А"]);
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { set: "3x690", um: "690", im: "40" }, ["Выход ПЧ для этой сети3 × 525–690 В", "СтатусОценка: номинальный ток ПЧ в режиме HD — не меньше 40 А"]);
+await calculateWithout("podbor-chastotnogo-preobrazovatelya.html", { env: "derate" }, ["СтатусНедостаточно данных: выше 40 °C или 1000 м ток ПЧ снижают по графику производителя; до снижения — не меньше 15 А в режиме HD"], ["Оценка:"]);
+// Границы: 150 % и 60 с включаются в типовую характеристику, 150,01 % — уже нет
+// (15·150,01/150 = 15,001 А, показано по ту же сторону от 15 А), 60,01 с — «Недостаточно данных».
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { load: "heavy", kp: "150", tp: "60" }, ["Минимальный номинальный ток ПЧ в режиме HD15 А", "СтатусОценка"], "boundary");
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { load: "heavy", kp: "150,01", tp: "60" }, ["Минимальный номинальный ток ПЧ в режиме HD15,001 А", "СтатусОценка: номинальный ток ПЧ в режиме HD — не меньше 15,001 А"], "boundary");
+await calculateWithout("podbor-chastotnogo-preobrazovatelya.html", { load: "heavy", kp: "150", tp: "60,01" }, ["СтатусНедостаточно данных: перегрузка дольше 60 с"], ["Оценка:"], "boundary");
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { um: "380" }, ["380 В — в пределах выхода ПЧ"], "boundary");
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { um: "480" }, ["480 В — в пределах выхода ПЧ"], "boundary");
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { um: "379,9" }, ["379,9 В — вне выхода ПЧ 380–480 В", "СтатусНедостаточно данных"], "boundary");
+await calculate("podbor-chastotnogo-preobrazovatelya.html", { um: "480,1" }, ["480,1 В — вне выхода ПЧ 380–480 В", "СтатусНедостаточно данных"], "boundary");
+await invalid("podbor-chastotnogo-preobrazovatelya.html", { im: "15 А" }, "Введите номинальный ток и номинальное напряжение двигателя");
+await invalid("podbor-chastotnogo-preobrazovatelya.html", { im: "0" }, "должны быть больше нуля");
+await invalid("podbor-chastotnogo-preobrazovatelya.html", { load: "heavy", kp: "100" }, "больше 100 %");
+await invalid("podbor-chastotnogo-preobrazovatelya.html", { load: "heavy", tp: "0" }, "Длительность перегрузки должна быть больше нуля");
+await invalid("podbor-chastotnogo-preobrazovatelya.html", { load: "heavy", kp: "сто" }, "Введите требуемый кратковременный ток");
+
+// --- 2. tormoznoy-rezistor-chrp: Danfoss MCE 101, Siemens MM440 ---
+// Эталон 1 (пример на странице): 7500·0,9·0,98 = 6615 Вт; Rmax = 778²/6615 = 91,50 Ом;
+// ток 778/91,5 = 8,503 А, 778/30 = 25,93 А; ПВ 12/60 = 20 %; Pср = 1323 Вт; W = 79,38 кДж.
+await calculate("tormoznoy-rezistor-chrp.html", {}, ["Мощность в звене постоянного тока P = Pмех·ηдв·ηПЧ6,615 кВт", "Uторм778 В", "Rmax = Uторм² / P91,5 Ом", "Ток ключа при Rmax и при Rmin8,503 А и 25,93 А", "ПВ = tт / tц20 %", "Pср = P·ПВ1,323 кВт", "Энергия одного торможения P·tт79,38 кДж", "СтатусОценка: сопротивление от 30 до 91,5 Ом, средняя мощность не меньше 1,323 кВт, пиковая — 6,615 кВт"]);
+// Эталон 2: момент 50 Н·м при 1500 об/мин: 50·2π·1500/60 = 7854 Вт; ·0,882 = 6927 Вт;
+// MM440 при 400 В: 1,13·√2·400 = 639,2 В; Rmax = 639,2²/6927 = 58,99 Ом; 639,2/30 = 21,31 А.
+await calculate("tormoznoy-rezistor-chrp.html", { mode: "mech", mt: "50", n: "1500", thr: "mm", us: "400" }, ["Механическая тормозная мощность на валу7,854 кВт", "6,927 кВт", "Uторм639,2 В (1,13·√2·400 В — Siemens MICROMASTER 440)", "Rmax = Uторм² / P58,99 Ом", "10,84 А и 21,31 А", "СтатусОценка: сопротивление от 30 до 58,99 Ом"]);
+// Эталон 3: 2,2 кВт, 150 %, FC 102 на 230 В (390 В): 2200·1,5·0,882 = 2911 Вт; Rmax = 390²/2911 = 52,26 Ом;
+// 5 с из 20 — ПВ 25 %, Pср = 727,6 Вт, W = 14,55 кДж.
+await calculate("tormoznoy-rezistor-chrp.html", { pm: "2,2", mbr: "150", thr: "d240", rmin: "20", tb: "5", tc: "20" }, ["2,911 кВт", "Uторм390 В", "Rmax = Uторм² / P52,26 Ом", "ПВ = tт / tц25 %", "Pср = P·ПВ727,6 Вт", "P·tт14,55 кДж", "СтатусОценка: сопротивление от 20 до 52,26 Ом"]);
+// Рискованный вердикт: 160 % и Rmin 60 Ом — Rmax = 778²/10584 = 57,19 Ом < 60; ключ пропустит 778²/60 = 10,09 кВт.
+await calculateWithout("tormoznoy-rezistor-chrp.html", { mbr: "160", rmin: "60" }, ["Rmax = Uторм² / P57,19 Ом", "СтатусТребуемое сопротивление меньше Rmin: тормозной ключ этого ПЧ не обеспечит заданную тормозную мощность", "Uторм² / Rmin = 10,09 кВт — меньше требуемых 10,58 кВт"], ["Оценка:"]);
+// Граница: 10 кВт, КПД 100 %, порог 700 В → Rmax = 49 Ом ровно; Rmin 49 — включается, 49,01 — нет.
+await calculate("tormoznoy-rezistor-chrp.html", { pm: "10", etm: "100", eti: "100", thr: "own", ubr: "700", rmin: "49" }, ["Rmax = Uторм² / P49 Ом", "СтатусОценка: сопротивление от 49 до 49 Ом"], "boundary");
+await calculateWithout("tormoznoy-rezistor-chrp.html", { pm: "10", etm: "100", eti: "100", thr: "own", ubr: "700", rmin: "49,01" }, ["Rmax = Uторм² / P49 Ом", "Rmin по руководству ПЧ49,01 Ом", "СтатусТребуемое сопротивление меньше Rmin", "9,998 кВт — меньше требуемых 10 кВт"], ["Оценка:"], "boundary");
+await calculate("tormoznoy-rezistor-chrp.html", { tb: "60", tc: "60" }, ["ПВ = tт / tц100 %", "Pср = P·ПВ6,615 кВт", "ПВ 100 %: торможение длительное"], "boundary");
+await invalid("tormoznoy-rezistor-chrp.html", { tb: "60,01", tc: "60" }, "не может быть больше периода цикла");
+await invalid("tormoznoy-rezistor-chrp.html", { eti: "100,1" }, "КПД задаётся в процентах");
+await invalid("tormoznoy-rezistor-chrp.html", { etm: "0" }, "КПД задаётся в процентах");
+await invalid("tormoznoy-rezistor-chrp.html", { rmin: "0" }, "Сопротивление Rmin должно быть больше нуля");
+await invalid("tormoznoy-rezistor-chrp.html", { pm: "7,5 кВт" }, "Введите мощность двигателя");
+await invalid("tormoznoy-rezistor-chrp.html", { thr: "own", ubr: "-780" }, "Порог включения должен быть больше нуля");
+await invalid("tormoznoy-rezistor-chrp.html", { mode: "mech", n: "0" }, "Тормозной момент и частота вращения должны быть больше нуля");
+
+// --- 3. kpd-dvigatelya-ie: Регламент (ЕС) 2019/1781, табл. 1–3 ---
+// Эталон 1: 11 кВт, 4 полюса: IE2 89,8 %, IE3 91,4 % (табл. 1 и 2).
+// 11/0,898 = 12,25; 11/0,914 = 12,04; разница 0,2144 кВт; ·4000 = 857,7 кВт·ч; ·7 = 6004 ₽.
+await calculate("kpd-dvigatelya-ie.html", {}, ["Строка таблицы11 кВт, 4 полюса, 50 Гц", "Минимальный КПД IE289,8 %", "Минимальный КПД IE391,4 %", "12,25 / 12,04 кВт", "1,249 / 1,035 кВт", "Снижение потребляемой мощности0,2144 кВт", "Экономия энергии за год857,7 кВт·ч", "Экономия за год6004 ₽", "СтатусОценка: экономия около 857,7 кВт·ч в год"]);
+// Эталон 2: 7,5 кВт, 2 полюса, паспортный КПД 86 % → IE4 91,7 % (табл. 3):
+// 8,721 и 8,179 кВт, разница 0,5421 кВт, ·6000 = 3253 кВт·ч, ·5 = 16260 ₽.
+await calculate("kpd-dvigatelya-ie.html", { p: "7,5", pol: "2", cold: "own", etaold: "86", cnew: "ie4", h: "6000", tar: "5" }, ["КПД старого двигателя (задан)86 %", "Минимальный КПД IE491,7 %", "8,721 / 8,179 кВт", "0,5421 кВт", "3253 кВт·ч", "16260 ₽", "задан вами"]);
+// Эталон 3: 315 кВт, 6 полюсов — строка «200 up to 1000»: IE3 95,8, IE4 96,3 %.
+await calculate("kpd-dvigatelya-ie.html", { p: "315", pol: "6", cold: "ie3", cnew: "ie4", h: "8000", tar: "6" }, ["Строка таблицы200–1000 кВт, 6 полюсов", "Минимальный КПД IE395,8 %", "Минимальный КПД IE496,3 %", "328,8 / 327,1 кВт", "1,707 кВт", "13660 кВт·ч", "81950 ₽"]);
+// Контрольные строки таблиц, выписанные из выдачи вручную.
+await calculate("kpd-dvigatelya-ie.html", { p: "0,75", pol: "2", cold: "ie2", cnew: "ie3" }, ["Минимальный КПД IE277,4 %", "Минимальный КПД IE380,7 %"]);
+await calculate("kpd-dvigatelya-ie.html", { p: "0,75", pol: "4", cold: "ie3", cnew: "ie4" }, ["Минимальный КПД IE382,5 %", "Минимальный КПД IE485,7 %"]);
+await calculate("kpd-dvigatelya-ie.html", { p: "0,75", pol: "6", cold: "ie2", cnew: "ie3" }, ["Минимальный КПД IE275,9 %", "Минимальный КПД IE378,9 %"]);
+await calculate("kpd-dvigatelya-ie.html", { p: "75", pol: "2", cold: "ie3", cnew: "ie4" }, ["Минимальный КПД IE394,7 %", "Минимальный КПД IE495,6 %"]);
+await calculate("kpd-dvigatelya-ie.html", { p: "18,5", pol: "2", cold: "ie2", cnew: "ie4" }, ["Минимальный КПД IE290,9 %", "Минимальный КПД IE493,7 %"]);
+// Эталон 4: 0,12 кВт, 2 полюса IE2 53,6 → IE3 60,8, 2000 ч, 7 ₽: 0,02651 кВт, 53,02 кВт·ч, 371,2 ₽.
+await calculate("kpd-dvigatelya-ie.html", { p: "0,12", pol: "2", h: "2000" }, ["Минимальный КПД IE253,6 %", "Минимальный КПД IE360,8 %", "0,02651 кВт", "53,02 кВт·ч", "371,2 ₽"], "boundary");
+// Рискованный вердикт: мощности нет в таблице — без интерполяции и без экономии.
+await calculateWithout("kpd-dvigatelya-ie.html", { p: "10" }, ["Ближайшие строки таблицы7,5 кВт и 11 кВт", "Минимальный КПД IE3 для них, 4 полюса90,4 % и 91,4 %", "СтатусНедостаточно данных: мощности 10 кВт нет в таблице IEC 60034-30-1 — интерполяция не выполняется"], ["Экономия", "Оценка"]);
+await calculateWithout("kpd-dvigatelya-ie.html", { p: "199,9" }, ["Ближайшие строки таблицы160 кВт и 200–1000 кВт", "СтатусНедостаточно данных"], ["Экономия"], "boundary");
+await calculate("kpd-dvigatelya-ie.html", { p: "200" }, ["Строка таблицы200–1000 кВт, 4 полюса", "Минимальный КПД IE295,1 %", "Минимальный КПД IE396 %"], "boundary");
+await calculate("kpd-dvigatelya-ie.html", { p: "1000" }, ["Строка таблицы200–1000 кВт"], "boundary");
+await calculateWithout("kpd-dvigatelya-ie.html", { cold: "ie4", cnew: "ie3" }, ["СтатусОценка: новый двигатель по минимальному КПД класса IE3 не лучше старого — экономии нет"], ["Экономия энергии за год"]);
+await invalid("kpd-dvigatelya-ie.html", { p: "0,11" }, "от 0,12 до 1000 кВт");
+await invalid("kpd-dvigatelya-ie.html", { p: "1000,1" }, "от 0,12 до 1000 кВт");
+await invalid("kpd-dvigatelya-ie.html", { h: "8761" }, "от 0 до 8760 ч");
+await invalid("kpd-dvigatelya-ie.html", { cold: "own", etaold: "100" }, "меньше 100");
+await invalid("kpd-dvigatelya-ie.html", { cold: "own", etaold: "восемьдесят" }, "Введите КПД старого двигателя");
+await invalid("kpd-dvigatelya-ie.html", { tar: "-1" }, "Тариф не может быть отрицательным");
+
+// --- 4. privedennyy-moment-inercii: J/i², m(v/ω)², Mс/(i·η) ---
+// Эталон 1: ω = 2π·1450/60 = 151,8; 20/10² = 0,2; Σ = 0,04+0,002+0,2 = 0,242; 0,2/0,04 = 5;
+// Mс = 200/(10·0,95) = 21,05; Mдин = 38,95; t = 0,242·151,8/38,95 = 0,9435 с; E = 2,79 кДж.
+await calculate("privedennyy-moment-inercii.html", {}, ["ω = 2πn / 60151,8 рад/с", "Jн / i²0,2 кг·м²", "Суммарный момент инерции на валу двигателя0,242 кг·м²", "Отношение приведённой инерции нагрузки к ротору5", "Mс / (i·η)21,05 Н·м", "Кинетическая энергия при 1450 об/мин2,79 кДж", "Mдв − Mс,пр38,95 Н·м", "t = J·ω / Mдин943,5 мс", "СтатусОценка: время разгона около 943,5 мс при постоянных моментах"]);
+// Эталон 2: тележка 500 кг, 1,2 м/с при 1500 об/мин (ω = 157,1): 500·(1,2/157,1)² = 0,02918;
+// Σ = 0,1292; отношение 0,2918; t = 0,1292·157,1/50 = 0,4058 с; E = 1,594 кДж.
+await calculate("privedennyy-moment-inercii.html", { jm: "0,1", jg: "0", jl: "0", i: "20", m: "500", v: "1,2", n: "1500", mm: "50", ml: "0" }, ["m·(v/ω)²0,02918 кг·м²", "Суммарный момент инерции на валу двигателя0,1292 кг·м²", "к ротору0,2918", "405,8 мс", "1,594 кДж"]);
+// Эталон 3: повышающая передача i = 0,5 — инерция 1 кг·м² даёт 1/0,25 = 4 кг·м².
+await calculate("privedennyy-moment-inercii.html", { jl: "1", i: "0,5", ml: "0" }, ["Jн / i²4 кг·м²", "к ротору100"]);
+// Рискованный вердикт: 200/(10·0,95) = 21,05 при моменте двигателя 20 — разгона нет.
+await calculateWithout("privedennyy-moment-inercii.html", { mm: "20" }, ["СтатусДвигатель не разгонит привод: приведённый момент сопротивления 21,05 Н·м не меньше среднего момента двигателя 20 Н·м"], ["t = J·ω / Mдин", "Оценка:"]);
+// Граница: η = 100 %, 190/10 = 19 Н·м; момент двигателя 19 — разгона нет, 19,01 — t ≈ 3675 с = 1,02 ч.
+await calculateWithout("privedennyy-moment-inercii.html", { ml: "190", eta: "100", mm: "19" }, ["СтатусДвигатель не разгонит привод"], ["t = J·ω / Mдин"], "boundary");
+await calculate("privedennyy-moment-inercii.html", { ml: "190", eta: "100", mm: "19,01" }, ["Mс / (i·η)19 Н·м", "t = J·ω / Mдин1,02 ч"], "boundary");
+await invalid("privedennyy-moment-inercii.html", { i: "0" }, "Передаточное число должно быть больше нуля");
+await invalid("privedennyy-moment-inercii.html", { jm: "0" }, "Момент инерции ротора должен быть больше нуля");
+await invalid("privedennyy-moment-inercii.html", { v: "-1" }, "не могут быть отрицательными");
+await invalid("privedennyy-moment-inercii.html", { eta: "101" }, "КПД редуктора задаётся в процентах");
+await invalid("privedennyy-moment-inercii.html", { m: "" }, "Заполните все поля числами");
+
+// --- 5. klinoremennaya-peredacha: ГОСТ 1284.3-96, геометрия открытой передачи ---
+// Эталон 1: 125/250 мм, a = 400: Lp = 800 + π·375/2 + 125²/1600 = 1398,81 мм; точная 1398,83;
+// α = 180 − 2·arcsin(125/800) = 162,0°; приближённо 180 − 57·125/400 = 162,2°;
+// n2 = 1450·125·0,99/250 = 717,8; u = 250/(125·0,99) = 2,02; v = π·0,125·1450/60 = 9,49 м/с.
+await calculate("klinoremennaya-peredacha.html", {}, ["d2 / d12", "d2 / (d1·(1 − ε))2,02", "Частота вращения ведомого шкива717,8 об/мин", "v = π·d1·n1 / 600009,49 м/с", "Расчётная длина ремня Lp (ГОСТ 1284.3-96)1398,81 мм", "точная длина по геометрии1398,83 мм", "arcsin(|d2 − d1| / 2a)162°", "57°·|d2 − d1| / a162,2°", "СтатусОценка: угол обхвата малого шкива 162° — не меньше рекомендуемых 120°"]);
+// Эталон 2 (обратная задача): Lp = 1400 мм → a = [(1400 − 589,05) + √(810,95² − 2·125²)]/4 = 400,6 мм.
+await calculate("klinoremennaya-peredacha.html", { mode: "l", lp: "1400" }, ["Межосевое расстояние a400,6 мм", "162°", "запас межосевого расстояния на натяжение"]);
+// Эталон 3: равные шкивы 200/200, a = 500: L = 1000 + 200π = 1628,32 мм, угол 180°.
+await calculate("klinoremennaya-peredacha.html", { d1: "200", d2: "200", a: "500" }, ["Lp (ГОСТ 1284.3-96)1628,32 мм", "arcsin(|d2 − d1| / 2a)180°", "СтатусОценка"]);
+// Граница 120°: 100/400 мм, a = 300: arcsin(0,5) = 30°, α = 120° — включается; L = 600 + 250π + 75 = 1460,4;
+// ε = 2 %, n1 = 2900: n2 = 2900·100·0,98/400 = 710,5; v = 15,18 м/с; u = 4,082; приближённо 123°.
+await calculate("klinoremennaya-peredacha.html", { d1: "100", d2: "400", a: "300", n1: "2900", eps: "2" }, ["1460,4 мм", "710,5 об/мин", "15,18 м/с", "d2 / (d1·(1 − ε))4,082", "a123°", "СтатусОценка: угол обхвата малого шкива 120° — не меньше рекомендуемых 120°"], "boundary");
+await calculateWithout("klinoremennaya-peredacha.html", { d1: "100", d2: "400", a: "299" }, ["СтатусУгол обхвата малого шкива 119,8° меньше рекомендуемых 120°"], ["Оценка:"], "boundary");
+// Ведущий шкив больше ведомого — угол по малому шкиву тот же: 250/125, a = 400 → 162°, n2 = 1450·250·0,99/125 = 2871.
+await calculate("klinoremennaya-peredacha.html", { d1: "250", d2: "125" }, ["2871 об/мин", "162°", "Lp (ГОСТ 1284.3-96)1398,81 мм"]);
+await invalid("klinoremennaya-peredacha.html", { a: "187,5" }, "больше полусуммы диаметров (d1 + d2) / 2 = 187,5 мм");
+await invalid("klinoremennaya-peredacha.html", { mode: "l", lp: "984" }, "слишком короток");
+await invalid("klinoremennaya-peredacha.html", { eps: "100" }, "Скольжение задаётся в процентах");
+await invalid("klinoremennaya-peredacha.html", { d1: "0" }, "Диаметры и частота вращения должны быть больше нуля");
+await invalid("klinoremennaya-peredacha.html", { n1: "1450 об/мин" }, "Введите диаметры шкивов");
+
+// Каждый переключатель влияет на расчёт и скрывает ненужные поля (правило 7).
+{
+  kind = "structural";
+  const vis = (d, id) => d.getElementById(`f_${id}`)?.style.display !== "none";
+  const change = (dom, id, value) => { const el = dom.window.document.getElementById(id); el.value = value; el.dispatchEvent(new dom.window.Event("change", { bubbles: true })); };
+  let dom = await load("podbor-chastotnogo-preobrazovatelya.html"); let d = dom.window.document;
+  check(!vis(d, "kp") && !vis(d, "tp"), "podbor-chastotnogo-preobrazovatelya: перегрузка вне режима тяжёлого пуска не влияет на расчёт и должна быть скрыта");
+  change(dom, "load", "heavy");
+  check(vis(d, "kp") && vis(d, "tp"), "podbor-chastotnogo-preobrazovatelya: в режиме тяжёлого пуска поля перегрузки должны быть видны");
+  dom.window.close();
+  dom = await load("tormoznoy-rezistor-chrp.html"); d = dom.window.document;
+  check(vis(d, "pm") && vis(d, "mbr") && !vis(d, "mt") && !vis(d, "n") && !vis(d, "us") && !vis(d, "ubr"), "tormoznoy-rezistor-chrp: в режиме «в процентах» с порогом Danfoss видны только мощность и момент в %");
+  change(dom, "mode", "mech"); change(dom, "thr", "mm");
+  check(!vis(d, "pm") && vis(d, "mt") && vis(d, "n") && vis(d, "us") && !vis(d, "ubr"), "tormoznoy-rezistor-chrp: режим Н·м и порог MM440 должны показывать свои поля");
+  change(dom, "thr", "own");
+  check(!vis(d, "us") && vis(d, "ubr"), "tormoznoy-rezistor-chrp: для своего порога должно быть видно только поле порога");
+  dom.window.close();
+  dom = await load("kpd-dvigatelya-ie.html"); d = dom.window.document;
+  check(!vis(d, "etaold"), "kpd-dvigatelya-ie: поле своего КПД не влияет на расчёт по классу и должно быть скрыто");
+  change(dom, "cold", "own");
+  check(vis(d, "etaold"), "kpd-dvigatelya-ie: при своём КПД поле должно быть видно");
+  dom.window.close();
+  dom = await load("klinoremennaya-peredacha.html"); d = dom.window.document;
+  check(vis(d, "a") && !vis(d, "lp"), "klinoremennaya-peredacha: в режиме межосевого расстояния длина скрыта");
+  change(dom, "mode", "l");
+  check(!vis(d, "a") && vis(d, "lp"), "klinoremennaya-peredacha: в режиме длины скрыто межосевое расстояние");
+  dom.window.close();
+}
+
+// Семантика: что источник не подтверждает, не выдаётся за норму.
+{
+  kind = "structural";
+  const text = file => fs.readFileSync(path.join(sourceDir, file), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  const pages = ["podbor-chastotnogo-preobrazovatelya", "tormoznoy-rezistor-chrp", "kpd-dvigatelya-ie", "privedennyy-moment-inercii", "klinoremennaya-peredacha"];
+  const registry = fs.readFileSync(path.join(sourceDir, "ENGINEERING_AUDIT.md"), "utf8");
+  for (const slug of pages) {
+    const t = text(`${slug}.html`);
+    check(!/проходит|безопасно|соответствует нормам/i.test(t), `${slug}: запрещённая формулировка вердикта`);
+    check(/Оценка, не нормативный вердикт/.test(t) && /Границы применимости/.test(t) && /Редакция/.test(t) && /обращение 30\.09\.2026/.test(t),
+      `${slug}: карточка источника без статуса, редакции, даты обращения или границ`);
+    check(registry.includes(`\`${slug}\``), `ENGINEERING_AUDIT.md: нет записи о ${slug}`);
+  }
+  const ie = text("kpd-dvigatelya-ie.html");
+  check(/не интерполир/.test(ie) && /IE1 не табулирован|Почему нет IE1/.test(ie) && /2019\/1781/.test(ie),
+    "kpd-dvigatelya-ie: не сказано про отказ от интерполяции, отсутствие IE1 или источник таблиц");
+  const br = text("tormoznoy-rezistor-chrp.html");
+  check(/778 В/.test(br) && /1,13·√2/.test(br) && /порядок величины/.test(br),
+    "tormoznoy-rezistor-chrp: пороги ключа должны быть приписаны производителям, а оценка 1,35·U — названа порядком величины");
+  const belt = text("klinoremennaya-peredacha.html");
+  check(/ГОСТ 1284\.3-96/.test(belt) && /учебной литератур/.test(belt),
+    "klinoremennaya-peredacha: рекомендация 120° приписана ГОСТ, а не учебной литературе");
 }
 
 // Coverage guard считает фактически выполненные сценарии. Простое load()
