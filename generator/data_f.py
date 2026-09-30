@@ -154,7 +154,7 @@ faqs=[
  ("Учитывает ли расчёт перекос фаз?",
   "Нет, формулы верны для симметричной нагрузки. При неравных фазах в звезде без нулевого провода смещается нейтраль и напряжения на фазах становятся разными — там нужен отдельный расчёт по методу двух узлов."),
 ],
-related=["moshchnost-toka", "tok-elektrodvigatelya", "kva-kvt", "tok-v-nule-perekos"],
+related=["moshchnost-toka", "tok-elektrodvigatelya", "kva-kvt", "tok-v-nule-perekos", "ustavka-teplovogo-rele"],
 ),
 
 dict(

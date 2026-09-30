@@ -250,7 +250,7 @@ faqs=[
  ("Подойдут ли электролитические конденсаторы?",
   "Обычные полярные — нет, в сети переменного тока они выходят из строя. Допустимы только специальные неполярные пусковые электролиты, и только в цепи пуска на секунды."),
 ],
-related=["tok-elektrodvigatelya", "energiya-kondensatora", "moshchnost-toka", "kpd-dvigatelya-ie", "klinoremennaya-peredacha"],
+related=["tok-elektrodvigatelya", "energiya-kondensatora", "kpd-dvigatelya-ie", "klinoremennaya-peredacha", "skolzhenie-dvigatelya"],
 ),
 
 # ─── 14. Заземление ──────────────────────────────────────────────────────────
