@@ -941,7 +941,7 @@ faqs=[
  ("Что если панелей нужно больше, чем помещается в цепочку?",
   "Собирают несколько параллельных цепочек по допустимому числу панелей. Напряжение при этом не растёт, увеличивается ток — нужно лишь проверить, что суммарный ток не превышает предел контроллера."),
 ],
-related=["solar-panel-energy","raschet-akb-avtonomnoy","batareya-posledovatelno-parallelno"],
+related=["solar-panel-energy","raschet-akb-avtonomnoy","batareya-posledovatelno-parallelno","kontroller-zaryada-mppt-pwm"],
 ),
 
 dict(

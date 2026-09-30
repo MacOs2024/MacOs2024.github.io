@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Саморазряд аккумулятора при хранении и срок подзаряда</title>
+<meta name="description" content="Сколько заряда останется у аккумулятора после хранения: саморазряд по паспорту в процентах в месяц, линейная модель производителей, поправка на температуру для свинцово-кислотных VRLA (удвоение на каждые +10 °C) и время до порога подзаряда.">
+<link rel="canonical" href="https://macos2024.github.io/samorazryad-akkumulyatora.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Саморазряд аккумулятора при хранении и срок подзаряда">
+<meta property="og:description" content="Сколько заряда останется у аккумулятора после хранения: саморазряд по паспорту в процентах в месяц, линейная модель производителей, поправка на температуру для свинцово-кислотных VRLA (удвоение на каждые +10 °C) и время до порога подзаряда.">
+<meta property="og:url" content="https://macos2024.github.io/samorazryad-akkumulyatora.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Саморазряд аккумулятора при хранении и срок подзаряда","url":"https://macos2024.github.io/samorazryad-akkumulyatora.html","description":"Сколько заряда останется у аккумулятора после хранения: саморазряд по паспорту в процентах в месяц, линейная модель производителей, поправка на температуру для свинцово-кислотных VRLA (удвоение на каждые +10 °C) и время до порога подзаряда.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Саморазряд аккумулятора при хранении и срок подзаряда","item":"https://macos2024.github.io/samorazryad-akkumulyatora.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему в тепле аккумулятор разряжается быстрее?","acceptedAnswer":{"@type":"Answer","text":"Саморазряд — это побочные химические реакции, а они ускоряются с температурой. Для свинцово-кислотных VRLA производители указывают, что саморазряд примерно удваивается на каждые 10 °C."}},{"@type":"Question","name":"Чем опасно хранить свинцово-кислотный аккумулятор разряженным?","acceptedAnswer":{"@type":"Answer","text":"При падении заряда пластины сульфатируются, и часть ёмкости теряется безвозвратно — поэтому Battery University советует подзаряжать до того, как напряжение опустится ниже примерно 2,07 В на элемент, а производители требуют подзаряда по сроку или по напряжению разомкнутой цепи."}},{"@type":"Question","name":"Почему не экспоненциальная модель?","acceptedAnswer":{"@type":"Answer","text":"Паспорт задаёт саморазряд в процентах номинальной ёмкости в месяц, и производители считают его линейно — Panasonic, например, как [5 %/мес.] × число месяцев. Экспоненциальная модель теряет долю от остатка и даёт больший остаток, то есть меньший запас, поэтому она показана только для сравнения."}},{"@type":"Question","name":"Где взять порог подзаряда?","acceptedAnswer":{"@type":"Answer","text":"В руководстве по хранению: производители свинцово-кислотных АКБ задают его сроком (например, 6 месяцев при 20 °C) и напряжением разомкнутой цепи (например, 2,10 В на элемент). Порог в процентах вы задаёте сами; точно перевести напряжение в проценты можно только по таблице производителя."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Саморазряд аккумулятора при хранении и срок подзаряда</h1>
+<p class="intro">Заряженный аккумулятор теряет заряд и на полке — тем быстрее, чем теплее. Калькулятор считает, сколько заряда останется через заданный срок и когда он опустится до порога подзаряда. Сколько потом заряжать, покажет <a href="battery-charge-time.html">калькулятор времени зарядки</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Саморазряд аккумулятора при хранении и срок подзаряда</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_chem"><label for="chem">Тип аккумулятора</label><div class="fw"><select id="chem"><option value="lead" selected>Свинцово-кислотный VRLA: AGM, гель</option><option value="other">Другой (Li-ion, NiMH и т. д.) — саморазряд при температуре хранения</option></select></div></div><div class="f" id="f_r"><label for="r">Саморазряд r по паспорту</label><div class="fw"><input id="r" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">% в месяц</span></div><div class="hint">Процент номинальной ёмкости в месяц. Ориентиры: VRLA — около 3 % при 20 °C (Yuasa NP), меньше 2 % при 20 °C (Victron GEL и AGM), 1,25 % при 20 °C (EnerSys SBS XC); Li-ion — 1–2 % после первых суток, плюс до 3 % на схему защиты; никелевые — 10–15 % (Battery University, вторичный источник)</div></div><div class="f" id="f_tref"><label for="tref">Температура, при которой в паспорте указан саморазряд</label><div class="fw"><input id="tref" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">°C</span></div></div><div class="f" id="f_temp"><label for="temp">Температура хранения</label><div class="fw"><input id="temp" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">°C</span></div><div class="hint">Если температура меняется, берите тёплый период: из-за удвоения на каждые 10 °C средняя температура занижает саморазряд</div></div><div class="f" id="f_s0"><label for="s0">Заряд в начале хранения</label><div class="fw"><input id="s0" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_th"><label for="th">Порог подзаряда</label><div class="fw"><input id="th" type="text" inputmode="decimal" autocomplete="off" value="90" placeholder=""><span class="u">%</span></div><div class="hint">Задаёте вы. EnerSys и Yuasa требуют подзаряда, когда напряжение разомкнутой цепи опускается до 2,10 В на элемент; по Battery University (вторичный источник) это около 90 % заряда</div></div><div class="f" id="f_m"><label for="m">Срок хранения</label><div class="fw"><input id="m" type="text" inputmode="decimal" autocomplete="off" value="6" placeholder=""><span class="u">мес.</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Саморазряд аккумулятора при хранении: как считается</h2>
+<div class="formula">SoC(t) = SoC₀ − r<sub>T</sub> · t,&nbsp;&nbsp;t<sub>порог</sub> = (SoC₀ − SoC<sub>порог</sub>) / r<sub>T</sub><br>Свинцово-кислотные VRLA: r<sub>T</sub> = r · 2<sup>(T − T<sub>п</sub>)/10</sup> при T выше T<sub>п</sub>, до 40 °C<br>Для сравнения: SoC(t) = SoC₀ · (1 − r<sub>T</sub>)<sup>t</sup></div>
+<p><b>Саморазряд в паспорте</b> задают в процентах номинальной ёмкости в месяц при определённой температуре: у Yuasa NP — около 3 % в месяц при 20 °C, у Victron GEL и AGM — меньше 2 % при 20 °C, у EnerSys SBS XC — 1,25 % при 20 °C. У литий-ионных, по сводке Battery University (вторичный источник), — 1–2 % в месяц после первых суток, в которые уходит около 5 %, плюс до 3 % в месяц на схему защиты; у никелевых — 10–15 % в месяц. Это ориентиры: вводите значение из паспорта своего аккумулятора. С возрастом саморазряд растёт.</p>
+<p><b>Почему линейно.</b> Раз r — процент номинальной ёмкости, заряд убывает на одну и ту же величину каждый месяц. Так саморазряд и оценивает Panasonic в справочнике по VRLA: при хранении ниже 20 °C принимать [5 %/мес.] × число месяцев. Экспоненциальная модель, в которой каждый месяц теряется доля r от остатка, даёт остаток больше линейного и порог позже — калькулятор показывает её только для сравнения, вывод делается по линейной.</p>
+<p><b>Температура.</b> Для свинцово-кислотных VRLA саморазряд примерно удваивается на каждые 10 °C: так пишут Victron и Panasonic, и так устроена таблица EnerSys для SBS XC — 1,25 % в месяц при 20 °C, 1,76 % при 25 °C, 2,5 % при 30 °C и 5 % при 40 °C. Калькулятор применяет удвоение от температуры, при которой в паспорте указан r, до 40 °C. Ниже паспортной температуры саморазряд меньше, но поправка не делается — оценка с запасом. Для других химий удвоение в найденных источниках не подтверждено: вводите r для своей температуры хранения.</p>
+<p><b>Порог подзаряда.</b> Производители свинцово-кислотных АКБ задают его сроком и напряжением разомкнутой цепи: EnerSys для PowerSafe PV Bloc — подзаряд через 6 месяцев при 20 °C или когда напряжение приближается к 2,10 В на элемент, что наступит раньше; Yuasa для NP — после 6 месяцев хранения или при напряжении ниже 2,1 В на элемент. По таблице Battery University 2,10 В на элемент — это примерно 90 % заряда, 2,07 В — около 70 %. Порог в процентах задаёте вы; перед подзарядом проверьте напряжение.</p>
+<h2>Саморазряд аккумулятора при хранении: пример расчёта</h2>
+<p>AGM с саморазрядом 3 % в месяц при 20 °C хранят полгода в гараже при 30 °C. Поправка 2<sup>(30 − 20)/10</sup> = 2, саморазряд 6 % в месяц. Через 6 месяцев останется 100 − 6 · 6 = <b>64 %</b>, а порог 90 % наступит уже через 10 / 6 ≈ <b>1,667 месяца</b> — подзаряжать нужно задолго до конца хранения. Экспоненциальная модель дала бы 68,99 % и 1,703 месяца.</p>
+<p>Тот же аккумулятор при 20 °C: 3 % в месяц, через 6 месяцев — 82 %, порог 90 % — через 3,333 месяца. При 40 °C саморазряд вырос бы вчетверо, до 12 % в месяц.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему в тепле аккумулятор разряжается быстрее?</h3><p>Саморазряд — это побочные химические реакции, а они ускоряются с температурой. Для свинцово-кислотных VRLA производители указывают, что саморазряд примерно удваивается на каждые 10 °C.</p><h3>Чем опасно хранить свинцово-кислотный аккумулятор разряженным?</h3><p>При падении заряда пластины сульфатируются, и часть ёмкости теряется безвозвратно — поэтому Battery University советует подзаряжать до того, как напряжение опустится ниже примерно 2,07 В на элемент, а производители требуют подзаряда по сроку или по напряжению разомкнутой цепи.</p><h3>Почему не экспоненциальная модель?</h3><p>Паспорт задаёт саморазряд в процентах номинальной ёмкости в месяц, и производители считают его линейно — Panasonic, например, как [5 %/мес.] × число месяцев. Экспоненциальная модель теряет долю от остатка и даёт больший остаток, то есть меньший запас, поэтому она показана только для сравнения.</p><h3>Где взять порог подзаряда?</h3><p>В руководстве по хранению: производители свинцово-кислотных АКБ задают его сроком (например, 6 месяцев при 20 °C) и напряжением разомкнутой цепи (например, 2,10 В на элемент). Порог в процентах вы задаёте сами; точно перевести напряжение в проценты можно только по таблице производителя.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://mediap.industry.panasonic.eu/assets/custom-upload/Energy%20&amp;%20Building/Batteries/Secondary%20Batteries/Valve%20Regulated%20Lead-Acid%20Batteries/Panasonic%20VRLA%20Batteries%20VRLA%20Handbook.pdf" rel="nofollow noopener" target="_blank">VRLA Technical Handbook</a> — Panasonic — Редакция справочник на дату обращения; формулировки видны в выдаче — раздел при хранении ниже 20 °C саморазряд принимают [5 %/мес.] × число месяцев, саморазряд почти удваивается на каждые 10 °C — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Datasheet-GEL-and-AGM-Batteries-EN.pdf" rel="nofollow noopener" target="_blank">Gel and AGM Batteries. Datasheet</a> — Victron Energy — Редакция редакция паспорта на дату обращения; значения видны в выдаче — раздел саморазряд меньше 2 % в месяц при 20 °C, удваивается на каждые +10 °C — обращение 30.09.2026</li><li><a href="https://www.enersys.com/48f55a/globalassets/documents/product-documentation/supersafe/sbs-xc/apac-en-og-ss-sbsxc-re-1220.pdf" rel="nofollow noopener" target="_blank">SuperSafe SBS XC. Operation Guide for Renewable Energy Applications</a> — EnerSys — Редакция APAC-EN-OG-SS-SBSXC-RE-1220; таблица саморазряда видна в выдаче — раздел саморазряд в месяц: 1,25 % при 20 °C, 1,76 % при 25 °C, 2,5 % при 30 °C, 5 % при 40 °C — обращение 30.09.2026</li><li><a href="https://www.enersys.com/493bb4/globalassets/documents/product-documentation/powersafe/pv-bloc/emea/en-ps-pv-bloc-og-001_0811.pdf" rel="nofollow noopener" target="_blank">PowerSafe PV Bloc. Operation Guide for Solar Applications</a> — EnerSys — Редакция EN-PS-PV-BLOC-OG-001, 08.2011; условие подзаряда видно в выдаче — раздел подзаряд через 6 мес. при 20 °C или при напряжении около 2,10 В/эл., что наступит раньше — обращение 30.09.2026</li><li><a href="https://www.farnell.com/datasheets/612553.pdf" rel="nofollow noopener" target="_blank">Yuasa NP, NPC and NPH Batteries. Brochure and NP Series manual</a> — Yuasa Battery — Редакция редакции на дату обращения; значения видны в выдаче — раздел саморазряд около 3 % номинальной ёмкости в месяц при 20 °C, подзаряд после 6 мес. хранения или ниже 2,1 В/эл. — обращение 30.09.2026</li><li><a href="https://www.batteryuniversity.com/article/bu-802b-what-does-elevated-self-discharge-do/" rel="nofollow noopener" target="_blank">BU-802b: What does Elevated Self-discharge Do?</a> — Battery University (вторичный источник) — Редакция онлайн-статья на дату обращения; видна в выдаче — раздел Li-ion: около 5 % за первые сутки, затем 1–2 % в месяц, схема защиты — ещё до 3 %, никелевые: 10–15 % в месяц, саморазряд растёт с возрастом и температурой — обращение 30.09.2026</li><li><a href="https://www.batteryuniversity.com/article/bu-403-charging-lead-acid/" rel="nofollow noopener" target="_blank">BU-403: Charging Lead Acid</a> — Battery University (вторичный источник) — Редакция онлайн-статья на дату обращения; видна в выдаче — раздел 2,10 В/эл. — около 90 % заряда, 2,07 В/эл. — около 70 % — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Саморазряд r — процент номинальной ёмкости в месяц, постоянный весь срок хранения.</li><li>Для свинцово-кислотных VRLA r удваивается на каждые +10 °C выше паспортной температуры, не выше 40 °C.</li><li>Температура хранения постоянная; при колебаниях средняя температура занижает саморазряд, потому что удвоение на каждые 10 °C нелинейно.</li><li>Вывод делается по линейной модели; экспоненциальная показана для сравнения.</li></ul><p><b>Границы применимости:</b></p><ul><li>Для Li-ion не описывает потерю около 5 % в первые сутки после заряда и потребление BMS, если оно не входит в r.</li><li>Поправка на температуру — только для свинцово-кислотных VRLA и только до 40 °C.</li><li>Порог в процентах не переводится в напряжение: напряжение разомкнутой цепи сравнивают с руководством производителя.</li><li>Саморазряд растёт с возрастом аккумулятора — паспортное значение относится к новому.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="battery-charge-time.html">Время зарядки аккумулятора</a></li><li><a href="vremya-raboty-ibp-peukert.html">Время работы ИБП от АКБ с учётом закона Пейкерта</a></li><li><a href="stoimost-kvtch-akkumulyatora.html">Стоимость 1 кВт·ч, запасённого аккумулятором за срок службы</a></li><li><a href="raschet-akb-avtonomnoy.html">Ёмкость аккумуляторов для автономной системы</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function lt(a,b){return a<b*(1-1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function pl(s,one,few,many,frac){if(/[,·]/.test(s))return frac;var n=Math.abs(parseInt(s,10))%100,n1=n%10;if(n>10&&n<20)return many;if(n1===1)return one;if(n1>=2&&n1<=4)return few;return many;}
+function yr(s){return s+' '+pl(s,'год','года','лет','года');}
+
+function sync(){var pb=S('chem')==='lead';hideF('tref',!pb);hideF('temp',!pb);}
+function init(){$('chem').addEventListener('change',sync);sync();}
+function calc(){
+var pb=S('chem')==='lead',r=P('r'),s0=P('s0'),th=P('th'),m=P('m'),tr=NaN,tt=NaN,f=1;
+if([r,s0,th,m].some(isNaN))return err('Заполните саморазряд, начальный заряд, порог подзаряда и срок хранения числами.');
+if(r<=0||r>=100)return err('Саморазряд задаётся в процентах в месяц: больше 0 и меньше 100.');
+if(s0<=0||s0>100)return err('Начальный заряд — больше 0 и не больше 100 %.');
+if(th<=0||th>=100)return err('Порог подзаряда — больше 0 и меньше 100 %.');
+if(m<=0)return err('Срок хранения должен быть больше нуля.');
+if(pb){tr=P('tref');tt=P('temp');
+ if(isNaN(tr)||isNaN(tt))return err('Введите температуру, при которой в паспорте указан саморазряд, и температуру хранения.');
+ if(tr<15||tr>30)return err('Саморазряд в паспортах указывают при 20–25 °C; калькулятор принимает температуру паспорта от 15 до 30 °C.');
+ if(tt>40)return err('Выше 40 °C удвоение саморазряда на каждые 10 °C в найденных источниках не подтверждено — такие температуры калькулятор не считает.');
+ if(tt<-40)return err('Температура хранения ниже −40 °C — вне области калькулятора.');
+ if(gt(tt,tr))f=Math.pow(2,(tt-tr)/10);}
+var rt=r*f;
+if(rt>=100)return err('С поправкой на температуру саморазряд получается '+fmt(rt)+' % в месяц — вне модели.');
+var sl=Math.max(0,s0-rt*m),tl=(s0-th)/rt,q=1-rt/100,se=s0*Math.pow(q,m),te=Math.log(th/s0)/Math.log(q),t0=s0/rt;
+var h='';
+if(pb)h+=row('Поправка на температуру 2^((T − Tп)/10)',f>1?'× '+fmt(f):'не применяется: хранение не теплее паспортной температуры');
+h+=row('Саморазряд при хранении r',fmt(rt)+' % в месяц');
+var st;
+if(!gt(s0,th)){st='Подзарядите перед хранением: начальный заряд '+fx(s0,th)+' % не выше порога '+fx(th,s0)+' %';
+ h+=row('Заряд через '+fmt(m)+' мес. — линейно',fmt(sl)+' %');}
+else{h+=row('Заряд через '+fmt(m)+' мес. — линейно, как у Panasonic',fx(sl,th)+' %'+(sl<=0?' — полный разряд через '+fmt(t0)+' мес.':''))+
+ row('Время до порога подзаряда '+fmt(th)+' %',fx(tl,m)+' мес.')+
+ row('Для сравнения: экспоненциально (1 − r)^t',fmt(se)+' % через '+fmt(m)+' мес., порог — через '+fmt(te)+' мес.');
+ st=gt(tl,m)?'Оценка: через '+fmt(m)+' мес. заряд около '+fx(sl,th)+' % — выше порога '+fmt(th)+' %; порог — примерно через '+fx(tl,m)+' мес.'
+  :'Подзаряд нужен не позже чем через '+fx(tl,m)+' мес.: к концу хранения ('+fx(m,tl)+' мес.) заряд опустится до '+fx(sl,th)+' % при пороге '+fmt(th)+' %';}
+var n='Линейная модель: r — процент номинальной ёмкости в месяц, поэтому заряд убывает на одну и ту же величину каждый месяц; так саморазряд оценивает Panasonic: [5 %/мес.] × число месяцев. Экспоненциальная модель теряет долю r от остатка и даёт больший остаток — она показана только для сравнения, вывод — по линейной. ';
+if(pb){n+='Для свинцово-кислотных VRLA саморазряд примерно удваивается на каждые 10 °C (Victron, Panasonic; у EnerSys SBS XC — 1,25 % при 20 °C и 5 % при 40 °C). ';
+ if(f===1)n+='Ниже паспортной температуры саморазряд меньше, но поправка не делается — оценка с запасом. ';
+ n+='Производители задают и порог по напряжению: EnerSys — подзаряд через 6 мес. при 20 °C или когда напряжение разомкнутой цепи приближается к 2,10 В на элемент, что наступит раньше; Yuasa NP — после 6 мес. хранения или ниже 2,1 В на элемент. Проверяйте напряжением: расчёт по r — оценка.';}
+else n+='Поправка на температуру не применяется: удвоение на каждые 10 °C в найденных источниках подтверждено только для свинцово-кислотных VRLA. Введите r для вашей температуры хранения. У Li-ion, по Battery University, в первые сутки после заряда уходит около 5 % — модель эту потерю не описывает.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

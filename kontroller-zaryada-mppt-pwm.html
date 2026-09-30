@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Контроллер заряда MPPT и PWM по току солнечного массива</title>
+<meta name="description" content="Проверка контроллера заряда солнечных панелей: ток короткого замыкания массива с запасом 1,25 по NEC 690.8 или по пределу из паспорта, мощность, которую PWM передаёт в АКБ, ток на выходе MPPT P·η/U и перегруз по мощности — только по данным производителя.">
+<link rel="canonical" href="https://macos2024.github.io/kontroller-zaryada-mppt-pwm.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Контроллер заряда MPPT и PWM по току солнечного массива">
+<meta property="og:description" content="Проверка контроллера заряда солнечных панелей: ток короткого замыкания массива с запасом 1,25 по NEC 690.8 или по пределу из паспорта, мощность, которую PWM передаёт в АКБ, ток на выходе MPPT P·η/U и перегруз по мощности — только по данным производителя.">
+<meta property="og:url" content="https://macos2024.github.io/kontroller-zaryada-mppt-pwm.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Контроллер заряда MPPT и PWM по току солнечного массива","url":"https://macos2024.github.io/kontroller-zaryada-mppt-pwm.html","description":"Проверка контроллера заряда солнечных панелей: ток короткого замыкания массива с запасом 1,25 по NEC 690.8 или по пределу из паспорта, мощность, которую PWM передаёт в АКБ, ток на выходе MPPT P·η/U и перегруз по мощности — только по данным производителя.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Контроллер заряда MPPT и PWM по току солнечного массива","item":"https://macos2024.github.io/kontroller-zaryada-mppt-pwm.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Зачем запас 1,25 к току короткого замыкания?","acceptedAnswer":{"@type":"Answer","text":"Ток КЗ панели в паспорте дан для облучённости 1000 Вт/м², а в ясный день с отражением от снега или облаков она бывает больше. NEC 690.8 поэтому принимает наибольший ток массива равным 125 % суммы Isc. Если производитель контроллера сам указывает допустимый ток КЗ массива, проверяют по нему."}},{"@type":"Question","name":"Можно ли ставить на MPPT массив мощнее номинала?","acceptedAnswer":{"@type":"Answer","text":"Только если это разрешает производитель контроллера. Контроллер ограничит ток номиналом, и часть энергии в солнечные часы не используется, зато утром, вечером и в пасмурную погоду он работает ближе к номиналу. Пределы по напряжению Voc и току КЗ массива при этом нарушать нельзя."}},{"@type":"Question","name":"Когда достаточно PWM?","acceptedAnswer":{"@type":"Answer","text":"В маленьких системах, где Vmp панели немного выше напряжения заряда — например, 36-элементная панель на 12-вольтовую АКБ, — особенно если панели работают нагретыми. Если Vmp массива заметно выше напряжения АКБ или климат холодный, MPPT даёт больше энергии."}},{"@type":"Question","name":"Где проверить напряжение массива на морозе?","acceptedAnswer":{"@type":"Answer","text":"На странице массива солнечных панелей: там Voc цепочки пересчитывается на минимальную температуру и сравнивается с пределом контроллера. Превышение напряжения повреждает контроллер, поэтому это отдельная обязательная проверка."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Контроллер заряда MPPT и PWM по току солнечного массива</h1>
+<p class="intro">Контроллер проверяют по <b>току короткого замыкания</b> массива, току на выходе и напряжению. Калькулятор делает проверки по току и согласует Vmp массива с напряжением АКБ. Напряжение холостого хода на морозе — главный риск для входа контроллера — проверяет <a href="solnechnye-paneli-massiv.html">калькулятор массива солнечных панелей</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Контроллер заряда MPPT и PWM по току солнечного массива</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_tip"><label for="tip">Тип контроллера</label><div class="fw"><select id="tip"><option value="pwm" selected>PWM (ШИМ): массив подключается к АКБ ключом</option><option value="mppt">MPPT: преобразователь с поиском точки максимальной мощности</option></select></div></div><div class="f" id="f_isc"><label for="isc">Ток короткого замыкания массива Isc при STC</label><div class="fw"><input id="isc" type="text" inputmode="decimal" autocomplete="off" value="19,83" placeholder=""><span class="u">А</span></div><div class="hint">Сумма Isc параллельных цепочек; у цепочки из последовательных панелей Isc — как у одной панели. Пример: три панели Victron BlueSolar 115 Вт (Isc 6,61 А) параллельно</div></div><div class="f" id="f_vmp"><label for="vmp">Напряжение массива в точке максимальной мощности Vmp при STC</label><div class="fw"><input id="vmp" type="text" inputmode="decimal" autocomplete="off" value="19" placeholder=""><span class="u">В</span></div><div class="hint">Vmp панели × число панелей в цепочке; у Victron BlueSolar 115 Вт Vmp 19 В</div></div><div class="f" id="f_pw"><label for="pw">Мощность массива при STC</label><div class="fw"><input id="pw" type="text" inputmode="decimal" autocomplete="off" value="345" placeholder=""><span class="u">Вт</span></div></div><div class="f" id="f_umin"><label for="umin">Напряжение АКБ в начале заряда (наименьшее)</label><div class="fw"><input id="umin" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">В</span></div><div class="hint">Разряженная АКБ под зарядом: при этом напряжении ток на выходе MPPT наибольший, а доля мощности у PWM наименьшая</div></div><div class="f" id="f_umax"><label for="umax">Наибольшее напряжение заряда (абсорбция)</label><div class="fw"><input id="umax" type="text" inputmode="decimal" autocomplete="off" value="14,4" placeholder=""><span class="u">В</span></div><div class="hint">По паспорту АКБ или настройкам контроллера</div></div><div class="f" id="f_irated"><label for="irated">Номинальный ток контроллера (наибольший ток заряда)</label><div class="fw"><input id="irated" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_base"><label for="base">Предел по току короткого замыкания массива</label><div class="fw"><select id="base"><option value="nec" selected>NEC 690.8: номинальный ток контроллера не меньше 1,25·Isc (так в руководствах Morningstar)</option><option value="own">Паспорт контроллера: наибольший допустимый Isc массива</option></select></div></div><div class="f" id="f_iscmax"><label for="iscmax">Наибольший ток КЗ массива по паспорту контроллера</label><div class="fw"><input id="iscmax" type="text" inputmode="decimal" autocomplete="off" value="35" placeholder=""><span class="u">А</span></div><div class="hint">Например, Victron SmartSolar 100/30 — 35 А при номинальном токе 30 А</div></div><div class="f" id="f_eta"><label for="eta">КПД MPPT-контроллера</label><div class="fw"><input id="eta" type="text" inputmode="decimal" autocomplete="off" value="98" placeholder=""><span class="u">%</span></div><div class="hint">По паспорту; наибольший КПД Victron SmartSolar 100/30 — 98 %. Больший КПД даёт больший ток на выходе, то есть оценку с запасом</div></div><div class="f" id="f_ovp"><label for="ovp">Перегруз по мощности (массив мощнее номинала MPPT)</label><div class="fw"><select id="ovp"><option value="none" selected>Нет данных производителя</option><option value="pmax">Производитель задаёт наибольшую мощность массива</option><option value="isc">Производитель допускает любую мощность при соблюдении предела Isc (как Victron)</option></select></div></div><div class="f" id="f_pmax"><label for="pmax">Наибольшая мощность массива по данным производителя</label><div class="fw"><input id="pmax" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">Вт</span></div><div class="hint">Из паспорта или руководства контроллера для вашего напряжения АКБ</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Контроллер заряда MPPT и PWM: как считается</h2>
+<div class="formula">NEC 690.8: I<sub>контр</sub> ≥ 1,25 · I<sub>sc</sub>&nbsp;&nbsp;или по паспорту контроллера: I<sub>sc</sub> ≤ I<sub>sc,max</sub><br>PWM: I<sub>АКБ</sub> ≈ I<sub>mp</sub>…I<sub>sc</sub>,&nbsp;&nbsp;P<sub>АКБ</sub> ≈ U<sub>АКБ</sub> · I,&nbsp;&nbsp;I<sub>mp</sub> = P / V<sub>mp</sub><br>MPPT: I<sub>вых</sub> = P · η / U<sub>мин</sub> ≤ I<sub>ном</sub>, иначе перегруз — только по данным производителя</div>
+<p><b>Ток короткого замыкания.</b> NEC 690.8(A)(1) принимает наибольший ток цепи солнечного массива равным 125 % суммы токов КЗ параллельно соединённых модулей: облучённость бывает выше стандартных 1000 Вт/м², и ток растёт вместе с ней. Morningstar в руководстве PWM-контроллеров TriStar пишет, что для соответствия NEC номинальный ток контроллера должен быть не меньше 125 % тока КЗ массива: для TS-45 это массив до 36 А, для TS-60 — до 48 А. Это американская норма, в ПУЭ такого правила нет. Другой путь — предел тока КЗ массива из паспорта контроллера: у Victron SmartSolar 100/30 при номинальном токе 30 А допустимый Isc массива — 35 А.</p>
+<p><b>PWM.</b> ШИМ-контроллер подключает массив к аккумулятору ключом, и панели работают при напряжении АКБ, а не в точке максимальной мощности. По техническому описанию Victron ток 36-элементной панели почти постоянен примерно до 17 В, а максимум мощности — около 18 В при 25 °C. Поэтому ток в АКБ лежит между I<sub>mp</sub> и I<sub>sc</sub>, а мощность — U<sub>АКБ</sub>·I; остальное теряется. Если V<sub>mp</sub> массива не выше напряжения заряда, ток быстро падает и АКБ не зарядится полностью; на нагретых панелях V<sub>mp</sub> ещё ниже. Morningstar подчёркивает, что PWM-контроллер перегружать нельзя: ток массива не должен превышать его номинальный ток.</p>
+<p><b>MPPT.</b> MPPT-контроллер — понижающий преобразователь: он держит массив в точке максимальной мощности и отдаёт в АКБ ту же мощность за вычетом потерь, поэтому ток на выходе P·η/U больше тока массива. Наибольший он при наименьшем напряжении АКБ — в начале заряда. Если этот ток больше номинального, контроллер ограничивает его номиналом, и часть мощности массива не используется. Допустим ли такой перегруз, решает производитель: Morningstar для своих MPPT допускает массив мощнее номинальной выходной мощности, в зависимости от серии до 150–200 %; Victron — любую мощность при соблюдении пределов Voc и Isc. Без этих данных калькулятор пишет «Недостаточно данных».</p>
+<p><b>Напряжение.</b> Понижающий MPPT не поднимет напряжение выше V<sub>mp</sub> массива, поэтому V<sub>mp</sub> должно быть выше наибольшего напряжения заряда с запасом; у Victron контроллер включается, когда напряжение массива выше напряжения АКБ на 5 В. Наибольшее напряжение массива — Voc на морозе — проверяется отдельно, на странице массива солнечных панелей.</p>
+<h2>Контроллер заряда MPPT и PWM: пример расчёта</h2>
+<p>Три панели Victron BlueSolar 115 Вт на 12 В (V<sub>mp</sub> 19 В, I<sub>sc</sub> 6,61 А) параллельно: I<sub>sc</sub> массива 19,83 А, мощность 345 Вт. По NEC номинальный ток контроллера нужен не меньше 1,25 · 19,83 = <b>24,79 А</b> — PWM на 30 А это условие выполняет. При напряжении АКБ 12 В в начале заряда PWM передаст от 12 · 18,16 до 12 · 19,83 Вт, то есть 217,9…238 Вт — 63,16…68,97 % мощности массива при STC.</p>
+<p>Четыре такие панели двумя цепочками по две (V<sub>mp</sub> 38 В, I<sub>sc</sub> 13,22 А, 460 Вт) через MPPT с КПД 98 % дадут в АКБ 12 В до 460 · 0,98 / 12 = <b>37,57 А</b> — больше номинальных 30 А. Такой перегруз допустим, только если его разрешает производитель; тогда контроллер ограничит ток 30 А, а мощность сверх 367,3 Вт в солнечные часы не используется.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Зачем запас 1,25 к току короткого замыкания?</h3><p>Ток КЗ панели в паспорте дан для облучённости 1000 Вт/м², а в ясный день с отражением от снега или облаков она бывает больше. NEC 690.8 поэтому принимает наибольший ток массива равным 125 % суммы Isc. Если производитель контроллера сам указывает допустимый ток КЗ массива, проверяют по нему.</p><h3>Можно ли ставить на MPPT массив мощнее номинала?</h3><p>Только если это разрешает производитель контроллера. Контроллер ограничит ток номиналом, и часть энергии в солнечные часы не используется, зато утром, вечером и в пасмурную погоду он работает ближе к номиналу. Пределы по напряжению Voc и току КЗ массива при этом нарушать нельзя.</p><h3>Когда достаточно PWM?</h3><p>В маленьких системах, где Vmp панели немного выше напряжения заряда — например, 36-элементная панель на 12-вольтовую АКБ, — особенно если панели работают нагретыми. Если Vmp массива заметно выше напряжения АКБ или климат холодный, MPPT даёт больше энергии.</p><h3>Где проверить напряжение массива на морозе?</h3><p>На странице массива солнечных панелей: там Voc цепочки пересчитывается на минимальную температуру и сравнивается с пределом контроллера. Превышение напряжения повреждает контроллер, поэтому это отдельная обязательная проверка.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.mayfield.energy/technical-articles/how-to-calculate-wire-size-amp-nec-690-8-b/" rel="nofollow noopener" target="_blank">NFPA 70, National Electrical Code, 690.8(A)(1). PV source circuit currents</a> — NFPA; текст по пересказу Mayfield Renewables и GreenLancer (вторичные источники) — Редакция NEC 2020/2023; дословно текст статьи не виден, множитель 125 % совпадает в нескольких пересказах — раздел 690.8(A)(1): наибольший ток цепи PV — 125 % суммы Isc параллельных модулей — обращение 30.09.2026</li><li><a href="https://www.morningstarcorp.com/wp-content/uploads/operation-manual-tristar-en.pdf" rel="nofollow noopener" target="_blank">TriStar Solar Charging System Controller. Installation, Operation and Maintenance Manual</a> — Morningstar Corporation — Редакция руководство PWM-контроллеров TriStar на дату обращения; фраза о 125 % Isc и пределы 36 и 48 А видны в выдаче — раздел номинальный ток контроллера не меньше 125 % Isc массива для соответствия NEC, TS-45 — массив до 36 А Isc, TS-60 — до 48 А — обращение 30.09.2026</li><li><a href="https://www.morningstarcorp.com/oversizing-your-pv-array-with-morningstar-mppt-controllers/" rel="nofollow noopener" target="_blank">Oversizing Your PV Array with Morningstar MPPT Controllers</a> — Morningstar Corporation — Редакция онлайн-статья на дату обращения; видна в выдаче — раздел MPPT ограничивает ток на выходе 100 % номинала, перегруз до 200 % номинальной выходной мощности, для GenStar рекомендовано 150 %, PWM-контроллер перегружать нельзя — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Technical-Information-Which-solar-charge-controller-PWM-or-MPPT.pdf" rel="nofollow noopener" target="_blank">Which solar charge controller: PWM or MPPT?</a> — Victron Energy, техническая информация — Редакция PDF на дату обращения; фразы о 36-элементной панели видны в выдаче — раздел 36-элементная панель: ток почти постоянен до ~17 В, максимум мощности около 18 В при 25 °C, PWM — для малых систем при температуре элементов 45–75 °C — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Manual_SmartSolar_MPPT_100-30__100-50/29694-MPPT_solar_charger_manual-pdf-en.pdf" rel="nofollow noopener" target="_blank">SmartSolar MPPT 100/30 &amp; 100/50. Manual and datasheet</a> — Victron Energy — Редакция руководство Rev 12 и паспорт на дату обращения; значения видны в выдаче — раздел 100/30: номинальный ток 30 А, наибольший Isc массива 35 А, 440 Вт при 12 В, запуск при Upv &gt; Uакб + 5 В, работа до Uакб + 1 В, ограничение входной мощности при более мощном массиве — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Datasheet-BlueSolar-Monocrystalline-Panels-EN.pdf" rel="nofollow noopener" target="_blank">BlueSolar Monocrystalline Panels. Datasheet</a> — Victron Energy — Редакция редакция паспорта на дату обращения; строка 115 Вт 12 В видна в выдаче — раздел BlueSolar 115 Вт 12 В: Vmp 19,0 В, Imp 6,04 А, Voc 23,32 В, Isc 6,61 А — значения примера — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Мощность, Vmp и Isc массива — при STC (1000 Вт/м², 25 °C) по паспорту панелей.</li><li>PWM: массив работает при напряжении АКБ, ток — между Imp и Isc.</li><li>MPPT: мощность на выходе — мощность массива, умноженная на КПД; наибольший ток — при наименьшем напряжении АКБ.</li><li>Запас 1,25 к Isc — по NEC 690.8(A)(1) в формулировке руководств Morningstar; либо предел Isc из паспорта контроллера.</li></ul><p><b>Границы применимости:</b></p><ul><li>Voc массива на холоде не проверяется — для этого отдельный калькулятор массива солнечных панелей.</li><li>Температура панелей, затенение и потери в проводах не учитываются.</li><li>Допустимость перегруза MPPT по мощности — только по данным производителя; без них вывода нет.</li><li>NEC — американская норма; в ПУЭ правила 1,25·Isc нет, пределы задаёт документация изготовителя контроллера.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="solnechnye-paneli-massiv.html">Массив солнечных панелей: оценка Voc на холоде</a></li><li><a href="solar-panel-energy.html">Выработка солнечной панели</a></li><li><a href="raschet-akb-avtonomnoy.html">Ёмкость аккумуляторов для автономной системы</a></li><li><a href="sechenie-po-dline-12v.html">Сечение провода для 12, 24 и 48 В</a></li><li><a href="stoimost-kvtch-akkumulyatora.html">Стоимость 1 кВт·ч, запасённого аккумулятором за срок службы</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function lt(a,b){return a<b*(1-1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function pl(s,one,few,many,frac){if(/[,·]/.test(s))return frac;var n=Math.abs(parseInt(s,10))%100,n1=n%10;if(n>10&&n<20)return many;if(n1===1)return one;if(n1>=2&&n1<=4)return few;return many;}
+function yr(s){return s+' '+pl(s,'год','года','лет','года');}
+
+function sync(){var m=S('tip')==='mppt';hideF('eta',!m);hideF('ovp',!m);hideF('pmax',!(m&&S('ovp')==='pmax'));hideF('iscmax',S('base')!=='own');}
+function init(){$('tip').addEventListener('change',sync);$('base').addEventListener('change',sync);$('ovp').addEventListener('change',sync);sync();}
+function calc(){
+var m=S('tip')==='mppt',own=S('base')==='own',ov=S('ovp'),isc=P('isc'),vmp=P('vmp'),pw=P('pw'),u1=P('umin'),u2=P('umax'),ir=P('irated'),eta=100,imax=NaN,pmax=NaN;
+if([isc,vmp,pw,u1,u2,ir].some(isNaN))return err('Заполните ток КЗ, Vmp и мощность массива, напряжения АКБ и номинальный ток контроллера числами.');
+if(isc<=0||vmp<=0||pw<=0||u1<=0||u2<=0||ir<=0)return err('Токи, напряжения и мощность должны быть больше нуля.');
+if(u2<u1)return err('Наибольшее напряжение заряда не может быть меньше напряжения в начале заряда.');
+var imp=pw/vmp;
+if(!lt(imp,isc))return err('Ток в точке максимальной мощности Imp = P / Vmp = '+fmt(imp)+' А не меньше Isc = '+fmt(isc)+' А — у солнечной панели так не бывает: проверьте мощность, Vmp и Isc массива.');
+if(own){imax=P('iscmax');if(isNaN(imax))return err('Введите наибольший ток КЗ массива по паспорту контроллера.');if(imax<=0)return err('Наибольший ток КЗ массива по паспорту должен быть больше нуля.');}
+if(m){eta=P('eta');if(isNaN(eta))return err('Введите КПД MPPT-контроллера.');if(eta<=0||eta>100)return err('КПД задаётся в процентах: больше 0 и не больше 100.');
+ if(ov==='pmax'){pmax=P('pmax');if(isNaN(pmax))return err('Введите наибольшую мощность массива по данным производителя.');if(pmax<=0)return err('Наибольшая мощность массива должна быть больше нуля.');}}
+var req=own?isc:1.25*isc,lim=own?imax:ir,iok=le(req,lim),vok=gt(vmp,u2),h=row('Тип контроллера',m?'MPPT':'PWM (ШИМ)'),st,n='',io=NaN,over=false,pa=NaN,pb=NaN;
+if(own)h+=row('Isc массива и предел по паспорту контроллера',fx(isc,imax)+' А '+(iok?'≤':'>')+' '+fx(imax,isc)+' А');
+else h+=row('1,25·Isc (NEC 690.8) и номинальный ток контроллера',fx(req,ir)+' А '+(iok?'≤':'>')+' '+fx(ir,req)+' А');
+if(!m){h+=row('Ток массива в АКБ при STC — от Imp до Isc',fmt(imp)+'…'+fmt(isc)+' А');
+ if(u1<vmp){pa=u1*imp;pb=Math.min(u1*isc,pw);h+=row('Мощность в АКБ при '+fmt(u1)+' В — от U·Imp до U·Isc',fmt(pa)+'…'+fmt(pb)+' Вт из '+fmt(pw)+' Вт ('+fmt(100*pa/pw)+'…'+fmt(100*pb/pw)+' %)');}
+ else h+=row('Мощность в АКБ при '+fmt(u1)+' В','не оценивается: напряжение АКБ не ниже Vmp, ток массива быстро падает');}
+else{io=pw*(eta/100)/u1;over=gt(io,ir);
+ if(!isFinite(io))return err('Значения вне диапазона надёжного расчёта.');
+ h+=row('Ток на выходе при STC Iвых = P·η / Uмин',fx(io,ir)+' А')+row('Номинальный ток контроллера',fx(ir,io)+' А');
+ if(over){var p1=ir*u1/(eta/100);h+=row('Мощность массива, при которой ток на выходе равен номинальному',fmt(p1)+' Вт')+row('Превышение мощности массива над ней',fmt(100*(pw/p1-1))+' %');}
+ if(ov==='pmax')h+=row('Мощность массива и предел производителя',fx(pw,pmax)+' Вт '+(le(pw,pmax)?'≤':'>')+' '+fx(pmax,pw)+' Вт');}
+h+=row('Vmp массива и наибольшее напряжение заряда',fx(vmp,u2)+' В '+(vok?'>':'≤')+' '+fx(u2,vmp)+' В');
+if(!iok)st=own?'Ток КЗ массива больше допустимого по паспорту контроллера: '+fx(isc,imax)+' А > '+fx(imax,isc)+' А'
+ :'Контроллер не подходит по току массива: 1,25·Isc = '+fx(req,ir)+' А больше номинального тока '+fx(ir,req)+' А (условие NEC 690.8 в руководствах Morningstar)';
+else if(m&&ov==='pmax'&&!le(pw,pmax))st='Мощность массива '+fx(pw,pmax)+' Вт больше допустимой производителем '+fx(pmax,pw)+' Вт';
+else if(!vok)st='Риск недозаряда: Vmp массива '+fx(vmp,u2)+' В не выше наибольшего напряжения заряда '+fx(u2,vmp)+' В'+(m?' — понижающий MPPT-контроллер не поднимет напряжение выше Vmp':' — выше Vmp ток массива быстро падает');
+else if(m&&over&&ov==='none')st='Недостаточно данных: ток на выходе при STC '+fx(io,ir)+' А больше номинального '+fx(ir,io)+' А — допустим ли такой перегруз по мощности, указывает только производитель контроллера';
+else if(m&&over)st='Оценка: массив мощнее номинала контроллера — ток на выходе ограничится '+fmt(ir)+' А; перегруз '+(ov==='pmax'?'в пределах мощности, заявленной производителем':'допускается производителем при соблюдении предела по току КЗ');
+else if(m)st='Оценка: условие по току КЗ выполнено, ток на выходе при STC '+fx(io,ir)+' А не больше номинального '+fx(ir,io)+' А';
+else st='Оценка: условие по току КЗ выполнено; PWM передаст в АКБ около '+fmt(100*pa/pw)+'…'+fmt(100*pb/pw)+' % мощности массива при STC';
+if(own)n+='Предел Isc по паспорту — предел самого контроллера; запаса 1,25 по NEC 690.8 в нём может не быть. ';
+else n+='NEC 690.8(A)(1) принимает наибольший ток цепи массива равным 125 % суммы Isc параллельных модулей: облучённость бывает выше стандартных 1000 Вт/м². Morningstar в руководстве TriStar требует для соответствия NEC номинальный ток контроллера не меньше этой величины. Это американская норма, в ПУЭ такого правила нет. ';
+if(!m)n+='PWM работает при напряжении АКБ, а не в точке максимальной мощности: у 36-элементной панели ток почти постоянен примерно до 17 В (Victron), поэтому в АКБ идёт U·I, остальная мощность теряется. Morningstar: PWM-контроллер перегружать нельзя — ток массива не должен превышать его номинальный ток. Если Vmp массива заметно выше напряжения АКБ или панели холодные, MPPT даст больше энергии. ';
+else n+='MPPT отдаёт в АКБ мощность массива за вычетом потерь, поэтому ток на выходе больше тока массива и наибольший — при наименьшем напряжении АКБ. При перегрузе контроллер ограничивает ток номиналом (Morningstar, Victron), но допустимость перегруза задаёт только производитель: у Morningstar — до 150–200 % номинальной выходной мощности в зависимости от серии, у Victron — любая мощность при соблюдении пределов Voc и Isc. Victron включает MPPT, когда напряжение массива выше напряжения АКБ на 5 В. ';
+n+='Мощность и токи — при STC; нагретые панели дают меньше, а облучённость выше 1000 Вт/м² — больше. Voc массива на морозе проверьте на странице массива солнечных панелей.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
