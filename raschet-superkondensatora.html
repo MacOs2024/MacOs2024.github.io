@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Суперконденсатор для импульсной нагрузки — ВольтКальк</title>
+<meta name="description" content="Расчёт банка суперконденсаторов (ионисторов) для импульсной нагрузки и удержания питания: ёмкость по постоянной мощности с КПД преобразователя или по постоянному току, просадка на ESR, число элементов последовательно и параллельно с запасом на допуск и старение, балансировка напряжений.">
+<link rel="canonical" href="https://macos2024.github.io/raschet-superkondensatora.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Суперконденсатор для импульсной нагрузки — ВольтКальк">
+<meta property="og:description" content="Расчёт банка суперконденсаторов (ионисторов) для импульсной нагрузки и удержания питания: ёмкость по постоянной мощности с КПД преобразователя или по постоянному току, просадка на ESR, число элементов последовательно и параллельно с запасом на допуск и старение, балансировка напряжений.">
+<meta property="og:url" content="https://macos2024.github.io/raschet-superkondensatora.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Суперконденсатор для импульсной нагрузки","url":"https://macos2024.github.io/raschet-superkondensatora.html","description":"Расчёт банка суперконденсаторов (ионисторов) для импульсной нагрузки и удержания питания: ёмкость по постоянной мощности с КПД преобразователя или по постоянному току, просадка на ESR, число элементов последовательно и параллельно с запасом на допуск и старение, балансировка напряжений.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Суперконденсатор для импульсной нагрузки","item":"https://macos2024.github.io/raschet-superkondensatora.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему ёмкость нужна больше, чем по формуле энергии?","acceptedAnswer":{"@type":"Answer","text":"Формула ½·C·(V1² − V2²) = P·t/η не учитывает ESR: к концу разряда ток растёт, и часть напряжения теряется внутри банка. Кроме того, ёмкость бывает ниже номинала по допуску и снижается к концу срока службы, а ESR растёт — у ячеек Maxwell 350 Ф на 20 % и 100 %."}},{"@type":"Question","name":"Зачем балансировка, если элементы одинаковые?","acceptedAnswer":{"@type":"Answer","text":"Одинаковых не бывает: при заряде напряжение делится обратно пропорционально ёмкостям, в покое его разводит разброс утечки. Eaton приводит пример: 10 Ф ±20 % при 5 В дают 3,0 и 2,0 В. Maxwell требует балансировку в цепочках более чем из двух элементов."}},{"@type":"Question","name":"Почему банк нельзя разрядить до нуля?","acceptedAnswer":{"@type":"Answer","text":"Преобразователю нужно наименьшее входное напряжение, а при постоянной мощности ток растёт по мере разряда. Ниже √(4·R·P/η) банк вообще не отдаёт нужную мощность — у Analog Devices это наименьшее напряжение стека."}},{"@type":"Question","name":"Чем этот расчёт отличается от калькулятора энергии конденсатора?","acceptedAnswer":{"@type":"Answer","text":"Тот считает энергию одного конденсатора при заданном напряжении. Этот подбирает ёмкость и число элементов под нагрузку, окно напряжений, ESR, КПД преобразователя, допуск и старение."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Суперконденсатор для импульсной нагрузки</h1>
+<p class="intro">Суперконденсатор отдаёт энергию, пока напряжение падает от V1 до V2, и часть напряжения теряется на внутреннем сопротивлении ESR. Калькулятор подбирает банк из элементов с учётом КПД преобразователя, допуска, старения и балансировки. Энергию одного конденсатора при заданном напряжении считает <a href="energiya-kondensatora.html">калькулятор энергии конденсатора</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Суперконденсатор для импульсной нагрузки</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Нагрузка</label><div class="fw"><select id="mode"><option value="p" selected>Постоянная мощность через преобразователь (DC-DC, инвертор)</option><option value="i">Постоянный ток напрямую от банка</option></select></div></div><div class="f" id="f_pw"><label for="pw">Мощность нагрузки на выходе преобразователя</label><div class="fw"><input id="pw" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">Вт</span></div></div><div class="f" id="f_eta"><label for="eta">КПД преобразователя</label><div class="fw"><input id="eta" type="text" inputmode="decimal" autocomplete="off" value="90" placeholder=""><span class="u">%</span></div><div class="hint">По паспорту преобразователя при наименьшем входном напряжении</div></div><div class="f" id="f_il"><label for="il">Ток нагрузки</label><div class="fw"><input id="il" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_t"><label for="t">Длительность импульса или удержания</label><div class="fw"><input id="t" type="text" inputmode="decimal" autocomplete="off" value="60" placeholder=""><span class="u">с</span></div></div><div class="f" id="f_v1"><label for="v1">Напряжение банка в начале — заряжен до</label><div class="fw"><input id="v1" type="text" inputmode="decimal" autocomplete="off" value="16" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_v2"><label for="v2">Наименьшее допустимое напряжение на выводах банка</label><div class="fw"><input id="v2" type="text" inputmode="decimal" autocomplete="off" value="8" placeholder=""><span class="u">В</span></div><div class="hint">Наименьшее входное напряжение преобразователя или нагрузки</div></div><div class="f" id="f_cc"><label for="cc">Номинальная ёмкость элемента</label><div class="fw"><input id="cc" type="text" inputmode="decimal" autocomplete="off" value="350" placeholder=""><span class="u">Ф</span></div><div class="hint">Элемент — ячейка или готовый модуль</div></div><div class="f" id="f_tolm"><label for="tolm">Допуск ёмкости по паспорту: минус</label><div class="fw"><input id="tolm" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_tolp"><label for="tolp">Допуск ёмкости по паспорту: плюс</label><div class="fw"><input id="tolp" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_esr"><label for="esr">ESR элемента на постоянном токе, максимум по паспорту</label><div class="fw"><input id="esr" type="text" inputmode="decimal" autocomplete="off" value="3,2" placeholder=""><span class="u">мОм</span></div></div><div class="f" id="f_ur"><label for="ur">Номинальное напряжение элемента</label><div class="fw"><input id="ur" type="text" inputmode="decimal" autocomplete="off" value="2,7" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_eolc"><label for="eolc">Снижение ёмкости к концу срока службы по паспорту</label><div class="fw"><input id="eolc" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_eolr"><label for="eolr">Рост ESR к концу срока службы по паспорту</label><div class="fw"><input id="eolr" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_ilk"><label for="ilk">Ток утечки элемента, максимум по паспорту</label><div class="fw"><input id="ilk" type="text" inputmode="decimal" autocomplete="off" value="0,75" placeholder=""><span class="u">мА</span></div><div class="hint">Для резистора пассивной балансировки. Утечка растёт с температурой (Eaton) — берите значение для наибольшей рабочей температуры, если оно дано; нет данных — оставьте пустым</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Суперконденсатор для импульсной нагрузки: как считается</h2>
+<div class="formula">Постоянный ток: ΔU = I·(R + t/C) → C ≥ I·t / (V1 − V2 − I·R)<br>Постоянная мощность без ESR: ½·C·(V1² − V2²)·η ≥ P·t → C ≥ 2·P·t / (η·(V1² − V2²))<br>С ESR: P<sub>вх</sub> = P/η,&nbsp;&nbsp;u = (v + √(v² − 4·P<sub>вх</sub>·R)) / 2,&nbsp;&nbsp;t = (C / P<sub>вх</sub>)·[(u<sub>1</sub>² − u<sub>2</sub>²)/2 − P<sub>вх</sub>·R·ln(u<sub>1</sub>/u<sub>2</sub>)]<br>Банк: n = ⌈V1 / U<sub>ном</sub>⌉,&nbsp;&nbsp;C<sub>банка</sub> = m·C / n,&nbsp;&nbsp;R<sub>банка</sub> = n·R / m</div>
+<p><b>Постоянный ток.</b> При разряде током I напряжение банка падает на I·t/C, и сразу при включении — на I·R из-за ESR. Руководство Eaton по модулям суперконденсаторов записывает это как ΔU = I·(R + t/C). Отсюда наименьшая ёмкость: C ≥ I·t / (V1 − V2 − I·R). Если V1 − V2 не больше I·R, никакая ёмкость не поможет — нужен меньший ESR, то есть больше параллельных цепочек.</p>
+<p><b>Постоянная мощность.</b> Преобразователь (DC-DC, инвертор) держит мощность на выходе и берёт от банка P/η. Требуемая энергия — P·t/η, а конденсатор между V1 и V2 отдаёт ½·C·(V1² − V2²); так считает Analog Devices в статье «How Big Is Big Enough?». Это формула без ESR. С ESR ток растёт по мере разряда, и на ESR теряется всё больше напряжения.</p>
+<p><b>Как учтён ESR.</b> Пусть v — напряжение идеальной ёмкости, u — на выводах банка, i — ток. Преобразователь берёт u·i = P<sub>вх</sub>, а v = u + i·R, откуда u² − v·u + P<sub>вх</sub>·R = 0 и u = (v + √(v² − 4·P<sub>вх</sub>·R)) / 2. Корень существует, только пока v² ≥ 4·P<sub>вх</sub>·R: ниже этого банк не отдаёт мощность P<sub>вх</sub> вовсе — у Analog Devices это наименьшее напряжение стека √(4·R·P/η). Ток разряжает ёмкость: C·dv = −i·dt. Подставив v = u + P<sub>вх</sub>·R/u и i = P<sub>вх</sub>/u, получаем dt = −(C/P<sub>вх</sub>)·(u − P<sub>вх</sub>·R/u)·du и после интегрирования от u<sub>1</sub> (выводы в начале) до u<sub>2</sub> = V2 — формулу времени выше. При R = 0 она превращается в энергетическую ½·C·(V1² − V2²) = P<sub>вх</sub>·t. Если √(P<sub>вх</sub>·R) &gt; V2, разряд обрывается раньше, на напряжении √(P<sub>вх</sub>·R) на выводах, — калькулятор это учитывает.</p>
+<p><b>Допуск и старение.</b> Банк должен выдать импульс и в конце срока службы. Поэтому ёмкость элемента берётся по нижней границе допуска и уменьшается на паспортное снижение к концу срока, а ESR — по паспортному максимуму, увеличенному на рост к концу срока. У ячейки Maxwell 2,7 В 350 Ф это 350–420 Ф, ESR не более 3,2 мОм и к концу срока −20 % ёмкости и +100 % ESR. Analog Devices тоже закладывает удвоение ESR к концу срока.</p>
+<p><b>Последовательное соединение и балансировка.</b> Элемент выдерживает единицы вольт, поэтому элементы ставят последовательно: n = ⌈V1 / U<sub>ном</sub>⌉. Ёмкость цепочки в n раз меньше, ESR — в n раз больше. При заряде током напряжение делится обратно пропорционально ёмкостям: у элемента с наименьшей ёмкостью оно наибольшее. В худшем случае — один элемент на нижней границе допуска, остальные на верхней — U = V1 / (1 + (n − 1)·C<sub>min</sub>/C<sub>max</sub>). В покое напряжения разводит ещё и разброс токов утечки (Eaton). Maxwell требует балансировку в цепочках более чем из двух элементов. Для пассивной балансировки Eaton выбирает резистор так, чтобы ток через него был не меньше 50 токов утечки элемента, и рекомендует её только для банков, которые не циклируются постоянно.</p>
+<p><b>Чем отличается от энергии конденсатора.</b> <a href="energiya-kondensatora.html">Калькулятор энергии конденсатора</a> считает E = C·U²/2 для одного конденсатора при одном напряжении. Здесь решается обратная задача: какая ёмкость и сколько элементов нужны, чтобы удержать нагрузку в окне напряжений с учётом ESR, КПД, допуска и старения. Суммарную ёмкость произвольного соединения считает <a href="soedinenie-kondensatorov.html">калькулятор соединения конденсаторов</a>.</p>
+<h2>Суперконденсатор для импульсной нагрузки: пример расчёта</h2>
+<p>Удержание 100 Вт на выходе DC-DC с КПД 90 % в течение 60 с; банк заряжен до 16 В, преобразователь работает до 8 В. Ячейки Maxwell 2,7 В 350 Ф: допуск −0/+20 %, ESR не более 3,2 мОм, к концу срока −20 % ёмкости и +100 % ESR, утечка не более 0,75 мА. Последовательно ⌈16 / 2,7⌉ = <b>6</b> ячеек, по 2,667 В. Без ESR нужно 2 · 111,1 · 60 / (256 − 64) ≈ 69,44 Ф. Одна цепочка к концу срока — 350 · 0,8 / 6 ≈ 46,67 Ф и 38,4 мОм — держит нагрузку только около 37,3 с. Две цепочки — 93,33 Ф и 19,2 мОм — держат <b>77,61 с</b>: нужно 12 ячеек. Без балансировки после заряда с нуля одна ячейка может получить 16 / (1 + 5 / 1,2) ≈ 3,097 В — больше номинальных 2,7 В, балансировка обязательна.</p>
+<p>Пример Eaton: два конденсатора 10 Ф с допуском ±20 % последовательно на 5 В. Наихудшее деление: 5 / (1 + 0,8 / 1,2) = <b>3,0 В</b> на одном и 2,0 В на другом. Поэтому Eaton требует, чтобы ёмкости последовательных элементов укладывались в ±20 %: при большем разбросе напряжение превысит их импульсный предел 3 В.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему ёмкость нужна больше, чем по формуле энергии?</h3><p>Формула ½·C·(V1² − V2²) = P·t/η не учитывает ESR: к концу разряда ток растёт, и часть напряжения теряется внутри банка. Кроме того, ёмкость бывает ниже номинала по допуску и снижается к концу срока службы, а ESR растёт — у ячеек Maxwell 350 Ф на 20 % и 100 %.</p><h3>Зачем балансировка, если элементы одинаковые?</h3><p>Одинаковых не бывает: при заряде напряжение делится обратно пропорционально ёмкостям, в покое его разводит разброс утечки. Eaton приводит пример: 10 Ф ±20 % при 5 В дают 3,0 и 2,0 В. Maxwell требует балансировку в цепочках более чем из двух элементов.</p><h3>Почему банк нельзя разрядить до нуля?</h3><p>Преобразователю нужно наименьшее входное напряжение, а при постоянной мощности ток растёт по мере разряда. Ниже √(4·R·P/η) банк вообще не отдаёт нужную мощность — у Analog Devices это наименьшее напряжение стека.</p><h3>Чем этот расчёт отличается от калькулятора энергии конденсатора?</h3><p>Тот считает энергию одного конденсатора при заданном напряжении. Этот подбирает ёмкость и число элементов под нагрузку, окно напряжений, ESR, КПД преобразователя, допуск и старение.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.eaton.com/content/dam/eaton/products/electronic-components/resources/technical/eaton-supercapacitor-modules-application-guidelines.pdf" rel="nofollow noopener" target="_blank">Supercapacitor modules application guidelines</a> — Eaton — Редакция редакция на дату обращения; формула видна в выдаче — раздел Vdrop = I × (R + t/C) при постоянном токе, исходные данные: тип разряда, мощность или ток, время, наибольшее и наименьшее напряжение — обращение 30.09.2026</li><li><a href="https://www.analog.com/en/resources/analog-dialogue/raqs/raq-issue-179.html" rel="nofollow noopener" target="_blank">Energy Storage Using Supercapacitors: How Big Is Big Enough? (RAQ Issue 179)</a> — Analog Devices, Analog Dialogue; M. Holtkamp, G. Alonso — Редакция Vol. 54, No. 3, July 2020; формулы видны в пересказе выдачи — раздел требуемая энергия P·t / η, E = ½·C·V², наименьшее напряжение стека при постоянной мощности √(4·R·P/η), ESR к концу срока вдвое больше начального — обращение 30.09.2026</li><li><a href="https://www.eaton.com/content/dam/eaton/products/electronic-components/resources/technical/eaton-supercapacitor-application-guidelines.pdf" rel="nofollow noopener" target="_blank">Supercapacitor application guidelines</a> — Eaton — Редакция редакция на дату обращения; положения видны в выдаче — раздел дисбаланс: при заряде — разброс ёмкости, в покое — разброс утечки, пример: 10 Ф ±20 % последовательно при 5 В — 3,0 и 2,0 В, пассивная балансировка: ток резистора не меньше 50 токов утечки — обращение 30.09.2026</li><li><a href="https://maxwell.com/wp-content/uploads/2021/08/Notes_on_Using_Ultracapacitor_Cells.pdf" rel="nofollow noopener" target="_blank">Notes on Using Ultracapacitor Cells</a> — Maxwell Technologies — Редакция редакция на дату обращения; видно в выдаче — раздел балансировка обязательна в цепочках более чем из двух элементов, напряжение каждого элемента проверяют до и после заряда — обращение 30.09.2026</li><li><a href="https://maxwell.com/wp-content/uploads/2021/08/2.7V-350F_ds_3002974-EN.3_20200908.pdf" rel="nofollow noopener" target="_blank">2.7V 350F Ultracapacitor Cell datasheet</a> — Maxwell Technologies — Редакция 3002974-EN.3, 08.09.2020; значения видны в выдаче — раздел 350 Ф min / 420 Ф max, 2,7 В, ESR не более 3,2 мОм, утечка не более 0,75 мА, к концу срока: ёмкость −20 %, ESR +100 % — обращение 30.09.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/8-2-capacitors-in-series-and-in-parallel" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 8.2 Capacitors in Series and in Parallel, 8.3 Energy Stored in a Capacitor — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Преобразователь берёт постоянную мощность P/η на всём интервале; нагрузка постоянного тока питается прямо от банка.</li><li>ESR — постоянное активное сопротивление, ёмкость не зависит от напряжения.</li><li>Все элементы одинаковы: ёмкость — нижняя граница допуска, уменьшенная на старение; ESR — паспортный максимум, увеличенный на старение.</li><li>Наихудшее деление напряжения: один элемент на нижней границе допуска, остальные на верхней, заряд с нуля без балансировки.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не учитывает температуру: на холоде ESR растёт — берите данные паспорта для своей температуры.</li><li>Не учитывает саморазряд за время ожидания и ток цепей балансировки во время импульса.</li><li>Не проверяет допустимый ток и нагрев элементов, преобразователя и зарядного устройства.</li><li>Дрейф напряжений из-за разброса утечки не рассчитывается — дано только правило выбора резистора Eaton.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="energiya-kondensatora.html">Энергия и заряд конденсатора</a></li><li><a href="soedinenie-kondensatorov.html">Параллельное и последовательное соединение конденсаторов</a></li><li><a href="zaryad-kondensatora.html">Время заряда конденсатора через резистор</a></li><li><a href="discharge-resistor-capacitor.html">Резистор разряда конденсатора</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+
+function sync(){var p=S('mode')==='p';hideF('pw',!p);hideF('eta',!p);hideF('il',p);}
+function init(){$('mode').addEventListener('change',sync);sync();}
+function tav(pm,C,R,v1,v2,x){
+ if(!pm){var d=v1-v2-x*R;return d>0?C*d/x:0;}
+ var q=v1*v1-4*x*R;if(q<0)return 0;
+ var u1=(v1+Math.sqrt(q))/2,ue=Math.max(v2,Math.sqrt(x*R));
+ if(!(u1>ue))return 0;
+ return C/x*((u1*u1-ue*ue)/2-x*R*Math.log(u1/ue));}
+function calc(){
+var pm=S('mode')==='p',t=P('t'),v1=P('v1'),v2=P('v2'),cc=P('cc'),tm=P('tolm'),tp=P('tolp'),esr=P('esr'),ur=P('ur'),ec=P('eolc'),er=P('eolr'),lk=OPT('ilk'),x;
+if(pm){var pw=P('pw'),eta=P('eta');
+ if(isNaN(pw)||isNaN(eta))return err('Введите мощность нагрузки и КПД преобразователя.');
+ if(pw<=0)return err('Мощность нагрузки должна быть больше нуля.');
+ if(eta<=0||eta>100)return err('КПД задаётся в процентах: больше 0 и не больше 100.');
+ x=pw/(eta/100);}
+else{x=P('il');if(isNaN(x))return err('Введите ток нагрузки.');if(x<=0)return err('Ток нагрузки должен быть больше нуля.');}
+if([t,v1,v2,cc,tm,tp,esr,ur,ec,er].some(isNaN))return err('Заполните длительность, напряжения банка и параметры элемента из паспорта.');
+if(t<=0)return err('Длительность должна быть больше нуля.');
+if(!(v2>0)||!(v1>v2))return err('Нужно 0 < наименьшее напряжение < начальное напряжение банка.');
+if(cc<=0||ur<=0)return err('Ёмкость и номинальное напряжение элемента должны быть больше нуля.');
+if(tm<0||tm>=100||tp<0||tp>100)return err('Допуск ёмкости: минус — от 0 до 100 % (не включая 100), плюс — от 0 до 100 %.');
+if(esr<0)return err('ESR не может быть отрицательным.');
+if(ec<0||ec>=100)return err('Снижение ёмкости к концу срока — от 0 до 100 % (не включая 100).');
+if(er<0)return err('Рост ESR к концу срока не может быть отрицательным.');
+if(lk!==null){if(isNaN(lk))return err('Ток утечки — число в миллиамперах. Если его нет, оставьте поле пустым.');if(lk<=0)return err('Ток утечки должен быть больше нуля.');}
+var n=Math.ceil(v1/ur*(1-1e-12));
+if(n>1000)return err('Нужно больше 1000 элементов последовательно — вне области калькулятора.');
+var ce=cc*(1-tm/100)*(1-ec/100),re=esr/1000*(1+er/100),m=0,C,R,ta;
+for(var k=1;k<=10000;k++){C=k*ce/n;R=n*re/k;ta=tav(pm,C,R,v1,v2,x);if(ge(ta,t)){m=k;break;}}
+if(!m)return err('Нужно больше 10 000 параллельных цепочек — для такой нагрузки элемент слишком мал.');
+var cid=pm?2*x*t/(v1*v1-v2*v2):x*t/(v1-v2),u1,ue,creq;
+if(pm){u1=(v1+Math.sqrt(v1*v1-4*x*R))/2;ue=Math.max(v2,Math.sqrt(x*R));creq=x*t/((u1*u1-ue*ue)/2-x*R*Math.log(u1/ue));}
+else creq=x*t/(v1-v2-x*R);
+var cn=m*cc/n,a=tm/100,b=tp/100,uc=v1/n,uw=n>1?v1/(1+(n-1)*(1-a)/(1+b)):v1;
+if(![cid,creq,cn,uw].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var h=row('Последовательно элементов n = ⌈V1 / Uном⌉',n+' — по '+fmt(uc,4)+' В на элемент')+
+ row('Параллельных цепочек m / всего элементов',m+' / '+(n*m))+
+ row('Ёмкость банка: номинальная / с допуском и к концу срока',fmt(cn,4)+' / '+fx(C,creq)+' Ф')+
+ row('ESR банка: по паспорту / к концу срока',fmt(n*esr/m,4)+' / '+fmt(R*1000,4)+' мОм')+
+ row('Нужная ёмкость без ESR '+(pm?'2·P·t / (η·(V1² − V2²))':'I·t / (V1 − V2)'),fmt(cid,4)+' Ф')+
+ row('Нужная ёмкость с ESR банка к концу срока',fx(creq,C)+' Ф')+
+ row('Банк к концу срока удерживает нагрузку',fx(ta,t)+' с — нужно '+fmt(t,4)+' с');
+if(pm)h+=row('Ток банка в начале / в конце разряда',fmt(x/u1,4)+' / '+fmt(x/ue,4)+' А')+row('Просадка на ESR в начале / в конце',fmt(x/u1*R,4)+' / '+fmt(x/ue*R,4)+' В');
+else h+=row('Просадка на ESR I·R',fmt(x*R,4)+' В');
+h+=row('Энергия банка между V1 и V2 при номинальной ёмкости',si(cn*(v1*v1-v2*v2)/2,'Дж'));
+if(n>1){h+=row('Без балансировки после заряда с нуля элемент может получить',fx(uw,ur)+' В при номинале '+fx(ur,uw)+' В');
+ if(lk!==null){var rb=uc/(50*lk/1000);h+=row('Пассивная балансировка по Eaton: резистор на элемент','не больше '+fmt(rb,4)+' Ом — '+fmt(50*lk,4)+' мА, '+fmt(uc*50*lk/1000,4)+' Вт; саморазряд R·C ≈ '+tf(rb*cc));}}
+var st='Оценка: банк '+n+' последовательно × '+m+' параллельно, всего элементов — '+(n*m)+'; к концу срока удерживает нагрузку '+fx(ta,t)+' с';
+if(n>2)st+='; нужна балансировка напряжений элементов';
+else if(n===2&&gt(uw,ur))st+='; без балансировки напряжение элемента может превысить номинальное';
+var nt=pm?'Преобразователь берёт от банка постоянную мощность P/η: по мере разряда напряжение падает, ток растёт, и просадка на ESR к концу разряда наибольшая. ':'Нагрузка берёт постоянный ток: напряжение падает на I·t/C, плюс постоянная просадка I·R (Eaton). ';
+if(pm&&gt(Math.sqrt(x*R),v2))nt+='При таком ESR банк перестаёт отдавать мощность P/η, не дойдя до V2: предел на выводах — √(P·R/η) = '+fmt(Math.sqrt(x*R),4)+' В (ADI). ';
+nt+='Ёмкость взята по нижней границе допуска и уменьшена на старение, ESR — паспортный максимум, увеличенный на старение. ';
+if(n>2)nt+='Maxwell требует балансировку в цепочках более чем из двух элементов: разброс ёмкости делит напряжение неравно при заряде, разброс утечки — в покое (Eaton). ';
+else if(n===2)nt+='Напряжение каждого элемента проверяют после заряда (Maxwell): разброс утечки со временем тоже разводит напряжения (Eaton). ';
+if(n>1&&lk!==null)nt+='Пассивную балансировку Eaton рекомендует, только если банк не циклируется постоянно и допускает дополнительный ток разряда через резисторы. ';
+nt+='Температура не учитывается: на холоде ESR больше — берите данные паспорта для своей температуры.';
+out(h+row('Статус',st)+note(nt));
+}
+
+</script>
+</body>
+</html>

@@ -129,7 +129,7 @@ faqs=[
  ("Зависит ли внутреннее сопротивление от температуры и заряда?",
   "Да, сильно. На морозе оно растёт в разы — отсюда трудности с зимним пуском. У разряженного аккумулятора оно тоже выше, поэтому измерять состояние батареи нужно в заряженном виде и при комнатной температуре."),
 ],
-related=["zakon-oma","vremya-raboty-akkumulyatora","batareya-posledovatelno-parallelno"],
+related=["zakon-oma","vremya-raboty-akkumulyatora","batareya-posledovatelno-parallelno","tok-vyravnivaniya-akb"],
 ),
 
 dict(
@@ -828,7 +828,7 @@ faqs=[
  ("Как выбрать предохранитель между батареей и инвертором?",
   "Его размещение, тип, номинал и отключающую способность выбирают по паспорту инвертора и батареи, допустимому току кабеля и расчётному току КЗ. Универсального множителя от рабочего тока для всех систем нет."),
 ],
-related=["raschet-akb-avtonomnoy","sechenie-po-dline-12v","batareya-posledovatelno-parallelno"],
+related=["raschet-akb-avtonomnoy","sechenie-po-dline-12v","batareya-posledovatelno-parallelno","tok-razryada-liion-sborki"],
 ),
 
 dict(

@@ -440,6 +440,6 @@ faqs=[
  ("Какое напряжение считать опасным?",
   "Условная граница — 50 В, но решает энергия и путь тока: заряженные сотни микрофарад на 300–400 В в блоках питания и вспышках способны нанести серьёзную травму даже одиночным разрядом."),
 ],
-related=["zaryad-kondensatora", "reaktivnoe-soprotivlenie", "kondensator-dvigatelya", "soedinenie-kondensatorov"],
+related=["zaryad-kondensatora", "reaktivnoe-soprotivlenie", "kondensator-dvigatelya", "soedinenie-kondensatorov", "raschet-superkondensatora"],
 ),
 ]

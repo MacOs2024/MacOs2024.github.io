@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Пассивная балансировка ячеек Li-ion — ВольтКальк</title>
+<meta name="description" content="Время выравнивания ячеек литиевой батареи пассивной балансировкой BMS: разбаланс в % SoC или ампер-часах, ток через резистор и ключ I = U/R, средний ток с учётом пауз, мощность и тепло. Разница напряжений у LiFePO₄ в разбаланс заряда не пересчитывается.">
+<link rel="canonical" href="https://macos2024.github.io/balansirovka-yacheek-bms.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Пассивная балансировка ячеек Li-ion — ВольтКальк">
+<meta property="og:description" content="Время выравнивания ячеек литиевой батареи пассивной балансировкой BMS: разбаланс в % SoC или ампер-часах, ток через резистор и ключ I = U/R, средний ток с учётом пауз, мощность и тепло. Разница напряжений у LiFePO₄ в разбаланс заряда не пересчитывается.">
+<meta property="og:url" content="https://macos2024.github.io/balansirovka-yacheek-bms.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Пассивная балансировка ячеек Li-ion","url":"https://macos2024.github.io/balansirovka-yacheek-bms.html","description":"Время выравнивания ячеек литиевой батареи пассивной балансировкой BMS: разбаланс в % SoC или ампер-часах, ток через резистор и ключ I = U/R, средний ток с учётом пауз, мощность и тепло. Разница напряжений у LiFePO₄ в разбаланс заряда не пересчитывается.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Пассивная балансировка ячеек Li-ion","item":"https://macos2024.github.io/balansirovka-yacheek-bms.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему балансировка идёт так долго?","acceptedAnswer":{"@type":"Answer","text":"Ток пассивной балансировки — десятки миллиампер: 150 мА·ч при 65 мА выравниваются за 2–3 часа непрерывной работы, а если BMS балансирует только в конце заряда, это несколько циклов. Разбаланс в ампер-часы выравнивается сотни часов — такой разброс говорит о подборе или износе ячеек, а не о нехватке балансировки."}},{"@type":"Question","name":"Можно ли узнать разбаланс по разнице напряжений?","acceptedAnswer":{"@type":"Answer","text":"Только если напряжение покоя заметно меняется с зарядом и известен график OCV–SoC этой ячейки из паспорта: тогда ΔSoC ≈ ΔU / k, где k — наклон графика. Напряжения меряют после отдыха без тока. У LiFePO₄ кривая почти плоская на большей части диапазона, и милливольты не переводятся в ампер-часы — калькулятор выдаёт «Недостаточно данных»."}},{"@type":"Question","name":"Почему не поставить резистор поменьше, чтобы ускорить?","acceptedAnswer":{"@type":"Answer","text":"Мощность растёт как U²/R: при 4,2 В резистор 10 Ом рассеивает уже 1,76 Вт на ячейку. Тепло всех балансирующих ячеек выделяется на плате BMS, поэтому TI советует балансировать ячейки через одну. Предельный ток ключа и мощность резисторов берут из их паспортов."}},{"@type":"Question","name":"Куда девается энергия балансировки?","acceptedAnswer":{"@type":"Answer","text":"В тепло: E = U·ΔQ. Пассивная балансировка не переносит заряд в слабые ячейки, поэтому время работы батареи не растёт. Перенос заряда делает активная балансировка — её калькулятор не считает."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Пассивная балансировка ячеек Li-ion</h1>
+<p class="intro">Пассивная балансировка разряжает более заряженную ячейку через резистор, пока остальные её не догонят. Калькулятор считает ток балансировки, <b>время выравнивания</b> t = ΔQ / I и тепло в цепи. Напряжение и ёмкость самой сборки считает <a href="batareya-posledovatelno-parallelno.html">калькулятор сборки батареи S/P</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Пассивная балансировка ячеек Li-ion</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_dmode"><label for="dmode">Как задан разбаланс</label><div class="fw"><select id="dmode"><option value="soc" selected>Разница SoC между ячейками, % — по данным BMS или замеру ёмкости</option><option value="ah">Разница заряда в ампер-часах</option><option value="volt">Разница напряжений покоя ячеек</option></select></div></div><div class="f" id="f_cap"><label for="cap">Ёмкость ячейки (параллельной группы)</label><div class="fw"><input id="cap" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">А·ч</span></div><div class="hint">Паспортная ёмкость; у группы из P параллельных ячеек — сумма их ёмкостей</div></div><div class="f" id="f_dsoc"><label for="dsoc">Разбаланс по SoC</label><div class="fw"><input id="dsoc" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_dah"><label for="dah">Разбаланс по заряду</label><div class="fw"><input id="dah" type="text" inputmode="decimal" autocomplete="off" value="150" placeholder=""><select id="dah_unit" class="u" aria-label="Единицы: Разбаланс по заряду"><option value="0.001" selected>мА·ч</option><option value="1">А·ч</option></select></div></div><div class="f" id="f_chem"><label for="chem">Химия ячеек</label><div class="fw"><select id="chem"><option value="nmc" selected>NMC, NCA, LCO — слоистые оксиды</option><option value="lfp">LiFePO₄ (LFP)</option></select></div></div><div class="f" id="f_du"><label for="du">Разница напряжений покоя между ячейками</label><div class="fw"><input id="du" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">мВ</span></div><div class="hint">Измеряйте после отдыха без тока: под током в разницу входит падение на внутреннем сопротивлении</div></div><div class="f" id="f_slope"><label for="slope">Наклон кривой OCV–SoC на этом участке по паспорту ячейки</label><div class="fw"><input id="slope" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">мВ/%</span></div><div class="hint">Разность напряжений покоя двух точек графика OCV–SoC из паспорта, делённая на разность SoC между ними. Графика нет — оставьте поле пустым</div></div><div class="f" id="f_imode"><label for="imode">Ток балансировки</label><div class="fw"><select id="imode"><option value="r" selected>Рассчитать по сопротивлению цепи</option><option value="i">Задан в паспорте BMS</option></select></div></div><div class="f" id="f_u"><label for="u">Напряжение ячейки во время балансировки</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="4,2" placeholder=""><span class="u">В</span></div><div class="hint">Обычно балансировка идёт в конце заряда — берите напряжение ячейки в этот момент</div></div><div class="f" id="f_rb"><label for="rb">Сопротивление балансировочных резисторов в цепи</label><div class="fw"><input id="rb" type="text" inputmode="decimal" autocomplete="off" value="40" placeholder=""><span class="u">Ом</span></div><div class="hint">У TI BQ769x2 при внутренней балансировке ток идёт через два входных резистора фильтра: 2 × Rвх</div></div><div class="f" id="f_rsw"><label for="rsw">Сопротивление открытого ключа балансировки</label><div class="fw"><input id="rsw" type="text" inputmode="decimal" autocomplete="off" value="25" placeholder=""><span class="u">Ом</span></div><div class="hint">По паспорту BMS: у внутреннего ключа TI BQ769x2 типовое 25 Ом</div></div><div class="f" id="f_ib"><label for="ib">Ток балансировки по паспорту BMS</label><div class="fw"><input id="ib" type="text" inputmode="decimal" autocomplete="off" value="65" placeholder=""><span class="u">мА</span></div></div><div class="f" id="f_duty"><label for="duty">Доля времени, когда ключ балансировки открыт</label><div class="fw"><input id="duty" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">%</span></div><div class="hint">Например, TI BQ769x2 прерывает балансировку на время измерений, а TI советует балансировать ячейки через одну — тогда средний ток меньше тока при открытом ключе</div></div><div class="f" id="f_tcyc"><label for="tcyc">Время балансировки за один цикл заряда</label><div class="fw"><input id="tcyc" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">ч</span></div><div class="hint">Если BMS балансирует только в конце заряда — сколько часов за цикл. Пусто — число циклов не считается</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Пассивная балансировка ячеек Li-ion: как считается</h2>
+<div class="formula">ΔQ = ΔSoC · C&nbsp;&nbsp;&nbsp;I = U / (R<sub>рез</sub> + R<sub>ключа</sub>)&nbsp;&nbsp;&nbsp;t = ΔQ / (I · D)<br>P = U · I&nbsp;&nbsp;&nbsp;E = U · ΔQ<br>По напряжению (NMC, NCA): ΔSoC = ΔU / k, k — наклон кривой OCV–SoC из паспорта, мВ на 1 %</div>
+<p><b>Как работает пассивная балансировка.</b> Параллельно каждой ячейке стоят ключ и резистор. Когда ячейка заряжена больше остальных, BMS открывает ключ, и часть её заряда уходит в тепло — пока соседние не догонят. Так описывают пассивную балансировку Texas Instruments («resistor bleeding») и Analog Devices. Энергия при этом не переносится в слабые ячейки, а рассеивается: время работы батареи пассивная балансировка не увеличивает, зато ячейки заряжаются до одного уровня и BMS не обрывает заряд раньше времени из-за одной ячейки.</p>
+<p><b>Ток балансировки.</b> Это ток через резистор и открытый ключ под напряжением ячейки: I = U / (R<sub>рез</sub> + R<sub>ключа</sub>). В руководстве TI по мониторам BQ769x2 ток внутренней балансировки записан так же: I = V<sub>CELL</sub> / (2·R<sub>n</sub> + R<sub>CB</sub>), где R<sub>n</sub> — входные резисторы фильтра (не меньше 20 Ом), а R<sub>CB</sub> — сопротивление внутреннего ключа, типовое 25 Ом. При 4,2 В это около 65 мА. Мощность делится между элементами пропорционально их сопротивлению: I²·R. Если BMS даёт ток балансировки в паспорте, его можно ввести напрямую.</p>
+<p><b>Время.</b> Лишний заряд ΔQ уходит со средним током I·D, где D — доля времени, когда ключ открыт: t = ΔQ / (I·D). У BQ769x2 балансировка прерывается на время измерения самой ячейки и соседних, а TI советует балансировать ячейки через одну, чтобы ограничить нагрев микросхемы, — поэтому средний ток меньше тока при открытом ключе. Если BMS балансирует только в конце заряда, выравнивание растягивается на несколько циклов: введите время балансировки за цикл, и калькулятор посчитает их число.</p>
+<p><b>Откуда взять разбаланс.</b> SoC — это отношение оставшегося заряда к ёмкости ячейки, поэтому разница SoC переводится в ампер-часы умножением на ёмкость. Разбаланс в процентах SoC показывает BMS с подсчётом заряда; разбаланс в ампер-часах получают, измерив ёмкость ячеек. По разнице напряжений его можно оценить только там, где напряжение покоя заметно меняется с зарядом: у слоистых оксидов (NMC, NCA) — по графику OCV–SoC из паспорта конкретной ячейки. У LiFePO₄ кривая очень пологая примерно на 10–85 % SoC (TI, SLUAAR1), и пологость мешает точно оценить SoC для балансировки (TI, SLYT528): несколько милливольт могут означать и 1 %, и 20 %. Поэтому для LiFePO₄ калькулятор разницу напряжений в заряд не пересчитывает.</p>
+<p><b>Масштаб.</b> Пассивная балансировка медленная: токи — десятки миллиампер. В примере Battery Design ток 3 мА на каждый ампер-час ёмкости ячеек 10 А·ч даёт 30 мА, и разницу 8 А·ч такой ток выравнивает около 267 часов. Большой разбаланс пассивная балансировка не исправляет быстро — она поддерживает уже подобранные ячейки.</p>
+<h2>Пассивная балансировка ячеек Li-ion: пример расчёта</h2>
+<p>Ячейка 3 А·ч, разбаланс 5 % SoC: ΔQ = 0,05 · 3 = <b>0,15 А·ч</b> (150 мА·ч). BMS на TI BQ769x2 с внутренней балансировкой: входные резисторы 2 × 20 Ом и ключ 25 Ом, ячейка заряжена до 4,2 В. Ток I = 4,2 / 65 ≈ <b>64,62 мА</b>, в цепи 0,2714 Вт, из них в ключе 0,06462² · 25 ≈ 0,1044 Вт. При непрерывной балансировке t = 150 / 64,62 ≈ <b>2,321 ч</b>, в тепло уйдёт 4,2 · 0,15 = 0,63 Вт·ч (2,268 кДж). Если BMS балансирует по часу в конце каждого заряда — понадобится не меньше 3 циклов.</p>
+<p>Пример Battery Design: ток 30 мА (3 мА на ампер-час ячейки 10 А·ч), разница 8 А·ч. Время 8 / 0,03 ≈ <b>266,7 ч</b> — больше 11 суток непрерывной балансировки.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему балансировка идёт так долго?</h3><p>Ток пассивной балансировки — десятки миллиампер: 150 мА·ч при 65 мА выравниваются за 2–3 часа непрерывной работы, а если BMS балансирует только в конце заряда, это несколько циклов. Разбаланс в ампер-часы выравнивается сотни часов — такой разброс говорит о подборе или износе ячеек, а не о нехватке балансировки.</p><h3>Можно ли узнать разбаланс по разнице напряжений?</h3><p>Только если напряжение покоя заметно меняется с зарядом и известен график OCV–SoC этой ячейки из паспорта: тогда ΔSoC ≈ ΔU / k, где k — наклон графика. Напряжения меряют после отдыха без тока. У LiFePO₄ кривая почти плоская на большей части диапазона, и милливольты не переводятся в ампер-часы — калькулятор выдаёт «Недостаточно данных».</p><h3>Почему не поставить резистор поменьше, чтобы ускорить?</h3><p>Мощность растёт как U²/R: при 4,2 В резистор 10 Ом рассеивает уже 1,76 Вт на ячейку. Тепло всех балансирующих ячеек выделяется на плате BMS, поэтому TI советует балансировать ячейки через одну. Предельный ток ключа и мощность резисторов берут из их паспортов.</p><h3>Куда девается энергия балансировки?</h3><p>В тепло: E = U·ΔQ. Пассивная балансировка не переносит заряд в слабые ячейки, поэтому время работы батареи не растёт. Перенос заряда делает активная балансировка — её калькулятор не считает.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.ti.com/lit/pdf/sluaa81" rel="nofollow noopener" target="_blank">Cell Balancing With BQ769x2 Battery Monitors (SLUAA81A)</a> — Texas Instruments, Matt Sunna — Редакция октябрь 2020, редакция A — февраль 2022; формула и пояснения видны в пересказе выдачи — раздел внутренняя балансировка: I = VCELL / (2 × Rn + RCB), RCB типовое 25 Ом, Rn не меньше 20 Ом — около 65 мА при 4,2 В, балансировка прерывается на время измерения ячейки и соседних; балансировать через одну, чтобы ограничить нагрев — обращение 30.09.2026</li><li><a href="https://www.ti.com/lit/pdf/slyt322" rel="nofollow noopener" target="_blank">Cell balancing buys extra run time and battery life (SLYT322)</a> — Texas Instruments, Sihua Wen, Analog Applications Journal — Редакция 1Q 2009; видно в выдаче — раздел пассивная балансировка — разряд ячейки через рассеивающую цепь («resistor bleeding») — обращение 30.09.2026</li><li><a href="https://www.analog.com/en/resources/technical-articles/passive-battery-cell-balancing.html" rel="nofollow noopener" target="_blank">Passive Battery Cell Balancing</a> — Analog Devices, технический материал — Редакция онлайн-статья на дату обращения; видна в выдаче — раздел SoC — отношение оставшегося заряда к ёмкости ячейки, ключ и резистор параллельно ячейке; энергия уходит в тепло, время работы не растёт — обращение 30.09.2026</li><li><a href="https://www.ti.com/lit/pdf/sluaar1" rel="nofollow noopener" target="_blank">LiFePO4 Design Considerations (SLUAAR1)</a> — Texas Instruments, Jacob Rook — Редакция редакция на дату обращения; фраза о форме кривой видна в пересказе выдачи — раздел Li-ion — почти линейная зависимость OCV от SoC; LiFePO₄ — пологий участок примерно 10–85 % SoC — обращение 30.09.2026</li><li><a href="https://www.ti.com/lit/slyt528" rel="nofollow noopener" target="_blank">Improved LiFePO4 cell balancing in battery-backup systems with an Impedance Track fuel gauge (SLYT528)</a> — Texas Instruments, Analog Applications Journal — Редакция 3Q 2013; видно в выдаче — раздел пологий профиль напряжения LiFePO₄ мешает точной оценке SoC для балансировки — обращение 30.09.2026</li><li><a href="https://www.batterydesign.net/cell-balance-and-end-of-life/" rel="nofollow noopener" target="_blank">Cell Balance and End of Life</a> — Battery Design (batterydesign.net), вторичный источник — Редакция онлайн-статья на дату обращения; пример виден в выдаче — раздел 3 мА/А·ч, ячейки 10 А·ч, разница 8 А·ч — ток 30 мА и около 267 ч — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Напряжение ячейки за время балансировки постоянно; ток — по закону Ома через резисторы и открытый ключ (так же в TI SLUAA81A).</li><li>Разбаланс — разность заряда самой заряженной и самой разряженной ячеек; разряжается через резистор самая заряженная.</li><li>Доля времени учитывает паузы BMS; пока ключ открыт, ток постоянен.</li><li>Разница напряжений переводится в SoC линейно, по наклону кривой OCV–SoC из паспорта, и только для NMC, NCA, LCO.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не моделирует алгоритм конкретной BMS: пороги начала балансировки, гистерезис, число одновременно балансируемых ячеек.</li><li>Не проверяет нагрев платы BMS и допустимую мощность резисторов и ключей — по их паспортам.</li><li>Разницу напряжений LiFePO₄ в разбаланс заряда не пересчитывает — «Недостаточно данных».</li><li>Активную балансировку (перенос заряда между ячейками) не считает.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="liion-charge-current.html">Ток зарядки Li-ion по C-rate</a></li><li><a href="tok-razryada-liion-sborki.html">Ток разряда Li-ion сборки: BMS и предохранитель</a></li><li><a href="tok-vyravnivaniya-akb.html">Ток выравнивания при параллельном подключении АКБ</a></li><li><a href="battery-charge-time.html">Время зарядки аккумулятора</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+
+function sync(){var m=S('dmode'),v=m==='volt',r=S('imode')==='r';
+hideF('dsoc',m!=='soc');hideF('dah',m!=='ah');hideF('chem',!v);hideF('du',!v);hideF('slope',!v||S('chem')==='lfp');
+hideF('rb',!r);hideF('rsw',!r);hideF('ib',r);}
+function init(){$('dmode').addEventListener('change',sync);$('chem').addEventListener('change',sync);$('imode').addEventListener('change',sync);sync();}
+function hrs(h){var s=ge(h,1)?fmt(h,4)+' ч':fmt(h*60,4)+' мин';if(ge(h,48))s+=' ('+fmt(h/24,4)+' сут)';return s;}
+function calc(){
+var m=S('dmode'),r=S('imode')==='r',cap=P('cap'),u=P('u'),d=P('duty'),tc=OPT('tcyc'),i,rb=0,rsw=0,dq=NaN,ds=NaN,why='';
+if(isNaN(cap)||isNaN(u)||isNaN(d))return err('Введите ёмкость ячейки, её напряжение при балансировке и долю времени работы балансировки.');
+if(cap<=0)return err('Ёмкость ячейки должна быть больше нуля.');
+if(u<=0||u>5)return err('Напряжение ячейки при балансировке — больше 0 и не больше 5 В.');
+if(d<=0||d>100)return err('Доля времени балансировки задаётся в процентах: больше 0 и не больше 100.');
+if(tc!==null){if(isNaN(tc))return err('Время балансировки за цикл — число в часах. Если его нет, оставьте поле пустым.');if(tc<=0)return err('Время балансировки за цикл должно быть больше нуля.');}
+if(r){rb=P('rb');rsw=P('rsw');
+ if(isNaN(rb)||isNaN(rsw))return err('Введите сопротивление резисторов и открытого ключа балансировки.');
+ if(rb<0||rsw<0)return err('Сопротивления не могут быть отрицательными.');
+ if(!(rb+rsw>0))return err('Сопротивление цепи балансировки должно быть больше нуля.');
+ i=u/(rb+rsw);}
+else{i=P('ib');if(isNaN(i))return err('Введите ток балансировки по паспорту BMS.');if(i<=0)return err('Ток балансировки должен быть больше нуля.');i=i/1000;}
+if(m==='soc'){ds=P('dsoc');if(isNaN(ds))return err('Введите разбаланс по SoC.');if(ds<=0||ds>100)return err('Разбаланс по SoC — больше 0 и не больше 100 %.');dq=cap*ds/100;}
+else if(m==='ah'){dq=P('dah');if(isNaN(dq))return err('Введите разбаланс по заряду.');if(dq<=0)return err('Разбаланс по заряду должен быть больше нуля.');if(gt(dq,cap))return err('Разбаланс по заряду не может быть больше ёмкости ячейки.');ds=100*dq/cap;}
+else{var du=P('du');if(isNaN(du))return err('Введите разницу напряжений покоя.');if(du<=0)return err('Разница напряжений должна быть больше нуля.');
+ if(S('chem')==='lfp')why='lfp';
+ else{var k=OPT('slope');
+  if(k===null)why='slope';
+  else{if(isNaN(k))return err('Наклон кривой OCV–SoC — число в мВ на 1 % SoC. Если графика нет, оставьте поле пустым.');if(k<=0)return err('Наклон кривой OCV–SoC должен быть больше нуля.');
+   ds=du/k;if(gt(ds,100))return err('По этому наклону разбаланс больше 100 % SoC — проверьте наклон и разницу напряжений.');dq=cap*ds/100;}}}
+var ia=i*d/100,pw=u*i;
+if(![i,ia,pw].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var h=row(r?'Ток балансировки I = U / (Rрез + Rключа)':'Ток балансировки по паспорту BMS',fmt(i*1000,4)+' мА')+
+ row('Мощность в цепи балансировки P = U·I',fmt(pw,4)+' Вт');
+if(r)h+=row('Из неё в резисторах / в ключе (I²·R)',fmt(i*i*rb,4)+' / '+fmt(i*i*rsw,4)+' Вт');
+if(d<100)h+=row('Средний ток при доле времени '+fmt(d,4)+' %',fmt(ia*1000,4)+' мА');
+var st,n;
+if(why){
+ st=why==='lfp'?'Недостаточно данных: у LiFePO₄ напряжение покоя почти не меняется на большей части диапазона SoC — разница напряжений не пересчитывается в разбаланс заряда':'Недостаточно данных: чтобы пересчитать разницу напряжений в разбаланс заряда, нужен наклон кривой OCV–SoC из паспорта этой ячейки';
+ n=why==='lfp'?'По TI (SLUAAR1) у LiFePO₄ кривая напряжения покоя очень пологая примерно на 10–85 % SoC: разница в несколько милливольт может означать и малый, и большой разбаланс. Задайте разбаланс в % SoC или в ампер-часах — по данным BMS с подсчётом заряда или по измеренной ёмкости ячеек. ':'Кривая OCV–SoC у каждой модели ячейки своя; без неё милливольты в ампер-часы не переводятся. ';
+ n+='Ток и мощность балансировки от разбаланса не зависят и показаны выше.';}
+else{var t=dq/ia,e=u*dq;
+ if(!isFinite(t)||!isFinite(e))return err('Значения вне диапазона надёжного расчёта.');
+ if(m==='volt')h+=row('Разбаланс по наклону кривой OCV: ΔSoC = ΔU / k',fmt(ds,4)+' %');
+ h+=row('Разбаланс по заряду ΔQ',fmt(dq*1000,4)+' мА·ч'+(m==='volt'?'':' ('+fmt(ds,4)+' % SoC)'))+
+  row('Время выравнивания t = ΔQ / Iср',hrs(t))+
+  row('Тепло в цепи балансировки E = U·ΔQ',fmt(e,4)+' Вт·ч ('+si(e*3600,'Дж')+')');
+ if(tc!==null)h+=row('Циклов заряда при '+fmt(tc,4)+' ч балансировки за цикл','не меньше '+Math.ceil(t/tc*(1-1e-12)));
+ st='Оценка: разбаланс '+fmt(dq*1000,4)+' мА·ч выравнивается примерно за '+hrs(t)+' работы балансировки'+(m==='volt'?' (по наклону кривой OCV из паспорта)':'');
+ n='Пассивная балансировка не переносит заряд, а сжигает излишек более заряженной ячейки в резисторе: время работы батареи она не увеличивает, а выравнивает ячейки к концу заряда. ';
+ if(d<100)n+='Доля времени меньше 100 %: BMS прерывает балансировку — например, BQ769x2 на время измерения ячейки и её соседей, — и средний ток меньше тока при открытом ключе. ';
+ if(m==='volt')n+='Разница напряжений пересчитана линейно по наклону кривой OCV–SoC; напряжения нужно измерять в покое, после отдыха без тока: под током в разницу входит падение на внутреннем сопротивлении. ';
+ n+='Время — для непрерывной работы балансировки с постоянным током; если BMS балансирует только в конце заряда, выравнивание растягивается на несколько циклов.';}
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

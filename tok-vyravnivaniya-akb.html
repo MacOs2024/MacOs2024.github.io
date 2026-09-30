@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ток выравнивания при параллельном подключении АКБ</title>
+<meta name="description" content="Начальный ток выравнивания при параллельном подключении двух аккумуляторов с разным напряжением покоя: I = ΔU / (R1 + R2 + Rпер) по внутренним сопротивлениям из паспорта, сравнение с допустимыми токами заряда и разряда и вывод, нужно ли выровнять заряд до соединения.">
+<link rel="canonical" href="https://macos2024.github.io/tok-vyravnivaniya-akb.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Ток выравнивания при параллельном подключении АКБ">
+<meta property="og:description" content="Начальный ток выравнивания при параллельном подключении двух аккумуляторов с разным напряжением покоя: I = ΔU / (R1 + R2 + Rпер) по внутренним сопротивлениям из паспорта, сравнение с допустимыми токами заряда и разряда и вывод, нужно ли выровнять заряд до соединения.">
+<meta property="og:url" content="https://macos2024.github.io/tok-vyravnivaniya-akb.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Ток выравнивания при параллельном подключении АКБ","url":"https://macos2024.github.io/tok-vyravnivaniya-akb.html","description":"Начальный ток выравнивания при параллельном подключении двух аккумуляторов с разным напряжением покоя: I = ΔU / (R1 + R2 + Rпер) по внутренним сопротивлениям из паспорта, сравнение с допустимыми токами заряда и разряда и вывод, нужно ли выровнять заряд до соединения.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Ток выравнивания при параллельном подключении АКБ","item":"https://macos2024.github.io/tok-vyravnivaniya-akb.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему ток такой большой при разнице в доли вольта?","acceptedAnswer":{"@type":"Answer","text":"Его ограничивают только внутренние сопротивления батарей и перемычки — миллиомы. 0,5 В на 52 мОм — уже почти 10 А, а у батарей с сопротивлением в единицы миллиом — десятки и сотни ампер."}},{"@type":"Question","name":"Как выровнять заряд до соединения?","acceptedAnswer":{"@type":"Answer","text":"Зарядить каждую батарею отдельно подходящим зарядным устройством, чтобы их состояние заряда сравнялось, и только потом соединять. Так Victron рекомендует для своих литиевых батарей при заметной разнице напряжений. На плюсовом выводе каждой батареи — свой предохранитель."}},{"@type":"Question","name":"Можно ли соединять параллельно разные батареи?","acceptedAnswer":{"@type":"Answer","text":"Изготовители требуют одинаковые: Victron для батарей Lithium NG — одну ёмкость и один артикул. Разные химия, ёмкость и возраст приводят к неравному делению тока и после выравнивания, поэтому калькулятор для разных батарей выдаёт «Недостаточно данных»."}},{"@type":"Question","name":"Почему результат — только оценка?","acceptedAnswer":{"@type":"Answer","text":"Внутреннее сопротивление батареи зависит от заряда, температуры и длительности тока, а паспорт часто даёт его максимум. Ток после соединения спадает, и как быстро — калькулятор не считает. Надёжный вывод он делает только тогда, когда ток больше допустимого."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Ток выравнивания при параллельном подключении АКБ</h1>
+<p class="intro">Если соединить параллельно две батареи с разным напряжением, между ними сразу потечёт ток, ограниченный только их внутренними сопротивлениями и перемычками. Калькулятор оценивает этот ток и сравнивает его с паспортом. Напряжение и ёмкость готового банка считает <a href="batareya-posledovatelno-parallelno.html">калькулятор сборки батареи S/P</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Ток выравнивания при параллельном подключении АКБ</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_u1"><label for="u1">Напряжение покоя первой АКБ</label><div class="fw"><input id="u1" type="text" inputmode="decimal" autocomplete="off" value="13,4" placeholder=""><span class="u">В</span></div><div class="hint">Измеряйте после отдыха без нагрузки и заряда</div></div><div class="f" id="f_u2"><label for="u2">Напряжение покоя второй АКБ</label><div class="fw"><input id="u2" type="text" inputmode="decimal" autocomplete="off" value="12,9" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_r1"><label for="r1">Внутреннее сопротивление первой АКБ по паспорту</label><div class="fw"><input id="r1" type="text" inputmode="decimal" autocomplete="off" value="25" placeholder=""><span class="u">мОм</span></div></div><div class="f" id="f_r2"><label for="r2">Внутреннее сопротивление второй АКБ по паспорту</label><div class="fw"><input id="r2" type="text" inputmode="decimal" autocomplete="off" value="25" placeholder=""><span class="u">мОм</span></div></div><div class="f" id="f_rw"><label for="rw">Сопротивление перемычек, предохранителей и контактов в контуре</label><div class="fw"><input id="rw" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">мОм</span></div><div class="hint">Провод можно оценить калькулятором сопротивления провода; неизвестно — 0, ток получится с запасом</div></div><div class="f" id="f_ich"><label for="ich">Допустимый ток заряда АКБ по паспорту</label><div class="fw"><input id="ich" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">А</span></div><div class="hint">Рекомендуемый или наибольший ток заряда из паспорта, но не больше порога BMS; для разных батарей — меньшее из двух</div></div><div class="f" id="f_idis"><label for="idis">Допустимый ток разряда АКБ по паспорту</label><div class="fw"><input id="idis" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">А</span></div><div class="hint">Для разных батарей — меньшее из двух</div></div><div class="f" id="f_inf"><label for="inf">Номинал предохранителя в контуре</label><div class="fw"><input id="inf" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">А</span></div><div class="hint">Если предохранителя нет — оставьте пустым</div></div><div class="f" id="f_same"><label for="same">Батареи</label><div class="fw"><select id="same"><option value="same" selected>Одинаковые: одна модель, ёмкость и химия</option><option value="diff">Разные модели, ёмкость или химия</option></select></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Ток выравнивания при параллельном подключении АКБ: как считается</h2>
+<div class="formula">I<sub>0</sub> = |U<sub>1</sub> − U<sub>2</sub>| / (R<sub>1</sub> + R<sub>2</sub> + R<sub>пер</sub>)<br>ΔU<sub>доп</sub> = min(I<sub>заряда</sub>, I<sub>разряда</sub>) · (R<sub>1</sub> + R<sub>2</sub> + R<sub>пер</sub>)</div>
+<p><b>Откуда ток.</b> Каждая батарея — источник ЭДС, равной её напряжению покоя, с внутренним сопротивлением. При параллельном соединении они образуют один контур: по правилу Кирхгофа ток в нём равен разности ЭДС, делённой на сумму всех сопротивлений контура, — внутренних сопротивлений обеих батарей, перемычек, предохранителей и контактов. Внутренние сопротивления — миллиомы, поэтому даже полвольта разницы дают десятки ампер. Батарея с большим напряжением разряжается, с меньшим — заряжается тем же током.</p>
+<p><b>С чем сравнивать.</b> Ток в первый момент — наибольший: дальше напряжения сближаются, и ток спадает. Его сравнивают с допустимым током заряда более разряженной батареи и с допустимым током разряда более заряженной — по паспорту и по порогам BMS. Калькулятор показывает и разницу напряжений, при которой начальный ток как раз равен меньшему из этих пределов.</p>
+<p><b>Точность.</b> Внутреннее сопротивление меняется с зарядом, температурой и временем, а в паспорте его часто дают как максимум («не более»). При меньшем фактическом сопротивлении ток больше расчётного, поэтому вывод «в пределах» — только оценка, а вывод «больше допустимого» при паспортных максимумах тем более верен. У LiFePO₄ напряжение покоя почти не меняется на большей части диапазона заряда (TI): малая разница напряжений может скрывать большую разницу заряда, и ток спадает медленно.</p>
+<p><b>Что говорит изготовитель.</b> Victron в руководстве по литиевым батареям Smart напоминает, что батареи приходят к установке с разным состоянием заряда, и при заметной разнице напряжений требует выровнять заряд до параллельного соединения — зарядить каждую батарею отдельно. На плюсовом выводе каждой батареи ставят свой предохранитель, а кабели подключают так, чтобы путь тока через каждую батарею был одинаковым. Для батарей Lithium NG Victron допускает параллельно только батареи одной ёмкости и одного артикула.</p>
+<p><b>Чем отличается от расчёта сборки.</b> <a href="batareya-posledovatelno-parallelno.html">Калькулятор сборки батареи S/P</a> считает напряжение, ёмкость и энергию уже собранного банка. Эта страница — о моменте соединения: какой ток пойдёт между батареями, если их напряжения разные. Внутреннее сопротивление по просадке под нагрузкой оценивает <a href="vnutrennee-soprotivlenie.html">калькулятор внутреннего сопротивления</a>, сопротивление перемычки — <a href="soprotivlenie-provoda.html">калькулятор сопротивления провода</a>.</p>
+<h2>Ток выравнивания при параллельном подключении АКБ: пример расчёта</h2>
+<p>Две батареи LiFePO₄ 12,8 В 100 А·ч одной модели. По паспорту ECO-WORTHY 1100700112: внутреннее сопротивление 25 мОм, рекомендуемый ток заряда 50 А (наибольший 100 А), ток разряда 100 А. Напряжения покоя 13,4 и 12,9 В, перемычки с предохранителями — 2 мОм. Начальный ток: 0,5 / (0,025 + 0,025 + 0,002) = 0,5 / 0,052 ≈ <b>9,615 А</b> — меньше 50 А. Ток сравняется с 50 А при разнице 50 · 0,052 = 2,6 В.</p>
+<p>Если фактическое сопротивление батарей по 5 мОм, а перемычек 1 мОм, при разнице 1 В ток 1 / 0,011 ≈ <b>90,91 А</b> — больше 50 А: заряд нужно выровнять до соединения.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему ток такой большой при разнице в доли вольта?</h3><p>Его ограничивают только внутренние сопротивления батарей и перемычки — миллиомы. 0,5 В на 52 мОм — уже почти 10 А, а у батарей с сопротивлением в единицы миллиом — десятки и сотни ампер.</p><h3>Как выровнять заряд до соединения?</h3><p>Зарядить каждую батарею отдельно подходящим зарядным устройством, чтобы их состояние заряда сравнялось, и только потом соединять. Так Victron рекомендует для своих литиевых батарей при заметной разнице напряжений. На плюсовом выводе каждой батареи — свой предохранитель.</p><h3>Можно ли соединять параллельно разные батареи?</h3><p>Изготовители требуют одинаковые: Victron для батарей Lithium NG — одну ёмкость и один артикул. Разные химия, ёмкость и возраст приводят к неравному делению тока и после выравнивания, поэтому калькулятор для разных батарей выдаёт «Недостаточно данных».</p><h3>Почему результат — только оценка?</h3><p>Внутреннее сопротивление батареи зависит от заряда, температуры и длительности тока, а паспорт часто даёт его максимум. Ток после соединения спадает, и как быстро — калькулятор не считает. Надёжный вывод он делает только тогда, когда ток больше допустимого.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.1 Electromotive Force — ЭДС и внутреннее сопротивление, 10.3 Kirchhoff&#x27;s Rules — правило контуров — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/media/pg/Lithium_Battery_Smart/en/installation.html" rel="nofollow noopener" target="_blank">Lithium Smart Battery Manual — 4. Installation</a> — Victron Energy — Редакция rev 21 — 01/2026; положения видны в выдаче — раздел батареи приходят к установке с разным состоянием заряда, при заметной разнице напряжений — выровнять состояние заряда до соединения, зарядив каждую отдельно, предохранитель на плюсовом выводе каждой батареи; кабели — по диагонали — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Lithium_NG_battery_51,2_V/173204-Lithium_NG_battery_manual-pdf-en.pdf" rel="nofollow noopener" target="_blank">Lithium NG 51,2V battery manual</a> — Victron Energy — Редакция Rev 11 — 03/2026; видно в выдаче — раздел параллельно — батареи одной ёмкости и одного артикула — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/media/pg/The_Wiring_Unlimited_book/en/battery-bank-wiring.html" rel="nofollow noopener" target="_blank">Wiring Unlimited — 3. Battery bank wiring</a> — Victron Energy — Редакция онлайн-редакция книги на дату обращения; видно в выдаче — раздел одинаковый путь тока через каждую батарею, предохранители в каждой параллельной ветви — обращение 30.09.2026</li><li><a href="https://www.ti.com/lit/pdf/sluaar1" rel="nofollow noopener" target="_blank">LiFePO4 Design Considerations (SLUAAR1)</a> — Texas Instruments, Jacob Rook — Редакция редакция на дату обращения; фраза о форме кривой видна в пересказе выдачи — раздел пологая кривая напряжения покоя LiFePO₄ примерно на 10–85 % SoC — обращение 30.09.2026</li><li><a href="https://cdn.shopify.com/s/files/1/0585/7148/9429/files/1100700112_12V_100AH.pdf?v=1737623752" rel="nofollow noopener" target="_blank">100AH 12.8V Lithium Battery Specification (1100700112)</a> — ECO-WORTHY — Редакция редакция на дату обращения; значения видны в выдаче, в другой версии паспорта — 12 мОм — раздел внутреннее сопротивление 25 мОм, ток заряда: рекомендуемый 50 А, наибольший 100 А; ток разряда 100 А — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Батарея — источник ЭДС, равной напряжению покоя, с постоянным внутренним сопротивлением.</li><li>Ток в первый момент после соединения наибольший; дальше он спадает.</li><li>Сопротивление перемычек, предохранителей и контактов задаётся одним числом.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не рассчитывает, как быстро спадает ток и сколько длится выравнивание.</li><li>Не моделирует ограничение тока и срабатывание BMS — только сравнивает ток с введёнными пределами.</li><li>Если сопротивления в паспорте заданы как «не более», фактический ток может быть больше расчётного.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="vnutrennee-soprotivlenie.html">Внутреннее сопротивление источника</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li><li><a href="tok-razryada-liion-sborki.html">Ток разряда Li-ion сборки: BMS и предохранитель</a></li><li><a href="balansirovka-yacheek-bms.html">Пассивная балансировка ячеек Li-ion</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+
+function calc(){
+var u1=P('u1'),u2=P('u2'),r1=P('r1'),r2=P('r2'),rw=P('rw'),ich=P('ich'),idis=P('idis'),fu=OPT('inf'),same=S('same')==='same';
+if([u1,u2,r1,r2,rw,ich,idis].some(isNaN))return err('Заполните напряжения, сопротивления и допустимые токи.');
+if(u1<=0||u2<=0||u1>1000||u2>1000)return err('Напряжения АКБ — больше 0 и не больше 1000 В.');
+if(r1<=0||r2<=0)return err('Внутреннее сопротивление АКБ должно быть больше нуля.');
+if(rw<0)return err('Сопротивление перемычек не может быть отрицательным.');
+if(ich<=0||idis<=0)return err('Допустимые токи заряда и разряда должны быть больше нуля.');
+if(fu!==null){if(isNaN(fu))return err('Номинал предохранителя — число в амперах. Если предохранителя нет, оставьте поле пустым.');if(fu<=0)return err('Номинал предохранителя должен быть больше нуля.');}
+var du=Math.abs(u1-u2),rs=(r1+r2+rw)/1000,i0=du/rs,lim=Math.min(ich,idis),lo=u1<u2?'первая':'вторая',hi=u1<u2?'вторая':'первая';
+if(!isFinite(i0))return err('Значения вне диапазона надёжного расчёта.');
+var h=row('Разница напряжений покоя ΔU',fmt(du,4)+' В'+(du>0?' — сильнее разряжена '+lo+' АКБ':''))+
+ row('Сопротивление контура R1 + R2 + Rпер',fmt(rs*1000,4)+' мОм')+
+ row('Начальный ток выравнивания I = ΔU / ΣR',fx(i0,lim)+' А');
+if(du>0)h+=row('Допустимый ток заряда ('+lo+' АКБ) / разряда ('+hi+' АКБ)',fx(ich,i0)+' / '+fx(idis,i0)+' А');
+h+=row('Разница напряжений, при которой ток равен допустимому',fx(lim*rs,du)+' В')+
+ row('Мощность потерь в контуре в первый момент ΔU·I',fmt(du*i0,4)+' Вт');
+if(fu!==null)h+=row('Ток относительно номинала предохранителя',fmt(i0/fu,4)+'·In');
+var st,over=gt(i0,ich)||gt(i0,idis);
+if(over)st='Начальный ток выравнивания '+fx(i0,lim)+' А больше допустимого '+(gt(i0,ich)&&gt(i0,idis)?'тока заряда и разряда':(gt(i0,ich)?'тока заряда':'тока разряда'))+' — выровняйте заряд АКБ до соединения'+(same?'':'; к тому же батареи разные, а изготовители требуют одинаковые');
+else if(!same)st='Недостаточно данных: изготовители допускают параллельную работу только одинаковых батарей — ток показан справочно';
+else if(du===0)st='Оценка: напряжения покоя равны — в первый момент ток выравнивания не возникает';
+else if(fu!==null&&gt(i0,fu))st='Риск срабатывания предохранителя: начальный ток '+fx(i0,fu)+' А больше его номинала '+fx(fu,i0)+' А, хотя и в пределах допустимых токов АКБ';
+else st='Оценка: начальный ток выравнивания '+fx(i0,lim)+' А не больше допустимых токов АКБ';
+var n='Ток в первый момент после соединения наибольший: дальше напряжения сближаются, и он спадает. Батарея с меньшим напряжением заряжается, с большим — разряжается тем же током, поэтому ток сравнивается с обоими пределами. ';
+n+='Внутреннее сопротивление в паспорте часто дано как максимум («не более»): при меньшем фактическом сопротивлении ток больше расчётного. ';
+if(over)n+='Victron для своих литиевых батарей указывает: при заметной разнице напряжений состояние заряда выравнивают до соединения — заряжают каждую батарею отдельно. ';
+if(fu!==null&&gt(i0,fu))n+='Сработает ли предохранитель, зависит от длительности тока — по его время-токовой характеристике. ';
+n+='На плюсовом выводе каждой батареи ставят свой предохранитель (Victron); ток выравнивания течёт через оба. ';
+if(!same)n+='Разные батареи делят ток неравно и после выравнивания: Victron допускает параллельно только батареи одной ёмкости и одного артикула. ';
+n+='У LiFePO₄ напряжение покоя мало меняется на большей части диапазона заряда: малая разница напряжений может означать большую разницу заряда, и ток спадает медленно.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

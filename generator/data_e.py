@@ -302,7 +302,7 @@ faqs=[
  ("Всегда ли безопасно 0,5C?","Нет. Для некоторых ячеек допустимо больше, для других меньше; ограничения задаёт производитель."),
  ("Можно заряжать без BMS?","Нет для практической сборки: необходимы корректный зарядный контроллер, защита и, для многосекционной батареи, контроль каждой группы."),
 ],
-related=["battery-charge-time","power-bank-runtime","vremya-raboty-akkumulyatora"],
+related=["battery-charge-time","power-bank-runtime","vremya-raboty-akkumulyatora","tok-razryada-liion-sborki","balansirovka-yacheek-bms"],
 ),
 
 dict(

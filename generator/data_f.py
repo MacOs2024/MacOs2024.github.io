@@ -55,7 +55,7 @@ faqs=[
  ("Складывается ли ток утечки?",
   "При параллельном соединении токи утечки складываются, при последовательном определяются худшим конденсатором — именно он и задаёт распределение напряжения."),
 ],
-related=["soedinenie-rezistorov","energiya-kondensatora","zaryad-kondensatora"],
+related=["soedinenie-rezistorov","energiya-kondensatora","zaryad-kondensatora","raschet-superkondensatora"],
 ),
 
 dict(
@@ -885,7 +885,7 @@ faqs=[
  ("Почему ёмкость указывают в А·ч, а не в Вт·ч?",
   "Ампер-часы удобны для расчёта времени работы при известном токе, но сравнивать батареи разного напряжения по ним нельзя. Корректная мера запаса энергии — ватт-часы: 100 А·ч при 12 В и 50 А·ч при 24 В хранят одинаковые 1200 Вт·ч."),
 ],
-related=["vremya-raboty-akkumulyatora","perevod-ah-wh","raschet-akb-avtonomnoy"],
+related=["vremya-raboty-akkumulyatora","perevod-ah-wh","raschet-akb-avtonomnoy","tok-vyravnivaniya-akb","balansirovka-yacheek-bms"],
 ),
 
 dict(

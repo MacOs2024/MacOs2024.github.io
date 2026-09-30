@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ток разряда Li-ion сборки: BMS и предохранитель — ВольтКальк</title>
+<meta name="description" content="Допустимый длительный и импульсный ток разряда литиевой сборки по паспорту ячейки (ток или C-rate × ёмкость × число параллелей), ток нагрузки при наименьшем напряжении и требования к BMS и предохранителю: напряжение постоянного тока, номинал, отключающая способность по оценке тока КЗ.">
+<link rel="canonical" href="https://macos2024.github.io/tok-razryada-liion-sborki.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Ток разряда Li-ion сборки: BMS и предохранитель — ВольтКальк">
+<meta property="og:description" content="Допустимый длительный и импульсный ток разряда литиевой сборки по паспорту ячейки (ток или C-rate × ёмкость × число параллелей), ток нагрузки при наименьшем напряжении и требования к BMS и предохранителю: напряжение постоянного тока, номинал, отключающая способность по оценке тока КЗ.">
+<meta property="og:url" content="https://macos2024.github.io/tok-razryada-liion-sborki.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Ток разряда Li-ion сборки: BMS и предохранитель","url":"https://macos2024.github.io/tok-razryada-liion-sborki.html","description":"Допустимый длительный и импульсный ток разряда литиевой сборки по паспорту ячейки (ток или C-rate × ёмкость × число параллелей), ток нагрузки при наименьшем напряжении и требования к BMS и предохранителю: напряжение постоянного тока, номинал, отключающая способность по оценке тока КЗ.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Ток разряда Li-ion сборки: BMS и предохранитель","item":"https://macos2024.github.io/tok-razryada-liion-sborki.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему ток нагрузки считается при наименьшем напряжении?","acceptedAnswer":{"@type":"Answer","text":"Инвертор или контроллер двигателя держат мощность, а не ток: по мере разряда напряжение падает, и ток растёт как P / U. Наибольший он в конце разряда, при отсечке ячеек или пороге BMS, — это худший случай для ячеек, BMS и предохранителя."}},{"@type":"Question","name":"Можно ли просто умножить ток ячейки на число параллелей?","acceptedAnswer":{"@type":"Answer","text":"Да, если ячейки одинаковы и соединены симметрично: тогда ток делится поровну. Ячейка с меньшим сопротивлением или с более короткими перемычками берёт больше, поэтому для сборки подбирают ячейки одной партии и делают соединения одинаковыми."}},{"@type":"Question","name":"Что делать, если в паспорте нет импульсного тока?","acceptedAnswer":{"@type":"Answer","text":"Сравнивать пики с длительным током. Импульсный предел в BMS включают, только если его задаёт производитель ячейки, — так прямо пишет руководство Orion BMS."}},{"@type":"Question","name":"Зачем предохранитель, если в сборке есть BMS?","acceptedAnswer":{"@type":"Answer","text":"Предохранитель защищает провода и оборудование от перегрузки и короткого замыкания. Он должен быть рассчитан на постоянный ток и на полное напряжение сборки и уметь отключить ток КЗ литиевой батареи — это сотни и тысячи ампер."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Ток разряда Li-ion сборки: BMS и предохранитель</h1>
+<p class="intro">Сколько ампер можно брать с литиевой сборки, решает <b>паспорт ячейки</b>: длительный и импульсный ток разряда, умноженные на число параллельных ячеек. Калькулятор сравнивает с ними ток нагрузки и показывает требования к BMS и предохранителю. Ток <b>заряда</b> по C-rate считает <a href="liion-charge-current.html">калькулятор тока зарядки Li-ion</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Ток разряда Li-ion сборки: BMS и предохранитель</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_s"><label for="s">Ячеек последовательно S</label><div class="fw"><input id="s" type="text" inputmode="decimal" autocomplete="off" value="13" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_p"><label for="p">Ячеек параллельно P</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="4" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_cap"><label for="cap">Ёмкость ячейки по паспорту</label><div class="fw"><input id="cap" type="text" inputmode="decimal" autocomplete="off" value="2,5" placeholder=""><span class="u">А·ч</span></div></div><div class="f" id="f_umax"><label for="umax">Напряжение полностью заряженной ячейки</label><div class="fw"><input id="umax" type="text" inputmode="decimal" autocomplete="off" value="4,2" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_umin"><label for="umin">Наименьшее напряжение ячейки под нагрузкой</label><div class="fw"><input id="umin" type="text" inputmode="decimal" autocomplete="off" value="2,5" placeholder=""><span class="u">В</span></div><div class="hint">Отсечка разряда по паспорту ячейки или порог BMS, если он выше</div></div><div class="f" id="f_spec"><label for="spec">Как в паспорте задан ток разряда</label><div class="fw"><select id="spec"><option value="a" selected>В амперах</option><option value="c">Через C-rate</option></select></div></div><div class="f" id="f_ica"><label for="ica">Длительный ток разряда ячейки по паспорту</label><div class="fw"><input id="ica" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_ipa"><label for="ipa">Импульсный ток разряда ячейки по паспорту</label><div class="fw"><input id="ipa" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">А</span></div><div class="hint">Только если производитель задаёт импульсный ток и его длительность; иначе оставьте пустым</div></div><div class="f" id="f_crc"><label for="crc">Длительный C-rate разряда по паспорту</label><div class="fw"><input id="crc" type="text" inputmode="decimal" autocomplete="off" value="8" placeholder=""><span class="u">C</span></div></div><div class="f" id="f_crp"><label for="crp">Импульсный C-rate разряда по паспорту</label><div class="fw"><input id="crp" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">C</span></div><div class="hint">Только если производитель задаёт импульсный режим; иначе оставьте пустым</div></div><div class="f" id="f_tpk"><label for="tpk">Длительность импульса по паспорту</label><div class="fw"><input id="tpk" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">с</span></div></div><div class="f" id="f_lmode"><label for="lmode">Нагрузка задана</label><div class="fw"><select id="lmode"><option value="p" selected>Мощностью</option><option value="i">Током</option></select></div></div><div class="f" id="f_pl"><label for="pl">Длительная мощность нагрузки</label><div class="fw"><input id="pl" type="text" inputmode="decimal" autocomplete="off" value="1000" placeholder=""><span class="u">Вт</span></div></div><div class="f" id="f_eta"><label for="eta">КПД преобразователя между батареей и нагрузкой</label><div class="fw"><input id="eta" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">%</span></div><div class="hint">Мощность на выходе инвертора, контроллера или DC-DC — укажите его КПД по паспорту; если это мощность, взятая от батареи, — 100 %</div></div><div class="f" id="f_il"><label for="il">Длительный ток нагрузки</label><div class="fw"><input id="il" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_ppk"><label for="ppk">Пиковая мощность нагрузки</label><div class="fw"><input id="ppk" type="text" inputmode="decimal" autocomplete="off" value="2000" placeholder=""><span class="u">Вт</span></div><div class="hint">Пусковой или кратковременный режим; пиков нет — оставьте пустым вместе с длительностью пика</div></div><div class="f" id="f_ipk"><label for="ipk">Пиковый ток нагрузки</label><div class="fw"><input id="ipk" type="text" inputmode="decimal" autocomplete="off" value="60" placeholder=""><span class="u">А</span></div><div class="hint">Пиков нет — оставьте пустым вместе с длительностью пика</div></div><div class="f" id="f_tl"><label for="tl">Длительность пика нагрузки</label><div class="fw"><input id="tl" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">с</span></div></div><div class="f" id="f_temp"><label for="temp">Температура ячеек при разряде</label><div class="fw"><select id="temp"><option value="ok" selected>В диапазоне, для которого в паспорте задан этот ток</option><option value="no">Вне этого диапазона или неизвестна</option></select></div></div><div class="f" id="f_rcell"><label for="rcell">Внутреннее сопротивление ячейки по паспорту</label><div class="fw"><input id="rcell" type="text" inputmode="decimal" autocomplete="off" value="18" placeholder=""><span class="u">мОм</span></div><div class="hint">Для оценки тока КЗ и отключающей способности предохранителя; нет данных — оставьте пустым</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Ток разряда Li-ion сборки: как считается</h2>
+<div class="formula">I<sub>дл</sub> = I<sub>ячейки</sub> · P&nbsp;&nbsp;или&nbsp;&nbsp;I<sub>дл</sub> = C-rate · C<sub>ячейки</sub> · P;&nbsp;&nbsp;I<sub>имп</sub> = I<sub>имп,ячейки</sub> · P не дольше паспортного времени<br>I<sub>нагр</sub> = P<sub>нагр</sub> / (η · S · U<sub>min</sub>)<br>Предохранитель: U<sub>ном,DC</sub> ≥ S · U<sub>max</sub>;&nbsp;&nbsp;I<sub>ном</sub> ≥ I<sub>нагр</sub> / 0,75;&nbsp;&nbsp;I<sub>откл</sub> ≥ I<sub>КЗ</sub> ≈ S·U<sub>max</sub> / (S·R<sub>ячейки</sub>/P) = P·U<sub>max</sub> / R<sub>ячейки</sub></div>
+<p><b>Допустимый ток сборки.</b> Предел задаёт производитель ячейки: в паспорте это длительный ток разряда в амперах или C-rate. C-rate — ток, численно равный ёмкости в ампер-часах (TI): ячейка 2,5 А·ч при 8C отдаёт 20 А. Последовательные ячейки несут один и тот же ток, параллельные делят его, поэтому допустимый ток сборки — ток ячейки, умноженный на число параллелей P. Делятся токи поровну только у одинаковых ячеек с одинаковым сопротивлением соединений: ячейка с меньшим сопротивлением берёт больше, поэтому подбирают ячейки одной партии и делают симметричные соединения.</p>
+<p><b>Ток нагрузки.</b> Инвертор, контроллер двигателя или DC-DC потребляют почти постоянную мощность, и по мере разряда ток растёт: I = P / (η·U). Наибольший он при наименьшем напряжении сборки — S, умноженном на отсечку разряда ячейки или порог BMS. Если известен ток нагрузки, его вводят напрямую.</p>
+<p><b>Пики.</b> Кратковременный ток сравнивается с импульсным током из паспорта, если пик не дольше паспортной длительности импульса. Если производитель импульсный режим не задаёт, пик сравнивается с длительным током: в руководстве Orion BMS импульсные пределы включают, только если их задаёт производитель ячеек.</p>
+<p><b>BMS.</b> Она должна пропускать ток нагрузки и её пики, не отключаясь, а её собственный предел тока разряда не должен превышать предел производителя ячеек (Orion BMS). Если ток нагрузки больше допустимого тока ячеек, такого окна нет — нужна сборка с большим числом параллелей или ячейки с большим током.</p>
+<p><b>Предохранитель.</b> Руководство Littelfuse требует: номинальное напряжение предохранителя не ниже напряжения цепи — для батареи это напряжение полностью заряженной сборки и номинал именно для постоянного тока; отключающая способность не меньше наибольшего тока КЗ цепи; при 25 °C рабочий ток не больше 75 % номинала, то есть номинал не меньше I<sub>нагр</sub> / 0,75. Сверху номинал ограничен допустимым током кабеля. Victron напоминает, что литиевые батареи дают очень большие токи КЗ, и у предохранителя важен не только длительный ток, но и отключающая способность.</p>
+<p><b>Ток КЗ.</b> Батарея — источник ЭДС с внутренним сопротивлением, и при коротком замыкании ток ограничен только им: I = U / R. Сопротивления последовательных ячеек складываются, параллельных — делятся на P. Оценка по паспортному сопротивлению ячеек без проводов, контактов и ключей BMS — сверху: провода ток уменьшают. Но если паспорт даёт сопротивление как «не более», фактическое бывает меньше, и ток КЗ — больше.</p>
+<table class="t"><tr><th scope="col">Что взять из паспорта ячейки</th><th scope="col">Зачем</th></tr>
+<tr><td>Номинальная ёмкость, А·ч</td><td>перевод C-rate в амперы</td></tr>
+<tr><td>Длительный ток разряда и его условия (температура)</td><td>допустимый ток сборки</td></tr>
+<tr><td>Импульсный ток и его длительность, если заданы</td><td>проверка пиков нагрузки</td></tr>
+<tr><td>Напряжение конца заряда и отсечки разряда</td><td>напряжение предохранителя и наибольший ток нагрузки</td></tr>
+<tr><td>Внутреннее сопротивление</td><td>ток КЗ и отключающая способность</td></tr></table>
+<p><b>Чем отличается от расчёта заряда.</b> <a href="liion-charge-current.html">Калькулятор тока зарядки Li-ion</a> переводит зарядный C-rate в амперы. Допустимый ток разряда у той же ячейки обычно другой, а для защиты сборки нужны ещё BMS и предохранитель — их требования считает эта страница.</p>
+<h2>Ток разряда Li-ion сборки: пример расчёта</h2>
+<p>Сборка 13S4P из ячеек Samsung INR18650-25R. По паспорту ячейки: 2,5 А·ч, длительный разряд 20 А при 25 °C, заряд до 4,2 В, отсечка 2,5 В, внутреннее сопротивление не более 18 мОм на 1 кГц; импульсный ток не задан. Допустимый длительный ток сборки 4 · 20 = <b>80 А</b>. Нагрузка берёт от батареи 1000 Вт: при 13 · 2,5 = 32,5 В ток <b>30,77 А</b>. Пик 2000 Вт на 10 с — 61,54 А: импульсного тока в паспорте нет, пик сравнивается с 80 А и укладывается в него.</p>
+<p>BMS должна пропускать 30,77 А длительно и 61,54 А в течение 10 с, а её предел — не выше 80 А. Предохранитель: номинальное напряжение постоянного тока не меньше 13 · 4,2 = 54,6 В, номинал не меньше 30,77 / 0,75 = 41,03 А, отключающая способность не меньше 4 · 4,2 / 0,018 ≈ 933,3 А. Если та же сборка питает 3000 Вт, ток 92,31 А больше допустимых 80 А.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему ток нагрузки считается при наименьшем напряжении?</h3><p>Инвертор или контроллер двигателя держат мощность, а не ток: по мере разряда напряжение падает, и ток растёт как P / U. Наибольший он в конце разряда, при отсечке ячеек или пороге BMS, — это худший случай для ячеек, BMS и предохранителя.</p><h3>Можно ли просто умножить ток ячейки на число параллелей?</h3><p>Да, если ячейки одинаковы и соединены симметрично: тогда ток делится поровну. Ячейка с меньшим сопротивлением или с более короткими перемычками берёт больше, поэтому для сборки подбирают ячейки одной партии и делают соединения одинаковыми.</p><h3>Что делать, если в паспорте нет импульсного тока?</h3><p>Сравнивать пики с длительным током. Импульсный предел в BMS включают, только если его задаёт производитель ячейки, — так прямо пишет руководство Orion BMS.</p><h3>Зачем предохранитель, если в сборке есть BMS?</h3><p>Предохранитель защищает провода и оборудование от перегрузки и короткого замыкания. Он должен быть рассчитан на постоянный ток и на полное напряжение сборки и уметь отключить ток КЗ литиевой батареи — это сотни и тысячи ампер.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.ti.com/lit/an/snva533/snva533.pdf" rel="nofollow noopener" target="_blank">Characteristics of Rechargeable Batteries (SNVA533)</a> — Texas Instruments — Редакция SNVA533, July 2011 — раздел C-rate — ток, численно равный ёмкости в А·ч — обращение 30.09.2026</li><li><a href="https://files.batteryjunction.com/frontend/files/samsung/datasheet/SAMSUNG-INR18650-25R-Datasheet.pdf" rel="nofollow noopener" target="_blank">Specification of product INR18650-25R</a> — Samsung SDI — Редакция Version No. 1.0; значения видны в выдаче — раздел 2500 мА·ч; длительный разряд 20 А при 25 °C, заряд до 4,2 В, отсечка разряда 2,5 В, внутреннее сопротивление не более 18 мОм на 1 кГц — обращение 30.09.2026</li><li><a href="https://www.orionbms.com/manuals/pdf/operational_manual.pdf" rel="nofollow noopener" target="_blank">Orion BMS Operation Manual</a> — Ewert Energy Systems — Редакция Rev 2.1; положения видны в пересказе выдачи — раздел предел тока BMS не выше предела производителя ячеек, импульсные пределы — только если их задаёт производитель ячеек — обращение 30.09.2026</li><li><a href="https://www.littelfuse.com/assetdocs/fuseology-selection-guide?assetguid=d812dff2-1c47-4dc3-bce7-07a4001ddc32" rel="nofollow noopener" target="_blank">Fuseology Design Guide</a> — Littelfuse — Редакция редакция на дату обращения; положения видны в выдаче — раздел номинальное напряжение предохранителя не ниже напряжения цепи, отключающая способность не меньше наибольшего тока КЗ цепи, при 25 °C рабочий ток не больше 75 % номинала — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/media/pg/The_Wiring_Unlimited_book/en/dc-wiring.html" rel="nofollow noopener" target="_blank">Wiring Unlimited — 4. DC wiring</a> — Victron Energy — Редакция онлайн-редакция книги на дату обращения; положения видны в пересказе выдачи — раздел предохранитель выбирают по длительному току и по отключающей способности, литиевые батареи дают очень большие токи КЗ — обращение 30.09.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.1 Electromotive Force — внутреннее сопротивление, I = ε / (r + R), 10.2 Resistors in Series and Parallel — обращение 30.09.2026</li><li><a href="https://marinehowto.com/calculating-lifepo4-short-circuit-current/" rel="nofollow noopener" target="_blank">Calculating LiFePO4 Short Circuit Current</a> — Marine How To (Rod Collins), вторичный источник — Редакция онлайн-статья на дату обращения; видна в выдаче — раздел I = V / R, R — сумма сопротивлений ячеек и соединений, пример 13,313 В / 1,56 мОм ≈ 8533 А — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Ток между параллельными ячейками делится поровну.</li><li>Нагрузка задана мощностью — её ток наибольший при наименьшем напряжении сборки.</li><li>Пик нагрузки прямоугольный: постоянный ток в течение заданного времени.</li><li>Ток КЗ оценён по паспортному сопротивлению ячеек без проводов, контактов и ключей BMS.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не считает нагрев ячеек и сборки: паспортный ток задан для условий производителя.</li><li>Не выбирает конкретные BMS и предохранитель: их допустимые токи и время-токовые характеристики берут из паспортов.</li><li>Не проверяет сечение кабеля — номинал предохранителя не должен превышать его допустимый ток.</li><li>Правило 75 % — из руководства Littelfuse для 25 °C; у других типов и производителей предохранителей поправки свои.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="liion-charge-current.html">Ток зарядки Li-ion по C-rate</a></li><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="balansirovka-yacheek-bms.html">Пассивная балансировка ячеек Li-ion</a></li><li><a href="raschet-invertora.html">Подбор инвертора и кабеля от аккумулятора</a></li><li><a href="vremya-raboty-akkumulyatora.html">Время работы от аккумулятора</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+
+function sync(){var c=S('spec')==='c',p=S('lmode')==='p';
+hideF('ica',c);hideF('ipa',c);hideF('crc',!c);hideF('crp',!c);
+hideF('pl',!p);hideF('eta',!p);hideF('ppk',!p);hideF('il',p);hideF('ipk',p);}
+function init(){$('spec').addEventListener('change',sync);$('lmode').addEventListener('change',sync);sync();}
+function calc(){
+var s=P('s'),np=P('p'),cap=P('cap'),umax=P('umax'),umin=P('umin'),cr=S('spec')==='c',pm=S('lmode')==='p',hot=S('temp')!=='ok';
+if([s,np,cap,umax,umin].some(isNaN))return err('Заполните схему сборки, ёмкость и напряжения ячейки.');
+if(s<1||np<1||Math.floor(s)!==s||Math.floor(np)!==np||s>1000||np>1000)return err('Число ячеек последовательно и параллельно — целые числа от 1 до 1000.');
+if(cap<=0)return err('Ёмкость ячейки должна быть больше нуля.');
+if(umin<=0||umax>5)return err('Напряжения ячейки Li-ion задаются больше 0 и не больше 5 В.');
+if(!(umax>umin))return err('Напряжение полностью заряженной ячейки должно быть больше наименьшего напряжения под нагрузкой.');
+var ic,ipl=null,tpk=OPT('tpk');
+if(cr){var a=P('crc'),b=OPT('crp');
+ if(isNaN(a))return err('Введите длительный C-rate разряда по паспорту ячейки.');if(a<=0)return err('C-rate разряда должен быть больше нуля.');
+ ic=a*cap;
+ if(b!==null){if(isNaN(b))return err('Импульсный C-rate — число. Если в паспорте его нет, оставьте поле пустым.');if(!(b>a))return err('Импульсный C-rate должен быть больше длительного.');ipl=b*cap;}}
+else{ic=P('ica');var b2=OPT('ipa');
+ if(isNaN(ic))return err('Введите длительный ток разряда ячейки по паспорту.');if(ic<=0)return err('Ток разряда ячейки должен быть больше нуля.');
+ if(b2!==null){if(isNaN(b2))return err('Импульсный ток — число. Если в паспорте его нет, оставьте поле пустым.');if(!(b2>ic))return err('Импульсный ток должен быть больше длительного.');ipl=b2;}}
+if(tpk!==null){if(isNaN(tpk))return err('Длительность импульса — число в секундах.');if(tpk<=0)return err('Длительность импульса должна быть больше нуля.');}
+if(ipl!==null&&tpk===null)return err('Для импульсного тока задайте его длительность по паспорту.');
+if(ipl===null&&tpk!==null)return err('Длительность импульса задана без импульсного тока — заполните оба поля или оставьте оба пустыми.');
+var ul=s*umin,uh=s*umax,il,ilp=null,tl=OPT('tl'),k=1;
+if(pm){var pl=P('pl'),eta=P('eta'),pp=OPT('ppk');
+ if(isNaN(pl)||isNaN(eta))return err('Введите мощность нагрузки и КПД преобразователя.');
+ if(pl<=0)return err('Мощность нагрузки должна быть больше нуля.');
+ if(eta<=0||eta>100)return err('КПД задаётся в процентах: больше 0 и не больше 100.');
+ k=eta/100;il=pl/(k*ul);
+ if(pp!==null){if(isNaN(pp))return err('Пиковая мощность — число. Если пиков нет, оставьте поле пустым.');if(!(pp>pl))return err('Пиковая мощность должна быть больше длительной.');ilp=pp/(k*ul);}}
+else{il=P('il');var ip=OPT('ipk');
+ if(isNaN(il))return err('Введите длительный ток нагрузки.');if(il<=0)return err('Ток нагрузки должен быть больше нуля.');
+ if(ip!==null){if(isNaN(ip))return err('Пиковый ток — число. Если пиков нет, оставьте поле пустым.');if(!(ip>il))return err('Пиковый ток должен быть больше длительного.');ilp=ip;}}
+if(tl!==null){if(isNaN(tl))return err('Длительность пика — число в секундах.');if(tl<=0)return err('Длительность пика должна быть больше нуля.');}
+if(ilp!==null&&tl===null)return err('Для пика нагрузки задайте его длительность.');
+if(ilp===null&&tl!==null)return err('Длительность пика задана без пиковой нагрузки — заполните оба поля или оставьте оба пустыми.');
+var rc=OPT('rcell');
+if(rc!==null){if(isNaN(rc))return err('Внутреннее сопротивление — число в миллиомах. Если его нет, оставьте поле пустым.');if(rc<=0)return err('Внутреннее сопротивление должно быть больше нуля.');}
+var icn=np*ic,ipn=ipl!==null?np*ipl:NaN,isc=rc!==null?np*umax/(rc/1000):NaN;
+if(![icn,il,uh].every(isFinite)||(ilp!==null&&!isFinite(ilp))||(ipl!==null&&!isFinite(ipn))||(rc!==null&&!isFinite(isc)))return err('Значения вне диапазона надёжного расчёта.');
+var inP=ilp!==null&&ipl!==null&&le(tl,tpk),plim=inP?ipn:icn;
+var h=row('Сборка',s+'S'+np+'P: всего ячеек — '+(s*np)+', ёмкость '+fmt(np*cap,4)+' А·ч')+
+ row('Напряжение сборки: заряжена / наименьшее под нагрузкой',fmt(uh,4)+' / '+fmt(ul,4)+' В')+
+ row('Допустимый длительный ток сборки '+(cr?'C-rate · C · P':'Iячейки · P'),fx(icn,il)+' А');
+h+=ipl!==null?row('Допустимый импульсный ток сборки',fmt(ipn,4)+' А не дольше '+fmt(tpk,4)+' с'):row('Импульсный ток','в паспорте не задан — пики сравниваются с длительным током');
+h+=row(pm?'Ток нагрузки при наименьшем напряжении P / (η·S·Umin)':'Ток нагрузки',fx(il,icn)+' А — '+fmt(il/(np*cap),4)+'C, по '+fmt(il/np,4)+' А на ячейку при равном делении');
+if(ilp!==null)h+=row('Пиковый ток нагрузки',fx(ilp,plim)+' А в течение '+(ipl!==null?fx(tl,tpk):fmt(tl,4))+' с');
+h+=row('BMS должна пропускать без отключения','не меньше '+fmt(il,4)+' А длительно'+(ilp!==null?' и '+fmt(ilp,4)+' А в течение '+fmt(tl,4)+' с':''))+
+ row('Предел тока разряда в настройке BMS','не выше '+fmt(icn,4)+' А длительно'+(ipl!==null?' и '+fmt(ipn,4)+' А не дольше '+fmt(tpk,4)+' с':'')+' — по паспорту ячеек')+
+ row('Предохранитель: номинальное напряжение постоянного тока','не меньше '+fmt(uh,4)+' В')+
+ row('Предохранитель: номинальный ток','не меньше '+fmt(il/0.75,4)+' А (длительный ток / 0,75 при 25 °C) и не больше допустимого тока кабеля')+
+ row('Предохранитель: отключающая способность при постоянном токе',isNaN(isc)?'не оценена — нужен ожидаемый ток КЗ сборки':'не меньше ожидаемого тока КЗ ≈ '+fmt(isc,4)+' А (P·Umax / Rячейки, без проводов и BMS)');
+var st;
+if(hot)st='Недостаточно данных: паспортный ток разряда задан для своего диапазона температур ячейки — вне его допустимый ток по паспорту не определён';
+else if(gt(il,icn))st='Ток нагрузки '+fx(il,icn)+' А больше допустимого длительного тока сборки '+fx(icn,il)+' А по паспорту ячейки';
+else if(inP&&gt(ilp,ipn))st='Пиковый ток нагрузки '+fx(ilp,ipn)+' А больше допустимого импульсного тока сборки '+fx(ipn,ilp)+' А по паспорту ячейки';
+else if(ilp!==null&&ipl!==null&&!inP&&gt(ilp,icn))st='Пик '+fx(ilp,icn)+' А длится дольше паспортного импульса ('+fx(tl,tpk)+' с против '+fx(tpk,tl)+' с) и больше длительного тока '+fx(icn,ilp)+' А — паспорт ячейки такой режим не допускает';
+else if(ilp!==null&&ipl===null&&gt(ilp,icn))st='Недостаточно данных: пиковый ток '+fx(ilp,icn)+' А больше длительного тока сборки '+fx(icn,ilp)+' А, а импульсный ток в паспорте не задан';
+else st='Оценка: длительный ток нагрузки '+fx(il,icn)+' А не больше допустимого '+fx(icn,il)+' А'+(ilp!==null?'; пик '+fx(ilp,plim)+' А — в пределах '+(inP?'импульсного':'длительного')+' тока '+fx(plim,ilp)+' А':'');
+var n='Паспортный ток ячейки умножен на число параллелей: так ток делится только при одинаковых ячейках и одинаковом сопротивлении соединений — ячейка с меньшим сопротивлением берёт больше. ';
+if(pm)n+='Ток нагрузки постоянной мощности растёт по мере разряда: наибольший он при наименьшем напряжении сборки, так и считается. ';
+if(hot)n+='Вне паспортного диапазона температур допустимый ток не задан — возьмите данные производителя для этой температуры. ';
+if(ilp!==null&&ipl===null)n+='Импульсный предел в BMS включают, только если его задаёт производитель ячейки (Orion BMS); иначе пики ограничены длительным током. ';
+n+='Предохранитель выбирают с номинальным напряжением для постоянного тока и с отключающей способностью не меньше тока КЗ сборки (Littelfuse); пики нагрузки сверяют с его время-токовой характеристикой. ';
+if(rc!==null)n+='Ток КЗ оценён по паспортному сопротивлению ячеек; если в паспорте указан максимум («не более»), фактический ток КЗ может быть больше. ';
+n+='Ток заряда по C-rate считают отдельно — калькулятор тока зарядки Li-ion.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

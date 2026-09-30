@@ -95,7 +95,7 @@ const infoPages = ["privacy.html", "about.html"];
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
   .sort();
-check(htmlFiles.length === 134, `Ожидался 134 HTML-файлов, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 138, `Ожидался 138 HTML-файлов, найдено ${htmlFiles.length}`);
 
 // Совет закоротить заряженный конденсатор перемычкой, отвёрткой или
 // закороткой опасен: при запасённой энергии это даёт дугу и разбрызгивание
@@ -1108,7 +1108,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 134, `В sitemap должно быть 134 URL (корень + about + 132 калькулятора), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 138, `В sitemap должно быть 138 URL (корень + about + 136 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 
@@ -2486,6 +2486,275 @@ await calculateWithout("ustavka-teplovogo-rele.html", { im: "13,0004" }, ["Ди�
 for (const [tp, cls] of [["2", "10A"], ["2,01", "10"], ["4", "10"], ["4,01", "20"], ["6", "20"], ["6,01", "30"], ["9", "30"]])
   await calculate("ustavka-teplovogo-rele.html", { tp }, ["Наименьший класс, гарантирующий пуск" + cls + "Статус"], "boundary");
 await calculate("ustavka-teplovogo-rele.html", { tp: "9,01" }, ["ни один из классов 10A–30"], "boundary");
+
+// ===========================================================================
+// --- Партия №4, data_o.py ---
+// «Аккумуляторы и накопители»: пассивная балансировка ячеек Li-ion, ток
+// разряда Li-ion сборки с требованиями к BMS и предохранителю,
+// суперконденсатор для импульсной нагрузки, ток выравнивания двух АКБ.
+// Ожидаемые значения посчитаны отдельным скриптом (scratchpad o/ref.py) с
+// округлением как у toPrecision (половина — вверх), а не кодом страниц;
+// расчёт — в комментариях. Для суперконденсатора при постоянной мощности
+// время посчитано численной квадратурой t = (C/P)·∫u(v)dv по напряжению
+// идеальной ёмкости, а не замкнутой формулой страницы.
+// ===========================================================================
+
+// --- 1. balansirovka-yacheek-bms: TI SLUAA81A, ADI, TI SLUAAR1 ---
+// Эталон 1 (пример TI для BQ769x2): I = 4,2 / (2·20 + 25) = 64,62 мА; P = 4,2·0,06462 = 0,2714 Вт;
+// в резисторах 0,06462²·40 = 0,167 Вт, в ключе ·25 = 0,1044 Вт (у TI «около 0,1 Вт»);
+// ΔQ = 3 А·ч · 5 % = 150 мА·ч; t = 0,15 / 0,06462 = 2,321 ч; E = 4,2·0,15 = 0,63 Вт·ч = 2268 Дж.
+await calculateWithout("balansirovka-yacheek-bms.html", {}, ["Ток балансировки I = U / (Rрез + Rключа)64,62 мА", "Мощность в цепи балансировки P = U·I0,2714 Вт", "Из неё в резисторах / в ключе (I²·R)0,167 / 0,1044 Вт", "Разбаланс по заряду ΔQ150 мА·ч (5 % SoC)", "Время выравнивания t = ΔQ / Iср2,321 ч", "Тепло в цепи балансировки E = U·ΔQ0,63 Вт·ч (2,268 кДж)", "СтатусОценка: разбаланс 150 мА·ч выравнивается примерно за 2,321 ч работы балансировки"], ["Средний ток", "Циклов", "Недостаточно данных"]);
+// Эталон 2 (пример Battery Design): 30 мА, разница 8 А·ч → 8 / 0,03 = 266,7 ч = 11,11 сут; E = 3,6·8 = 28,8 Вт·ч = 103,7 кДж.
+await calculateWithout("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "8", dah_unit: "1", cap: "10", imode: "i", ib: "30", u: "3,6" }, ["Ток балансировки по паспорту BMS30 мА", "Мощность в цепи балансировки P = U·I0,108 Вт", "Разбаланс по заряду ΔQ8000 мА·ч (80 % SoC)", "Время выравнивания t = ΔQ / Iср266,7 ч (11,11 сут)", "Тепло в цепи балансировки E = U·ΔQ28,8 Вт·ч (103,7 кДж)"], ["Из неё в резисторах"]);
+// Доля времени 50 %: Iср = 32,31 мА, t = 4,643 ч; по 1 ч за цикл — ⌈4,643⌉ = 5 циклов.
+await calculate("balansirovka-yacheek-bms.html", { duty: "50", tcyc: "1" }, ["Средний ток при доле времени 50 %32,31 мА", "Время выравнивания t = ΔQ / Iср4,643 ч", "Циклов заряда при 1 ч балансировки за циклне меньше 5", "BQ769x2 на время измерения"]);
+// По напряжению для NMC с наклоном из паспорта: 12 мВ / 8 мВ/% = 1,5 % → 45 мА·ч; t = 0,045 / 0,06462 = 0,6964 ч = 41,79 мин;
+// E = 4,2·0,045 = 0,189 Вт·ч = 680,4 Дж.
+await calculate("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", du: "12", slope: "8" }, ["Разбаланс по наклону кривой OCV: ΔSoC = ΔU / k1,5 %", "Разбаланс по заряду ΔQ45 мА·ч", "Время выравнивания t = ΔQ / Iср41,79 мин", "Тепло в цепи балансировки E = U·ΔQ0,189 Вт·ч (680,4 Дж)", "СтатусОценка: разбаланс 45 мА·ч выравнивается примерно за 41,79 мин работы балансировки (по наклону кривой OCV из паспорта)", "в покое, после отдыха без тока"]);
+// Рискованный вывод: разница напряжений LiFePO₄ в разбаланс не пересчитывается — даже если в скрытом поле остался наклон.
+await calculateWithout("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "lfp", du: "12" }, ["Ток балансировки I = U / (Rрез + Rключа)64,62 мА", "СтатусНедостаточно данных: у LiFePO₄ напряжение покоя почти не меняется на большей части диапазона SoC", "10–85 % SoC"], ["Время выравнивания", "Разбаланс по заряду", "Оценка"]);
+await calculateWithout("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "lfp", du: "12", slope: "8" }, ["СтатусНедостаточно данных: у LiFePO₄"], ["Время выравнивания", "Оценка"]);
+await calculateWithout("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", du: "12", slope: "" }, ["СтатусНедостаточно данных: чтобы пересчитать разницу напряжений в разбаланс заряда, нужен наклон кривой OCV–SoC из паспорта этой ячейки"], ["Время выравнивания", "Оценка"]);
+// Границы: разбаланс, равный ёмкости, и 100 % SoC допустимы (3 / 0,06462 = 46,43 ч), больше — ошибка.
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "3000" }, ["Разбаланс по заряду ΔQ3000 мА·ч (100 % SoC)", "46,43 ч"], "boundary");
+await calculate("balansirovka-yacheek-bms.html", { dsoc: "100" }, ["Разбаланс по заряду ΔQ3000 мА·ч (100 % SoC)", "46,43 ч"], "boundary");
+await calculate("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", du: "200", slope: "2" }, ["ΔSoC = ΔU / k100 %", "46,43 ч"], "boundary");
+// Переход единиц времени: 100 мА·ч при 100 мА — ровно 1 ч; 99,9 — 59,94 мин; 48 ч — уже с сутками, 47,9 ч — без.
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "100", imode: "i", ib: "100" }, ["Время выравнивания t = ΔQ / Iср1 ч"], "boundary");
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "99,9", imode: "i", ib: "100" }, ["Время выравнивания t = ΔQ / Iср59,94 мин"], "boundary");
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "4800", cap: "10", imode: "i", ib: "100" }, ["Время выравнивания t = ΔQ / Iср48 ч (2 сут)"], "boundary");
+await calculateWithout("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "4790", cap: "10", imode: "i", ib: "100" }, ["Время выравнивания t = ΔQ / Iср47,9 ч"], ["сут"], "boundary");
+// Циклы: ровно 2 ч при 1 ч за цикл — 2 цикла; 2,001 ч — уже 3.
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "200", imode: "i", ib: "100", tcyc: "1" }, ["Циклов заряда при 1 ч балансировки за циклне меньше 2"], "boundary");
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "200,1", imode: "i", ib: "100", tcyc: "1" }, ["Циклов заряда при 1 ч балансировки за циклне меньше 3"], "boundary");
+// Доля 99,99 % уже влияет на расчёт: 64,61 мА и 2,322 ч.
+await calculate("balansirovka-yacheek-bms.html", { duty: "99,99" }, ["Средний ток при доле времени 99,99 %64,61 мА", "2,322 ч"], "boundary");
+await invalid("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "3000,1" }, "не может быть больше ёмкости ячейки");
+await invalid("balansirovka-yacheek-bms.html", { dsoc: "100,01" }, "Разбаланс по SoC — больше 0 и не больше 100 %");
+await invalid("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", du: "500", slope: "2" }, "больше 100 % SoC");
+await invalid("balansirovka-yacheek-bms.html", { cap: "3 А·ч" }, "Введите ёмкость ячейки");
+await invalid("balansirovka-yacheek-bms.html", { u: "0" }, "Напряжение ячейки при балансировке");
+await invalid("balansirovka-yacheek-bms.html", { u: "5,01" }, "Напряжение ячейки при балансировке");
+await invalid("balansirovka-yacheek-bms.html", { duty: "0" }, "Доля времени балансировки");
+await invalid("balansirovka-yacheek-bms.html", { rb: "-1" }, "Сопротивления не могут быть отрицательными");
+await invalid("balansirovka-yacheek-bms.html", { rb: "0", rsw: "0" }, "Сопротивление цепи балансировки должно быть больше нуля");
+await invalid("balansirovka-yacheek-bms.html", { imode: "i", ib: "0" }, "Ток балансировки должен быть больше нуля");
+await invalid("balansirovka-yacheek-bms.html", { imode: "i", ib: "abc" }, "Введите ток балансировки");
+await invalid("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", slope: "abc" }, "Наклон кривой OCV–SoC — число");
+await invalid("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", du: "0", slope: "8" }, "Разница напряжений должна быть больше нуля");
+await invalid("balansirovka-yacheek-bms.html", { tcyc: "0" }, "Время балансировки за цикл должно быть больше нуля");
+await invalid("balansirovka-yacheek-bms.html", { tcyc: "час" }, "Время балансировки за цикл — число");
+
+// --- 2. tok-razryada-liion-sborki: паспорт ячейки, Orion BMS, Littelfuse ---
+// Эталон 1 (пример на странице, Samsung INR18650-25R): 13S4P, 20 А · 4 = 80 А; 1000 Вт / (13·2,5 В) = 30,77 А (3,077C,
+// 7,692 А на ячейку); пик 2000 Вт → 61,54 А ≤ 80 А; предохранитель: 13·4,2 = 54,6 В, 30,77 / 0,75 = 41,03 А,
+// ток КЗ 4·4,2 / 0,018 = 933,3 А (то же, что 13·4,2 / (13·0,018/4)).
+await calculate("tok-razryada-liion-sborki.html", {}, ["Сборка13S4P: всего ячеек — 52, ёмкость 10 А·ч", "Напряжение сборки: заряжена / наименьшее под нагрузкой54,6 / 32,5 В", "Допустимый длительный ток сборки Iячейки · P80 А", "Импульсный токв паспорте не задан — пики сравниваются с длительным током", "Ток нагрузки при наименьшем напряжении P / (η·S·Umin)30,77 А — 3,077C, по 7,692 А на ячейку при равном делении", "Пиковый ток нагрузки61,54 А в течение 10 с", "BMS должна пропускать без отключенияне меньше 30,77 А длительно и 61,54 А в течение 10 с", "Предел тока разряда в настройке BMSне выше 80 А длительно — по паспорту ячеек", "Предохранитель: номинальное напряжение постоянного токане меньше 54,6 В", "Предохранитель: номинальный токне меньше 41,03 А (длительный ток / 0,75 при 25 °C)", "не меньше ожидаемого тока КЗ ≈ 933,3 А", "СтатусОценка: длительный ток нагрузки 30,77 А не больше допустимого 80 А; пик 61,54 А — в пределах длительного тока 80 А"]);
+// Эталон 2 (режим C-rate и импульс): 16S1P, 100 А·ч, 1C → 100 А, 2C → 200 А на 10 с; нагрузка 60 А, пик 150 А на 5 с;
+// 16·3,65 = 58,4 В, 16·2,5 = 40 В; 60 / 0,75 = 80 А; ток КЗ 1·3,65 / 0,00025 = 14 600 А.
+await calculate("tok-razryada-liion-sborki.html", { s: "16", p: "1", cap: "100", umax: "3,65", umin: "2,5", spec: "c", crc: "1", crp: "2", tpk: "10", lmode: "i", il: "60", ipk: "150", tl: "5", rcell: "0,25" }, ["Сборка16S1P: всего ячеек — 16, ёмкость 100 А·ч", "58,4 / 40 В", "Допустимый длительный ток сборки C-rate · C · P100 А", "Допустимый импульсный ток сборки200 А не дольше 10 с", "Ток нагрузки60 А — 0,6C, по 60 А на ячейку при равном делении", "Пиковый ток нагрузки150 А в течение 5 с", "не выше 100 А длительно и 200 А не дольше 10 с", "не меньше 80 А (длительный ток / 0,75", "≈ 14600 А", "СтатусОценка: длительный ток нагрузки 60 А не больше допустимого 100 А; пик 150 А — в пределах импульсного тока 200 А"]);
+// Превышение: 3000 Вт / 32,5 В = 92,31 А > 80 А — категоричный вывод по паспорту, без «Оценки».
+await calculateWithout("tok-razryada-liion-sborki.html", { pl: "3000", ppk: "", tl: "" }, ["Ток нагрузки при наименьшем напряжении P / (η·S·Umin)92,31 А", "не меньше 123,1 А (длительный ток / 0,75", "СтатусТок нагрузки 92,31 А больше допустимого длительного тока сборки 80 А по паспорту ячейки"], ["Оценка", "Пиковый ток нагрузки"]);
+// КПД 90 %: 1000 / (0,9·32,5) = 34,19 А (3,419C, 8,547 А на ячейку), пик 68,38 А, предохранитель от 45,58 А.
+await calculate("tok-razryada-liion-sborki.html", { eta: "90" }, ["34,19 А — 3,419C, по 8,547 А на ячейку", "Пиковый ток нагрузки68,38 А", "не меньше 45,58 А"]);
+// Импульс по паспорту 35 А на 5 с → 140 А; пик 4000 Вт = 123,1 А ровно 5 с — в пределах импульсного тока.
+await calculate("tok-razryada-liion-sborki.html", { ipa: "35", tpk: "5", ppk: "4000", tl: "5" }, ["Допустимый импульсный ток сборки140 А не дольше 5 с", "Пиковый ток нагрузки123,1 А в течение 5 с", "Предел тока разряда в настройке BMSне выше 80 А длительно и 140 А не дольше 5 с", "СтатусОценка: длительный ток нагрузки 30,77 А не больше допустимого 80 А; пик 123,1 А — в пределах импульсного тока 140 А"], "boundary");
+// Тот же пик на 5,01 с — дольше паспортного импульса и больше длительного тока: паспорт такой режим не допускает.
+await calculateWithout("tok-razryada-liion-sborki.html", { ipa: "35", tpk: "5", ppk: "4000", tl: "5,01" }, ["СтатусПик 123,1 А длится дольше паспортного импульса (5,01 с против 5 с) и больше длительного тока 80 А — паспорт ячейки такой режим не допускает"], ["Оценка"], "boundary");
+// 5000 Вт → 153,8 А > 140 А импульсного тока.
+await calculateWithout("tok-razryada-liion-sborki.html", { ipa: "35", tpk: "5", ppk: "5000", tl: "5" }, ["СтатусПиковый ток нагрузки 153,8 А больше допустимого импульсного тока сборки 140 А по паспорту ячейки"], ["Оценка"]);
+// Граница импульсного тока: 4550 Вт / 32,5 В = 140 А — в пределах; 4550,1 Вт = 140,003 А — показан по ту же сторону от 140 А.
+await calculate("tok-razryada-liion-sborki.html", { ipa: "35", tpk: "5", ppk: "4550", tl: "5" }, ["пик 140 А — в пределах импульсного тока 140 А"], "boundary");
+await calculateWithout("tok-razryada-liion-sborki.html", { ipa: "35", tpk: "5", ppk: "4550,1", tl: "5" }, ["СтатусПиковый ток нагрузки 140,003 А больше допустимого импульсного тока сборки 140 А"], ["Оценка"], "boundary");
+// Импульсный ток в паспорте не задан, пик 3000 Вт = 92,31 А больше длительного: «Недостаточно данных», не «Оценка».
+await calculateWithout("tok-razryada-liion-sborki.html", { ppk: "3000" }, ["СтатусНедостаточно данных: пиковый ток 92,31 А больше длительного тока сборки 80 А, а импульсный ток в паспорте не задан", "только если его задаёт производитель ячейки (Orion BMS)"], ["Оценка"]);
+await calculate("tok-razryada-liion-sborki.html", { ppk: "2600" }, ["пик 80 А — в пределах длительного тока 80 А"], "boundary");
+// Вне паспортного диапазона температур вывода нет.
+await calculateWithout("tok-razryada-liion-sborki.html", { temp: "no" }, ["СтатусНедостаточно данных: паспортный ток разряда задан для своего диапазона температур ячейки"], ["Оценка", "СтатусТок нагрузки", "СтатусПик"]);
+// Нагрузка током: ровно 80 А — в пределах, 80,001 А — больше (показано 80,001, а не 80).
+await calculate("tok-razryada-liion-sborki.html", { lmode: "i", il: "80", ipk: "", tl: "" }, ["Ток нагрузки80 А — 8C, по 20 А на ячейку при равном делении", "СтатусОценка: длительный ток нагрузки 80 А не больше допустимого 80 А"], "boundary");
+await calculateWithout("tok-razryada-liion-sborki.html", { lmode: "i", il: "80,001", ipk: "", tl: "" }, ["СтатусТок нагрузки 80,001 А больше допустимого длительного тока сборки 80 А"], ["Оценка"], "boundary");
+// Режим «нагрузка током» со значениями по умолчанию: 30 А = 3C (7,5 А на ячейку), пик 60 А ≤ 80 А; 30 / 0,75 = 40 А.
+await calculate("tok-razryada-liion-sborki.html", { lmode: "i" }, ["Ток нагрузки30 А — 3C, по 7,5 А на ячейку при равном делении", "Пиковый ток нагрузки60 А в течение 10 с", "не меньше 40 А (длительный ток / 0,75", "СтатусОценка: длительный ток нагрузки 30 А не больше допустимого 80 А; пик 60 А — в пределах длительного тока 80 А"]);
+await calculateWithout("tok-razryada-liion-sborki.html", { rcell: "" }, ["отключающая способность при постоянном токене оценена — нужен ожидаемый ток КЗ сборки"], ["≈"]);
+await invalid("tok-razryada-liion-sborki.html", { s: "2,5" }, "целые числа от 1 до 1000");
+await invalid("tok-razryada-liion-sborki.html", { p: "0" }, "целые числа от 1 до 1000");
+await invalid("tok-razryada-liion-sborki.html", { cap: "0" }, "Ёмкость ячейки должна быть больше нуля");
+await invalid("tok-razryada-liion-sborki.html", { umax: "5,1" }, "не больше 5 В");
+await invalid("tok-razryada-liion-sborki.html", { umin: "4,3" }, "больше наименьшего напряжения под нагрузкой");
+await invalid("tok-razryada-liion-sborki.html", { ica: "abc" }, "Введите длительный ток разряда ячейки");
+await invalid("tok-razryada-liion-sborki.html", { ipa: "15", tpk: "5" }, "Импульсный ток должен быть больше длительного");
+await invalid("tok-razryada-liion-sborki.html", { ipa: "30" }, "Для импульсного тока задайте его длительность");
+await invalid("tok-razryada-liion-sborki.html", { tpk: "5" }, "Длительность импульса задана без импульсного тока");
+await invalid("tok-razryada-liion-sborki.html", { spec: "c", crc: "0" }, "C-rate разряда должен быть больше нуля");
+await invalid("tok-razryada-liion-sborki.html", { eta: "0" }, "КПД задаётся в процентах");
+await invalid("tok-razryada-liion-sborki.html", { ppk: "900" }, "Пиковая мощность должна быть больше длительной");
+await invalid("tok-razryada-liion-sborki.html", { tl: "" }, "Для пика нагрузки задайте его длительность");
+await invalid("tok-razryada-liion-sborki.html", { rcell: "abc" }, "Внутреннее сопротивление — число");
+await invalid("tok-razryada-liion-sborki.html", { lmode: "i", il: "x" }, "Введите длительный ток нагрузки");
+
+// --- 3. raschet-superkondensatora: Eaton, ADI RAQ 179, Maxwell ---
+// Эталон 1 (пример на странице): 100 Вт / 0,9 = 111,1 Вт; n = ⌈16 / 2,7⌉ = 6; ячейка к концу срока 350·0,8 = 280 Ф,
+// 3,2·2 = 6,4 мОм. m = 1: 46,67 Ф и 38,4 мОм — квадратура даёт 37,30 с < 60; m = 2: 93,33 Ф, 19,2 мОм — 77,61 с.
+// Без ESR 2·111,1·60 / (256 − 64) = 69,44 Ф; с ESR 93,33·60 / 77,61 = 72,15 Ф; u1 = 15,87 В → ток 7,003 А, в конце 111,1 / 8 = 13,89 А;
+// просадка 0,1345 и 0,2667 В; энергия ½·116,7·192 = 11,2 кДж; без балансировки 16 / (1 + 5/1,2) = 3,097 В;
+// резистор Eaton 2,667 / (50·0,75 мА) = 71,11 Ом, 37,5 мА, 0,1 Вт, R·C = 71,11·350 = 24 889 с = 6,91 ч.
+await calculate("raschet-superkondensatora.html", {}, ["Последовательно элементов n = ⌈V1 / Uном⌉6 — по 2,667 В на элемент", "Параллельных цепочек m / всего элементов2 / 12", "Ёмкость банка: номинальная / с допуском и к концу срока116,7 / 93,33 Ф", "ESR банка: по паспорту / к концу срока9,6 / 19,2 мОм", "Нужная ёмкость без ESR 2·P·t / (η·(V1² − V2²))69,44 Ф", "Нужная ёмкость с ESR банка к концу срока72,15 Ф", "Банк к концу срока удерживает нагрузку77,61 с — нужно 60 с", "Ток банка в начале / в конце разряда7,003 / 13,89 А", "Просадка на ESR в начале / в конце0,1345 / 0,2667 В", "Энергия банка между V1 и V2 при номинальной ёмкости11,2 кДж", "Без балансировки после заряда с нуля элемент может получить3,097 В при номинале 2,7 В", "Пассивная балансировка по Eaton: резистор на элементне больше 71,11 Ом — 37,5 мА, 0,1 Вт; саморазряд R·C ≈ 6,91 ч", "СтатусОценка: банк 6 последовательно × 2 параллельно, всего элементов — 12; к концу срока удерживает нагрузку 77,61 с; нужна балансировка напряжений элементов"]);
+// Эталон 2 (постоянный ток, счёт вручную): n = ⌈5 / 2,7⌉ = 2; ячейка 10·0,8 = 8 Ф, 75 мОм; C = 4m, R = 0,15/m;
+// t = 4m·(2,5 − 5·0,15/m) / 5 = 2m − 0,6 → m = 5 даёт 9,4 с, m = 6 — 11,4 с; I·t/(V1 − V2) = 20 Ф; 50 / (2,5 − 0,125) = 21,05 Ф;
+// просадка 5·0,025 = 0,125 В; энергия ½·30·(25 − 6,25) = 281,3 Дж; без балансировки 5 / (1 + 0,8/1,2) = 3 В.
+await calculateWithout("raschet-superkondensatora.html", { mode: "i", il: "5", t: "10", v1: "5", v2: "2,5", cc: "10", tolm: "20", tolp: "20", esr: "75", ur: "2,7", eolc: "0", eolr: "0", ilk: "" }, ["2 — по 2,5 В на элемент", "Параллельных цепочек m / всего элементов6 / 12", "30 / 24 Ф", "25 / 25 мОм", "Нужная ёмкость без ESR I·t / (V1 − V2)20 Ф", "Нужная ёмкость с ESR банка к концу срока21,05 Ф", "Банк к концу срока удерживает нагрузку11,4 с — нужно 10 с", "Просадка на ESR I·R0,125 В", "281,3 Дж", "3 В при номинале 2,7 В", "без балансировки напряжение элемента может превысить номинальное"], ["Пассивная балансировка по Eaton", "Ток банка в начале"]);
+// Пример Eaton: два 10 Ф ±20 % последовательно на 5 В — 5·1,2 / (1,2 + 0,8) = 3,0 В на одном.
+await calculate("raschet-superkondensatora.html", { mode: "i", il: "1", t: "1", v1: "5", v2: "2,5", cc: "10", tolm: "20", tolp: "20", esr: "0", ur: "2,5", eolc: "0", eolr: "0", ilk: "" }, ["Без балансировки после заряда с нуля элемент может получить3 В при номинале 2,5 В", "может превысить номинальное"]);
+// m = 1 при 37 с: квадратура 37,30 с; ток 7,064 / 13,89 А, просадка 0,2713 / 0,5333 В; C с ESR 46,67·37 / 37,30 = 46,29 Ф.
+await calculate("raschet-superkondensatora.html", { t: "37" }, ["Параллельных цепочек m / всего элементов1 / 6", "58,33 / 46,67 Ф", "Нужная ёмкость с ESR банка к концу срока46,29 Ф", "Банк к концу срока удерживает нагрузку37,3 с — нужно 37 с", "7,064 / 13,89 А", "0,2713 / 0,5333 В", "5,6 кДж"]);
+// Граница выбора m: 37,30107 с ≥ 37,3 — одна цепочка (время показано 37,301, а не 37,3); 37,31 — уже две.
+await calculate("raschet-superkondensatora.html", { t: "37,3" }, ["Параллельных цепочек m / всего элементов1 / 6", "Банк к концу срока удерживает нагрузку37,301 с — нужно 37,3 с"], "boundary");
+await calculate("raschet-superkondensatora.html", { t: "37,31" }, ["Параллельных цепочек m / всего элементов2 / 12"], "boundary");
+// Один элемент — балансировка не нужна: 10 Вт, 2,7 → 1 В: квадратура 75,69 с, ток 4,156 / 11,11 А.
+await calculateWithout("raschet-superkondensatora.html", { pw: "10", t: "10", v1: "2,7", v2: "1" }, ["1 — по 2,7 В на элемент", "1 / 1", "Банк к концу срока удерживает нагрузку75,69 с — нужно 10 с", "Ток банка в начале / в конце разряда4,156 / 11,11 А"], ["балансировк"]);
+// Обрыв раньше V2: 5000 Вт, V2 = 1 В. m = 10: 466,7 Ф, 3,84 мОм; √(5555,6·0,00384) = 4,619 В > 1 В — предел на выводах;
+// квадратура до обрыва 5,919 с (m = 9 — 4,949 с); ток 382,3 / 1203 А; C с ESR 466,7·5 / 5,919 = 394,2 Ф.
+await calculate("raschet-superkondensatora.html", { pw: "5000", t: "5", v2: "1" }, ["Параллельных цепочек m / всего элементов10 / 60", "583,3 / 466,7 Ф", "1,92 / 3,84 мОм", "217,9 Ф", "Нужная ёмкость с ESR банка к концу срока394,2 Ф", "Банк к концу срока удерживает нагрузку5,919 с — нужно 5 с", "382,3 / 1203 А", "1,468 / 4,619 В", "74,38 кДж", "предел на выводах — √(P·R/η) = 4,619 В (ADI)"]);
+// Число элементов на границе номинала: 16,2 В = 6·2,7 — шесть; 16,21 В — семь (по 2,316 В).
+await calculate("raschet-superkondensatora.html", { v1: "16,2" }, ["6 — по 2,7 В на элемент"], "boundary");
+await calculate("raschet-superkondensatora.html", { v1: "16,21" }, ["7 — по 2,316 В на элемент"], "boundary");
+// 13,8 / 2,3 в двоичной арифметике даёт 6,000000000000001 (у 16,2 / 2,7 — 5,999…9): без допуска округления
+// вышло бы 7 элементов. 2,3 В — сниженное напряжение ячейки Maxwell для 85 °C. 13,81 / 7 = 1,973 В.
+await calculate("raschet-superkondensatora.html", { v1: "13,8", ur: "2,3" }, ["6 — по 2,3 В на элемент"], "boundary");
+await calculate("raschet-superkondensatora.html", { v1: "13,81", ur: "2,3" }, ["7 — по 1,973 В на элемент"], "boundary");
+// Деление напряжения у порога: без допуска 2,5 В = номиналу; допуск +0,01 % даёт 2,500125 — показано 2,5001, а не 2,5.
+await calculateWithout("raschet-superkondensatora.html", { mode: "i", il: "1", t: "1", v1: "5", v2: "2,5", cc: "10", tolm: "0", tolp: "0", esr: "0", ur: "2,5", eolc: "0", eolr: "0", ilk: "" }, ["2,5 В при номинале 2,5 В"], ["может превысить"], "boundary");
+await calculate("raschet-superkondensatora.html", { mode: "i", il: "1", t: "1", v1: "5", v2: "2,5", cc: "10", tolm: "0", tolp: "0,01", esr: "0", ur: "2,5", eolc: "0", eolr: "0", ilk: "" }, ["2,5001 В при номинале 2,5 В", "может превысить номинальное"], "boundary");
+await invalid("raschet-superkondensatora.html", { pw: "сто" }, "Введите мощность нагрузки");
+await invalid("raschet-superkondensatora.html", { eta: "0" }, "КПД задаётся в процентах");
+await invalid("raschet-superkondensatora.html", { mode: "i", il: "0" }, "Ток нагрузки должен быть больше нуля");
+await invalid("raschet-superkondensatora.html", { t: "0" }, "Длительность должна быть больше нуля");
+await invalid("raschet-superkondensatora.html", { v2: "16" }, "Нужно 0 < наименьшее напряжение");
+await invalid("raschet-superkondensatora.html", { v2: "0" }, "Нужно 0 < наименьшее напряжение");
+await invalid("raschet-superkondensatora.html", { cc: "0" }, "Ёмкость и номинальное напряжение элемента");
+await invalid("raschet-superkondensatora.html", { tolm: "100" }, "Допуск ёмкости");
+await invalid("raschet-superkondensatora.html", { esr: "-1" }, "ESR не может быть отрицательным");
+await invalid("raschet-superkondensatora.html", { eolc: "100" }, "Снижение ёмкости к концу срока");
+await invalid("raschet-superkondensatora.html", { eolr: "-5" }, "Рост ESR к концу срока не может быть отрицательным");
+await invalid("raschet-superkondensatora.html", { ilk: "abc" }, "Ток утечки — число");
+await invalid("raschet-superkondensatora.html", { ilk: "0" }, "Ток утечки должен быть больше нуля");
+await invalid("raschet-superkondensatora.html", { v1: "3000" }, "больше 1000 элементов последовательно");
+
+// --- 4. tok-vyravnivaniya-akb: правило Кирхгофа, Victron ---
+// Эталон 1 (пример на странице, паспорт ECO-WORTHY 25 мОм): ΣR = 25 + 25 + 2 = 52 мОм; I = 0,5 / 0,052 = 9,615 А;
+// ток равен 50 А при 50·0,052 = 2,6 В; мощность 0,5·9,615 = 4,808 Вт.
+await calculateWithout("tok-vyravnivaniya-akb.html", {}, ["Разница напряжений покоя ΔU0,5 В — сильнее разряжена вторая АКБ", "Сопротивление контура R1 + R2 + Rпер52 мОм", "Начальный ток выравнивания I = ΔU / ΣR9,615 А", "Допустимый ток заряда (вторая АКБ) / разряда (первая АКБ)50 / 100 А", "Разница напряжений, при которой ток равен допустимому2,6 В", "Мощность потерь в контуре в первый момент ΔU·I4,808 Вт", "СтатусОценка: начальный ток выравнивания 9,615 А не больше допустимых токов АКБ", "предохранитель (Victron)"], ["выровняйте"]);
+// Эталон 2: 5 + 5 + 1 = 11 мОм, 1 В → 90,91 А > 50 А заряда; предел при 50·0,011 = 0,55 В; 1·90,91 = 90,91 Вт.
+await calculateWithout("tok-vyravnivaniya-akb.html", { u1: "12,4", u2: "13,4", r1: "5", r2: "5", rw: "1" }, ["1 В — сильнее разряжена первая АКБ", "11 мОм", "Начальный ток выравнивания I = ΔU / ΣR90,91 А", "Допустимый ток заряда (первая АКБ) / разряда (вторая АКБ)50 / 100 А", "0,55 В", "90,91 Вт", "СтатусНачальный ток выравнивания 90,91 А больше допустимого тока заряда — выровняйте заряд АКБ до соединения", "заряжают каждую батарею отдельно"], ["Оценка"]);
+await calculate("tok-vyravnivaniya-akb.html", { u1: "12,4", u2: "13,4", r1: "5", r2: "5", rw: "1", idis: "60" }, ["больше допустимого тока заряда и разряда — выровняйте заряд АКБ до соединения"]);
+await calculate("tok-vyravnivaniya-akb.html", { u1: "12,4", u2: "13,4", r1: "5", r2: "5", rw: "1", ich: "100", idis: "60" }, ["больше допустимого тока разряда — выровняйте заряд АКБ до соединения"]);
+// Разные батареи: без превышения — «Недостаточно данных»; превышение паспорта сообщается всё равно.
+await calculateWithout("tok-vyravnivaniya-akb.html", { same: "diff" }, ["СтатусНедостаточно данных: изготовители допускают параллельную работу только одинаковых батарей", "одной ёмкости и одного артикула"], ["Оценка", "выровняйте"]);
+await calculate("tok-vyravnivaniya-akb.html", { same: "diff", u1: "12,4", u2: "13,4", r1: "5", r2: "5", rw: "1" }, ["СтатусНачальный ток выравнивания 90,91 А больше допустимого тока заряда — выровняйте заряд АКБ до соединения; к тому же батареи разные"]);
+// Предохранитель 5 А: 9,615 / 5 = 1,923·In — риск срабатывания, хотя ток в пределах АКБ.
+await calculate("tok-vyravnivaniya-akb.html", { inf: "5" }, ["Ток относительно номинала предохранителя1,923·In", "СтатусРиск срабатывания предохранителя: начальный ток 9,615 А больше его номинала 5 А, хотя и в пределах допустимых токов АКБ", "время-токовой характеристике"]);
+await calculateWithout("tok-vyravnivaniya-akb.html", { u2: "13,4" }, ["Разница напряжений покоя ΔU0 В", "Начальный ток выравнивания I = ΔU / ΣR0 А", "СтатусОценка: напряжения покоя равны"], ["сильнее разряжена", "Допустимый ток заряда ("]);
+// Граница 50 А: 2,6 / 0,052 = 50 А — в пределах; 2,6001 / 0,052 = 50,002 А — больше (показано 50,002, а не 50).
+await calculateWithout("tok-vyravnivaniya-akb.html", { u2: "10,8" }, ["Начальный ток выравнивания I = ΔU / ΣR50 А", "СтатусОценка: начальный ток выравнивания 50 А не больше допустимых токов АКБ"], ["выровняйте"], "boundary");
+await calculateWithout("tok-vyravnivaniya-akb.html", { u2: "10,7999" }, ["Начальный ток выравнивания I = ΔU / ΣR50,002 А", "Разница напряжений, при которой ток равен допустимому2,6 В", "СтатусНачальный ток выравнивания 50,002 А больше допустимого тока заряда"], ["Оценка"], "boundary");
+// Граница номинала предохранителя: 1 / 0,05 = 20 А при In = 20 А — не больше; при 19,99 А — риск.
+await calculateWithout("tok-vyravnivaniya-akb.html", { u1: "13", u2: "12", r1: "20", r2: "20", rw: "10", ich: "20", inf: "20" }, ["Начальный ток выравнивания I = ΔU / ΣR20 А", "1·In", "СтатусОценка: начальный ток выравнивания 20 А не больше допустимых токов АКБ"], ["Риск"], "boundary");
+await calculate("tok-vyravnivaniya-akb.html", { u1: "13", u2: "12", r1: "20", r2: "20", rw: "10", ich: "50", inf: "19,99" }, ["СтатусРиск срабатывания предохранителя: начальный ток 20 А больше его номинала 19,99 А"], "boundary");
+await invalid("tok-vyravnivaniya-akb.html", { u1: "13,4 В" }, "Заполните напряжения");
+await invalid("tok-vyravnivaniya-akb.html", { u1: "0" }, "Напряжения АКБ — больше 0");
+await invalid("tok-vyravnivaniya-akb.html", { u2: "1000,1" }, "Напряжения АКБ — больше 0");
+await invalid("tok-vyravnivaniya-akb.html", { r1: "0" }, "Внутреннее сопротивление АКБ должно быть больше нуля");
+await invalid("tok-vyravnivaniya-akb.html", { rw: "-1" }, "Сопротивление перемычек не может быть отрицательным");
+await invalid("tok-vyravnivaniya-akb.html", { ich: "0" }, "Допустимые токи заряда и разряда должны быть больше нуля");
+await invalid("tok-vyravnivaniya-akb.html", { inf: "abc" }, "Номинал предохранителя — число");
+await invalid("tok-vyravnivaniya-akb.html", { inf: "0" }, "Номинал предохранителя должен быть больше нуля");
+
+// Структурные проверки партии №4: запрещённые формулировки, карточка
+// источника, реестр, видимость полей по режиму (правило 7), ссылки на
+// соседние страницы вместо дублирования, входящие ссылки, лимит «Смотрите
+// также».
+{
+  kind = "structural";
+  const batch4 = ["balansirovka-yacheek-bms", "tok-razryada-liion-sborki", "raschet-superkondensatora", "tok-vyravnivaniya-akb"];
+  const read = file => fs.readFileSync(path.join(sourceDir, file), "utf8");
+  const visible = file => read(file).replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  const registry = read("ENGINEERING_AUDIT.md");
+  for (const slug of batch4) {
+    const html = read(`${slug}.html`);
+    const script = html.match(/<script>([\s\S]*?)<\/script>\s*<\/body>/)?.[1] ?? "";
+    check(!/проходит|безопасн|соответствует норм/i.test(visible(`${slug}.html`)) && !/проходит|безопасн|соответствует норм/i.test(script),
+      `${slug}: запрещённые слова «проходит», «безопасно», «соответствует нормам»`);
+    const card = html.match(/<section class="src">([\s\S]*?)<\/section>/)?.[1] ?? "";
+    check(card.includes("Оценка, не нормативный вердикт") && card.includes("Границы применимости") && card.includes("Допущения")
+      && card.includes("Редакция") && /обращение 30\.09\.2026/.test(card) && !/Проверил:/.test(card),
+      `${slug}: карточка источника без статуса, допущений, границ, редакции или даты обращения`);
+    check(registry.includes(`\`${slug}\``), `ENGINEERING_AUDIT.md: нет записи о ${slug}`);
+    check(/<a class="ccard"[^>]*href="/.test(read("index.html")) && read("index.html").includes(`href="${slug}.html"`), `index.html: ${slug} нет в каталоге`);
+  }
+  // Каждый переключатель влияет на расчёт, ненужные поля скрыты.
+  const vis = (d, id) => d.getElementById(`f_${id}`)?.style.display !== "none";
+  const change = (dom, id, value) => { const el = dom.window.document.getElementById(id); el.value = value; el.dispatchEvent(new dom.window.Event("change", { bubbles: true })); };
+  let dom = await load("balansirovka-yacheek-bms.html"); let d = dom.window.document;
+  check(vis(d, "dsoc") && !vis(d, "dah") && !vis(d, "chem") && !vis(d, "du") && !vis(d, "slope") && vis(d, "rb") && vis(d, "rsw") && !vis(d, "ib"),
+    "balansirovka-yacheek-bms: в режиме «% SoC» и «по сопротивлению» видны только их поля");
+  change(dom, "dmode", "ah"); change(dom, "imode", "i");
+  check(!vis(d, "dsoc") && vis(d, "dah") && !vis(d, "du") && !vis(d, "rb") && !vis(d, "rsw") && vis(d, "ib"),
+    "balansirovka-yacheek-bms: режимы «А·ч» и «ток по паспорту» показывают свои поля");
+  change(dom, "dmode", "volt");
+  check(vis(d, "chem") && vis(d, "du") && vis(d, "slope"), "balansirovka-yacheek-bms: для NMC по напряжению нужен наклон кривой OCV");
+  change(dom, "chem", "lfp");
+  check(vis(d, "du") && !vis(d, "slope"), "balansirovka-yacheek-bms: для LiFePO₄ наклон не используется и скрыт");
+  dom.window.close();
+  dom = await load("tok-razryada-liion-sborki.html"); d = dom.window.document;
+  check(vis(d, "ica") && vis(d, "ipa") && !vis(d, "crc") && !vis(d, "crp") && vis(d, "pl") && vis(d, "eta") && vis(d, "ppk") && !vis(d, "il") && !vis(d, "ipk"),
+    "tok-razryada-liion-sborki: в режимах «амперы» и «мощность» видны только их поля");
+  change(dom, "spec", "c"); change(dom, "lmode", "i");
+  check(!vis(d, "ica") && !vis(d, "ipa") && vis(d, "crc") && vis(d, "crp") && !vis(d, "pl") && !vis(d, "eta") && !vis(d, "ppk") && vis(d, "il") && vis(d, "ipk"),
+    "tok-razryada-liion-sborki: режимы «C-rate» и «ток» показывают свои поля");
+  dom.window.close();
+  dom = await load("raschet-superkondensatora.html"); d = dom.window.document;
+  check(vis(d, "pw") && vis(d, "eta") && !vis(d, "il"), "raschet-superkondensatora: в режиме мощности поле тока скрыто");
+  change(dom, "mode", "i");
+  check(!vis(d, "pw") && !vis(d, "eta") && vis(d, "il"), "raschet-superkondensatora: в режиме тока скрыты мощность и КПД");
+  dom.window.close();
+  // Не дублировать соседние страницы, а ссылаться на них.
+  const links = { "tok-razryada-liion-sborki": "liion-charge-current", "raschet-superkondensatora": "energiya-kondensatora",
+    "tok-vyravnivaniya-akb": "batareya-posledovatelno-parallelno", "balansirovka-yacheek-bms": "batareya-posledovatelno-parallelno" };
+  for (const [from, to] of Object.entries(links)) {
+    const article = read(`${from}.html`).match(/<p class="intro">[\s\S]*?<section class="related">/)?.[0] ?? "";
+    check(article.includes(`href="${to}.html"`), `${from}: в тексте нет ссылки на ${to}`);
+  }
+  // Входящие ссылки на новые страницы из «Смотрите также» существующих.
+  const inbound = [["liion-charge-current", "tok-razryada-liion-sborki"], ["liion-charge-current", "balansirovka-yacheek-bms"],
+    ["batareya-posledovatelno-parallelno", "tok-vyravnivaniya-akb"], ["batareya-posledovatelno-parallelno", "balansirovka-yacheek-bms"],
+    ["energiya-kondensatora", "raschet-superkondensatora"], ["soedinenie-kondensatorov", "raschet-superkondensatora"],
+    ["vnutrennee-soprotivlenie", "tok-vyravnivaniya-akb"], ["raschet-invertora", "tok-razryada-liion-sborki"]];
+  for (const [from, to] of inbound) {
+    const block = read(`${from}.html`).match(/<section class="related">([\s\S]*?)<\/section>/)?.[1] ?? "";
+    check(block.includes(`href="${to}.html"`), `${from}: в «Смотрите также» нет ссылки на ${to}`);
+  }
+  // Блок «Смотрите также» — не больше пяти ссылок на любой странице каталога.
+  for (const file of htmlFiles) {
+    const block = read(file).match(/<section class="related">([\s\S]*?)<\/section>/)?.[1];
+    if (block === undefined) continue;
+    const n = (block.match(/<li>/g) || []).length;
+    check(n <= 5, `${file}: в «Смотрите также» ${n} ссылок, допустимо не больше 5`);
+  }
+  // Смысловые проверки: что источник не подтверждает, не выдаётся за норму.
+  const bal = visible("balansirovka-yacheek-bms.html");
+  check(/LiFePO₄/.test(bal) && /не пересчитывает/.test(bal) && /2·R/.test(bal) && /SLUAA81/.test(bal),
+    "balansirovka-yacheek-bms: не сказано, что разница напряжений LiFePO₄ не пересчитывается, или нет формулы TI");
+  const dis = visible("tok-razryada-liion-sborki.html");
+  check(/0,75/.test(dis) && /Littelfuse/.test(dis) && /постоянного тока/.test(dis) && /отключающая способность/i.test(dis) && /Orion BMS/.test(dis),
+    "tok-razryada-liion-sborki: требования к предохранителю и BMS не приписаны источникам");
+  const sc = visible("raschet-superkondensatora.html");
+  check(/√\(4·R·P\/η\)/.test(sc) && /50 токов утечки/.test(sc) && /более чем из двух элементов/.test(sc) && /R = 0/.test(sc),
+    "raschet-superkondensatora: нет вывода формулы с ESR, правила Eaton или требования Maxwell");
+  const eqp = visible("tok-vyravnivaniya-akb.html");
+  check(/предохранитель/.test(eqp) && /до параллельного соединения|до соединения/.test(eqp) && !/соедин[^.]{0,40}(напрямую|и посмотр)/i.test(eqp),
+    "tok-vyravnivaniya-akb: нет требования выровнять заряд и поставить предохранитель или есть совет соединять напрямую");
+}
 
 // Coverage guard считает фактически выполненные сценарии. Простое load()
 // больше не выдаётся за проверку формулы. Минимум один сценарий предотвращает
