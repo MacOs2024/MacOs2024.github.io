@@ -2573,6 +2573,9 @@ await calculate("kontroller-zaryada-mppt-pwm.html", { ...mppt460, ovp: "pmax", p
 await calculate("kontroller-zaryada-mppt-pwm.html", { ...mppt460, ovp: "pmax", pmax: "459,99" }, ["СтатусМощность массива 460 Вт больше допустимой производителем 459,99 Вт"], "boundary");
 // Эталон 3 (MPPT без перегруза): 345·0,98/12 = 28,17 ≤ 30 А.
 await calculateWithout("kontroller-zaryada-mppt-pwm.html", { tip: "mppt" }, ["Ток на выходе при STC Iвых = P·η / Uмин28,17 А", "СтатусОценка: условие по току КЗ выполнено, ток на выходе при STC 28,17 А не больше номинального 30 А"], ["Превышение", "Мощность массива, при которой"]);
+// Предел мощности производителя проверяется и без перегруза по току: 345 Вт > 300 Вт — вывод без «Оценка»; 345 ≤ 345 — в пределе.
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", ovp: "pmax", pmax: "300" }, ["Мощность массива и предел производителя345 Вт > 300 Вт", "СтатусМощность массива 345 Вт больше допустимой производителем 300 Вт"], ["Оценка:"]);
+await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", ovp: "pmax", pmax: "345" }, ["345 Вт ≤ 345 Вт", "СтатусОценка: условие по току КЗ выполнено, ток на выходе при STC 28,17 А не больше номинального 30 А"], "boundary");
 // Граница номинального тока MPPT (КПД 100 %): 360/12 = 30 А — не перегруз; 360,01/12 = 30,001 А — перегруз.
 await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", eta: "100", pw: "360" }, ["СтатусОценка: условие по току КЗ выполнено, ток на выходе при STC 30 А не больше номинального 30 А"], "boundary");
 await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", eta: "100", pw: "360,01" }, ["СтатусНедостаточно данных: ток на выходе при STC 30,001 А больше номинального 30 А"], "boundary");
