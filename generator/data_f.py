@@ -1097,7 +1097,7 @@ faqs=[
  ("Как выбрать напряжение системы?",
   "По мощности нагрузки: до 1 кВт хватает 12 В, для 1–3 кВт берут 24 В, свыше 3 кВт — 48 В. Чем выше напряжение, тем меньше ток при той же мощности и тем тоньше может быть силовая проводка."),
 ],
-related=["batareya-posledovatelno-parallelno", "vremya-raboty-akkumulyatora", "solar-panel-energy", "raschet-invertora"],
+related=["batareya-posledovatelno-parallelno", "vremya-raboty-akkumulyatora", "solar-panel-energy", "raschet-invertora", "stoimost-kvtch-akkumulyatora"],
 ),
 
 dict(

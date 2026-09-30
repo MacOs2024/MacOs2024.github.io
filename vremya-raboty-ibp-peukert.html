@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Время работы ИБП от АКБ с учётом закона Пейкерта</title>
+<meta name="description" content="Время работы ИБП от свинцово-кислотной батареи по закону Пейкерта t = H·(C/(I·H))^k в сравнении с простым C/I: показатель k из паспорта или по двум ёмкостям, мощность на элемент для таблицы разряда постоянной мощностью; для Li-ion — только C/I с объяснением почему.">
+<link rel="canonical" href="https://macos2024.github.io/vremya-raboty-ibp-peukert.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Время работы ИБП от АКБ с учётом закона Пейкерта">
+<meta property="og:description" content="Время работы ИБП от свинцово-кислотной батареи по закону Пейкерта t = H·(C/(I·H))^k в сравнении с простым C/I: показатель k из паспорта или по двум ёмкостям, мощность на элемент для таблицы разряда постоянной мощностью; для Li-ion — только C/I с объяснением почему.">
+<meta property="og:url" content="https://macos2024.github.io/vremya-raboty-ibp-peukert.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Время работы ИБП от АКБ с учётом закона Пейкерта","url":"https://macos2024.github.io/vremya-raboty-ibp-peukert.html","description":"Время работы ИБП от свинцово-кислотной батареи по закону Пейкерта t = H·(C/(I·H))^k в сравнении с простым C/I: показатель k из паспорта или по двум ёмкостям, мощность на элемент для таблицы разряда постоянной мощностью; для Li-ion — только C/I с объяснением почему.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Время работы ИБП от АКБ с учётом закона Пейкерта","item":"https://macos2024.github.io/vremya-raboty-ibp-peukert.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему по Пейкерту выходит меньше, чем ёмкость, делённая на ток?","acceptedAnswer":{"@type":"Answer","text":"Паспортная ёмкость свинцово-кислотной батареи указана для долгого разряда, обычно 20-часового. При большом токе напряжение раньше падает до конечного, и батарея отдаёт меньше ампер-часов — это и описывает закон Пейкерта."}},{"@type":"Question","name":"Где взять показатель Пейкерта?","acceptedAnswer":{"@type":"Answer","text":"Рассчитать по двум ёмкостям из паспорта — например, при 20-часовом и 2-часовом разряде; калькулятор делает это в режиме «по второй ёмкости». Если второй точки нет, для свинцово-кислотных Victron по умолчанию берёт 1,25."}},{"@type":"Question","name":"Можно ли так считать литиевую батарею ИБП?","acceptedAnswer":{"@type":"Answer","text":"Нет: закон Пейкерта выведен для свинцово-кислотных аккумуляторов, а для Li-ion работает лишь в узком диапазоне режимов. У LiFePO₄ показатель близок к 1, поэтому калькулятор даёт C/I, но допустимый ток и ёмкость при нём берут из паспорта батареи и BMS."}},{"@type":"Question","name":"Что точнее — формула или таблица производителя?","acceptedAnswer":{"@type":"Answer","text":"Таблица разряда постоянной мощностью: она снята для конкретной батареи до конкретного конечного напряжения и уже учитывает, что ток растёт по мере падения напряжения. Формула Пейкерта — приближение, когда таблицы нет."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Время работы ИБП от АКБ с учётом закона Пейкерта</h1>
+<p class="intro">Чем больше ток, тем меньше ампер-часов отдаёт свинцово-кислотная батарея: ёмкость в паспорте указана для долгого, обычно 20-часового разряда. Закон Пейкерта пересчитывает её на ток нагрузки ИБП. Расчёт по энергии без этой поправки делает <a href="vremya-raboty-akkumulyatora.html">калькулятор времени работы от аккумулятора</a> — здесь видно, насколько он оптимистичен при большом токе.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Время работы ИБП от АКБ с учётом закона Пейкерта</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_chem"><label for="chem">Тип аккумулятора</label><div class="fw"><select id="chem"><option value="lead" selected>Свинцово-кислотный: AGM, гель, заливной</option><option value="li">Литий-ионный: LiFePO₄ и другие</option></select></div></div><div class="f" id="f_p"><label for="p">Активная мощность нагрузки ИБП</label><div class="fw"><input id="p" type="text" inputmode="decimal" autocomplete="off" value="300" placeholder=""><span class="u">Вт</span></div></div><div class="f" id="f_eta"><label for="eta">КПД инвертора ИБП</label><div class="fw"><input id="eta" type="text" inputmode="decimal" autocomplete="off" value="85" placeholder=""><span class="u">%</span></div><div class="hint">По паспорту ИБП при вашей нагрузке</div></div><div class="f" id="f_u"><label for="u">Номинальное напряжение батареи</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="24" placeholder=""><span class="u">В</span></div><div class="hint">Для свинцово-кислотной — кратно 2 В: 12, 24, 48 В</div></div><div class="f" id="f_c"><label for="c">Ёмкость батареи C</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">А·ч</span></div></div><div class="f" id="f_h"><label for="h">Время разряда H, для которого указана ёмкость</label><div class="fw"><input id="h" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">ч</span></div><div class="hint">Обычно 20 часов (C20), бывает 10 часов (C10)</div></div><div class="f" id="f_kmode"><label for="kmode">Показатель Пейкерта</label><div class="fw"><select id="kmode"><option value="set" selected>Задать k</option><option value="two">Рассчитать по второй ёмкости из паспорта</option></select></div></div><div class="f" id="f_k"><label for="k">Показатель Пейкерта k</label><div class="fw"><input id="k" type="text" inputmode="decimal" autocomplete="off" value="1,25" placeholder=""></div><div class="hint">Victron для свинцово-кислотных по умолчанию берёт 1,25, диапазон настройки монитора — 1,00–1,50. По Википедии (вторичный источник): AGM 1,05–1,15, гель 1,1–1,25, заливные 1,2–1,6</div></div><div class="f" id="f_c2"><label for="c2">Вторая ёмкость из паспорта</label><div class="fw"><input id="c2" type="text" inputmode="decimal" autocomplete="off" value="56" placeholder=""><span class="u">А·ч</span></div><div class="hint">Например, ёмкость при 2-, 5- или 1-часовом разряде</div></div><div class="f" id="f_h2"><label for="h2">Время разряда для второй ёмкости</label><div class="fw"><input id="h2" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">ч</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Время работы ИБП по закону Пейкерта: как считается</h2>
+<div class="formula">I = P / (U · η),&nbsp;&nbsp;t = H · (C / (I · H))<sup>k</sup>,&nbsp;&nbsp;без поправки: t = C / I<br>k по двум точкам паспорта: k = lg(H<sub>2</sub>/H<sub>1</sub>) / lg(I<sub>1</sub>/I<sub>2</sub>),&nbsp;&nbsp;I<sub>1</sub> = C<sub>1</sub>/H<sub>1</sub>,&nbsp;I<sub>2</sub> = C<sub>2</sub>/H<sub>2</sub><br>Мощность на элемент для таблицы производителя: P / (η · n),&nbsp;&nbsp;n = U / 2 В</div>
+<p><b>Закон Пейкерта.</b> В 1897 году Вильгельм Пейкерт получил для свинцово-кислотных аккумуляторов эмпирическое соотношение I<sup>k</sup>·t = const: чем больше ток, тем меньше ампер-часов отдаёт батарея. Если ёмкость C указана для H-часового разряда, то есть для тока C/H, то при токе I время работы t = H·(C/(I·H))<sup>k</sup>. При k = 1 это обычное C/I; чем больше k, тем сильнее падает ёмкость с ростом тока. Батарея 100 А·ч (20-часовой разряд) с k = 1,2 при токе 10 А проработает 8,71 ч — отдаст 87 А·ч вместо 100.</p>
+<p><b>Откуда взять k.</b> Лучше всего — рассчитать по двум ёмкостям из паспорта, как предлагает Victron в руководстве к мониторам батарей: 100 А·ч при 20-часовом разряде и 56 А·ч при 2-часовом дают k ≈ 1,34. Если второй точки нет, Victron по умолчанию берёт 1,25 для свинцово-кислотных, а диапазон настройки монитора — от 1,00 до 1,50. По сводке Википедии (вторичный источник) у AGM обычно 1,05–1,15, у гелевых 1,1–1,25, у заливных 1,2–1,6. Калькулятор принимает k от 1 до 1,6.</p>
+<p><b>Где формула перестаёт работать.</b> Закон Пейкерта выведен для постоянного тока и постоянной температуры (Doerffel и Abu Sharkh, 2006). ИБП разряжает батарею постоянной мощностью: напряжение по мере разряда падает, ток растёт, поэтому расчёт по номинальному напряжению оптимистичен. При токе меньше тока паспортного режима C/H формула даёт ёмкость больше паспортной — это экстраполяция, и калькулятор тогда берёт в оценку C/I. Если k рассчитан по двум точкам, надёжна область между ними; за её пределами результат помечается как экстраполяция.</p>
+<p><b>Таблицы производителя точнее.</b> Для ИБП производители батарей дают таблицы разряда постоянной мощностью: сколько ватт отдаёт элемент за 5, 10, 15, 30 минут до конечного напряжения, например 1,67 или 1,75 В на элемент. У CSB HR1234W — 34,3 Вт на элемент за 15 минут до 1,67 В на элемент при 25 °C. Производители ИБП подбирают батареи по мощности на элемент — нагрузке, делённой на КПД инвертора и число элементов. Калькулятор считает эту величину; время по ней и конечному напряжению вашего ИБП находят в таблице.</p>
+<p><b>Li-ion.</b> Для литий-ионных аккумуляторов закон Пейкерта не применяется: Omar и Van den Bossche (2013) показали, что он описывает их лишь в узком диапазоне токов и температур, а у LiFePO₄ показатель в диапазоне 0–40 °C близок к 1. Victron для литиевых батарей берёт 1,05, если поставщик не указал иное. Поэтому для Li-ion калькулятор даёт только C/I, а допустимый ток и ёмкость задают паспорт и BMS.</p>
+<h2>Время работы ИБП по закону Пейкерта: пример расчёта</h2>
+<p>ИБП на 300 Вт с КПД инвертора 85 % работает от батареи 24 В 100 А·ч (C20, k = 1,25). Ток батареи 300 / (24 · 0,85) = <b>14,71 А</b> — почти втрое больше тока паспортного режима 5 А. Без поправки 100 / 14,71 = 6,8 ч, по Пейкерту 20 · (100 / (14,71 · 20))<sup>1,25</sup> = <b>5,19 ч</b>: батарея отдаст около 76,36 А·ч. Каждый из 12 элементов должен отдавать 300 / (0,85 · 12) = 29,41 Вт — по этой величине время ищут в таблице разряда постоянной мощностью.</p>
+<p>Пример из руководства Victron: батарея 100 А·ч при 20-часовом разряде отдаёт 56 А·ч за 2 часа. По этим точкам k = lg 10 / lg 5,6 ≈ 1,337, и при токе 28 А калькулятор даёт ровно 2 ч — точка паспорта воспроизводится.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему по Пейкерту выходит меньше, чем ёмкость, делённая на ток?</h3><p>Паспортная ёмкость свинцово-кислотной батареи указана для долгого разряда, обычно 20-часового. При большом токе напряжение раньше падает до конечного, и батарея отдаёт меньше ампер-часов — это и описывает закон Пейкерта.</p><h3>Где взять показатель Пейкерта?</h3><p>Рассчитать по двум ёмкостям из паспорта — например, при 20-часовом и 2-часовом разряде; калькулятор делает это в режиме «по второй ёмкости». Если второй точки нет, для свинцово-кислотных Victron по умолчанию берёт 1,25.</p><h3>Можно ли так считать литиевую батарею ИБП?</h3><p>Нет: закон Пейкерта выведен для свинцово-кислотных аккумуляторов, а для Li-ion работает лишь в узком диапазоне режимов. У LiFePO₄ показатель близок к 1, поэтому калькулятор даёт C/I, но допустимый ток и ёмкость при нём берут из паспорта батареи и BMS.</p><h3>Что точнее — формула или таблица производителя?</h3><p>Таблица разряда постоянной мощностью: она снята для конкретной батареи до конкретного конечного напряжения и уже учитывает, что ток растёт по мере падения напряжения. Формула Пейкерта — приближение, когда таблицы нет.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.victronenergy.com/media/pg/SmartShunt/en/battery-capacity-and-peukert-exponent.html" rel="nofollow noopener" target="_blank">SmartShunt / BMV battery monitor manual: Battery capacity and Peukert exponent</a> — Victron Energy — Редакция онлайн-руководство на дату обращения; формулы и значения видны в выдаче — раздел Cp = Iⁿ·t; n = (lg t2 − lg t1)/(lg I1 − lg I2) по двум ёмкостям паспорта, по умолчанию 1,25 для свинцово-кислотных, диапазон 1,00–1,50, для литиевых 1,05, пример: 100 А·ч при C20 и 56 А·ч при C2 — обращение 30.09.2026</li><li><a href="https://en.wikipedia.org/wiki/Peukert%27s_law" rel="nofollow noopener" target="_blank">Peukert&#x27;s law</a> — Википедия (вторичный источник; первоисточник — W. Peukert, Elektrotechnische Zeitschrift, 1897) — Редакция онлайн-статья на дату обращения; формула и диапазоны видны в выдаче — раздел t = H·(C/(I·H))^k, k: обычно 1,1–1,3; AGM 1,05–1,15, гель 1,1–1,25, заливные 1,2–1,6, пример: 100 А·ч, C20, k = 1,2, 10 А — 87 А·ч — обращение 30.09.2026</li><li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0378775305007093" rel="nofollow noopener" target="_blank">A critical review of using the Peukert equation for determining the remaining capacity of lead-acid and lithium-ion batteries</a> — D. Doerffel, S. Abu Sharkh; Journal of Power Sources — Редакция т. 155, вып. 2, 2006, с. 395–400; вывод виден в аннотации в выдаче — раздел уравнение Пейкерта верно только при постоянном токе и ограниченном нагреве батареи — обращение 30.09.2026</li><li><a href="https://doi.org/10.3390/en6115625" rel="nofollow noopener" target="_blank">Peukert Revisited — Critical Appraisal and Need for Modification for Lithium-Ion Batteries</a> — N. Omar, P. Van den Bossche и др.; журнал Energies (MDPI) — Редакция т. 6, вып. 11, 2013, с. 5625–5641; выводы видны в аннотации в выдаче — раздел для Li-ion — лишь в узком диапазоне токов и температур, у LiFePO₄ показатель близок к 1 при 0–40 °C — обращение 30.09.2026</li><li><a href="https://csb-battery.com/wp-content/uploads/2024/07/CSB-Datasheet-HR1234W-%E2%80%93-053124.pdf" rel="nofollow noopener" target="_blank">HR1234W. Datasheet</a> — CSB Battery — Редакция паспорт 05/2024; строка таблицы разряда постоянной мощностью видна в выдаче — раздел разряд постоянной мощностью: 34,3 Вт на элемент за 15 мин до 1,67 В/эл. при 25 °C — обращение 30.09.2026</li><li><a href="https://www.solidstatecontrolsinc.com/knowledgecenter/~/media/85b8e51754c446bda1f38449f444471c.ashx" rel="nofollow noopener" target="_blank">Selection and Sizing of Batteries for UPS Backup</a> — Solid State Controls (производитель ИБП), прикладная записка — Редакция PDF на дату обращения; формула кВт на элемент видна в выдаче — раздел батареи ИБП подбирают по кВт на элемент: нагрузка / (КПД · число элементов), для разряда 5–120 мин данные даются в кВт на элемент — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Ток батареи постоянный: I = P / (U·η) при номинальном напряжении.</li><li>Ёмкость C указана для H-часового разряда до того конечного напряжения, при котором ИБП отключается.</li><li>Показатель k постоянен во всём диапазоне токов.</li><li>Для Li-ion поправка на ток не делается: t = C/I.</li></ul><p><b>Границы применимости:</b></p><ul><li>Рост тока по мере падения напряжения при разряде постоянной мощностью не учтён — результат оптимистичен.</li><li>Температура, старение и запас на конец срока службы не учитываются.</li><li>При токе меньше C/H и вне двух паспортных точек формула Пейкерта — экстраполяция.</li><li>Точное время — по таблице разряда постоянной мощностью производителя батареи.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="vremya-raboty-akkumulyatora.html">Время работы от аккумулятора</a></li><li><a href="raschet-invertora.html">Подбор инвертора и кабеля от аккумулятора</a></li><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="samorazryad-akkumulyatora.html">Саморазряд аккумулятора при хранении и срок подзаряда</a></li><li><a href="stoimost-kvtch-akkumulyatora.html">Стоимость 1 кВт·ч, запасённого аккумулятором за срок службы</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function lt(a,b){return a<b*(1-1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function pl(s,one,few,many,frac){if(/[,·]/.test(s))return frac;var n=Math.abs(parseInt(s,10))%100,n1=n%10;if(n>10&&n<20)return many;if(n1===1)return one;if(n1>=2&&n1<=4)return few;return many;}
+function yr(s){return s+' '+pl(s,'год','года','лет','года');}
+
+function sync(){var pb=S('chem')==='lead',two=pb&&S('kmode')==='two';hideF('h',!pb);hideF('kmode',!pb);hideF('k',!pb||two);hideF('c2',!two);hideF('h2',!two);}
+function init(){$('chem').addEventListener('change',sync);$('kmode').addEventListener('change',sync);sync();}
+function th(x,lim){return x>=1?fx(x,lim)+' ч':fx(x*60,lim*60)+' мин';}
+function calc(){
+var pb=S('chem')==='lead',two=pb&&S('kmode')==='two',p=P('p'),eta=P('eta'),u=P('u'),c=P('c'),h=pb?P('h'):1,k=NaN,c2=NaN,h2=NaN,nc=u/2;
+if([p,eta,u,c,h].some(isNaN))return err(pb?'Заполните мощность нагрузки, КПД инвертора, напряжение, ёмкость и время разряда числами.':'Заполните мощность нагрузки, КПД инвертора, напряжение и ёмкость числами.');
+if(p<=0||u<=0||c<=0||h<=0)return err(pb?'Мощность, напряжение, ёмкость и время разряда должны быть больше нуля.':'Мощность, напряжение и ёмкость должны быть больше нуля.');
+if(eta<=0||eta>100)return err('КПД инвертора задаётся в процентах: больше 0 и не больше 100.');
+if(pb&&(nc<1-1e-9||Math.abs(nc-Math.round(nc))>1e-9))return err('Номинальное напряжение свинцово-кислотной батареи кратно 2 В — по 2 В на элемент: 12, 24, 48 В и так далее.');
+if(pb){nc=Math.round(nc);
+ if(two){c2=P('c2');h2=P('h2');
+  if(isNaN(c2)||isNaN(h2))return err('Введите вторую ёмкость из паспорта и время разряда для неё.');
+  if(c2<=0||h2<=0)return err('Вторая ёмкость и время разряда должны быть больше нуля.');
+  if(Math.abs(h2-h)<=1e-9*h)return err('Время разряда второй точки должно отличаться от H.');
+  var i1=c/h,i2=c2/h2;
+  if(Math.abs(i1-i2)<=1e-12*i1)return err('Токи разряда двух точек совпадают — показатель Пейкерта по ним не определить.');
+  k=Math.log(h2/h)/Math.log(i1/i2);
+  if(!(k>=1-1e-9&&k<=1.6+1e-9))return err('По двум точкам паспорта k = '+fmt(k)+' — вне диапазона 1…1,6, который источники дают для свинцово-кислотных АКБ. Проверьте, что меньшему времени разряда соответствует меньшая ёмкость.');}
+ else{k=P('k');if(isNaN(k))return err('Введите показатель Пейкерта k.');
+  if(k<1||k>1.6)return err('Показатель Пейкерта для свинцово-кислотных АКБ — от 1 до 1,6: Victron настраивает мониторы в диапазоне 1,00–1,50, по сводке Википедии у заливных бывает до 1,6.');}}
+var i=p/(u*eta/100),t0=c/i,ir=c/h;
+if(![i,t0].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var r=pb?row('Ток батареи I = P / (U·η)',fx(i,ir)+' А')+row('Ток паспортного режима C/H',fx(ir,i)+' А'):row('Ток батареи I = P / (U·η)',fmt(i)+' А'),st,n;
+r+=row('Без поправки на ток t = C/I',tf(t0*3600));
+if(!pb){st='Оценка без поправки на ток: около '+tf(t0*3600)+' = C/I; закон Пейкерта для Li-ion не применяется';
+ n='Закон Пейкерта выведен для свинцово-кислотных аккумуляторов. Для литий-ионных он работает лишь в узком диапазоне токов и температур, а у LiFePO₄ показатель в диапазоне 0–40 °C близок к 1 (Omar и Van den Bossche, 2013); Victron для литиевых батарей берёт 1,05, если поставщик не указал иное. Поэтому здесь только C/I. Ёмкость при вашем токе и допустимый ток разряда берите из паспорта батареи и ограничений BMS.';
+ return out(r+row('Статус',st)+note(n));}
+r+=row('Показатель Пейкерта k',fmt(k)+(two?' — по двум точкам паспорта':''));
+if(lt(i,ir)){st='Оценка: около '+tf(t0*3600)+' = C/I; ток '+fx(i,ir)+' А меньше тока паспортного режима C/H = '+fx(ir,i)+' А, и формула Пейкерта дала бы больше паспортной ёмкости — в оценку она не берётся';
+ r+=row('По Пейкерту','не применяется: ток ниже тока паспортного режима');}
+else{var tp=h*Math.pow(c/(i*h),k),ce=i*tp;
+ if(!isFinite(tp))return err('Значения вне диапазона надёжного расчёта.');
+ if(two){var lo=Math.min(h,h2),hi=Math.max(h,h2),inr=ge(tp,lo)&&le(tp,hi),bd=inr?(tp-lo<hi-tp?lo:hi):(tp<lo?lo:hi),ts=th(tp,bd);
+  st=inr?'Оценка по закону Пейкерта: около '+ts+' — между паспортными точками '+fmt(lo)+' и '+fmt(hi)+' ч'
+   :'Оценка по закону Пейкерта с экстраполяцией: около '+ts+' — вне паспортных точек '+fmt(lo)+'…'+fmt(hi)+' ч; уточните по таблице разряда постоянной мощностью';}
+ else{var ts=tf(tp*3600);st='Оценка по закону Пейкерта: около '+ts+' при k = '+fmt(k);}
+ r+=row('По Пейкерту t = H·(C/(I·H))^k',ts)+row('Ёмкость, которую батарея отдаст при этом токе',fmt(ce)+' А·ч ('+fmt(100*ce/c)+' % от C)');}
+r+=row('Мощность на элемент для таблицы производителя P / (η·n)',fmt(p/(eta/100)/nc)+' Вт на элемент, n = '+nc);
+n='Закон Пейкерта — эмпирическая формула для свинцово-кислотных АКБ при постоянном токе и температуре (Doerffel и Abu Sharkh, 2006). ИБП разряжает батарею постоянной мощностью: напряжение по мере разряда падает, ток растёт, поэтому расчёт по номинальному напряжению оптимистичен. ';
+n+='Точнее — по таблице разряда постоянной мощностью из паспорта батареи: найдите время, при котором элемент отдаёт не меньше '+fmt(p/(eta/100)/nc)+' Вт до конечного напряжения вашего ИБП (например, у CSB HR1234W — 34,3 Вт на элемент за 15 мин до 1,67 В на элемент при 25 °C); для таблиц «ватт на блок 12 В» умножьте на 6. ';
+n+='Время — до конечного напряжения, для которого указана C; холод, старение и запас на конец срока службы его уменьшают.';
+out(r+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
