@@ -621,7 +621,7 @@ faqs=[
  ("Считается ли сопротивление источника?",
   "Введите отдельно известный провал вышестоящей сети. Нулевое значение означает только то, что эта составляющая не задана, а не то, что трансформатор, ввод и источник имеют нулевой импеданс."),
 ],
-related=["tok-elektrodvigatelya","padenie-napryazheniya","vnutrennee-soprotivlenie"],
+related=["padenie-napryazheniya","vnutrennee-soprotivlenie","podbor-chastotnogo-preobrazovatelya","privedennyy-moment-inercii","avtotransformatornyy-pusk"],
 review_status="estimate",
 sources=[
  dict(title="Maximum voltage drop limit", organization="Schneider Electric Electrical Installation Guide", edition="редакция 05.08.2026, oldid=29547", sections=["Circuits supplying motors", "steady-state limits do not apply during starting"], accessed="15.08.2026", url="https://www.electrical-installation.org/enw/index.php?title=Maximum_voltage_drop_limit&oldid=29547"),

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Уставка теплового реле двигателя и класс расцепления</title>
+<meta name="description" content="Уставка теплового реле перегрузки по номинальному току двигателя: реле в линии или в фазе обмотки при звезде-треугольнике (Iн/√3), предел по NEC 430.32 с коэффициентом сервиса, попадание в диапазон реле и проверка времени пуска по классу расцепления 10A, 10, 20, 30 ГОСТ IEC 60947-4-1.">
+<link rel="canonical" href="https://macos2024.github.io/ustavka-teplovogo-rele.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Уставка теплового реле двигателя и класс расцепления">
+<meta property="og:description" content="Уставка теплового реле перегрузки по номинальному току двигателя: реле в линии или в фазе обмотки при звезде-треугольнике (Iн/√3), предел по NEC 430.32 с коэффициентом сервиса, попадание в диапазон реле и проверка времени пуска по классу расцепления 10A, 10, 20, 30 ГОСТ IEC 60947-4-1.">
+<meta property="og:url" content="https://macos2024.github.io/ustavka-teplovogo-rele.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Уставка теплового реле двигателя и класс расцепления","url":"https://macos2024.github.io/ustavka-teplovogo-rele.html","description":"Уставка теплового реле перегрузки по номинальному току двигателя: реле в линии или в фазе обмотки при звезде-треугольнике (Iн/√3), предел по NEC 430.32 с коэффициентом сервиса, попадание в диапазон реле и проверка времени пуска по классу расцепления 10A, 10, 20, 30 ГОСТ IEC 60947-4-1.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Уставка теплового реле двигателя и класс расцепления","item":"https://macos2024.github.io/ustavka-teplovogo-rele.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему при звезде-треугольнике уставка 0,58·Iн?","acceptedAnswer":{"@type":"Answer","text":"Если реле стоит после главного контактора, в фазе обмотки, оно видит фазный ток треугольника. Он в √3 раза меньше линейного тока, указанного на шильдике: 1/√3 ≈ 0,58. Если реле стоит в линии перед пускателем, уставка — полный Iн."}},{"@type":"Question","name":"Какой класс выбрать для тяжёлого пуска?","acceptedAnswer":{"@type":"Answer","text":"Тот, у которого нижняя граница времени при 7,2·Ir не меньше времени пуска: 10A — 2 с, 10 — 4 с, 20 — 6 с, 30 — 9 с. Для пуска дольше 9 с ни один из этих классов пуск не гарантирует — нужна кривая реле или другой способ защиты."}},{"@type":"Question","name":"Можно ли выставить уставку с запасом, чтобы реле не срабатывало?","acceptedAnswer":{"@type":"Answer","text":"Завышенная уставка перестаёт защищать двигатель от перегрузки. NEC допускает до 125 % тока с шильдика только для двигателей с коэффициентом сервиса не меньше 1,15 или превышением температуры до 40 °C; по практике IEC реле настраивают на номинальный ток."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Уставка теплового реле двигателя и класс расцепления</h1>
+<p class="intro">Реле настраивают на ток, который через него идёт при номинальной нагрузке двигателя. Класс расцепления говорит, сколько секунд реле терпит 7,2-кратный ток уставки из холодного состояния, — по нему проверяют, выдержит ли реле пуск. Номинальный ток по мощности оценивает <a href="tok-elektrodvigatelya.html">калькулятор тока двигателя</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Уставка теплового реле двигателя и класс расцепления</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_im"><label for="im">Номинальный ток двигателя Iн</label><div class="fw"><input id="im" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">А</span></div><div class="hint">С шильдика — для вашего напряжения и схемы соединения обмоток</div></div><div class="f" id="f_sch"><label for="sch">Где стоит реле</label><div class="fw"><select id="sch"><option value="dol" selected>В линии, прямой пуск</option><option value="ydl">В линии перед пускателем звезда-треугольник</option><option value="ydp">В фазе обмотки: звезда-треугольник, реле после главного контактора</option></select></div></div><div class="f" id="f_base"><label for="base">Основание уставки</label><div class="fw"><select id="base"><option value="iec" selected>Уставка равна току через реле при номинальной нагрузке (практика IEC)</option><option value="nec">NEC 430.32(A)(1): не выше 125 % или 115 % тока с шильдика</option></select></div></div><div class="f" id="f_sf"><label for="sf">Шильдик двигателя (для NEC)</label><div class="fw"><select id="sf"><option value="hi" selected>Коэффициент сервиса SF ≥ 1,15 или превышение температуры ≤ 40 °C — до 125 %</option><option value="lo">Прочие двигатели — до 115 %</option></select></div></div><div class="f" id="f_rmin"><label for="rmin">Диапазон регулирования реле: от</label><div class="fw"><input id="rmin" type="text" inputmode="decimal" autocomplete="off" value="9" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_rmax"><label for="rmax">Диапазон регулирования реле: до</label><div class="fw"><input id="rmax" type="text" inputmode="decimal" autocomplete="off" value="13" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_cls"><label for="cls">Класс расцепления реле</label><div class="fw"><select id="cls"><option value="10A">10A — при 7,2·Ir отключение за 2…10 с</option><option value="10" selected>10 — за 4…10 с</option><option value="20">20 — за 6…20 с</option><option value="30">30 — за 9…30 с</option></select></div></div><div class="f" id="f_kp"><label for="kp">Кратность пускового тока Iп/Iн</label><div class="fw"><input id="kp" type="text" inputmode="decimal" autocomplete="off" value="6" placeholder=""></div><div class="hint">При прямом пуске, из каталога двигателя</div></div><div class="f" id="f_tp"><label for="tp">Время пуска tп</label><div class="fw"><input id="tp" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">с</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Уставка теплового реле двигателя и класс расцепления: как считается</h2>
+<div class="formula">Реле в линии: Ir = Iн&nbsp;&nbsp;&nbsp;Реле в фазе обмотки Δ: Ir = Iн / √3 ≈ 0,58·Iн<br>Пуск выдерживается, если Iп / Ir ≤ 7,2 и tп ≤ T<sub>мин</sub> класса; отключит, если Iп / Ir ≥ 7,2 и tп &gt; T<sub>макс</sub></div>
+<p><b>Уставка.</b> Тепловое реле (электротепловой расцепитель) настраивают на ток, который через него идёт при номинальной нагрузке двигателя. Schneider Electric в описании классов расцепления прямо называет Ir «тепловой уставкой, указанной на шильдике двигателя». Если реле стоит в фазе обмотки — в схеме звезда-треугольник после главного контактора, — через него идёт фазный ток треугольника, в √3 раза меньше линейного, и уставка Iн/√3. Американский NEC 430.32(A)(1) разрешает уставку до 125 % тока с шильдика для двигателей с коэффициентом сервиса не меньше 1,15 или превышением температуры не более 40 °C и до 115 % для прочих; в ПУЭ и ГОСТ такого запаса нет.</p>
+<table class="t"><tr><th scope="col">Класс</th><th scope="col">Время отключения при 7,2·Ir из холодного состояния</th></tr>
+<tr><td>10A</td><td>больше 2 с, не больше 10 с</td></tr>
+<tr><td>10</td><td>больше 4 с, не больше 10 с</td></tr>
+<tr><td>20</td><td>больше 6 с, не больше 20 с</td></tr>
+<tr><td>30</td><td>больше 9 с, не больше 30 с</td></tr></table>
+<p><b>Класс расцепления.</b> ГОСТ IEC 60947-4-1-2021 (IEC 60947-4-1:2018) задаёт классы через время отключения при токе 7,2·Ir из холодного состояния. Таблица стандарта в выдаче поиска дословно не видна; значения выше сверены по документации Schneider Electric (TeSys) и ABB, которые её пересказывают. В редакции 2018 года есть и другие классы — например, 5 и 40; калькулятор их не предлагает, для них берут кривую реле.</p>
+<p><b>Проверка пуска.</b> Стандарт гарантирует время отключения только в одной точке. Если пусковой ток не больше 7,2·Ir, а пуск короче нижней границы класса, реле не отключит: при меньшем токе тепловое реле срабатывает не быстрее. Если ток не меньше 7,2·Ir, а пуск дольше верхней границы, реле отключит. Всё остальное стандарт не решает — нужна кривая конкретного реле, и калькулятор пишет «Недостаточно данных».</p>
+<h2>Уставка теплового реле двигателя и класс расцепления: пример расчёта</h2>
+<p>Двигатель 10 А, прямой пуск 6·Iн, пуск 3 с, реле 9–13 А класса 10. Уставка 10 А в диапазоне. Кратность 6 ≤ 7,2, а 3 с ≤ 4 с — реле класса 10 пуск выдержит. При пуске 5 с класс 10 ничего не гарантирует (4 &lt; 5 ≤ 10), класс 20 — выдержит.</p>
+<p>Двигатель 26 А в схеме звезда-треугольник, реле в фазе обмотки: уставка 26/√3 ≈ <b>15,01 А</b>. На ступени «звезда» через реле идёт 6·26/3 = 52 А — это 3,46·Ir.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему при звезде-треугольнике уставка 0,58·Iн?</h3><p>Если реле стоит после главного контактора, в фазе обмотки, оно видит фазный ток треугольника. Он в √3 раза меньше линейного тока, указанного на шильдике: 1/√3 ≈ 0,58. Если реле стоит в линии перед пускателем, уставка — полный Iн.</p><h3>Какой класс выбрать для тяжёлого пуска?</h3><p>Тот, у которого нижняя граница времени при 7,2·Ir не меньше времени пуска: 10A — 2 с, 10 — 4 с, 20 — 6 с, 30 — 9 с. Для пуска дольше 9 с ни один из этих классов пуск не гарантирует — нужна кривая реле или другой способ защиты.</p><h3>Можно ли выставить уставку с запасом, чтобы реле не срабатывало?</h3><p>Завышенная уставка перестаёт защищать двигатель от перегрузки. NEC допускает до 125 % тока с шильдика только для двигателей с коэффициентом сервиса не меньше 1,15 или превышением температуры до 40 °C; по практике IEC реле настраивают на номинальный ток.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.elec.ru/library/gosts_e71/gost-iec-60947-4-1-2021/" rel="nofollow noopener" target="_blank">ГОСТ IEC 60947-4-1-2021 (IEC 60947-4-1:2018). Аппаратура распределения и управления низковольтная. Часть 4-1. Контакторы и пускатели. Электромеханические контакторы и пускатели</a> — Росстандарт — Редакция 2021, идентичен IEC 60947-4-1:2018; таблица классов расцепления в выдаче дословно не видна — предельные времена сверены по документации изготовителей, пересказывающих стандарт — раздел классы расцепления реле перегрузки, время отключения при 7,2·Ir — обращение 30.09.2026</li><li><a href="https://www.productinfo.schneider-electric.com/tesysgigaframe56/doca0161-tesys-giga-frame5-6-user-guide/English/BM_TeSys%20GV5_6_354b1ab7_T000229243.xml/$/GTD_Tripclass_IEC60947_4_1_354b1ab7_T000229931" rel="nofollow noopener" target="_blank">Trip class (IEC 60947-4-1) — TeSys GV5/GV6 User Guide</a> — Schneider Electric — Редакция онлайн-редакция руководства на дату обращения — раздел классы 10A, 10, 20, 30 при 7,2·Ir, Ir — тепловая уставка по шильдику двигателя — обращение 30.09.2026</li><li><a href="https://library.e.abb.com/public/a9cd1c3f07dc1870852573a300738595/1SXU106043B0201.pdf" rel="nofollow noopener" target="_blank">Thermal Overload Relays Tripping Class 20</a> — ABB — Редакция каталог 1SXU106043B0201, редакция на дату обращения — раздел class 10A: 2 &lt; Tp ≤ 10 с; class 10: 4 &lt; Tp ≤ 10 с; class 20: 6 &lt; Tp ≤ 20 с — обращение 30.09.2026</li><li><a href="https://eepower.com/technical-articles/sizing-overload-protection-for-motors-above-1-hp/" rel="nofollow noopener" target="_blank">NFPA 70, National Electrical Code, 430.32(A)(1)</a> — NFPA; текст по пересказу EEPower — Редакция NEC 2023; дословно текст не виден, значения 125 % и 115 % совпадают в нескольких пересказах — раздел 430.32(A)(1): SF ≥ 1,15 или превышение ≤ 40 °C — 125 %, прочие — 115 % — обращение 30.09.2026</li><li><a href="https://electrical-engineering-portal.com/star-delta-motor-starter" rel="nofollow noopener" target="_blank">Star-delta motor starter explained in details</a> — Electrical Engineering Portal — Редакция онлайн-статья на дату обращения; вторичный источник — раздел реле в обмотке: уставка 0,58 × ток полной нагрузки — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Классы 10A, 10, 20, 30 — предельные времена при 7,2·Ir из холодного состояния по пересказу IEC 60947-4-1 у Schneider Electric и ABB.</li><li>Характеристика реле обратнозависимая: при меньшей кратности тока реле отключает не быстрее.</li><li>На ступени «звезда» ток в линии и в обмотках — треть прямого пускового тока.</li></ul><p><b>Границы применимости:</b></p><ul><li>Время отключения между точкой 7,2·Ir и током уставки не рассчитывается — только по кривой реле.</li><li>Не учитывает нагрев реле предыдущими пусками и бросок при переключении звезда → треугольник.</li><li>Классы 5, 40 и другие калькулятор не предлагает.</li><li>Предел NEC 430.32 — американская норма, в ПУЭ и ГОСТ её нет.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li><li><a href="avtomat-dlya-dvigatelya.html">Автомат для электродвигателя: отстройка от пускового тока</a></li><li><a href="zvezda-treugolnik.html">Звезда и треугольник: линейные и фазные величины</a></li><li><a href="avtotransformatornyy-pusk.html">Пуск двигателя через автотрансформатор</a></li><li><a href="kompensaciya-dvigatelya.html">Индивидуальная компенсация асинхронного двигателя</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+
+var CL={'10A':[2,10],'10':[4,10],'20':[6,20],'30':[9,30]};
+var ORD=['10A','10','20','30'];
+function sync(){hideF('sf',S('base')!=='nec');}
+function init(){$('base').addEventListener('change',sync);sync();}
+function calc(){
+var i=P('im'),rmin=P('rmin'),rmax=P('rmax'),kp=P('kp'),tp=P('tp'),sch=S('sch'),nec=S('base')==='nec',cls=S('cls'),c=CL[cls];
+if([i,rmin,rmax,kp,tp].some(isNaN))return err('Заполните ток двигателя, диапазон реле, кратность пускового тока и время пуска.');
+if(i<=0)return err('Номинальный ток двигателя должен быть больше нуля.');
+if(rmin<=0||rmax<=0)return err('Границы диапазона реле должны быть больше нуля.');
+if(rmin>rmax)return err('Нижняя граница диапазона реле больше верхней.');
+if(kp<1)return err('Кратность пускового тока не может быть меньше 1.');
+if(tp<=0)return err('Время пуска должно быть больше нуля.');
+var yd=sch!=='dol',irq=sch==='ydp'?i/Math.sqrt(3):i,kmax=nec?(S('sf')==='hi'?1.25:1.15):1,lim=irq*kmax,ir=NaN;
+if(le(rmin,irq)&&ge(rmax,irq))ir=irq;
+else if(nec&&gt(rmin,irq)&&le(rmin,lim))ir=rmin;
+var ist=yd?kp*i/3:kp*i,irc=isNaN(ir)?irq:ir,m=ist/irc;
+if(!isFinite(m)||!isFinite(lim))return err('Значения слишком велики для надёжного расчёта.');
+var h=row('Ток через реле при номинальной нагрузке'+(sch==='ydp'?', Iн/√3':''),fx(irq,irq<rmin?rmin:rmax)+' А');
+if(nec)h+=row('Наибольшая уставка по NEC 430.32(A)(1), '+(kmax===1.25?'125':'115')+' %',fx(lim,rmin)+' А');
+h+=row('Диапазон реле',fx(rmin,irq)+'…'+fx(rmax,irq)+' А')+
+ row('Уставка Ir',isNaN(ir)?'вне диапазона реле':fmt(ir,4)+' А'+(ir!==irq?' — нижняя граница диапазона, в пределах NEC':''))+
+ row('Ток через реле при пуске'+(yd?' (ступень «звезда»)':''),fmt(ist,4)+' А')+
+ (isNaN(ir)?'':row('Кратность пускового тока к уставке',fx(m,7.2)))+
+ row('Класс '+cls+': отключение при 7,2·Ir из холодного состояния','за время больше '+c[0]+' с и не больше '+c[1]+' с');
+var best='';
+if(!isNaN(ir)&&le(m,7.2)){for(var q=0;q<ORD.length;q++){if(le(tp,CL[ORD[q]][0])){best=ORD[q];break;}}
+ h+=row('Наименьший класс, гарантирующий пуск',best?best:'ни один из классов 10A–30: пуск дольше 9 с');}
+var st,n='';
+if(isNaN(ir))st='Реле не подходит: '+(nec?'в диапазоне нет уставки от '+fmt(irq,4)+' до '+fx(lim,rmin)+' А':'требуемая уставка '+fx(irq,irq<rmin?rmin:rmax)+' А вне диапазона');
+else if(le(m,7.2)&&le(tp,c[0]))st='Оценка: реле класса '+cls+' выдерживает пуск из холодного состояния';
+else if(ge(m,7.2)&&gt(tp,c[1]))st='Реле класса '+cls+' отключит двигатель при пуске';
+else st='Недостаточно данных: при этой кратности и времени пуска нужна время-токовая кривая реле';
+if(sch==='ydp')n+='Реле в фазе обмотки видит фазный ток треугольника, в √3 раза меньше линейного, поэтому уставка — Iн/√3 ≈ 0,58·Iн. ';
+if(sch==='ydl')n+='Реле в линии видит линейный ток, уставка — Iн. ';
+if(yd)n+='На ступени «звезда» ток в обмотках и в линии втрое меньше прямого пускового тока. Бросок при переключении на треугольник не учтён. ';
+if(nec)n+='NEC 430.32 — американская норма; в ПУЭ и ГОСТ IEC 60947-4-1 такого предела нет, реле настраивают на ток двигателя. ';
+n+='Класс задаёт время отключения только в одной точке — 7,2·Ir из холодного состояния. Вывод «выдерживает» опирается на то, что при меньшей кратности реле отключает не быстрее (обратнозависимая характеристика), вывод «отключит» — на то, что при большей кратности не медленнее. В остальных случаях время берут по кривой реле. После предыдущего пуска реле нагрето и отключит быстрее; допустимое число пусков в час указывает изготовитель.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

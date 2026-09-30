@@ -154,7 +154,7 @@ faqs=[
  ("Учитывает ли расчёт перекос фаз?",
   "Нет, формулы верны для симметричной нагрузки. При неравных фазах в звезде без нулевого провода смещается нейтраль и напряжения на фазах становятся разными — там нужен отдельный расчёт по методу двух узлов."),
 ],
-related=["moshchnost-toka", "tok-elektrodvigatelya", "kva-kvt", "tok-v-nule-perekos"],
+related=["moshchnost-toka", "tok-elektrodvigatelya", "kva-kvt", "tok-v-nule-perekos", "ustavka-teplovogo-rele"],
 ),
 
 dict(
@@ -1046,7 +1046,7 @@ faqs=[
  ("Как учесть пусковой ток?",
   "Возьмите пусковой ток и длительность пуска из паспорта двигателя, кривой производителя или измерения. Характеристику защиты выбирают вместе с кабелем, током КЗ и способом пуска; этот расчёт установившейся мощности её не определяет."),
 ],
-related=["tok-elektrodvigatelya","moshchnost-toka","vybor-avtomata"],
+related=["tok-elektrodvigatelya","moshchnost-toka","vybor-avtomata","kpd-dvigatelya-ie","podbor-chastotnogo-preobrazovatelya"],
 ),
 
 dict(

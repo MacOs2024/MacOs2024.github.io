@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Тормозной резистор для частотного преобразователя</title>
+<meta name="description" content="Наибольшее сопротивление тормозного резистора по порогу включения тормозного ключа и тормозной мощности (формула Danfoss), проверка минимального сопротивления ключа Rmin и средняя мощность резистора по продолжительности торможения.">
+<link rel="canonical" href="https://macos2024.github.io/tormoznoy-rezistor-chrp.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Тормозной резистор для частотного преобразователя">
+<meta property="og:description" content="Наибольшее сопротивление тормозного резистора по порогу включения тормозного ключа и тормозной мощности (формула Danfoss), проверка минимального сопротивления ключа Rmin и средняя мощность резистора по продолжительности торможения.">
+<meta property="og:url" content="https://macos2024.github.io/tormoznoy-rezistor-chrp.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Тормозной резистор для частотного преобразователя","url":"https://macos2024.github.io/tormoznoy-rezistor-chrp.html","description":"Наибольшее сопротивление тормозного резистора по порогу включения тормозного ключа и тормозной мощности (формула Danfoss), проверка минимального сопротивления ключа Rmin и средняя мощность резистора по продолжительности торможения.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Тормозной резистор для частотного преобразователя","item":"https://macos2024.github.io/tormoznoy-rezistor-chrp.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Можно ли поставить резистор с большим сопротивлением, раз через него меньше ток?","acceptedAnswer":{"@type":"Answer","text":"Можно, но тормозной момент будет меньше: при пороге включения резистор рассеет U²/R, и если это меньше тормозной мощности, напряжение звена продолжит расти до защиты от перенапряжения — ПЧ отключится. Danfoss прямо предупреждает не выбирать сопротивление выше рекомендованного."}},{"@type":"Question","name":"Что такое Rmin и где его взять?","acceptedAnswer":{"@type":"Answer","text":"Это наименьшее сопротивление, при котором ток встроенного тормозного ключа не превышает допустимый. Оно указано в руководстве или каталоге конкретного ПЧ; калькулятор его не угадывает."}},{"@type":"Question","name":"Почему мощность резистора намного меньше тормозной мощности?","acceptedAnswer":{"@type":"Answer","text":"Резистор нагружен только во время торможения. При ПВ 20 % средняя мощность — пятая часть пиковой. Но пиковую мощность он должен выдержать на время торможения — это проверяют по кривой перегрузки резистора в каталоге."}},{"@type":"Question","name":"Когда резистор не нужен?","acceptedAnswer":{"@type":"Answer","text":"Если механизм тормозится выбегом или вентилятор разгоняется и останавливается медленно, энергии мало, и ПЧ справится сам, удлинив время торможения. Для частых торможений больших масс рассматривают рекуперацию в сеть вместо резистора."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Тормозной резистор для частотного преобразователя</h1>
+<p class="intro">При торможении двигатель отдаёт энергию в звено постоянного тока ПЧ, напряжение растёт, и тормозной ключ сбрасывает её в резистор. Сопротивление ограничено сверху — иначе не хватит тормозного момента — и снизу минимумом ключа <b>Rmin</b> из руководства ПЧ. Инерцию механизма и энергию торможения помогает найти <a href="privedennyy-moment-inercii.html">приведённый момент инерции</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Тормозной резистор для частотного преобразователя</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Как задан тормозной режим</label><div class="fw"><select id="mode"><option value="pct" selected>Мощность двигателя и тормозной момент в % от номинального</option><option value="mech">Тормозной момент в Н·м и частота вращения в начале торможения</option></select></div></div><div class="f" id="f_pm"><label for="pm">Номинальная мощность двигателя</label><div class="fw"><input id="pm" type="text" inputmode="decimal" autocomplete="off" value="7,5" placeholder=""><span class="u">кВт</span></div></div><div class="f" id="f_mbr"><label for="mbr">Тормозной момент, % от номинального</label><div class="fw"><input id="mbr" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">%</span></div><div class="hint">Danfoss в примерах берёт до 160 %</div></div><div class="f" id="f_mt"><label for="mt">Тормозной момент на валу двигателя</label><div class="fw"><input id="mt" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">Н·м</span></div></div><div class="f" id="f_n"><label for="n">Частота вращения в начале торможения</label><div class="fw"><input id="n" type="text" inputmode="decimal" autocomplete="off" value="1500" placeholder=""><span class="u">об/мин</span></div></div><div class="f" id="f_etm"><label for="etm">КПД двигателя</label><div class="fw"><input id="etm" type="text" inputmode="decimal" autocomplete="off" value="90" placeholder=""><span class="u">%</span></div><div class="hint">Danfoss принимает около 90 %</div></div><div class="f" id="f_eti"><label for="eti">КПД преобразователя</label><div class="fw"><input id="eti" type="text" inputmode="decimal" autocomplete="off" value="98" placeholder=""><span class="u">%</span></div><div class="hint">Danfoss принимает около 98 %</div></div><div class="f" id="f_thr"><label for="thr">Порог включения тормозного ключа Uторм</label><div class="fw"><select id="thr"><option value="d480" selected>778 В — Danfoss VLT FC 102, 3 × 380–480 В</option><option value="d240">390 В — Danfoss VLT FC 102, 3 × 200–240 В</option><option value="mm">1,13·√2·U сети — Siemens MICROMASTER 440</option><option value="own">Ввести по руководству своего ПЧ</option></select></div><div class="hint">Порог у каждого производителя и серии свой</div></div><div class="f" id="f_us"><label for="us">Напряжение сети (параметр P0210)</label><div class="fw"><input id="us" type="text" inputmode="decimal" autocomplete="off" value="400" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_ubr"><label for="ubr">Порог включения тормозного ключа по руководству ПЧ</label><div class="fw"><input id="ubr" type="text" inputmode="decimal" autocomplete="off" value="780" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_rmin"><label for="rmin">Наименьшее допустимое сопротивление резистора Rmin по руководству ПЧ</label><div class="fw"><input id="rmin" type="text" inputmode="decimal" autocomplete="off" value="30" placeholder=""><span class="u">Ом</span></div></div><div class="f" id="f_tb"><label for="tb">Время торможения в цикле</label><div class="fw"><input id="tb" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">с</span></div></div><div class="f" id="f_tc"><label for="tc">Период цикла</label><div class="fw"><input id="tc" type="text" inputmode="decimal" autocomplete="off" value="60" placeholder=""><span class="u">с</span></div><div class="hint">Для одного торможения за длительный период берите реальный период повторения</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Тормозной резистор для частотного преобразователя: как считается</h2>
+<div class="formula">P = P<sub>мех</sub> · η<sub>дв</sub> · η<sub>ПЧ</sub>,&nbsp;&nbsp;P<sub>мех</sub> = P<sub>дв</sub> · M<sub>торм</sub>% / 100 или M · 2πn / 60<br>R<sub>max</sub> = U<sub>торм</sub>² / P,&nbsp;&nbsp;R<sub>min</sub> ≤ R ≤ R<sub>max</sub><br>ПВ = t<sub>т</sub> / t<sub>ц</sub>,&nbsp;&nbsp;P<sub>ср</sub> = P · ПВ</div>
+<p><b>Откуда берётся энергия.</b> Когда ПЧ снижает частоту быстрее, чем механизм тормозится сам, двигатель переходит в генераторный режим. Энергия через обратные диоды инвертора возвращается в звено постоянного тока, и напряжение на конденсаторах растёт. Выпрямитель обычного ПЧ вернуть её в сеть не может. Когда напряжение достигает порога <b>U<sub>торм</sub></b>, открывается тормозной ключ и подключает резистор.</p>
+<p><b>Наибольшее сопротивление.</b> При пороге U<sub>торм</sub> резистор рассеивает U<sub>торм</sub>²/R. Чтобы принять тормозную мощность P, нужно U<sub>торм</sub>²/R ≥ P, откуда R ≤ U<sub>торм</sub>²/P. Так в руководстве Danfoss MCE 101: R<sub>rec</sub> = U<sub>dc</sub>²·100 / (P<sub>motor</sub>·M<sub>br</sub>(%)·η<sub>VLT</sub>·η<sub>motor</sub>), где U<sub>dc</sub> — напряжение включения тормоза, η<sub>motor</sub> ≈ 0,90, η<sub>VLT</sub> ≈ 0,98. Резистор с большим сопротивлением не даст заданного момента: ПЧ отключится по перенапряжению звена.</p>
+<p><b>Наименьшее сопротивление.</b> Меньше R<sub>min</sub> из руководства ПЧ ставить нельзя: ток ключа U<sub>торм</sub>/R превысит допустимый. Если R<sub>max</sub> &lt; R<sub>min</sub>, встроенный ключ заданную мощность не обеспечит.</p>
+<p><b>Порог включения.</b> Он зависит от производителя и серии. В руководстве Danfoss MCE 101 для VLT FC 102: 390 В для сети 3 × 200–240 В, 778 В для 380–480 В, 943 В и 1099 В для 525–600 и 525–690 В. У Siemens MICROMASTER 440 порог считается от напряжения сети в параметре P0210: 1,13·√2·U. Для других ПЧ введите значение из руководства — оценка «1,35·U сети плюс 15–20 %» даёт лишь порядок величины.</p>
+<p><b>Мощность резистора.</b> Средняя мощность за цикл — P·ПВ, где ПВ — доля времени торможения в периоде цикла; так её считает Danfoss. Для торможения постоянным моментом до остановки мощность спадает от P до нуля и в среднем вдвое меньше — формула P·ПВ даёт запас. Пиковую мощность P резистор должен выдерживать в течение t<sub>т</sub>: это проверяют по кривой кратковременной перегрузки в каталоге резисторов.</p>
+<h2>Тормозной резистор для частотного преобразователя: пример расчёта</h2>
+<p>Двигатель 7,5 кВт, ПЧ Danfoss FC 102 на 400 В (порог 778 В), торможение 100 % момента, 12 с каждые 60 с, R<sub>min</sub> = 30 Ом. Мощность в звене: 7500 · 0,90 · 0,98 = <b>6615 Вт</b>. R<sub>max</sub> = 778² / 6615 ≈ <b>91,5 Ом</b>. Подходит резистор от 30 до 91,5 Ом; ПВ = 20 %, средняя мощность — 6615 · 0,2 = <b>1323 Вт</b>, пиковая — 6,6 кВт в течение 12 с.</p>
+<p>Тот же ПЧ, торможение 160 % и R<sub>min</sub> = 60 Ом: P = 10,58 кВт, R<sub>max</sub> = 778² / 10584 ≈ 57,2 Ом — меньше 60 Ом. Встроенный ключ такой момент не обеспечит.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Можно ли поставить резистор с большим сопротивлением, раз через него меньше ток?</h3><p>Можно, но тормозной момент будет меньше: при пороге включения резистор рассеет U²/R, и если это меньше тормозной мощности, напряжение звена продолжит расти до защиты от перенапряжения — ПЧ отключится. Danfoss прямо предупреждает не выбирать сопротивление выше рекомендованного.</p><h3>Что такое Rmin и где его взять?</h3><p>Это наименьшее сопротивление, при котором ток встроенного тормозного ключа не превышает допустимый. Оно указано в руководстве или каталоге конкретного ПЧ; калькулятор его не угадывает.</p><h3>Почему мощность резистора намного меньше тормозной мощности?</h3><p>Резистор нагружен только во время торможения. При ПВ 20 % средняя мощность — пятая часть пиковой. Но пиковую мощность он должен выдержать на время торможения — это проверяют по кривой перегрузки резистора в каталоге.</p><h3>Когда резистор не нужен?</h3><p>Если механизм тормозится выбегом или вентилятор разгоняется и останавливается медленно, энергии мало, и ПЧ справится сам, удлинив время торможения. Для частых торможений больших масс рассматривают рекуперацию в сеть вместо резистора.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://files.danfoss.com/download/Drives/MG06H102.pdf" rel="nofollow noopener" target="_blank">Design Guide VLT® Brake Resistor MCE 101</a> — Danfoss Drives — Редакция MG06H102; формулы и таблица порогов сверены по выдаче поиска и её пересказу — раздел Rrec = Udc²·100 / (Pmotor·Mbr(%)·ηVLT·ηmotor), ηmotor ≈ 0,90, ηVLT ≈ 0,98, Udc FC 102: 390, 778, 943, 1099 В, расчёт средней мощности: Pavg = Ppeak·ПВ, ПВ = Tb/Tp — обращение 30.09.2026</li><li><a href="https://support.industry.siemens.com/cs/attachments/22101908/PDF_Engineering_braking_chopper_operation_V1_2_en.pdf" rel="nofollow noopener" target="_blank">Drive System Application: Engineering braking chopper operation</a> — Siemens AG, Industry Support — Редакция V1.2; формула порога видна в пересказе выдачи — раздел MICROMASTER 440: порог VDC,chopper = 1,13·√2·P0210 — обращение 30.09.2026</li><li><a href="https://library.e.abb.com/public/20be376000f34dd6b9c513580cf56423/Technical_guide_No_8_3AFE64362534_RevC.pdf" rel="nofollow noopener" target="_blank">Technical guide No. 8. Electrical braking</a> — ABB Drives — Редакция 3AFE64362534 Rev C; общий принцип, текст формул не сверен — раздел тормозной прерыватель и резистор в звене постоянного тока — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Тормозная мощность в звене постоянного тока — механическая, умноженная на КПД двигателя и ПЧ (формула Danfoss).</li><li>В режиме «в процентах» торможение начинается с номинальной скорости: Pмех = Pдв·Mторм%/100.</li><li>Средняя мощность — P·ПВ, как при торможении постоянной мощностью: с запасом для торможения постоянным моментом.</li><li>Порог включения ключа — из выбранной строки или из руководства ПЧ; Rmin — из руководства ПЧ.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не выбирает номинальную мощность резистора по кривой кратковременной перегрузки — её даёт каталог резисторов.</li><li>Не учитывает потери энергии в механизме и собственное трение: тормозная мощность берётся с запасом.</li><li>Не рассчитывает рекуперацию в сеть и общую шину постоянного тока нескольких ПЧ.</li><li>Пороги Danfoss и Siemens взяты из их документации; у других производителей значения другие.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="podbor-chastotnogo-preobrazovatelya.html">Подбор частотного преобразователя по току двигателя</a></li><li><a href="privedennyy-moment-inercii.html">Приведённый момент инерции через редуктор</a></li><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+
+var THR={d480:[778,'778 В — Danfoss VLT FC 102, 3 × 380–480 В'],d240:[390,'390 В — Danfoss VLT FC 102, 3 × 200–240 В']};
+function sync(){var m=S('mode')==='pct',t=S('thr');hideF('pm',!m);hideF('mbr',!m);hideF('mt',m);hideF('n',m);hideF('us',t!=='mm');hideF('ubr',t!=='own');}
+function init(){$('mode').addEventListener('change',sync);$('thr').addEventListener('change',sync);sync();}
+function calc(){
+var pct=S('mode')==='pct',thr=S('thr'),em=P('etm'),ei=P('eti'),rmin=P('rmin'),tb=P('tb'),tc=P('tc'),pmech,u,ulab;
+if(pct){var pm=P('pm'),mbr=P('mbr');
+ if(isNaN(pm)||isNaN(mbr))return err('Введите мощность двигателя и тормозной момент в процентах.');
+ if(pm<=0||mbr<=0)return err('Мощность двигателя и тормозной момент должны быть больше нуля.');
+ pmech=pm*1000*mbr/100;}
+else{var mt=P('mt'),n=P('n');
+ if(isNaN(mt)||isNaN(n))return err('Введите тормозной момент и частоту вращения.');
+ if(mt<=0||n<=0)return err('Тормозной момент и частота вращения должны быть больше нуля.');
+ pmech=mt*2*Math.PI*n/60;}
+if(isNaN(em)||isNaN(ei))return err('Введите КПД двигателя и преобразователя.');
+if(em<=0||em>100||ei<=0||ei>100)return err('КПД задаётся в процентах: больше 0 и не больше 100.');
+if(thr==='mm'){var us=P('us');
+ if(isNaN(us))return err('Введите напряжение сети.');
+ if(us<=0)return err('Напряжение сети должно быть больше нуля.');
+ u=1.13*Math.SQRT2*us;ulab='1,13·√2·'+fmt(us)+' В — Siemens MICROMASTER 440';}
+else if(thr==='own'){u=P('ubr');
+ if(isNaN(u))return err('Введите порог включения тормозного ключа.');
+ if(u<=0)return err('Порог включения должен быть больше нуля.');
+ ulab='по руководству ПЧ';}
+else{u=THR[thr][0];ulab=THR[thr][1];}
+if(isNaN(rmin))return err('Введите наименьшее допустимое сопротивление Rmin по руководству ПЧ.');
+if(rmin<=0)return err('Сопротивление Rmin должно быть больше нуля.');
+if(isNaN(tb)||isNaN(tc))return err('Введите время торможения и период цикла.');
+if(tb<=0||tc<=0)return err('Время торможения и период цикла должны быть больше нуля.');
+if(!le(tb,tc))return err('Время торможения не может быть больше периода цикла.');
+var pel=pmech*em/100*ei/100,rmax=u*u/pel,pv=Math.min(tb/tc,1),pavg=pel*pv,w=pel*tb,pcap=u*u/rmin;
+if(![pel,rmax,pavg,w,pcap].every(isFinite)||rmax<=0||pel<=0)return err('Значения вне диапазона надёжного расчёта.');
+var ok=ge(rmax,rmin),st,nt;
+var h=row('Механическая тормозная мощность на валу',si(pmech,'Вт'))+
+ row('Мощность в звене постоянного тока P = Pмех·ηдв·ηПЧ',si(pel,'Вт'))+
+ row('Порог включения тормозного ключа Uторм',fmt(u)+' В ('+ulab+')')+
+ row('Наибольшее сопротивление Rmax = Uторм² / P',fx(rmax,rmin)+' Ом')+
+ row('Наименьшее допустимое Rmin по руководству ПЧ',fx(rmin,rmax)+' Ом')+
+ row('Ток ключа при Rmax и при Rmin',fmt(u/rmax)+' А и '+fmt(u/rmin)+' А')+
+ row('Продолжительность торможения ПВ = tт / tц',fmt(pv*100)+' %')+
+ row('Средняя мощность резистора Pср = P·ПВ',si(pavg,'Вт'))+
+ row('Энергия одного торможения P·tт',si(w,'Дж'));
+if(ok){st='Оценка: сопротивление от '+fx(rmin,rmax)+' до '+fx(rmax,rmin)+' Ом, средняя мощность не меньше '+si(pavg,'Вт')+', пиковая — '+si(pel,'Вт');
+ nt='Резистор с сопротивлением больше Rmax не даст заданного тормозного момента: при пороге Uторм он рассеет меньше P, напряжение звена дойдёт до защиты от перенапряжения, и ПЧ отключится. Меньше Rmin — перегрузка тормозного ключа. ';}
+else{st='Требуемое сопротивление меньше Rmin: тормозной ключ этого ПЧ не обеспечит заданную тормозную мощность';
+ nt='При сопротивлении не меньше Rmin ключ при пороге Uторм пропустит не больше Uторм² / Rmin = '+si(pcap,'Вт')+' — меньше требуемых '+si(pel,'Вт')+'. Уменьшите тормозной момент или скорость, увеличьте время торможения либо возьмите ПЧ или внешний тормозной модуль с меньшим Rmin. ';}
+nt+='Формула Danfoss: R = Uторм²·100 / (Pдв·Mторм%·ηПЧ·ηдв); в режиме «в процентах» торможение считается от номинальной скорости. Средняя мощность P·ПВ — для торможения постоянной мощностью; если момент постоянен и скорость падает до нуля, мощность спадает линейно, и средняя вдвое меньше — расчёт идёт с запасом. Номинальную мощность резистора выбирают по кривой его кратковременной перегрузки из каталога; калькулятор её не знает. ';
+if(pv>=1-1e-12)nt+='ПВ 100 %: торможение длительное — сравните резистор с рекуперацией энергии в сеть. ';
+out(h+row('Статус',st)+note(nt));
+}
+
+</script>
+</body>
+</html>

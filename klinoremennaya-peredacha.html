@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Клиноремённая передача: длина ремня и угол обхвата</title>
+<meta name="description" content="Расчёт открытой клиноремённой передачи: передаточное число и частота ведомого шкива с учётом скольжения, скорость ремня, расчётная длина ремня по межосевому расстоянию (ГОСТ 1284.3-96) или межосевое расстояние по длине, угол обхвата малого шкива с проверкой рекомендуемых 120°.">
+<link rel="canonical" href="https://macos2024.github.io/klinoremennaya-peredacha.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Клиноремённая передача: длина ремня и угол обхвата">
+<meta property="og:description" content="Расчёт открытой клиноремённой передачи: передаточное число и частота ведомого шкива с учётом скольжения, скорость ремня, расчётная длина ремня по межосевому расстоянию (ГОСТ 1284.3-96) или межосевое расстояние по длине, угол обхвата малого шкива с проверкой рекомендуемых 120°.">
+<meta property="og:url" content="https://macos2024.github.io/klinoremennaya-peredacha.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Клиноремённая передача: длина ремня и угол обхвата","url":"https://macos2024.github.io/klinoremennaya-peredacha.html","description":"Расчёт открытой клиноремённой передачи: передаточное число и частота ведомого шкива с учётом скольжения, скорость ремня, расчётная длина ремня по межосевому расстоянию (ГОСТ 1284.3-96) или межосевое расстояние по длине, угол обхвата малого шкива с проверкой рекомендуемых 120°.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Клиноремённая передача: длина ремня и угол обхвата","item":"https://macos2024.github.io/klinoremennaya-peredacha.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Какой диаметр шкива вводить?","acceptedAnswer":{"@type":"Answer","text":"Расчётный — по нейтральному слою ремня. Он меньше наружного диаметра шкива; для стандартных шкивов его указывают в чертеже или каталоге."}},{"@type":"Question","name":"Почему ведомый шкив вращается медленнее, чем по отношению диаметров?","acceptedAnswer":{"@type":"Answer","text":"Из-за упругого скольжения ремня. Для клиновых ремней оно обычно около 1–2 %, поэтому частота ведомого вала на столько же ниже."}},{"@type":"Question","name":"Что делать, если угол обхвата меньше 120°?","acceptedAnswer":{"@type":"Answer","text":"Увеличить межосевое расстояние, уменьшить передаточное число одной ступени или поставить натяжной ролик. При малом угле ремень передаёт меньшую мощность и может буксовать."}},{"@type":"Question","name":"Как выбрать стандартный ремень?","acceptedAnswer":{"@type":"Answer","text":"Округлите расчётную длину до ближайшей стандартной по ГОСТ 1284.1-89 и пересчитайте межосевое расстояние в режиме «Расчётная длина ремня». Число ремней считают по мощности на один ремень из ГОСТ 1284.3-96."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Клиноремённая передача: длина ремня и угол обхвата</h1>
+<p class="intro">Клиновой ремень передаёт вращение от двигателя к механизму. Калькулятор считает геометрию открытой передачи по <b>расчётным диаметрам</b> шкивов: длину ремня или межосевое расстояние, угол обхвата малого шкива и частоту вращения ведомого вала. Инерцию механизма за передачей приводит <a href="privedennyy-moment-inercii.html">калькулятор приведённого момента инерции</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Клиноремённая передача: длина ремня и угол обхвата</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Что известно</label><div class="fw"><select id="mode"><option value="a" selected>Межосевое расстояние — найти длину ремня</option><option value="l">Расчётная длина ремня — найти межосевое расстояние</option></select></div></div><div class="f" id="f_d1"><label for="d1">Расчётный диаметр ведущего шкива d1</label><div class="fw"><input id="d1" type="text" inputmode="decimal" autocomplete="off" value="125" placeholder=""><span class="u">мм</span></div></div><div class="f" id="f_d2"><label for="d2">Расчётный диаметр ведомого шкива d2</label><div class="fw"><input id="d2" type="text" inputmode="decimal" autocomplete="off" value="250" placeholder=""><span class="u">мм</span></div></div><div class="f" id="f_n1"><label for="n1">Частота вращения ведущего шкива</label><div class="fw"><input id="n1" type="text" inputmode="decimal" autocomplete="off" value="1450" placeholder=""><span class="u">об/мин</span></div></div><div class="f" id="f_eps"><label for="eps">Упругое скольжение ремня ε</label><div class="fw"><input id="eps" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">%</span></div><div class="hint">В учебной литературе для клиновых ремней обычно принимают около 1–2 %</div></div><div class="f" id="f_a"><label for="a">Межосевое расстояние a</label><div class="fw"><input id="a" type="text" inputmode="decimal" autocomplete="off" value="400" placeholder=""><span class="u">мм</span></div></div><div class="f" id="f_lp"><label for="lp">Расчётная длина ремня Lp</label><div class="fw"><input id="lp" type="text" inputmode="decimal" autocomplete="off" value="1400" placeholder=""><span class="u">мм</span></div><div class="hint">Стандартные расчётные длины — по ГОСТ 1284.1-89</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Клиноремённая передача: как считается</h2>
+<div class="formula">u = d<sub>2</sub> / (d<sub>1</sub>·(1 − ε)),&nbsp;&nbsp;n<sub>2</sub> = n<sub>1</sub>·d<sub>1</sub>·(1 − ε) / d<sub>2</sub>,&nbsp;&nbsp;v = π·d<sub>1</sub>·n<sub>1</sub> / 60000<br>L<sub>p</sub> = 2a + π(d<sub>1</sub> + d<sub>2</sub>)/2 + (d<sub>2</sub> − d<sub>1</sub>)²/(4a)<br>a = [(L<sub>p</sub> − w) + √((L<sub>p</sub> − w)² − 8y)] / 4,&nbsp;&nbsp;w = π(d<sub>1</sub> + d<sub>2</sub>)/2,&nbsp;&nbsp;y = ((d<sub>2</sub> − d<sub>1</sub>)/2)²<br>α<sub>1</sub> = 180° − 2·arcsin((d<sub>2</sub> − d<sub>1</sub>) / 2a) ≈ 180° − 57°·(d<sub>2</sub> − d<sub>1</sub>)/a</div>
+<p><b>Скольжение.</b> Ремень упруго растягивается на ведущей ветви сильнее, чем на ведомой, и немного проскальзывает по шкивам. Поэтому ведомый шкив вращается медленнее, чем дало бы отношение диаметров: n<sub>2</sub> = n<sub>1</sub>·d<sub>1</sub>·(1 − ε)/d<sub>2</sub>. Для клиновых ремней в учебной литературе обычно принимают ε около 1–2 %; калькулятор берёт введённое значение.</p>
+<p><b>Длина ремня.</b> ГОСТ 1284.3-96 даёт расчётную длину ремня через межосевое расстояние a и расчётные диаметры шкивов: L<sub>p</sub> = 2a + π(d<sub>1</sub> + d<sub>2</sub>)/2 + (d<sub>2</sub> − d<sub>1</sub>)²/(4a). Последнее слагаемое — приближение точной геометрии открытой передачи; калькулятор показывает для сравнения и точную длину. Обратная задача — межосевое расстояние по стандартной длине — решается из того же выражения как квадратное уравнение. Стандартные расчётные длины ремней задаёт ГОСТ 1284.1-89.</p>
+<p><b>Угол обхвата.</b> Малый шкив охвачен ремнём на угол α<sub>1</sub> = 180° − 2·arcsin((d<sub>2</sub> − d<sub>1</sub>)/2a); приближённо — 180° − 57°·(d<sub>2</sub> − d<sub>1</sub>)/a. Чем меньше угол, тем меньше сила трения и мощность, которую ремень передаёт без буксования. В учебной литературе рекомендуют для клиновых ремней α<sub>1</sub> не меньше 120°. ГОСТ 1284.3-96 учитывает угол коэффициентом C<sub>α</sub> при расчёте передаваемой мощности; в выдаче поиска для стандарта видна и рекомендация не меньше 90°.</p>
+<p><b>Чего здесь нет.</b> Мощность, передаваемая одним ремнём, и число ремней считаются по таблицам ГОСТ 1284.3-96 с коэффициентами угла обхвата, длины и режима работы — калькулятор их не применяет. Расчётные диаметры шкивов — это диаметры по нейтральному слою ремня, а не наружные.</p>
+<h2>Клиноремённая передача: пример расчёта</h2>
+<p>Двигатель 1450 об/мин, шкивы 125 и 250 мм, межосевое расстояние 400 мм, скольжение 1 %. Длина ремня: 2 · 400 + π · 375 / 2 + 125² / 1600 = 800 + 589,05 + 9,77 ≈ <b>1398,8 мм</b>. Угол обхвата малого шкива: 180° − 2 · arcsin(125/800) ≈ <b>162°</b> — больше 120°. Ведомый шкив: 1450 · 125 · 0,99 / 250 ≈ <b>717,8 об/мин</b>, скорость ремня — 9,49 м/с.</p>
+<p>Шкивы 100 и 400 мм на межосевом расстоянии 300 мм: arcsin(300/600) = 30°, угол обхвата ровно 120° — на границе рекомендации; при 299 мм он уже меньше.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Какой диаметр шкива вводить?</h3><p>Расчётный — по нейтральному слою ремня. Он меньше наружного диаметра шкива; для стандартных шкивов его указывают в чертеже или каталоге.</p><h3>Почему ведомый шкив вращается медленнее, чем по отношению диаметров?</h3><p>Из-за упругого скольжения ремня. Для клиновых ремней оно обычно около 1–2 %, поэтому частота ведомого вала на столько же ниже.</p><h3>Что делать, если угол обхвата меньше 120°?</h3><p>Увеличить межосевое расстояние, уменьшить передаточное число одной ступени или поставить натяжной ролик. При малом угле ремень передаёт меньшую мощность и может буксовать.</p><h3>Как выбрать стандартный ремень?</h3><p>Округлите расчётную длину до ближайшей стандартной по ГОСТ 1284.1-89 и пересчитайте межосевое расстояние в режиме «Расчётная длина ремня». Число ремней считают по мощности на один ремень из ГОСТ 1284.3-96.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://docs.cntd.ru/document/1200017858" rel="nofollow noopener" target="_blank">ГОСТ 1284.3-96. Ремни приводные клиновые нормальных сечений. Передаваемые мощности</a> — Межгосударственный стандарт — Редакция введён 01.01.1998; формулы длины и угла обхвата видны в пересказе выдачи, актуальность по официальному реестру не проверена — раздел расчётная длина ремня Lp = 2a + π(d1 + d2)/2 + (d2 − d1)²/(4a), угол обхвата α ≈ 180 − 57(d2 − d1)/a и коэффициент Cα (табл. 18) — обращение 30.09.2026</li><li><a href="https://vsegost.com/Catalog/28/28539.shtml" rel="nofollow noopener" target="_blank">ГОСТ 1284.1-89. Ремни приводные клиновые нормальных сечений. Основные размеры и методы контроля</a> — Межгосударственный стандарт — Редакция введён 01.01.1991 (по выдаче поиска) — раздел стандартные расчётные длины ремней — обращение 30.09.2026</li><li><a href="https://elib.belstu.by/bitstream/123456789/9783/8/pm-lekciya-08.pdf" rel="nofollow noopener" target="_blank">Лекция № 8. Ременные передачи</a> — БГТУ, курс «Прикладная механика» (учебный материал, вторичный источник) — Редакция PDF на дату обращения; рекомендация α1 ≥ 120° видна в пересказе выдачи — раздел угол обхвата малого шкива клиноремённой передачи не менее 120°, упругое скольжение ремня — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Передача открытая, валы параллельны, натяжных роликов нет.</li><li>Диаметры — расчётные, по нейтральному слою ремня.</li><li>Скольжение постоянно и задаётся пользователем.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не считает мощность на один ремень, число ремней и натяжение по ГОСТ 1284.3-96.</li><li>Не округляет длину до стандартного ряда ГОСТ 1284.1-89 — это делается вручную.</li><li>Не проверяет минимальный диаметр шкива для сечения ремня и предельную скорость ремня.</li><li>Статус ГОСТ 1284.1-89 и 1284.3-96 в официальном реестре не проверен.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="privedennyy-moment-inercii.html">Приведённый момент инерции через редуктор</a></li><li><a href="kpd-dvigatelya-ie.html">КПД электродвигателя по классам IE2–IE4 и экономия</a></li><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+
+function sync(){var m=S('mode')==='a';hideF('a',!m);hideF('lp',m);}
+function init(){$('mode').addEventListener('change',sync);sync();}
+function calc(){
+var ma=S('mode')==='a',d1=P('d1'),d2=P('d2'),n1=P('n1'),e=P('eps'),a,L;
+if([d1,d2,n1,e].some(isNaN))return err('Введите диаметры шкивов, частоту вращения и скольжение.');
+if(d1<=0||d2<=0||n1<=0)return err('Диаметры и частота вращения должны быть больше нуля.');
+if(e<0||e>=100)return err('Скольжение задаётся в процентах: от 0 до 100, не включая 100.');
+var half=(d1+d2)/2,dd=Math.abs(d2-d1),wv=Math.PI*(d1+d2)/2;
+if(ma){a=P('a');if(isNaN(a))return err('Введите межосевое расстояние.');
+ if(!(a>half*(1+1e-12)))return err('Межосевое расстояние должно быть больше полусуммы диаметров (d1 + d2) / 2 = '+fmt(half)+' мм, иначе шкивы перекрываются.');
+ L=2*a+wv+dd*dd/(4*a);}
+else{L=P('lp');if(isNaN(L))return err('Введите расчётную длину ремня.');
+ if(L<=0)return err('Длина ремня должна быть больше нуля.');
+ var q=L-wv,D=q*q-2*dd*dd;
+ if(q<=0||D<0)return err('Ремень такой длины слишком короток для этих шкивов.');
+ a=(q+Math.sqrt(D))/4;
+ if(!(a>half*(1+1e-12)))return err('Ремень такой длины слишком короток: межосевое расстояние получается не больше (d1 + d2) / 2 = '+fmt(half)+' мм.');}
+var b=Math.asin(dd/(2*a)),al=180-2*b*180/Math.PI,alg=180-57*dd/a,lex=2*a*Math.cos(b)+wv+b*dd;
+var k=1-e/100,n2=n1*d1*k/d2,u=d2/(d1*k),v=Math.PI*d1*n1/60000;
+if(![L,a,al,n2,u,v,lex].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var h=row('Передаточное число без скольжения d2 / d1',fmt(d2/d1))+
+ row('Передаточное отношение с учётом скольжения d2 / (d1·(1 − ε))',fmt(u))+
+ row('Частота вращения ведомого шкива',fmt(n2)+' об/мин')+
+ row('Скорость ремня v = π·d1·n1 / 60000',fmt(v)+' м/с');
+if(ma)h+=row('Расчётная длина ремня Lp (ГОСТ 1284.3-96)',fmt(L,6)+' мм')+row('Для сравнения: точная длина по геометрии',fmt(lex,6)+' мм');
+else h+=row('Межосевое расстояние a',fmt(a,6)+' мм');
+h+=row('Угол обхвата малого шкива α₁ = 180° − 2·arcsin(|d2 − d1| / 2a)',fx(al,120)+'°')+
+ row('По приближённой формуле 180° − 57°·|d2 − d1| / a',fmt(alg)+'°');
+var st=ge(al,120)?'Оценка: угол обхвата малого шкива '+fx(al,120)+'° — не меньше рекомендуемых 120°':'Угол обхвата малого шкива '+fx(al,120)+'° меньше рекомендуемых 120°: увеличьте межосевое расстояние или уменьшите передаточное число';
+var n='Рекомендация «не меньше 120°» — из учебной литературы по деталям машин. ГОСТ 1284.3-96 учитывает угол обхвата коэффициентом Cα при расчёте мощности, передаваемой ремнём; эту мощность и число ремней калькулятор не считает. ';
+n+=ma?'Полученную длину округлите до стандартной расчётной длины по ГОСТ 1284.1-89 и пересчитайте межосевое расстояние режимом «Расчётная длина ремня».':'Предусмотрите запас межосевого расстояния на натяжение ремня и его установку.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

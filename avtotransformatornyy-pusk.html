@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Пуск двигателя через автотрансформатор — ВольтКальк</title>
+<meta name="description" content="Пусковой ток сети и пусковой момент асинхронного двигателя при пуске через автотрансформатор с отводом k (ток и момент снижаются в k² раз) в сравнении с прямым пуском и звездой-треугольником (1/3); проверка момента трогания против момента нагрузки.">
+<link rel="canonical" href="https://macos2024.github.io/avtotransformatornyy-pusk.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Пуск двигателя через автотрансформатор — ВольтКальк">
+<meta property="og:description" content="Пусковой ток сети и пусковой момент асинхронного двигателя при пуске через автотрансформатор с отводом k (ток и момент снижаются в k² раз) в сравнении с прямым пуском и звездой-треугольником (1/3); проверка момента трогания против момента нагрузки.">
+<meta property="og:url" content="https://macos2024.github.io/avtotransformatornyy-pusk.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Пуск двигателя через автотрансформатор","url":"https://macos2024.github.io/avtotransformatornyy-pusk.html","description":"Пусковой ток сети и пусковой момент асинхронного двигателя при пуске через автотрансформатор с отводом k (ток и момент снижаются в k² раз) в сравнении с прямым пуском и звездой-треугольником (1/3); проверка момента трогания против момента нагрузки.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Пуск двигателя через автотрансформатор","item":"https://macos2024.github.io/avtotransformatornyy-pusk.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему ток сети меньше тока двигателя?","acceptedAnswer":{"@type":"Answer","text":"Автотрансформатор понижает напряжение и, как любой трансформатор, повышает ток на выходе: мощность на входе и выходе почти одинакова. На двигатель идёт k·Iп, из сети — k²·Iп. При отводе 65 % двигатель получает 65 % прямого пускового тока, а сеть отдаёт только 42 %."}},{"@type":"Question","name":"Что лучше — автотрансформатор или звезда-треугольник?","acceptedAnswer":{"@type":"Answer","text":"При одинаковом токе сети автотрансформатор даёт тот же момент, но позволяет выбрать отвод под нагрузку: 80 % — больше момента, 50 % — меньше тока. Звезда-треугольник дешевле, но жёстко даёт 1/3 тока и момента и требует двигателя, рассчитанного на треугольник при напряжении сети."}},{"@type":"Question","name":"Почему при достаточном моменте статус только «Оценка»?","acceptedAnswer":{"@type":"Answer","text":"Сравнивается лишь момент трогания. По мере разгона момент двигателя сначала снижается до минимума, а момент насоса или вентилятора растёт; разгон проверяют по механическим характеристикам двигателя и механизма, которых у калькулятора нет."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Питание и энергия</nav>
+<h1>Пуск двигателя через автотрансформатор</h1>
+<p class="intro">Автотрансформатор подаёт на двигатель долю k напряжения сети. Ток двигателя падает в k раз, а ток <b>сети</b> и момент — в k² раз. Проверьте, хватит ли момента, чтобы сдвинуть нагрузку. Провал напряжения в кабеле при пуске считает <a href="prosadka-pri-puske.html">калькулятор просадки при пуске</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Пуск двигателя через автотрансформатор</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_im"><label for="im">Номинальный ток двигателя Iн</label><div class="fw"><input id="im" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_kp"><label for="kp">Кратность пускового тока при прямом пуске Iп/Iн</label><div class="fw"><input id="kp" type="text" inputmode="decimal" autocomplete="off" value="7" placeholder=""></div><div class="hint">Из каталога двигателя</div></div><div class="f" id="f_mp"><label for="mp">Кратность пускового момента при прямом пуске Mп/Mн</label><div class="fw"><input id="mp" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""></div><div class="hint">Из каталога двигателя</div></div><div class="f" id="f_mc"><label for="mc">Момент нагрузки при трогании Mс/Mн</label><div class="fw"><input id="mc" type="text" inputmode="decimal" autocomplete="off" value="0,5" placeholder=""></div><div class="hint">Доля номинального момента двигателя, нужная, чтобы сдвинуть механизм с места</div></div><div class="f" id="f_met"><label for="met">Способ пуска</label><div class="fw"><select id="met"><option value="at50">Автотрансформатор, отвод 50 %</option><option value="at65" selected>Автотрансформатор, отвод 65 %</option><option value="at80">Автотрансформатор, отвод 80 %</option><option value="atk">Автотрансформатор, свой отвод k</option><option value="yd">Звезда-треугольник</option><option value="dol">Прямой пуск</option></select></div></div><div class="f" id="f_k"><label for="k">Отвод автотрансформатора k</label><div class="fw"><input id="k" type="text" inputmode="decimal" autocomplete="off" value="0,7" placeholder=""></div><div class="hint">Доля напряжения сети на двигателе, от 0 до 1</div></div><div class="f" id="f_u"><label for="u">Напряжение сети при пуске</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">%</span></div><div class="hint">Меньше 100 %, если сеть проседает от пускового тока; момент падает как квадрат напряжения</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Пуск двигателя через автотрансформатор: как считается</h2>
+<div class="formula">Iдв = k · Iп&nbsp;&nbsp;&nbsp;Iсети = k² · Iп&nbsp;&nbsp;&nbsp;Mп(k) = k² · Mп<br>Звезда-треугольник: Iсети = Iп / 3, Mп = Mп,Δ / 3</div>
+<p>Пусковой ток асинхронного двигателя при заторможенном роторе пропорционален приложенному напряжению, а момент — его квадрату. Автотрансформатор с отводом k подаёт на двигатель k·U: ток двигателя становится k·Iп, момент — k²·Mп. Ток на стороне сети автотрансформатор уменьшает ещё в k раз — мощность на входе и выходе одинакова, если пренебречь потерями, — поэтому ток сети равен k²·Iп. Это главное преимущество автотрансформаторного пуска: при том же моменте ток сети меньше, чем при пуске через реактор или резистор, где ток сети равен току двигателя.</p>
+<table class="t"><tr><th scope="col">Способ</th><th scope="col">Ток сети от прямого пуска</th><th scope="col">Момент от прямого пуска</th></tr>
+<tr><td>Прямой пуск</td><td>100 %</td><td>100 %</td></tr>
+<tr><td>Автотрансформатор 80 %</td><td>64 %</td><td>64 %</td></tr>
+<tr><td>Автотрансформатор 65 %</td><td>42 %</td><td>42 %</td></tr>
+<tr><td>Автотрансформатор 50 %</td><td>25 %</td><td>25 %</td></tr>
+<tr><td>Звезда-треугольник</td><td>33 %</td><td>33 %</td></tr></table>
+<p><b>Звезда-треугольник.</b> Обмотки, рассчитанные на треугольник, на время пуска соединяют звездой: напряжение на каждой падает в √3 раза, момент — в 3 раза, а линейный ток — тоже в 3 раза (√3 от снижения напряжения и √3 от перехода от линейного тока треугольника к фазному). По соотношению тока и момента это то же, что автотрансформатор с k = 1/√3 ≈ 0,577, но без выбора отвода.</p>
+<p><b>Хватит ли момента.</b> Двигатель тронется, только если его пусковой момент больше момента, нужного, чтобы сдвинуть механизм. Калькулятор сравнивает эти два числа и при недостатке момента делает однозначный вывод: двигатель не тронется. Обратное не гарантирует разгона: момент двигателя по мере разгона сначала снижается до минимума, а момент вентилятора и насоса растёт со скоростью. Поэтому при достаточном моменте статус — только «Оценка».</p>
+<h2>Пуск двигателя через автотрансформатор: пример расчёта</h2>
+<p>Двигатель 50 А, прямой пуск — 7·Iн = 350 А и 2·Mн. На отводе 65 % ток сети 0,65²·350 ≈ <b>147,9 А</b>, ток двигателя 0,65·350 = 227,5 А, момент 0,845·Mн. При моменте трогания нагрузки 0,5·Mн двигатель сдвинет механизм. Звезда-треугольник дал бы 116,7 А и 0,667·Mн.</p>
+<p>На отводе 50 % момент 0,25·2 = <b>0,5·Mн</b> — ровно момент нагрузки: этого мало, двигатель не тронется. Если сеть при пуске проседает до 80 %, на отводе 65 % момент падает до 0,845·0,64 ≈ 0,54·Mн.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему ток сети меньше тока двигателя?</h3><p>Автотрансформатор понижает напряжение и, как любой трансформатор, повышает ток на выходе: мощность на входе и выходе почти одинакова. На двигатель идёт k·Iп, из сети — k²·Iп. При отводе 65 % двигатель получает 65 % прямого пускового тока, а сеть отдаёт только 42 %.</p><h3>Что лучше — автотрансформатор или звезда-треугольник?</h3><p>При одинаковом токе сети автотрансформатор даёт тот же момент, но позволяет выбрать отвод под нагрузку: 80 % — больше момента, 50 % — меньше тока. Звезда-треугольник дешевле, но жёстко даёт 1/3 тока и момента и требует двигателя, рассчитанного на треугольник при напряжении сети.</p><h3>Почему при достаточном моменте статус только «Оценка»?</h3><p>Сравнивается лишь момент трогания. По мере разгона момент двигателя сначала снижается до минимума, а момент насоса или вентилятора растёт; разгон проверяют по механическим характеристикам двигателя и механизма, которых у калькулятора нет.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://productinfo.se.com/nadigest/5cc35b7ed6593c0001ba8661/Supplemental%20Digest/SD17716_MAIN%20%28bookmap%29_0000066217.xml/%24/_SD17717018_Heading2_7" rel="nofollow noopener" target="_blank">Reduced Voltage Starting of Squirrel Cage Motors</a> — Schneider Electric / Square D — Редакция Digest Plus, Supplemental 16, редакция на дату обращения — раздел Autotransformer: line current and torque at 50/65/80 % taps, Wye-delta: 33 % current and torque, torque proportional to voltage squared — обращение 30.09.2026</li><li><a href="https://www.ecmweb.com/content/article/20892322/reduced-voltage-autotransformer-starter-performance-misunderstood" rel="nofollow noopener" target="_blank">Reduced-Voltage Autotransformer Starter Performance Misunderstood</a> — EC&amp;M — Редакция онлайн-статья на дату обращения; видно только в выдаче — раздел ток двигателя пропорционален отводу, ток сети — квадрату отвода; 50/65/80 % → 25/42/64 % — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Пусковой ток пропорционален напряжению на двигателе, пусковой момент — его квадрату.</li><li>Автотрансформатор идеальный: намагничивающий ток и падение напряжения в нём не учитываются.</li><li>Звезда-треугольник: ток сети и момент — 1/3 от прямого пуска при соединении треугольником.</li></ul><p><b>Границы применимости:</b></p><ul><li>Проверяется только момент трогания; разгон по всей механической характеристике не проверяется.</li><li>Не учитывает бросок тока при переключении с отвода на полное напряжение.</li><li>Провал напряжения сети задаётся пользователем, а не рассчитывается.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="prosadka-pri-puske.html">Оценка просадки напряжения при пуске двигателя</a></li><li><a href="zvezda-treugolnik.html">Звезда и треугольник: линейные и фазные величины</a></li><li><a href="avtomat-dlya-dvigatelya.html">Автомат для электродвигателя: отстройка от пускового тока</a></li><li><a href="skolzhenie-dvigatelya.html">Синхронная скорость, скольжение и момент двигателя</a></li><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+
+var KT={at50:0.5,at65:0.65,at80:0.8};
+function sync(){hideF('k',S('met')!=='atk');}
+function init(){$('met').addEventListener('change',sync);sync();}
+function calc(){
+var i=P('im'),kp=P('kp'),mp=P('mp'),mc=P('mc'),u=P('u'),met=S('met'),k=1;
+if([i,kp,mp,mc,u].some(isNaN))return err('Заполните ток двигателя, кратности пускового тока и момента, момент нагрузки и напряжение сети.');
+if(i<=0)return err('Номинальный ток двигателя должен быть больше нуля.');
+if(kp<1)return err('Кратность пускового тока не может быть меньше 1.');
+if(mp<=0)return err('Кратность пускового момента должна быть больше нуля.');
+if(mc<0)return err('Момент нагрузки не может быть отрицательным.');
+if(u<=0||u>100)return err('Напряжение сети при пуске задаётся в процентах: больше 0 и не больше 100.');
+if(met==='atk'){k=P('k');if(isNaN(k))return err('Введите отвод автотрансформатора k.');
+ if(k<=0||k>=1)return err('Отвод автотрансформатора k — доля напряжения сети: больше 0 и меньше 1.');}
+else if(KT[met])k=KT[met];
+var uu=u/100,ipd=kp*i*uu,md=mp*uu*uu,il,imot,ms,share,name,h;
+if(met==='dol'){il=ipd;imot=ipd;ms=md;share=1;name='Прямой пуск';}
+else if(met==='yd'){il=ipd/3;imot=ipd/3;ms=md/3;share=1/3;name='Звезда-треугольник';}
+else{il=k*k*ipd;imot=k*ipd;ms=k*k*md;share=k*k;name='Автотрансформатор, отвод '+fmt(100*k,4)+' %';}
+if(!isFinite(il)||!isFinite(ms))return err('Значения слишком велики для надёжного расчёта.');
+h=row('Способ пуска',name)+row('Пусковой ток сети',fmt(il,4)+' А ('+fmt(il/i,4)+'·Iн)');
+if(met!=='dol'&&met!=='yd')h+=row('Пусковой ток двигателя за автотрансформатором, k·Iп',fmt(imot,4)+' А');
+h+=row('Пусковой момент',fx(ms,mc)+'·Mн ('+fmt(100*share,4)+' % от прямого пуска)');
+if(met!=='dol')h+=row('Для сравнения: прямой пуск',fmt(ipd,4)+' А, '+fmt(md,4)+'·Mн');
+if(met!=='yd')h+=row('Для сравнения: звезда-треугольник',fmt(ipd/3,4)+' А, '+fmt(md/3,4)+'·Mн');
+h+=row('Момент нагрузки при трогании',fx(mc,ms)+'·Mн');
+var st,n='';
+if(gt(ms,mc)){st='Оценка: пусковой момент больше момента нагрузки при трогании; разгон по всей характеристике не проверен';
+ n+='Двигатель сдвинет механизм с места, но это ещё не разгон: по мере разгона момент двигателя сначала снижается до минимума, а момент нагрузки у насоса или вентилятора растёт со скоростью. Для вывода о разгоне нужны механические характеристики двигателя и нагрузки. ';}
+else{st='Момента не хватит для трогания: пусковой момент '+fx(ms,mc)+'·Mн не больше момента нагрузки '+fx(mc,ms)+'·Mн';
+ n+='При таком моменте двигатель не тронется и будет стоять под пусковым током, пока его не отключит защита. Выберите отвод с большим k, прямой пуск или устройство плавного пуска с достаточным моментом. ';}
+if(u<100)n+='Напряжение сети '+fmt(u,4)+' % уменьшает ток в '+fmt(1/uu,4)+' раза, а момент — в '+fmt(1/(uu*uu),4)+' раза по сравнению с номинальным напряжением. ';
+if(met==='yd')n+='Звезда-треугольник применим, только если двигатель рассчитан на соединение треугольником при напряжении сети (например, 400Δ/690Y для сети 400 В). ';
+if(met!=='dol'&&met!=='yd')n+='Ток сети меньше тока двигателя в 1/k раза за счёт трансформации: автотрансформатор понижает напряжение и поэтому повышает ток на своей вторичной стороне. Намагничивающий ток автотрансформатора и падение напряжения в нём не учтены — фактический ток сети несколько больше. ';
+n+='Пусковые кратности тока и момента берут из каталога двигателя; при пониженном напряжении они считаются пропорциональными U и U².';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
