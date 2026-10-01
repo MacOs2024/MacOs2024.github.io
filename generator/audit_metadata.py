@@ -195,6 +195,14 @@ SCHNEIDER_POWER = source(
     ["Power and reactive energy", "three-phase circuits", "motor current"],
     "https://www.electrical-installation.org/enwiki/Power_and_reactive_energy",
 )
+NFPA_STANDALONE_INVERTER = dict(
+    title="NFPA 70, National Electrical Code, 710.12 Stand-Alone Inverter Input Circuit Current",
+    organization="National Fire Protection Association; формулировка видна в выдаче поиска (UpCodes, учебные материалы по NEC), сам документ не открывался",
+    edition="NFPA 70-2020 и 70-2023, 710.12; в NFPA 70-2017 то же требование — 690.8(A)(4)",
+    sections=["710.12: maximum current is the stand-alone continuous inverter input current rating when the inverter is producing rated power at the lowest input voltage"],
+    accessed="01.10.2026",
+    url="https://up.codes/s/stand-alone-inverter-input-circuit-current",
+)
 NFPA_CONDUIT = source(
     "NFPA 70 National Electrical Code — Chapter 9, Table 1 и Notes to Tables",
     "National Fire Protection Association",
@@ -462,9 +470,18 @@ add(
 )
 add(
     "batareya-posledovatelno-parallelno power-bank-runtime "
-    "vremya-raboty-akkumulyatora raschet-akb-avtonomnoy raschet-invertora sechenie-po-dline-12v",
+    "vremya-raboty-akkumulyatora raschet-akb-avtonomnoy sechenie-po-dline-12v",
     "estimate", [VICTRON_WIRING],
     ["Результат не проверяет паспортный ток батареи, BMS, предохранитель, допустимый нагрев кабеля, качество соединений и старение."],
+)
+add(
+    "raschet-invertora",
+    "estimate", [VICTRON_WIRING, NFPA_STANDALONE_INVERTER],
+    [
+        "Результат не проверяет паспортный ток батареи, BMS, предохранитель, допустимый нагрев кабеля, качество соединений и старение.",
+        "Ток считается по введённой мощности нагрузки; NEC 710.12 берёт номинальную мощность инвертора — если инвертор мощнее нагрузки, пересчитайте с его мощностью.",
+        "Без наименьшего входного напряжения инвертора ток и сечение считаются при номинальном напряжении и занижены.",
+    ],
 )
 add(
     "tok-elektrodvigatelya moshchnost-nasosa",
