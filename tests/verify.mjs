@@ -95,7 +95,7 @@ const infoPages = ["privacy.html", "about.html"];
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
   .sort();
-check(htmlFiles.length === 134, `Ожидался 134 HTML-файлов, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 142, `Ожидался 142 HTML-файлов, найдено ${htmlFiles.length}`);
 
 // Совет закоротить заряженный конденсатор перемычкой, отвёрткой или
 // закороткой опасен: при запасённой энергии это даёт дугу и разбрызгивание
@@ -1108,7 +1108,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 134, `В sitemap должно быть 134 URL (корень + about + 132 калькулятора), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 142, `В sitemap должно быть 142 URL (корень + about + 140 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 
@@ -2486,6 +2486,595 @@ await calculateWithout("ustavka-teplovogo-rele.html", { im: "13,0004" }, ["Ди�
 for (const [tp, cls] of [["2", "10A"], ["2,01", "10"], ["4", "10"], ["4,01", "20"], ["6", "20"], ["6,01", "30"], ["9", "30"]])
   await calculate("ustavka-teplovogo-rele.html", { tp }, ["Наименьший класс, гарантирующий пуск" + cls + "Статус"], "boundary");
 await calculate("ustavka-teplovogo-rele.html", { tp: "9,01" }, ["ни один из классов 10A–30"], "boundary");
+
+// ===========================================================================
+// --- Партия №4, data_o.py ---
+// «Аккумуляторы и накопители»: пассивная балансировка ячеек Li-ion, ток
+// разряда Li-ion сборки с требованиями к BMS и предохранителю,
+// суперконденсатор для импульсной нагрузки, ток выравнивания двух АКБ.
+// Ожидаемые значения посчитаны отдельным скриптом (scratchpad o/ref.py) с
+// округлением как у toPrecision (половина — вверх), а не кодом страниц;
+// расчёт — в комментариях. Для суперконденсатора при постоянной мощности
+// время посчитано численной квадратурой t = (C/P)·∫u(v)dv по напряжению
+// идеальной ёмкости, а не замкнутой формулой страницы.
+// ===========================================================================
+
+// --- 1. balansirovka-yacheek-bms: TI SLUAA81A, ADI, TI SLUAAR1 ---
+// Эталон 1 (пример TI для BQ769x2): I = 4,2 / (2·20 + 25) = 64,62 мА; P = 4,2·0,06462 = 0,2714 Вт;
+// в резисторах 0,06462²·40 = 0,167 Вт, в ключе ·25 = 0,1044 Вт (у TI «около 0,1 Вт»);
+// ΔQ = 3 А·ч · 5 % = 150 мА·ч; t = 0,15 / 0,06462 = 2,321 ч; E = 4,2·0,15 = 0,63 Вт·ч = 2268 Дж.
+await calculateWithout("balansirovka-yacheek-bms.html", {}, ["Ток балансировки I = U / (Rрез + Rключа)64,62 мА", "Мощность в цепи балансировки P = U·I0,2714 Вт", "Из неё в резисторах / в ключе (I²·R)0,167 / 0,1044 Вт", "Разбаланс по заряду ΔQ150 мА·ч (5 % SoC)", "Время выравнивания t = ΔQ / Iср2,321 ч", "Тепло в цепи балансировки E = U·ΔQ0,63 Вт·ч (2,268 кДж)", "СтатусОценка: разбаланс 150 мА·ч выравнивается примерно за 2,321 ч работы балансировки"], ["Средний ток", "Циклов", "Недостаточно данных"]);
+// Эталон 2 (пример Battery Design): 30 мА, разница 8 А·ч → 8 / 0,03 = 266,7 ч = 11,11 сут; E = 3,6·8 = 28,8 Вт·ч = 103,7 кДж.
+await calculateWithout("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "8", dah_unit: "1", cap: "10", imode: "i", ib: "30", u: "3,6" }, ["Ток балансировки по паспорту BMS30 мА", "Мощность в цепи балансировки P = U·I0,108 Вт", "Разбаланс по заряду ΔQ8000 мА·ч (80 % SoC)", "Время выравнивания t = ΔQ / Iср266,7 ч (11,11 сут)", "Тепло в цепи балансировки E = U·ΔQ28,8 Вт·ч (103,7 кДж)"], ["Из неё в резисторах"]);
+// Доля времени 50 %: Iср = 32,31 мА, t = 4,643 ч; по 1 ч за цикл — ⌈4,643⌉ = 5 циклов.
+await calculate("balansirovka-yacheek-bms.html", { duty: "50", tcyc: "1" }, ["Средний ток при доле времени 50 %32,31 мА", "Время выравнивания t = ΔQ / Iср4,643 ч", "Циклов заряда при 1 ч балансировки за циклне меньше 5", "BQ769x2 на время измерения"]);
+// По напряжению для NMC с наклоном из паспорта: 12 мВ / 8 мВ/% = 1,5 % → 45 мА·ч; t = 0,045 / 0,06462 = 0,6964 ч = 41,79 мин;
+// E = 4,2·0,045 = 0,189 Вт·ч = 680,4 Дж.
+await calculate("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", du: "12", slope: "8" }, ["Разбаланс по наклону кривой OCV: ΔSoC = ΔU / k1,5 %", "Разбаланс по заряду ΔQ45 мА·ч", "Время выравнивания t = ΔQ / Iср41,79 мин", "Тепло в цепи балансировки E = U·ΔQ0,189 Вт·ч (680,4 Дж)", "СтатусОценка: разбаланс 45 мА·ч выравнивается примерно за 41,79 мин работы балансировки (по наклону кривой OCV из паспорта)", "в покое, после отдыха без тока"]);
+// Рискованный вывод: разница напряжений LiFePO₄ в разбаланс не пересчитывается — даже если в скрытом поле остался наклон.
+await calculateWithout("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "lfp", du: "12" }, ["Ток балансировки I = U / (Rрез + Rключа)64,62 мА", "СтатусНедостаточно данных: у LiFePO₄ напряжение покоя почти не меняется на большей части диапазона SoC", "10–85 % SoC"], ["Время выравнивания", "Разбаланс по заряду", "Оценка"]);
+await calculateWithout("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "lfp", du: "12", slope: "8" }, ["СтатусНедостаточно данных: у LiFePO₄"], ["Время выравнивания", "Оценка"]);
+await calculateWithout("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", du: "12", slope: "" }, ["СтатусНедостаточно данных: чтобы пересчитать разницу напряжений в разбаланс заряда, нужен наклон кривой OCV–SoC из паспорта этой ячейки"], ["Время выравнивания", "Оценка"]);
+// Границы: разбаланс, равный ёмкости, и 100 % SoC допустимы (3 / 0,06462 = 46,43 ч), больше — ошибка.
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "3000" }, ["Разбаланс по заряду ΔQ3000 мА·ч (100 % SoC)", "46,43 ч"], "boundary");
+await calculate("balansirovka-yacheek-bms.html", { dsoc: "100" }, ["Разбаланс по заряду ΔQ3000 мА·ч (100 % SoC)", "46,43 ч"], "boundary");
+await calculate("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", du: "200", slope: "2" }, ["ΔSoC = ΔU / k100 %", "46,43 ч"], "boundary");
+// Переход единиц времени: 100 мА·ч при 100 мА — ровно 1 ч; 99,9 — 59,94 мин; 48 ч — уже с сутками, 47,9 ч — без.
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "100", imode: "i", ib: "100" }, ["Время выравнивания t = ΔQ / Iср1 ч"], "boundary");
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "99,9", imode: "i", ib: "100" }, ["Время выравнивания t = ΔQ / Iср59,94 мин"], "boundary");
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "4800", cap: "10", imode: "i", ib: "100" }, ["Время выравнивания t = ΔQ / Iср48 ч (2 сут)"], "boundary");
+await calculateWithout("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "4790", cap: "10", imode: "i", ib: "100" }, ["Время выравнивания t = ΔQ / Iср47,9 ч"], ["сут"], "boundary");
+// Циклы: ровно 2 ч при 1 ч за цикл — 2 цикла; 2,001 ч — уже 3.
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "200", imode: "i", ib: "100", tcyc: "1" }, ["Циклов заряда при 1 ч балансировки за циклне меньше 2"], "boundary");
+await calculate("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "200,1", imode: "i", ib: "100", tcyc: "1" }, ["Циклов заряда при 1 ч балансировки за циклне меньше 3"], "boundary");
+// Доля 99,99 % уже влияет на расчёт: 64,61 мА и 2,322 ч.
+await calculate("balansirovka-yacheek-bms.html", { duty: "99,99" }, ["Средний ток при доле времени 99,99 %64,61 мА", "2,322 ч"], "boundary");
+await invalid("balansirovka-yacheek-bms.html", { dmode: "ah", dah: "3000,1" }, "не может быть больше ёмкости ячейки");
+await invalid("balansirovka-yacheek-bms.html", { dsoc: "100,01" }, "Разбаланс по SoC — больше 0 и не больше 100 %");
+await invalid("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", du: "500", slope: "2" }, "больше 100 % SoC");
+await invalid("balansirovka-yacheek-bms.html", { cap: "3 А·ч" }, "Введите ёмкость ячейки");
+await invalid("balansirovka-yacheek-bms.html", { u: "0" }, "Напряжение ячейки при балансировке");
+await invalid("balansirovka-yacheek-bms.html", { u: "5,01" }, "Напряжение ячейки при балансировке");
+await invalid("balansirovka-yacheek-bms.html", { duty: "0" }, "Доля времени балансировки");
+await invalid("balansirovka-yacheek-bms.html", { rb: "-1" }, "Сопротивления не могут быть отрицательными");
+await invalid("balansirovka-yacheek-bms.html", { rb: "0", rsw: "0" }, "Сопротивление цепи балансировки должно быть больше нуля");
+await invalid("balansirovka-yacheek-bms.html", { imode: "i", ib: "0" }, "Ток балансировки должен быть больше нуля");
+await invalid("balansirovka-yacheek-bms.html", { imode: "i", ib: "abc" }, "Введите ток балансировки");
+await invalid("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", slope: "abc" }, "Наклон кривой OCV–SoC — число");
+await invalid("balansirovka-yacheek-bms.html", { dmode: "volt", chem: "nmc", du: "0", slope: "8" }, "Разница напряжений должна быть больше нуля");
+await invalid("balansirovka-yacheek-bms.html", { tcyc: "0" }, "Время балансировки за цикл должно быть больше нуля");
+await invalid("balansirovka-yacheek-bms.html", { tcyc: "час" }, "Время балансировки за цикл — число");
+
+// --- 2. tok-razryada-liion-sborki: паспорт ячейки, Orion BMS, Littelfuse ---
+// Эталон 1 (пример на странице, Samsung INR18650-25R): 13S4P, 20 А · 4 = 80 А; 1000 Вт / (13·2,5 В) = 30,77 А (3,077C,
+// 7,692 А на ячейку); пик 2000 Вт → 61,54 А ≤ 80 А; предохранитель: 13·4,2 = 54,6 В, 30,77 / 0,75 = 41,03 А,
+// ток КЗ 4·4,2 / 0,018 = 933,3 А (то же, что 13·4,2 / (13·0,018/4)).
+await calculate("tok-razryada-liion-sborki.html", {}, ["Сборка13S4P: всего ячеек — 52, ёмкость 10 А·ч", "Напряжение сборки: заряжена / наименьшее под нагрузкой54,6 / 32,5 В", "Допустимый длительный ток сборки Iячейки · P80 А", "Импульсный токв паспорте не задан — пики сравниваются с длительным током", "Ток нагрузки при наименьшем напряжении P / (η·S·Umin)30,77 А — 3,077C, по 7,692 А на ячейку при равном делении", "Пиковый ток нагрузки61,54 А в течение 10 с", "BMS должна пропускать без отключенияне меньше 30,77 А длительно и 61,54 А в течение 10 с", "Предел тока разряда в настройке BMSне выше 80 А длительно — по паспорту ячеек", "Предохранитель: номинальное напряжение постоянного токане меньше 54,6 В", "Предохранитель: номинальный токне меньше 41,03 А по правилу Littelfuse для его предохранителей", "не меньше ожидаемого тока КЗ ≈ 933,3 А", "СтатусОценка: длительный ток нагрузки 30,77 А не больше допустимого 80 А; пик 61,54 А — в пределах длительного тока 80 А"]);
+// Эталон 2 (режим C-rate и импульс): 16S1P, 100 А·ч, 1C → 100 А, 2C → 200 А на 10 с; нагрузка 60 А, пик 150 А на 5 с;
+// 16·3,65 = 58,4 В, 16·2,5 = 40 В; 60 / 0,75 = 80 А; ток КЗ 1·3,65 / 0,00025 = 14 600 А.
+await calculate("tok-razryada-liion-sborki.html", { s: "16", p: "1", cap: "100", umax: "3,65", umin: "2,5", spec: "c", crc: "1", crp: "2", tpk: "10", lmode: "i", il: "60", ipk: "150", tl: "5", rcell: "0,25" }, ["Сборка16S1P: всего ячеек — 16, ёмкость 100 А·ч", "58,4 / 40 В", "Допустимый длительный ток сборки C-rate · C · P100 А", "Допустимый импульсный ток сборки200 А не дольше 10 с", "Ток нагрузки60 А — 0,6C, по 60 А на ячейку при равном делении", "Пиковый ток нагрузки150 А в течение 5 с", "не выше 100 А длительно и 200 А не дольше 10 с", "не меньше 80 А по правилу Littelfuse", "≈ 14600 А", "СтатусОценка: длительный ток нагрузки 60 А не больше допустимого 100 А; пик 150 А — в пределах импульсного тока 200 А"]);
+// Превышение: 3000 Вт / 32,5 В = 92,31 А > 80 А — категоричный вывод по паспорту, без «Оценки».
+await calculateWithout("tok-razryada-liion-sborki.html", { pl: "3000", ppk: "", tl: "" }, ["Ток нагрузки при наименьшем напряжении P / (η·S·Umin)92,31 А", "не меньше 123,1 А по правилу Littelfuse", "СтатусТок нагрузки 92,31 А больше допустимого длительного тока сборки 80 А по паспорту ячейки"], ["Оценка", "Пиковый ток нагрузки"]);
+// КПД 90 %: 1000 / (0,9·32,5) = 34,19 А (3,419C, 8,547 А на ячейку), пик 68,38 А, предохранитель от 45,58 А.
+await calculate("tok-razryada-liion-sborki.html", { eta: "90" }, ["34,19 А — 3,419C, по 8,547 А на ячейку", "Пиковый ток нагрузки68,38 А", "не меньше 45,58 А"]);
+// Импульс по паспорту 35 А на 5 с → 140 А; пик 4000 Вт = 123,1 А ровно 5 с — в пределах импульсного тока.
+await calculate("tok-razryada-liion-sborki.html", { ipa: "35", tpk: "5", ppk: "4000", tl: "5" }, ["Допустимый импульсный ток сборки140 А не дольше 5 с", "Пиковый ток нагрузки123,1 А в течение 5 с", "Предел тока разряда в настройке BMSне выше 80 А длительно и 140 А не дольше 5 с", "СтатусОценка: длительный ток нагрузки 30,77 А не больше допустимого 80 А; пик 123,1 А — в пределах импульсного тока 140 А"], "boundary");
+// Тот же пик на 5,01 с — дольше паспортного импульса и больше длительного тока: паспорт такой режим не допускает.
+await calculateWithout("tok-razryada-liion-sborki.html", { ipa: "35", tpk: "5", ppk: "4000", tl: "5,01" }, ["СтатусПик 123,1 А длится дольше паспортного импульса (5,01 с против 5 с) и больше длительного тока 80 А — паспорт ячейки такой режим не допускает"], ["Оценка"], "boundary");
+// 5000 Вт → 153,8 А > 140 А импульсного тока.
+await calculateWithout("tok-razryada-liion-sborki.html", { ipa: "35", tpk: "5", ppk: "5000", tl: "5" }, ["СтатусПиковый ток нагрузки 153,8 А больше допустимого импульсного тока сборки 140 А по паспорту ячейки"], ["Оценка"]);
+// Граница импульсного тока: 4550 Вт / 32,5 В = 140 А — в пределах; 4550,1 Вт = 140,003 А — показан по ту же сторону от 140 А.
+await calculate("tok-razryada-liion-sborki.html", { ipa: "35", tpk: "5", ppk: "4550", tl: "5" }, ["пик 140 А — в пределах импульсного тока 140 А"], "boundary");
+await calculateWithout("tok-razryada-liion-sborki.html", { ipa: "35", tpk: "5", ppk: "4550,1", tl: "5" }, ["СтатусПиковый ток нагрузки 140,003 А больше допустимого импульсного тока сборки 140 А"], ["Оценка"], "boundary");
+// Импульсный ток в паспорте не задан, пик 3000 Вт = 92,31 А больше длительного: «Недостаточно данных», не «Оценка».
+await calculateWithout("tok-razryada-liion-sborki.html", { ppk: "3000" }, ["СтатусНедостаточно данных: пиковый ток 92,31 А больше длительного тока сборки 80 А, а импульсный ток в паспорте не задан", "только если его задаёт производитель ячейки (Orion BMS)"], ["Оценка"]);
+await calculate("tok-razryada-liion-sborki.html", { ppk: "2600" }, ["пик 80 А — в пределах длительного тока 80 А"], "boundary");
+// Вне паспортного диапазона температур вывода нет.
+await calculateWithout("tok-razryada-liion-sborki.html", { temp: "no" }, ["СтатусНедостаточно данных: паспортный ток разряда задан для своего диапазона температур ячейки"], ["Оценка", "СтатусТок нагрузки", "СтатусПик"]);
+// Нагрузка током: ровно 80 А — в пределах, 80,001 А — больше (показано 80,001, а не 80).
+await calculate("tok-razryada-liion-sborki.html", { lmode: "i", il: "80", ipk: "", tl: "" }, ["Ток нагрузки80 А — 8C, по 20 А на ячейку при равном делении", "СтатусОценка: длительный ток нагрузки 80 А не больше допустимого 80 А"], "boundary");
+await calculateWithout("tok-razryada-liion-sborki.html", { lmode: "i", il: "80,001", ipk: "", tl: "" }, ["СтатусТок нагрузки 80,001 А больше допустимого длительного тока сборки 80 А"], ["Оценка"], "boundary");
+// Режим «нагрузка током» со значениями по умолчанию: 30 А = 3C (7,5 А на ячейку), пик 60 А ≤ 80 А; 30 / 0,75 = 40 А.
+await calculate("tok-razryada-liion-sborki.html", { lmode: "i" }, ["Ток нагрузки30 А — 3C, по 7,5 А на ячейку при равном делении", "Пиковый ток нагрузки60 А в течение 10 с", "не меньше 40 А по правилу Littelfuse", "СтатусОценка: длительный ток нагрузки 30 А не больше допустимого 80 А; пик 60 А — в пределах длительного тока 80 А"]);
+await calculateWithout("tok-razryada-liion-sborki.html", { rcell: "" }, ["отключающая способность при постоянном токене оценена — нужен ожидаемый ток КЗ сборки"], ["≈"]);
+await invalid("tok-razryada-liion-sborki.html", { s: "2,5" }, "целые числа от 1 до 1000");
+await invalid("tok-razryada-liion-sborki.html", { p: "0" }, "целые числа от 1 до 1000");
+await invalid("tok-razryada-liion-sborki.html", { cap: "0" }, "Ёмкость ячейки должна быть больше нуля");
+await invalid("tok-razryada-liion-sborki.html", { umax: "5,1" }, "не больше 5 В");
+await invalid("tok-razryada-liion-sborki.html", { umin: "4,3" }, "больше наименьшего напряжения под нагрузкой");
+await invalid("tok-razryada-liion-sborki.html", { ica: "abc" }, "Введите длительный ток разряда ячейки");
+await invalid("tok-razryada-liion-sborki.html", { ipa: "15", tpk: "5" }, "Импульсный ток должен быть больше длительного");
+await invalid("tok-razryada-liion-sborki.html", { ipa: "30" }, "Для импульсного тока задайте его длительность");
+await invalid("tok-razryada-liion-sborki.html", { tpk: "5" }, "Длительность импульса задана без импульсного тока");
+await invalid("tok-razryada-liion-sborki.html", { spec: "c", crc: "0" }, "C-rate разряда должен быть больше нуля");
+await invalid("tok-razryada-liion-sborki.html", { eta: "0" }, "КПД задаётся в процентах");
+await invalid("tok-razryada-liion-sborki.html", { ppk: "900" }, "Пиковая мощность должна быть больше длительной");
+await invalid("tok-razryada-liion-sborki.html", { tl: "" }, "Для пика нагрузки задайте его длительность");
+await invalid("tok-razryada-liion-sborki.html", { rcell: "abc" }, "Внутреннее сопротивление — число");
+await invalid("tok-razryada-liion-sborki.html", { lmode: "i", il: "x" }, "Введите длительный ток нагрузки");
+
+// --- 3. raschet-superkondensatora: Eaton, ADI RAQ 179, Maxwell ---
+// Эталон 1 (пример на странице): 100 Вт / 0,9 = 111,1 Вт; n = ⌈16 / 2,7⌉ = 6; ячейка к концу срока 350·0,8 = 280 Ф,
+// 3,2·2 = 6,4 мОм. m = 1: 46,67 Ф и 38,4 мОм — квадратура даёт 37,30 с < 60; m = 2: 93,33 Ф, 19,2 мОм — 77,61 с.
+// Без ESR 2·111,1·60 / (256 − 64) = 69,44 Ф; с ESR 93,33·60 / 77,61 = 72,15 Ф; u1 = 15,87 В → ток 7,003 А, в конце 111,1 / 8 = 13,89 А;
+// просадка 0,1345 и 0,2667 В; энергия ½·116,7·192 = 11,2 кДж; без балансировки 16 / (1 + 5/1,2) = 3,097 В;
+// резистор Eaton 2,667 / (50·0,75 мА) = 71,11 Ом, 37,5 мА, 0,1 Вт, R·C = 71,11·350 = 24 889 с = 6,91 ч.
+await calculate("raschet-superkondensatora.html", {}, ["Последовательно элементов n = ⌈V1 / Uном⌉6 — по 2,667 В на элемент", "Параллельных цепочек m / всего элементов2 / 12", "Ёмкость банка: номинальная / с допуском и к концу срока116,7 / 93,33 Ф", "ESR банка: по паспорту / к концу срока9,6 / 19,2 мОм", "Нужная ёмкость без ESR 2·P·t / (η·(V1² − V2²))69,44 Ф", "Нужная ёмкость с ESR банка к концу срока72,15 Ф", "Банк к концу срока удерживает нагрузку77,61 с — нужно 60 с", "Ток банка в начале / в конце разряда7,003 / 13,89 А", "Просадка на ESR в начале / в конце0,1345 / 0,2667 В", "Энергия банка между V1 и V2 при номинальной ёмкости11,2 кДж", "Без балансировки после заряда с нуля элемент может получить3,097 В при номинале 2,7 В", "Пассивная балансировка по Eaton: резистор на элементне больше 71,11 Ом — 37,5 мА, 0,1 Вт; саморазряд R·C ≈ 6,91 ч", "СтатусОценка: банк 6 последовательно × 2 параллельно, всего элементов — 12; к концу срока удерживает нагрузку 77,61 с; нужна балансировка напряжений элементов"]);
+// Эталон 2 (постоянный ток, счёт вручную): n = ⌈5 / 2,7⌉ = 2; ячейка 10·0,8 = 8 Ф, 75 мОм; C = 4m, R = 0,15/m;
+// t = 4m·(2,5 − 5·0,15/m) / 5 = 2m − 0,6 → m = 5 даёт 9,4 с, m = 6 — 11,4 с; I·t/(V1 − V2) = 20 Ф; 50 / (2,5 − 0,125) = 21,05 Ф;
+// просадка 5·0,025 = 0,125 В; энергия ½·30·(25 − 6,25) = 281,3 Дж; без балансировки 5 / (1 + 0,8/1,2) = 3 В.
+await calculateWithout("raschet-superkondensatora.html", { mode: "i", il: "5", t: "10", v1: "5", v2: "2,5", cc: "10", tolm: "20", tolp: "20", esr: "75", ur: "2,7", eolc: "0", eolr: "0", ilk: "" }, ["2 — по 2,5 В на элемент", "Параллельных цепочек m / всего элементов6 / 12", "30 / 24 Ф", "25 / 25 мОм", "Нужная ёмкость без ESR I·t / (V1 − V2)20 Ф", "Нужная ёмкость с ESR банка к концу срока21,05 Ф", "Банк к концу срока удерживает нагрузку11,4 с — нужно 10 с", "Просадка на ESR I·R0,125 В", "281,3 Дж", "3 В при номинале 2,7 В", "без балансировки напряжение элемента может превысить номинальное"], ["Пассивная балансировка по Eaton", "Ток банка в начале"]);
+// Пример Eaton: два 10 Ф ±20 % последовательно на 5 В — 5·1,2 / (1,2 + 0,8) = 3,0 В на одном.
+await calculate("raschet-superkondensatora.html", { mode: "i", il: "1", t: "1", v1: "5", v2: "2,5", cc: "10", tolm: "20", tolp: "20", esr: "0", ur: "2,5", eolc: "0", eolr: "0", ilk: "" }, ["Без балансировки после заряда с нуля элемент может получить3 В при номинале 2,5 В", "может превысить номинальное"]);
+// m = 1 при 37 с: квадратура 37,30 с; ток 7,064 / 13,89 А, просадка 0,2713 / 0,5333 В; C с ESR 46,67·37 / 37,30 = 46,29 Ф.
+await calculate("raschet-superkondensatora.html", { t: "37" }, ["Параллельных цепочек m / всего элементов1 / 6", "58,33 / 46,67 Ф", "Нужная ёмкость с ESR банка к концу срока46,29 Ф", "Банк к концу срока удерживает нагрузку37,3 с — нужно 37 с", "7,064 / 13,89 А", "0,2713 / 0,5333 В", "5,6 кДж"]);
+// Граница выбора m: 37,30107 с ≥ 37,3 — одна цепочка (время показано 37,301, а не 37,3); 37,31 — уже две.
+await calculate("raschet-superkondensatora.html", { t: "37,3" }, ["Параллельных цепочек m / всего элементов1 / 6", "Банк к концу срока удерживает нагрузку37,301 с — нужно 37,3 с"], "boundary");
+await calculate("raschet-superkondensatora.html", { t: "37,31" }, ["Параллельных цепочек m / всего элементов2 / 12"], "boundary");
+// Один элемент — балансировка не нужна: 10 Вт, 2,7 → 1 В: квадратура 75,69 с, ток 4,156 / 11,11 А.
+await calculateWithout("raschet-superkondensatora.html", { pw: "10", t: "10", v1: "2,7", v2: "1" }, ["1 — по 2,7 В на элемент", "1 / 1", "Банк к концу срока удерживает нагрузку75,69 с — нужно 10 с", "Ток банка в начале / в конце разряда4,156 / 11,11 А"], ["балансировк"]);
+// Обрыв раньше V2: 5000 Вт, V2 = 1 В. m = 10: 466,7 Ф, 3,84 мОм; √(5555,6·0,00384) = 4,619 В > 1 В — предел на выводах;
+// квадратура до обрыва 5,919 с (m = 9 — 4,949 с); ток 382,3 / 1203 А; C с ESR 466,7·5 / 5,919 = 394,2 Ф.
+await calculate("raschet-superkondensatora.html", { pw: "5000", t: "5", v2: "1" }, ["Параллельных цепочек m / всего элементов10 / 60", "583,3 / 466,7 Ф", "1,92 / 3,84 мОм", "217,9 Ф", "Нужная ёмкость с ESR банка к концу срока394,2 Ф", "Банк к концу срока удерживает нагрузку5,919 с — нужно 5 с", "382,3 / 1203 А", "1,468 / 4,619 В", "74,38 кДж", "предел на выводах — √(P·R/η) = 4,619 В: выведено из наименьшего напряжения стека √(4·R·P/η) у ADI"]);
+// Число элементов на границе номинала: 16,2 В = 6·2,7 — шесть; 16,21 В — семь (по 2,316 В).
+await calculate("raschet-superkondensatora.html", { v1: "16,2" }, ["6 — по 2,7 В на элемент"], "boundary");
+await calculate("raschet-superkondensatora.html", { v1: "16,21" }, ["7 — по 2,316 В на элемент"], "boundary");
+// 13,8 / 2,3 в двоичной арифметике даёт 6,000000000000001 (у 16,2 / 2,7 — 5,999…9): без допуска округления
+// вышло бы 7 элементов. 2,3 В — сниженное напряжение ячейки Maxwell для 85 °C. 13,81 / 7 = 1,973 В.
+await calculate("raschet-superkondensatora.html", { v1: "13,8", ur: "2,3" }, ["6 — по 2,3 В на элемент"], "boundary");
+await calculate("raschet-superkondensatora.html", { v1: "13,81", ur: "2,3" }, ["7 — по 1,973 В на элемент"], "boundary");
+// Деление напряжения у порога: без допуска 2,5 В = номиналу; допуск +0,01 % даёт 2,500125 — показано 2,5001, а не 2,5.
+await calculateWithout("raschet-superkondensatora.html", { mode: "i", il: "1", t: "1", v1: "5", v2: "2,5", cc: "10", tolm: "0", tolp: "0", esr: "0", ur: "2,5", eolc: "0", eolr: "0", ilk: "" }, ["2,5 В при номинале 2,5 В"], ["может превысить"], "boundary");
+await calculate("raschet-superkondensatora.html", { mode: "i", il: "1", t: "1", v1: "5", v2: "2,5", cc: "10", tolm: "0", tolp: "0,01", esr: "0", ur: "2,5", eolc: "0", eolr: "0", ilk: "" }, ["2,5001 В при номинале 2,5 В", "может превысить номинальное"], "boundary");
+await invalid("raschet-superkondensatora.html", { pw: "сто" }, "Введите мощность нагрузки");
+await invalid("raschet-superkondensatora.html", { eta: "0" }, "КПД задаётся в процентах");
+await invalid("raschet-superkondensatora.html", { mode: "i", il: "0" }, "Ток нагрузки должен быть больше нуля");
+await invalid("raschet-superkondensatora.html", { t: "0" }, "Длительность должна быть больше нуля");
+await invalid("raschet-superkondensatora.html", { v2: "16" }, "Нужно 0 < наименьшее напряжение");
+await invalid("raschet-superkondensatora.html", { v2: "0" }, "Нужно 0 < наименьшее напряжение");
+await invalid("raschet-superkondensatora.html", { cc: "0" }, "Ёмкость и номинальное напряжение элемента");
+await invalid("raschet-superkondensatora.html", { tolm: "100" }, "Допуск ёмкости");
+await invalid("raschet-superkondensatora.html", { esr: "-1" }, "ESR не может быть отрицательным");
+await invalid("raschet-superkondensatora.html", { eolc: "100" }, "Снижение ёмкости к концу срока");
+await invalid("raschet-superkondensatora.html", { eolr: "-5" }, "Рост ESR к концу срока не может быть отрицательным");
+await invalid("raschet-superkondensatora.html", { ilk: "abc" }, "Ток утечки — число");
+await invalid("raschet-superkondensatora.html", { ilk: "0" }, "Ток утечки должен быть больше нуля");
+await invalid("raschet-superkondensatora.html", { v1: "3000" }, "больше 1000 элементов последовательно");
+
+// --- 4. tok-vyravnivaniya-akb: правило Кирхгофа, Victron ---
+// Эталон 1 (пример на странице, паспорт ECO-WORTHY 25 мОм): ΣR = 25 + 25 + 2 = 52 мОм; I = 0,5 / 0,052 = 9,615 А;
+// ток равен 50 А при 50·0,052 = 2,6 В; мощность 0,5·9,615 = 4,808 Вт.
+await calculateWithout("tok-vyravnivaniya-akb.html", {}, ["Разница напряжений покоя ΔU0,5 В — сильнее разряжена вторая АКБ", "Сопротивление контура R1 + R2 + Rпер52 мОм", "Начальный ток выравнивания I = ΔU / ΣR9,615 А", "Допустимый ток заряда (вторая АКБ) / разряда (первая АКБ)50 / 100 А", "Разница напряжений, при которой ток равен допустимому2,6 В", "Мощность потерь в контуре в первый момент ΔU·I4,808 Вт", "СтатусОценка: начальный ток выравнивания 9,615 А не больше допустимых токов АКБ", "предохранитель (Victron)"], ["выровняйте"]);
+// Эталон 2: 5 + 5 + 1 = 11 мОм, 1 В → 90,91 А > 50 А заряда; предел при 50·0,011 = 0,55 В; 1·90,91 = 90,91 Вт.
+await calculateWithout("tok-vyravnivaniya-akb.html", { u1: "12,4", u2: "13,4", r1: "5", r2: "5", rw: "1" }, ["1 В — сильнее разряжена первая АКБ", "11 мОм", "Начальный ток выравнивания I = ΔU / ΣR90,91 А", "Допустимый ток заряда (первая АКБ) / разряда (вторая АКБ)50 / 100 А", "0,55 В", "90,91 Вт", "СтатусНачальный ток выравнивания 90,91 А больше допустимого тока заряда — до соединения уменьшите разницу напряжений до 0,55 В, выровняв заряд АКБ", "Вывод следует из самого расчёта"], ["Оценка", "Victron для своих литиевых батарей указывает"]);
+await calculate("tok-vyravnivaniya-akb.html", { u1: "12,4", u2: "13,4", r1: "5", r2: "5", rw: "1", idis: "60" }, ["больше допустимого тока заряда и разряда — до соединения уменьшите разницу напряжений до 0,55 В, выровняв заряд АКБ"]);
+await calculate("tok-vyravnivaniya-akb.html", { u1: "12,4", u2: "13,4", r1: "5", r2: "5", rw: "1", ich: "100", idis: "60" }, ["больше допустимого тока разряда — до соединения уменьшите разницу напряжений до 0,66 В, выровняв заряд АКБ"]);
+// Разные батареи: без превышения — «Недостаточно данных» (допустимость — по паспорту, а не «изготовители требуют
+// одинаковые»: Victron Lithium NG допускает в параллели разную ёмкость и возраст — находка независимого проверяющего).
+await calculateWithout("tok-vyravnivaniya-akb.html", { same: "diff" }, ["СтатусНедостаточно данных: батареи разные — допустима ли их параллельная работа, указано в паспорте", "допускает в параллели разную ёмкость и возраст"], ["Оценка", "выровняв", "одной ёмкости и одного артикула", "изготовители требуют"]);
+await calculate("tok-vyravnivaniya-akb.html", { same: "diff", u1: "12,4", u2: "13,4", r1: "5", r2: "5", rw: "1" }, ["СтатусНачальный ток выравнивания 90,91 А больше допустимого тока заряда — до соединения уменьшите разницу напряжений до 0,55 В, выровняв заряд АКБ; батареи к тому же разные — допустима ли их параллельная работа, указано в паспорте"]);
+// Предохранитель 5 А: 9,615 / 5 = 1,923·In — риск срабатывания, хотя ток в пределах АКБ.
+await calculate("tok-vyravnivaniya-akb.html", { inf: "5" }, ["Ток относительно номинала предохранителя1,923·In", "СтатусРиск срабатывания предохранителя: начальный ток 9,615 А больше его номинала 5 А, хотя и в пределах допустимых токов АКБ", "время-токовой характеристике"]);
+await calculateWithout("tok-vyravnivaniya-akb.html", { u2: "13,4" }, ["Разница напряжений покоя ΔU0 В", "Начальный ток выравнивания I = ΔU / ΣR0 А", "СтатусОценка: напряжения покоя равны"], ["сильнее разряжена", "Допустимый ток заряда ("]);
+// Граница 50 А: 2,6 / 0,052 = 50 А — в пределах; 2,6001 / 0,052 = 50,002 А — больше (показано 50,002, а не 50).
+await calculateWithout("tok-vyravnivaniya-akb.html", { u2: "10,8" }, ["Начальный ток выравнивания I = ΔU / ΣR50 А", "СтатусОценка: начальный ток выравнивания 50 А не больше допустимых токов АКБ"], ["выровняв"], "boundary");
+await calculateWithout("tok-vyravnivaniya-akb.html", { u2: "10,7999" }, ["Начальный ток выравнивания I = ΔU / ΣR50,002 А", "Разница напряжений, при которой ток равен допустимому2,6 В", "СтатусНачальный ток выравнивания 50,002 А больше допустимого тока заряда"], ["Оценка"], "boundary");
+// Батареи разного номинального напряжения (находка проверяющего): 25,6 и 12,8 В — не «выровняйте заряд», а «не соединяйте».
+// Граница — разница в четверть большего напряжения: 16 и 12 В (ΔU = 4 = 0,25·16) — ещё обычное превышение тока
+// (4 / 0,052 = 76,92 А > 50 А), 16 и 11,99 В — «не соединяйте».
+await calculateWithout("tok-vyravnivaniya-akb.html", { u1: "25,6", u2: "12,8", same: "diff" }, ["СтатусНе соединяйте параллельно: напряжения различаются больше чем на четверть"], ["выровняв", "уменьшите разницу"]);
+await calculate("tok-vyravnivaniya-akb.html", { u1: "16", u2: "12" }, ["Начальный ток выравнивания I = ΔU / ΣR76,92 А", "СтатусНачальный ток выравнивания 76,92 А больше допустимого тока заряда — до соединения уменьшите разницу напряжений до 2,6 В"], "boundary");
+await calculateWithout("tok-vyravnivaniya-akb.html", { u1: "16", u2: "11,99" }, ["СтатусНе соединяйте параллельно"], ["уменьшите разницу"], "boundary");
+// Граница номинала предохранителя: 1 / 0,05 = 20 А при In = 20 А — не больше; при 19,99 А — риск.
+await calculateWithout("tok-vyravnivaniya-akb.html", { u1: "13", u2: "12", r1: "20", r2: "20", rw: "10", ich: "20", inf: "20" }, ["Начальный ток выравнивания I = ΔU / ΣR20 А", "1·In", "СтатусОценка: начальный ток выравнивания 20 А не больше допустимых токов АКБ"], ["Риск"], "boundary");
+await calculate("tok-vyravnivaniya-akb.html", { u1: "13", u2: "12", r1: "20", r2: "20", rw: "10", ich: "50", inf: "19,99" }, ["СтатусРиск срабатывания предохранителя: начальный ток 20 А больше его номинала 19,99 А"], "boundary");
+await invalid("tok-vyravnivaniya-akb.html", { u1: "13,4 В" }, "Заполните напряжения");
+await invalid("tok-vyravnivaniya-akb.html", { u1: "0" }, "Напряжения АКБ — больше 0");
+await invalid("tok-vyravnivaniya-akb.html", { u2: "1000,1" }, "Напряжения АКБ — больше 0");
+await invalid("tok-vyravnivaniya-akb.html", { r1: "0" }, "Внутреннее сопротивление АКБ должно быть больше нуля");
+await invalid("tok-vyravnivaniya-akb.html", { rw: "-1" }, "Сопротивление перемычек не может быть отрицательным");
+await invalid("tok-vyravnivaniya-akb.html", { ich: "0" }, "Допустимые токи заряда и разряда должны быть больше нуля");
+await invalid("tok-vyravnivaniya-akb.html", { inf: "abc" }, "Номинал предохранителя — число");
+await invalid("tok-vyravnivaniya-akb.html", { inf: "0" }, "Номинал предохранителя должен быть больше нуля");
+
+// Структурные проверки партии №4: запрещённые формулировки, карточка
+// источника, реестр, видимость полей по режиму (правило 7), ссылки на
+// соседние страницы вместо дублирования, входящие ссылки, лимит «Смотрите
+// также».
+{
+  kind = "structural";
+  const batch4 = ["balansirovka-yacheek-bms", "tok-razryada-liion-sborki", "raschet-superkondensatora", "tok-vyravnivaniya-akb"];
+  const read = file => fs.readFileSync(path.join(sourceDir, file), "utf8");
+  const visible = file => read(file).replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  const registry = read("ENGINEERING_AUDIT.md");
+  for (const slug of batch4) {
+    const html = read(`${slug}.html`);
+    const script = html.match(/<script>([\s\S]*?)<\/script>\s*<\/body>/)?.[1] ?? "";
+    check(!/проходит|безопасн|соответствует норм/i.test(visible(`${slug}.html`)) && !/проходит|безопасн|соответствует норм/i.test(script),
+      `${slug}: запрещённые слова «проходит», «безопасно», «соответствует нормам»`);
+    const card = html.match(/<section class="src">([\s\S]*?)<\/section>/)?.[1] ?? "";
+    check(card.includes("Оценка, не нормативный вердикт") && card.includes("Границы применимости") && card.includes("Допущения")
+      && card.includes("Редакция") && /обращение 30\.09\.2026/.test(card) && !/Проверил:/.test(card),
+      `${slug}: карточка источника без статуса, допущений, границ, редакции или даты обращения`);
+    check(registry.includes(`\`${slug}\``), `ENGINEERING_AUDIT.md: нет записи о ${slug}`);
+    check(/<a class="ccard"[^>]*href="/.test(read("index.html")) && read("index.html").includes(`href="${slug}.html"`), `index.html: ${slug} нет в каталоге`);
+  }
+  // Каждый переключатель влияет на расчёт, ненужные поля скрыты.
+  const vis = (d, id) => d.getElementById(`f_${id}`)?.style.display !== "none";
+  const change = (dom, id, value) => { const el = dom.window.document.getElementById(id); el.value = value; el.dispatchEvent(new dom.window.Event("change", { bubbles: true })); };
+  let dom = await load("balansirovka-yacheek-bms.html"); let d = dom.window.document;
+  check(vis(d, "dsoc") && !vis(d, "dah") && !vis(d, "chem") && !vis(d, "du") && !vis(d, "slope") && vis(d, "rb") && vis(d, "rsw") && !vis(d, "ib"),
+    "balansirovka-yacheek-bms: в режиме «% SoC» и «по сопротивлению» видны только их поля");
+  change(dom, "dmode", "ah"); change(dom, "imode", "i");
+  check(!vis(d, "dsoc") && vis(d, "dah") && !vis(d, "du") && !vis(d, "rb") && !vis(d, "rsw") && vis(d, "ib"),
+    "balansirovka-yacheek-bms: режимы «А·ч» и «ток по паспорту» показывают свои поля");
+  change(dom, "dmode", "volt");
+  check(vis(d, "chem") && vis(d, "du") && vis(d, "slope"), "balansirovka-yacheek-bms: для NMC по напряжению нужен наклон кривой OCV");
+  change(dom, "chem", "lfp");
+  check(vis(d, "du") && !vis(d, "slope"), "balansirovka-yacheek-bms: для LiFePO₄ наклон не используется и скрыт");
+  dom.window.close();
+  dom = await load("tok-razryada-liion-sborki.html"); d = dom.window.document;
+  check(vis(d, "ica") && vis(d, "ipa") && !vis(d, "crc") && !vis(d, "crp") && vis(d, "pl") && vis(d, "eta") && vis(d, "ppk") && !vis(d, "il") && !vis(d, "ipk"),
+    "tok-razryada-liion-sborki: в режимах «амперы» и «мощность» видны только их поля");
+  change(dom, "spec", "c"); change(dom, "lmode", "i");
+  check(!vis(d, "ica") && !vis(d, "ipa") && vis(d, "crc") && vis(d, "crp") && !vis(d, "pl") && !vis(d, "eta") && !vis(d, "ppk") && vis(d, "il") && vis(d, "ipk"),
+    "tok-razryada-liion-sborki: режимы «C-rate» и «ток» показывают свои поля");
+  dom.window.close();
+  dom = await load("raschet-superkondensatora.html"); d = dom.window.document;
+  check(vis(d, "pw") && vis(d, "eta") && !vis(d, "il"), "raschet-superkondensatora: в режиме мощности поле тока скрыто");
+  change(dom, "mode", "i");
+  check(!vis(d, "pw") && !vis(d, "eta") && vis(d, "il"), "raschet-superkondensatora: в режиме тока скрыты мощность и КПД");
+  dom.window.close();
+  // Не дублировать соседние страницы, а ссылаться на них.
+  const links = { "tok-razryada-liion-sborki": "liion-charge-current", "raschet-superkondensatora": "energiya-kondensatora",
+    "tok-vyravnivaniya-akb": "batareya-posledovatelno-parallelno", "balansirovka-yacheek-bms": "batareya-posledovatelno-parallelno" };
+  for (const [from, to] of Object.entries(links)) {
+    const article = read(`${from}.html`).match(/<p class="intro">[\s\S]*?<section class="related">/)?.[0] ?? "";
+    check(article.includes(`href="${to}.html"`), `${from}: в тексте нет ссылки на ${to}`);
+  }
+  // Входящие ссылки на новые страницы из «Смотрите также» существующих.
+  const inbound = [["liion-charge-current", "tok-razryada-liion-sborki"], ["liion-charge-current", "balansirovka-yacheek-bms"],
+    ["batareya-posledovatelno-parallelno", "tok-vyravnivaniya-akb"], ["batareya-posledovatelno-parallelno", "balansirovka-yacheek-bms"],
+    ["energiya-kondensatora", "raschet-superkondensatora"], ["soedinenie-kondensatorov", "raschet-superkondensatora"],
+    ["vnutrennee-soprotivlenie", "tok-vyravnivaniya-akb"], ["raschet-invertora", "tok-razryada-liion-sborki"]];
+  for (const [from, to] of inbound) {
+    const block = read(`${from}.html`).match(/<section class="related">([\s\S]*?)<\/section>/)?.[1] ?? "";
+    check(block.includes(`href="${to}.html"`), `${from}: в «Смотрите также» нет ссылки на ${to}`);
+  }
+  // Блок «Смотрите также» — не больше пяти ссылок на любой странице каталога.
+  for (const file of htmlFiles) {
+    const block = read(file).match(/<section class="related">([\s\S]*?)<\/section>/)?.[1];
+    if (block === undefined) continue;
+    const n = (block.match(/<li>/g) || []).length;
+    check(n <= 5, `${file}: в «Смотрите также» ${n} ссылок, допустимо не больше 5`);
+  }
+  // Смысловые проверки: что источник не подтверждает, не выдаётся за норму.
+  const bal = visible("balansirovka-yacheek-bms.html");
+  check(/LiFePO₄/.test(bal) && /не пересчитывает/.test(bal) && /2·R/.test(bal) && /SLUAA81/.test(bal),
+    "balansirovka-yacheek-bms: не сказано, что разница напряжений LiFePO₄ не пересчитывается, или нет формулы TI");
+  const dis = visible("tok-razryada-liion-sborki.html");
+  check(/0,75/.test(dis) && /Littelfuse/.test(dis) && /постоянного тока/.test(dis) && /отключающая способность/i.test(dis) && /Orion BMS/.test(dis),
+    "tok-razryada-liion-sborki: требования к предохранителю и BMS не приписаны источникам");
+  const sc = visible("raschet-superkondensatora.html");
+  check(/√\(4·R·P\/η\)/.test(sc) && /50 токов утечки/.test(sc) && /более чем из двух элементов/.test(sc) && /R = 0/.test(sc),
+    "raschet-superkondensatora: нет вывода формулы с ESR, правила Eaton или требования Maxwell");
+  const eqp = visible("tok-vyravnivaniya-akb.html");
+  check(/предохранитель/.test(eqp) && /до параллельного соединения|до соединения/.test(eqp) && !/соедин[^.]{0,40}(напрямую|и посмотр)/i.test(eqp),
+    "tok-vyravnivaniya-akb: нет требования выровнять заряд и поставить предохранитель или есть совет соединять напрямую");
+}
+
+
+// ===========================================================================
+// --- Партия №4, data_p.py ---
+// Аккумуляторы и накопители: стоимость 1 кВт·ч за срок службы, контроллер
+// заряда MPPT/PWM, время работы ИБП по закону Пейкерта, саморазряд при
+// хранении. Эталоны посчитаны отдельным скриптом (scratchpad p/ref.py) по
+// формулам источников с округлением как у toPrecision (половина — вверх), а
+// не кодом страниц; расчёт показан в комментариях. Два эталона взяты прямо
+// из источников: пример Википедии для закона Пейкерта (100 А·ч, C20, k = 1,2,
+// 10 А → 87 А·ч) и пример Victron (100 А·ч при C20 и 56 А·ч при C2), а для
+// саморазряда — таблица EnerSys SBS XC (1,25 % при 20 °C → 5 % при 40 °C).
+// ===========================================================================
+
+// --- 1. stoimost-kvtch-akkumulyatora: LCOS Schmidt et al. (2019) без дисконтирования ---
+// Паспортная ёмкость — ёмкость разряда, поэтому отданная энергия C·U·DoD — без КПД цикла; КПД задаёт энергию
+// на заряд E/η (замечание независимого проверяющего). Эталоны — scratchpad b4/cost_ref.py, не код страницы.
+// Эталон 1 (по умолчанию): A — 100·12·0,5 = 600 Вт·ч за цикл; N = min(600, 7·365 = 2555) = 600; E = 360 кВт·ч;
+// 20000/360 = 55,56 ₽/кВт·ч; цикл 33,33 ₽; 600/365 = 1,644 года; на заряд 360/0,8 = 450 кВт·ч.
+// B — 100·12,8·0,8 = 1024 Вт·ч; срок не задан → N = 2500, E = 2560 кВт·ч, 23,44 ₽/кВт·ч, цикл 24 ₽, 6,849 года;
+// на заряд 2560/0,92 = 2783 кВт·ч. Безубыточный срок B: 60000/55,556/1,024/365 = 2,89 года.
+await calculateWithout("stoimost-kvtch-akkumulyatora.html", {}, [
+  "A: энергия за цикл C·U·DoD0,6 кВт·ч", "A: ресурс по паспорту600 циклов — выработается за 1,644 года",
+  "A: предел календарного срока — 7 лет × 365 цикл/год2555 циклов", "A: циклов за срок службы600 — ограничивает ресурс циклов",
+  "A: энергия за срок службы E360 кВт·ч", "A: энергия на заряд за срок службы E / η450 кВт·ч", "A: стоимость одного цикла33,33 ₽", "A: стоимость 1 кВт·ч55,56 ₽/кВт·ч",
+  "B: энергия за цикл C·U·DoD1,024 кВт·ч", "B: ресурс по паспорту2500 циклов — выработается за 6,849 года",
+  "B: календарный срокне задан — ограничение не проверено", "B: энергия за срок службы E2560 кВт·ч", "B: энергия на заряд за срок службы E / η2783 кВт·ч", "B: стоимость одного цикла24 ₽",
+  "B: стоимость 1 кВт·ч23,44 ₽/кВт·ч — если прослужит 6,849 года", "Календарный срок, при котором вариант B дешевле Aне меньше 2,89 года",
+  "СтатусНедостаточно данных: вариант B дешевле варианта A, если его календарный срок не меньше 2,89 года"], ["Оценка: вариант B дешевле", "Статус Оценка", "C·U·DoD·η"]);
+// Эталон 2: резерв, 20 циклов в год, срок B 15 лет. A: 7·20 = 140 < 600 → календарный срок, E = 84 кВт·ч, 238,1 ₽/кВт·ч,
+// цикл 142,9 ₽. B: 15·20 = 300 < 2500, E = 300·1,024 = 307,2 кВт·ч, 195,3 ₽/кВт·ч, цикл 200 ₽; 238,10/195,31 = 1,219.
+await calculate("stoimost-kvtch-akkumulyatora.html", { cy: "20", lb: "15" }, [
+  "A: предел календарного срока — 7 лет × 20 цикл/год140 циклов", "A: циклов за срок службы140 — ограничивает календарный срок",
+  "A: энергия за срок службы E84 кВт·ч", "A: стоимость одного цикла142,9 ₽", "A: стоимость 1 кВт·ч238,1 ₽/кВт·ч",
+  "B: ресурс по паспорту2500 циклов — выработается за 125 лет", "B: предел календарного срока — 15 лет × 20 цикл/год300 циклов",
+  "B: энергия за срок службы E307,2 кВт·ч", "B: стоимость одного цикла200 ₽", "B: стоимость 1 кВт·ч195,3 ₽/кВт·ч",
+  "СтатусОценка: вариант B дешевле за 1 кВт·ч в 1,219 раза: 195,3 ₽ против 238,1 ₽"]);
+// КПД влияет только на энергию заряда, а не на стоимость отданного кВт·ч (правило 7: поле η меняет результат).
+await calculate("stoimost-kvtch-akkumulyatora.html", { mode: "one", ea: "50" }, ["A: энергия на заряд за срок службы E / η720 кВт·ч", "A: стоимость 1 кВт·ч55,56 ₽/кВт·ч"]);
+// Один аккумулятор: вариант B скрыт и не читается — мусор в его полях не мешает (правило 7).
+await calculateWithout("stoimost-kvtch-akkumulyatora.html", { mode: "one", pb: "abc", lb: "abc" }, [
+  "A: стоимость 1 кВт·ч55,56 ₽/кВт·ч", "СтатусОценка: 1 кВт·ч за срок службы обходится в 55,56 ₽; ограничивает ресурс циклов"], ["B:", "Вариант B"]);
+await calculate("stoimost-kvtch-akkumulyatora.html", { mode: "one", la: "" }, [
+  "A: календарный срокне задан — ограничение не проверено", "A: стоимость 1 кВт·ч55,56 ₽/кВт·ч — если прослужит 1,644 года",
+  "СтатусОценка без проверки календарного срока: 55,56 ₽/кВт·ч, если аккумулятор прослужит 1,644 года"]);
+// Дорогой B без срока: его стоимость — только нижняя граница 400000/2560 = 156,3, и A дешевле при любом сроке B.
+await calculate("stoimost-kvtch-akkumulyatora.html", { pb: "400000" }, [
+  "СтатусОценка: вариант A дешевле при любом календарном сроке варианта B: 55,56 ₽/кВт·ч против не меньше 156,3 ₽/кВт·ч"]);
+// Равные стоимости, но срок B неизвестен — сравнить нельзя: «Недостаточно данных», а не «Оценка» (правило 6).
+await calculateWithout("stoimost-kvtch-akkumulyatora.html", { pb: "20000", ub: "12", db: "50", nb: "600", eb: "80", lb: "" }, [
+  "СтатусНедостаточно данных: без календарного срока варианта B стоимости не сравнить — задайте срок по паспорту"], ["СтатусОценка"], "boundary");
+// Граница «ресурс или календарный срок» при 100 циклах в год: 6 лет → 600 = 600 — ресурс; 5,99 → 599 — срок
+// (E = 599·0,6 = 359,4 кВт·ч, 55,65 ₽/кВт·ч); 6,01 → 601 — снова ресурс.
+await calculate("stoimost-kvtch-akkumulyatora.html", { mode: "one", cy: "100", la: "6" }, ["A: предел календарного срока — 6 лет × 100 цикл/год600 циклов", "A: циклов за срок службы600 — ограничивает ресурс циклов", "ограничивает ресурс циклов"], "boundary");
+await calculate("stoimost-kvtch-akkumulyatora.html", { mode: "one", cy: "100", la: "5,99" }, ["A: предел календарного срока — 5,99 года × 100 цикл/год599 циклов", "A: циклов за срок службы599 — ограничивает календарный срок", "A: энергия за срок службы E359,4 кВт·ч", "СтатусОценка: 1 кВт·ч за срок службы обходится в 55,65 ₽; ограничивает календарный срок"], "boundary");
+await calculate("stoimost-kvtch-akkumulyatora.html", { mode: "one", cy: "100", la: "6,01" }, ["A: циклов за срок службы600 — ограничивает ресурс циклов"], "boundary");
+// Условие безубыточности согласовано с прямым расчётом: срок B 2,9 года — B дешевле в 1,004 раза,
+// 2,88 года — уже A дешевле в 1,003 раза.
+await calculate("stoimost-kvtch-akkumulyatora.html", { lb: "2,9" }, ["СтатусОценка: вариант B дешевле за 1 кВт·ч в 1,004 раза: 55,36 ₽ против 55,56 ₽"], "boundary");
+await calculate("stoimost-kvtch-akkumulyatora.html", { lb: "2,88" }, ["СтатусОценка: вариант A дешевле за 1 кВт·ч в 1,003 раза: 55,56 ₽ против 55,74 ₽"], "boundary");
+// Почти равные цены: 20000 и 20000,02 ₽ при одинаковых данных: отношение 1,000001 — показаны столько знаков,
+// чтобы не округлиться в «1 раз» и в равные цены.
+await calculate("stoimost-kvtch-akkumulyatora.html", { pb: "20000,02", ub: "12", db: "50", nb: "600", eb: "80", lb: "7" }, ["СтатусОценка: вариант A дешевле за 1 кВт·ч в 1,000001 раза: 55,5556 ₽ против 55,56 ₽"], "boundary");
+await calculate("stoimost-kvtch-akkumulyatora.html", { ub: "12", db: "50", nb: "600", eb: "80", lb: "7", pb: "20000" }, ["СтатусОценка: стоимость 1 кВт·ч у вариантов одинакова — 55,56 ₽"], "boundary");
+await invalid("stoimost-kvtch-akkumulyatora.html", { da: "0" }, "Вариант A: глубина разряда задаётся в процентах");
+await invalid("stoimost-kvtch-akkumulyatora.html", { db: "101" }, "Вариант B: глубина разряда задаётся в процентах");
+await invalid("stoimost-kvtch-akkumulyatora.html", { ea: "0" }, "Вариант A: КПД цикла задаётся в процентах");
+await invalid("stoimost-kvtch-akkumulyatora.html", { pa: "двадцать тысяч" }, "Вариант A: заполните цену");
+await invalid("stoimost-kvtch-akkumulyatora.html", { lb: "десять" }, "Вариант B: календарный срок службы — число лет");
+await invalid("stoimost-kvtch-akkumulyatora.html", { la: "-1" }, "календарный срок службы должен быть больше нуля");
+await invalid("stoimost-kvtch-akkumulyatora.html", { na: "0,5" }, "ресурс — не меньше одного цикла");
+await invalid("stoimost-kvtch-akkumulyatora.html", { cy: "0" }, "Число циклов в год должно быть больше нуля");
+
+// --- 2. kontroller-zaryada-mppt-pwm: NEC 690.8 (Morningstar), Victron, Morningstar ---
+// Эталон 1 (по умолчанию, PWM): три панели Victron BlueSolar 115 Вт параллельно: Isc 3·6,61 = 19,83 А, Vmp 19 В, 345 Вт.
+// NEC: 1,25·19,83 = 24,79 ≤ 30 А. Imp = 345/19 = 18,16 А; при 12 В — 12·18,16 = 217,9 и min(12·19,83, 345) = 238 Вт,
+// 63,16…68,97 % мощности массива; Vmp 19 > 14,4 В.
+await calculate("kontroller-zaryada-mppt-pwm.html", {}, [
+  "1,25·Isc (NEC 690.8) и номинальный ток контроллера24,79 А ≤ 30 А", "Ток массива в АКБ при STC — от Imp до Isc18,16…19,83 А",
+  "Мощность в АКБ при 12 В — от U·Imp до U·Isc217,9…238 Вт из 345 Вт (63,16…68,97 %)", "Vmp массива и наибольшее напряжение заряда19 В > 14,4 В",
+  "СтатусОценка: условие по току КЗ выполнено; PWM передаст в АКБ около 63,16…68,97 % мощности массива при STC", "PWM-контроллер перегружать нельзя"]);
+// Эталон 2 (MPPT, перегруз): две цепочки по две панели: Isc 13,22 А, Vmp 38 В, 460 Вт; NEC 1,25·13,22 = 16,53 А.
+// Iвых = 460·0,98/12 = 37,57 А > 30 А; мощность при номинальном токе 30·12/0,98 = 367,3 Вт; превышение 25,22 %.
+const mppt460 = { tip: "mppt", isc: "13,22", vmp: "38", pw: "460" };
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", mppt460, [
+  "1,25·Isc (NEC 690.8) и номинальный ток контроллера16,53 А ≤ 30 А", "Ток на выходе при STC Iвых = P·η / Uмин37,57 А",
+  "Мощность массива, при которой ток на выходе равен номинальному367,3 Вт", "Превышение мощности массива над ней25,22 %",
+  "СтатусНедостаточно данных: ток на выходе при STC 37,57 А больше номинального 30 А — допустим ли такой перегруз по мощности, указывает только производитель контроллера"], ["Оценка:"]);
+await calculate("kontroller-zaryada-mppt-pwm.html", { ...mppt460, ovp: "isc" }, ["СтатусОценка: массив мощнее номинала контроллера — ток на выходе ограничится 30 А; перегруз допускается производителем при соблюдении предела по току КЗ"]);
+await calculate("kontroller-zaryada-mppt-pwm.html", { ...mppt460, ovp: "pmax", pmax: "500" }, ["Мощность массива и предел производителя460 Вт ≤ 500 Вт", "СтатусОценка: массив мощнее номинала контроллера — ток на выходе ограничится 30 А; перегруз в пределах мощности, заявленной производителем"]);
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { ...mppt460, ovp: "pmax", pmax: "450" }, ["Мощность массива и предел производителя460 Вт > 450 Вт", "СтатусМощность массива 460 Вт больше допустимой производителем 450 Вт"], ["Оценка:"]);
+await calculate("kontroller-zaryada-mppt-pwm.html", { ...mppt460, ovp: "pmax", pmax: "460" }, ["460 Вт ≤ 460 Вт", "СтатусОценка: массив мощнее номинала"], "boundary");
+await calculate("kontroller-zaryada-mppt-pwm.html", { ...mppt460, ovp: "pmax", pmax: "459,99" }, ["СтатусМощность массива 460 Вт больше допустимой производителем 459,99 Вт"], "boundary");
+// Эталон 3 (MPPT без перегруза): 345·0,98/12 = 28,17 ≤ 30 А.
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { tip: "mppt" }, ["Ток на выходе при STC Iвых = P·η / Uмин28,17 А", "СтатусОценка: условие по току КЗ выполнено, ток на выходе при STC 28,17 А не больше номинального 30 А"], ["Превышение", "Мощность массива, при которой"]);
+// Предел мощности производителя проверяется и без перегруза по току: 345 Вт > 300 Вт — вывод без «Оценка»; 345 ≤ 345 — в пределе.
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", ovp: "pmax", pmax: "300" }, ["Мощность массива и предел производителя345 Вт > 300 Вт", "СтатусМощность массива 345 Вт больше допустимой производителем 300 Вт"], ["Оценка:"]);
+await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", ovp: "pmax", pmax: "345" }, ["345 Вт ≤ 345 Вт", "СтатусОценка: условие по току КЗ выполнено, ток на выходе при STC 28,17 А не больше номинального 30 А"], "boundary");
+// Граница номинального тока MPPT (КПД 100 %): 360/12 = 30 А — не перегруз; 360,01/12 = 30,001 А — перегруз.
+await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", eta: "100", pw: "360" }, ["СтатусОценка: условие по току КЗ выполнено, ток на выходе при STC 30 А не больше номинального 30 А"], "boundary");
+await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", eta: "100", pw: "360,01" }, ["СтатусНедостаточно данных: ток на выходе при STC 30,001 А больше номинального 30 А"], "boundary");
+// Граница NEC: Isc 24 → 30 А ≤ 30 А; 24,01 → 30,01 А > 30 А — контроллер не подходит.
+await calculate("kontroller-zaryada-mppt-pwm.html", { isc: "24" }, ["1,25·Isc (NEC 690.8) и номинальный ток контроллера30 А ≤ 30 А", "СтатусОценка: условие по току КЗ выполнено"], "boundary");
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { isc: "24,01" }, ["30,01 А > 30 А", "СтатусКонтроллер не подходит по току массива: 1,25·Isc = 30,01 А больше номинального тока 30 А (условие NEC 690.8 в руководствах Morningstar)"], ["Оценка:"], "boundary");
+// Предел по паспорту (Victron 100/30 — 35 А): Isc 35 — в пределе, PWM 12·(600/19) = 378,9 и 12·35 = 420 Вт из 600 (63,16…70 %);
+// 35,01 — выше предела. Переключатель основания влияет на расчёт: 4 панели параллельно (26,44 А) по NEC — 33,05 > 30, по паспорту — 26,44 ≤ 35.
+await calculate("kontroller-zaryada-mppt-pwm.html", { base: "own", isc: "35", pw: "600" }, ["Isc массива и предел по паспорту контроллера35 А ≤ 35 А", "378,9…420 Вт из 600 Вт (63,16…70 %)", "СтатусОценка: условие по току КЗ выполнено"], "boundary");
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { base: "own", isc: "35,01", pw: "600" }, ["Isc массива и предел по паспорту контроллера35,01 А > 35 А", "СтатусТок КЗ массива больше допустимого по паспорту контроллера: 35,01 А > 35 А"], ["Оценка:"], "boundary");
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { isc: "26,44", pw: "460" }, ["1,25·Isc (NEC 690.8) и номинальный ток контроллера33,05 А > 30 А", "СтатусКонтроллер не подходит по току массива"], ["Оценка:"]);
+await calculate("kontroller-zaryada-mppt-pwm.html", { base: "own", isc: "26,44", pw: "460" }, ["Isc массива и предел по паспорту контроллера26,44 А ≤ 35 А", "СтатусОценка: условие по току КЗ выполнено"]);
+// Vmp и напряжение заряда: 14,4 ≤ 14,4 — риск недозаряда; 14,41 — нет (Imp = 250/14,41 = 17,35 А, 208,2…238 Вт).
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { vmp: "14,4", pw: "250" }, ["Vmp массива и наибольшее напряжение заряда14,4 В ≤ 14,4 В", "СтатусРиск недозаряда: Vmp массива 14,4 В не выше наибольшего напряжения заряда 14,4 В — выше Vmp ток массива быстро падает"], ["Оценка:"], "boundary");
+await calculate("kontroller-zaryada-mppt-pwm.html", { vmp: "14,41", pw: "250" }, ["14,41 В > 14,4 В", "Ток массива в АКБ при STC — от Imp до Isc17,35…19,83 А", "208,2…238 Вт из 250 Вт (83,28…95,18 %)", "СтатусОценка"], "boundary");
+await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", vmp: "14", pw: "250" }, ["СтатусРиск недозаряда: Vmp массива 14 В не выше наибольшего напряжения заряда 14,4 В — понижающий MPPT-контроллер не поднимет напряжение выше Vmp"]);
+await calculate("kontroller-zaryada-mppt-pwm.html", { vmp: "12", pw: "200" }, ["Мощность в АКБ при 12 Вне оценивается: напряжение АКБ не ниже Vmp", "СтатусРиск недозаряда"], "boundary");
+// В режиме PWM поля MPPT не читаются (правило 7): мусор в КПД не мешает.
+await calculate("kontroller-zaryada-mppt-pwm.html", { eta: "abc" }, ["СтатусОценка: условие по току КЗ выполнено; PWM передаст"]);
+await invalid("kontroller-zaryada-mppt-pwm.html", { pw: "400" }, "не меньше Isc");
+await invalid("kontroller-zaryada-mppt-pwm.html", { umax: "11" }, "Наибольшее напряжение заряда не может быть меньше");
+await invalid("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", eta: "0" }, "КПД задаётся в процентах");
+await invalid("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", ovp: "pmax", pmax: "" }, "Введите наибольшую мощность массива");
+await invalid("kontroller-zaryada-mppt-pwm.html", { base: "own", iscmax: "abc" }, "Наибольший ток КЗ массива по паспорту контроллера — число в амперах");
+await invalid("kontroller-zaryada-mppt-pwm.html", { base: "own", iscmax: "" }, "Введите наибольший ток КЗ массива по паспорту");
+await invalid("kontroller-zaryada-mppt-pwm.html", { isc: "19,83 А" }, "Заполните ток КЗ");
+await invalid("kontroller-zaryada-mppt-pwm.html", { irated: "0" }, "должны быть больше нуля");
+
+// --- 3. vremya-raboty-ibp-peukert: Пейкерт (Википедия, Victron), таблицы постоянной мощности ---
+// Эталон 1 (Википедия): 100 А·ч при C20, k = 1,2, ток 10 А (120 Вт, 12 В, КПД 100 %):
+// t = 20·(100/(10·20))^1,2 = 8,7055 ч, отдаст 87,06 А·ч; C/I = 10 ч; 120/6 = 20 Вт на элемент.
+await calculate("vremya-raboty-ibp-peukert.html", { p: "120", u: "12", eta: "100", k: "1,2" }, [
+  "Ток батареи I = P / (U·η)10 А", "Ток паспортного режима C/H5 А", "Без поправки на ток t = C/I10 ч",
+  "По Пейкерту t = H·(C/(I·H))^k8,71 ч", "Ёмкость, которую батарея отдаст при этом токе87,06 А·ч (87,06 % от C)",
+  "Мощность на элемент для таблицы производителя P / (η·n)20 Вт на элемент, n = 6", "СтатусОценка по закону Пейкерта: около 8,71 ч при k = 1,2"]);
+// Эталон 2 (Victron): 100 А·ч при 20 ч и 56 А·ч при 2 ч → k = ln(0,1)/ln(5/28) = 1,337; при 28 А (336 Вт) t = 2 ч, 56 А·ч.
+await calculate("vremya-raboty-ibp-peukert.html", { kmode: "two", p: "336", u: "12", eta: "100" }, [
+  "Показатель Пейкерта k1,337 — по двум точкам паспорта", "По Пейкерту t = H·(C/(I·H))^k2 ч", "Ёмкость, которую батарея отдаст при этом токе56 А·ч (56 % от C)",
+  "СтатусОценка по закону Пейкерта: около 2 ч — между паспортными точками 2 и 20 ч"]);
+// Эталон 3 (по умолчанию): 300/(24·0,85) = 14,71 А; C/I = 6,8 ч; 20·(100/(14,71·20))^1,25 = 5,19 ч; 76,36 А·ч;
+// 300/(0,85·12) = 29,41 Вт на элемент.
+await calculate("vremya-raboty-ibp-peukert.html", {}, [
+  "Ток батареи I = P / (U·η)14,71 А", "Без поправки на ток t = C/I6,8 ч", "По Пейкерту t = H·(C/(I·H))^k5,19 ч",
+  "76,36 А·ч (76,36 % от C)", "29,41 Вт на элемент, n = 12", "СтатусОценка по закону Пейкерта: около 5,19 ч при k = 1,25",
+  "таблице разряда постоянной мощностью", "34,3 Вт на элемент"]);
+// Граница паспортных точек: 340 Вт → 28,33 А → 1,969 ч < 2 ч — экстраполяция (показано по ту же сторону от 2 ч).
+await calculate("vremya-raboty-ibp-peukert.html", { kmode: "two", p: "340", u: "12", eta: "100" }, [
+  "По Пейкерту t = H·(C/(I·H))^k1,969 ч", "55,78 А·ч", "СтатусОценка по закону Пейкерта с экстраполяцией: около 1,969 ч — вне паспортных точек 2…20 ч"], "boundary");
+// Граница тока паспортного режима: 60 Вт → 5 А = C/H → по Пейкерту ровно 20 ч; 59,99 Вт → 4,999 А — ниже, только C/I.
+await calculate("vremya-raboty-ibp-peukert.html", { p: "60", u: "12", eta: "100" }, ["По Пейкерту t = H·(C/(I·H))^k20 ч", "СтатусОценка по закону Пейкерта: около 20 ч при k = 1,25"], "boundary");
+await calculateWithout("vremya-raboty-ibp-peukert.html", { p: "59,99", u: "12", eta: "100" }, ["СтатусОценка: около 20 ч = C/I; ток 4,999 А меньше тока паспортного режима C/H = 5 А"], ["По Пейкерту t"], "boundary");
+// Рискованный вердикт: при 4 А Пейкерт дал бы 20·(100/80)^1,25 = 26,4 ч — больше паспортной ёмкости; в оценку идёт C/I = 25 ч.
+await calculateWithout("vremya-raboty-ibp-peukert.html", { p: "48", u: "12", eta: "100" }, ["По Пейкертуне применяется: ток ниже тока паспортного режима", "СтатусОценка: около 25 ч = C/I"], ["26,4"]);
+// k = 1 — формула совпадает с C/I (6,8 ч); k = 1,6 — край диапазона: 20·0,34^1,6 = 3,56 ч.
+await calculate("vremya-raboty-ibp-peukert.html", { k: "1" }, ["По Пейкерту t = H·(C/(I·H))^k6,8 ч"], "boundary");
+await calculate("vremya-raboty-ibp-peukert.html", { k: "1,6" }, ["По Пейкерту t = H·(C/(I·H))^k3,56 ч"], "boundary");
+// Li-ion: 300/(25,6·0,85) = 13,79 А, C/I = 7,25 ч, без Пейкерта; напряжение не обязано быть кратно 2 В, поле H скрыто и не читается.
+await calculateWithout("vremya-raboty-ibp-peukert.html", { chem: "li", u: "25,6", h: "abc" }, ["Ток батареи I = P / (U·η)13,79 А", "Без поправки на ток t = C/I7,25 ч", "СтатусОценка без поправки на ток: около 7,25 ч = C/I; закон Пейкерта для Li-ion не применяется", "близок к 1"], ["По Пейкерту", "Показатель Пейкерта k", "Вт на элемент"]);
+await invalid("vremya-raboty-ibp-peukert.html", { u: "25,6" }, "кратно 2 В");
+await invalid("vremya-raboty-ibp-peukert.html", { u: "13" }, "кратно 2 В");
+await invalid("vremya-raboty-ibp-peukert.html", { k: "0,99" }, "от 1 до 1,6");
+await invalid("vremya-raboty-ibp-peukert.html", { k: "1,61" }, "от 1 до 1,6");
+await invalid("vremya-raboty-ibp-peukert.html", { kmode: "two", h2: "20" }, "должно отличаться от H");
+// 100 А·ч при 20 ч и 110 А·ч при 2 ч дают k = 0,9603 < 1 — отклоняется.
+await invalid("vremya-raboty-ibp-peukert.html", { kmode: "two", c2: "110" }, "k = 0,9603 — вне диапазона 1…1,6");
+await invalid("vremya-raboty-ibp-peukert.html", { kmode: "two", c2: "" }, "Введите вторую ёмкость");
+await invalid("vremya-raboty-ibp-peukert.html", { eta: "0" }, "КПД инвертора задаётся в процентах");
+await invalid("vremya-raboty-ibp-peukert.html", { p: "300 Вт" }, "Заполните мощность нагрузки");
+
+// --- 4. samorazryad-akkumulyatora: Panasonic (линейно), Victron / EnerSys (удвоение на +10 °C) ---
+// Эталон 1 (по умолчанию): 3 %/мес при 20 °C, хранение 30 °C → ×2 → 6 %/мес; 100 − 6·6 = 64 %; порог 90 % — 10/6 = 1,667 мес.;
+// экспоненциально 100·0,94^6 = 68,99 %, ln 0,9 / ln 0,94 = 1,703 мес.
+await calculateWithout("samorazryad-akkumulyatora.html", {}, [
+  "Поправка на температуру 2^((T − Tп)/10)× 2", "Саморазряд при хранении r6 % в месяц", "Заряд через 6 мес. — линейно, как у Panasonic64 %",
+  "Время до порога подзаряда 90 %1,667 мес.", "Для сравнения: экспоненциально (1 − r)^t68,99 % через 6 мес., порог — через 1,703 мес.",
+  "СтатусПодзаряд нужен не позже чем через 1,667 мес.: к концу хранения (6 мес.) заряд опустится до 64 % при пороге 90 %", "2,10 В на элемент"], ["Оценка:"]);
+// Эталон 2 (таблица EnerSys SBS XC): 1,25 %/мес при 20 °C → 1,768 при 25 °C (в таблице 1,76), 2,5 при 30 °C, 5 при 40 °C.
+await calculate("samorazryad-akkumulyatora.html", { r: "1,25", temp: "25" }, ["× 1,414", "Саморазряд при хранении r1,768 % в месяц", "89,39 %", "5,657 мес."]);
+await calculate("samorazryad-akkumulyatora.html", { r: "1,25", temp: "30" }, ["Саморазряд при хранении r2,5 % в месяц", "Заряд через 6 мес. — линейно, как у Panasonic85 %", "Время до порога подзаряда 90 %4 мес."]);
+await calculate("samorazryad-akkumulyatora.html", { r: "1,25", temp: "40" }, ["× 4", "Саморазряд при хранении r5 % в месяц", "70 %", "Время до порога подзаряда 90 %2 мес."], "boundary");
+// Эталон 3 (метод Panasonic, 5 %/мес ниже 20 °C): поправка не применяется; 100 − 5·6 = 70 %; порог — через 2 мес.
+await calculate("samorazryad-akkumulyatora.html", { r: "5", temp: "15" }, ["не применяется: хранение не теплее паспортной температуры", "Саморазряд при хранении r5 % в месяц", "70 %", "73,51 %", "2,054 мес."]);
+// Другая химия: поправки нет, поля температуры скрыты и не читаются: 2 %/мес, 12 мес. → 76 %, порог 50 % — через 25 мес.
+await calculateWithout("samorazryad-akkumulyatora.html", { chem: "other", r: "2", th: "50", m: "12", temp: "abc" }, [
+  "Заряд через 12 мес. — линейно, как у Panasonic76 %", "Время до порога подзаряда 50 %25 мес.", "78,47 % через 12 мес., порог — через 34,31 мес.",
+  "СтатусОценка: через 12 мес. заряд около 76 % — выше порога 50 %; порог — примерно через 25 мес.", "подтверждено только для свинцово-кислотных"], ["Поправка на температуру 2^"]);
+// Граница порога: 2 %/мес, 6 мес., порог 88 % — достигается ровно к концу (6 мес.); 87,99 % — через 6,005 мес.; 88,01 % — через 5,995 мес.
+await calculateWithout("samorazryad-akkumulyatora.html", { r: "2", temp: "20", th: "88" }, ["СтатусПодзаряд нужен не позже чем через 6 мес.: к концу хранения (6 мес.) заряд опустится до 88 % при пороге 88 %"], ["Оценка:"], "boundary");
+await calculate("samorazryad-akkumulyatora.html", { r: "2", temp: "20", th: "87,99" }, ["СтатусОценка: через 6 мес. заряд около 88 % — выше порога 87,99 %; порог — примерно через 6,005 мес."], "boundary");
+await calculate("samorazryad-akkumulyatora.html", { r: "2", temp: "20", th: "88,01" }, ["СтатусПодзаряд нужен не позже чем через 5,995 мес."], "boundary");
+await calculateWithout("samorazryad-akkumulyatora.html", { s0: "90" }, ["СтатусПодзарядите перед хранением: начальный заряд 90 % не выше порога 90 %"], ["Время до порога"], "boundary");
+await calculate("samorazryad-akkumulyatora.html", { s0: "90,01" }, ["Время до порога подзаряда 90 %0,001667 мес."], "boundary");
+await calculate("samorazryad-akkumulyatora.html", { r: "5", temp: "20", m: "30" }, ["0 % — полный разряд через 20 мес."]);
+await calculate("samorazryad-akkumulyatora.html", { temp: "40" }, ["Саморазряд при хранении r12 % в месяц"], "boundary");
+await calculate("samorazryad-akkumulyatora.html", { temp: "-40" }, ["Саморазряд при хранении r3 % в месяц"], "boundary");
+await invalid("samorazryad-akkumulyatora.html", { temp: "40,01" }, "Выше 40 °C удвоение");
+await invalid("samorazryad-akkumulyatora.html", { temp: "-40,01" }, "ниже −40 °C");
+await invalid("samorazryad-akkumulyatora.html", { tref: "14,99" }, "от 15 до 30 °C");
+await invalid("samorazryad-akkumulyatora.html", { tref: "30,01" }, "от 15 до 30 °C");
+// 30 %/мес при 15 °C, хранение 40 °C: ×2^2,5 → 169,7 %/мес — вне модели.
+await invalid("samorazryad-akkumulyatora.html", { r: "30", tref: "15", temp: "40" }, "169,7 % в месяц — вне модели");
+await invalid("samorazryad-akkumulyatora.html", { r: "0" }, "Саморазряд задаётся в процентах в месяц");
+await invalid("samorazryad-akkumulyatora.html", { r: "100" }, "Саморазряд задаётся в процентах в месяц");
+await invalid("samorazryad-akkumulyatora.html", { s0: "100,1" }, "Начальный заряд");
+await invalid("samorazryad-akkumulyatora.html", { th: "0" }, "Порог подзаряда");
+await invalid("samorazryad-akkumulyatora.html", { m: "0" }, "Срок хранения должен быть больше нуля");
+await invalid("samorazryad-akkumulyatora.html", { m: "полгода" }, "Заполните саморазряд");
+
+// Структурные проверки партии №4: запрещённые формы вердикта, карточка
+// источника, видимость полей по режиму (правило 7), ссылки на существующие
+// страницы вместо дублирования, входящие ссылки и не больше 5 ссылок в
+// «Смотрите также» по всему каталогу.
+{
+  kind = "structural";
+  const batch4 = ["stoimost-kvtch-akkumulyatora", "kontroller-zaryada-mppt-pwm", "vremya-raboty-ibp-peukert", "samorazryad-akkumulyatora"];
+  const visible = file => fs.readFileSync(path.join(sourceDir, file), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  const registry = fs.readFileSync(path.join(sourceDir, "ENGINEERING_AUDIT.md"), "utf8");
+  for (const slug of batch4) {
+    const html = fs.readFileSync(path.join(sourceDir, `${slug}.html`), "utf8");
+    const script = html.match(/<script>([\s\S]*?)<\/script>\s*<\/body>/)?.[1] ?? "";
+    check(!/проходит|безопасн|соответствует норм/i.test(visible(`${slug}.html`)) && !/проходит|безопасн|соответствует норм/i.test(script),
+      `${slug}: запрещённые слова «проходит», «безопасно», «соответствует нормам»`);
+    const card = html.match(/<section class="src">([\s\S]*?)<\/section>/)?.[1] ?? "";
+    check(card.includes("Оценка, не нормативный вердикт") && card.includes("Границы применимости") && card.includes("Редакция") && /обращение 30\.09\.2026/.test(card) && !/Проверил:/.test(card),
+      `${slug}: карточка источника без статуса «Оценка», границ, редакции или даты обращения — либо с выдуманным проверяющим`);
+    check(registry.includes(`\`${slug}\``), `ENGINEERING_AUDIT.md: нет записи о ${slug}`);
+  }
+  const page = slug => fs.readFileSync(path.join(sourceDir, `${slug}.html`), "utf8");
+  // Voc на холоде проверяет существующая страница — здесь ссылка, а не второй расчёт.
+  check(/href="solnechnye-paneli-massiv\.html"/.test(page("kontroller-zaryada-mppt-pwm")) && !/id="tmin"|id="beta"|id="voc"/.test(page("kontroller-zaryada-mppt-pwm")),
+    "kontroller-zaryada-mppt-pwm: проверка Voc на холоде должна остаться на странице массива, здесь — только ссылка");
+  check(/href="vremya-raboty-akkumulyatora\.html"/.test(page("vremya-raboty-ibp-peukert")),
+    "vremya-raboty-ibp-peukert: нет ссылки на простой расчёт времени работы от аккумулятора");
+  const peukert = visible("vremya-raboty-ibp-peukert.html");
+  check(/разряда постоянной мощностью/.test(peukert) && /оптимистичен/.test(peukert) && /Li-ion/.test(peukert) && /близок к 1/.test(peukert),
+    "vremya-raboty-ibp-peukert: нет оговорки о таблицах постоянной мощности, приближённости формулы или неприменимости для Li-ion");
+  const cost = visible("stoimost-kvtch-akkumulyatora.html");
+  check(/не интерполирует/.test(cost) && /не подставляет/.test(cost), "stoimost-kvtch-akkumulyatora: не сказано, что паспортные ресурс и срок не интерполируются и не подставляются");
+  const sd = visible("samorazryad-akkumulyatora.html");
+  check(/только для свинцово-кислотных|подтверждено только для свинцово-кислотных|Для других химий удвоение/.test(sd), "samorazryad-akkumulyatora: удвоение на +10 °C не ограничено свинцово-кислотными VRLA");
+  const inbound = { "vremya-raboty-akkumulyatora": "vremya-raboty-ibp-peukert", "solnechnye-paneli-massiv": "kontroller-zaryada-mppt-pwm",
+    "raschet-akb-avtonomnoy": "stoimost-kvtch-akkumulyatora", "battery-charge-time": "samorazryad-akkumulyatora" };
+  for (const [from, to] of Object.entries(inbound)) {
+    const block = page(from).match(/<section class="related">([\s\S]*?)<\/section>/)?.[1] ?? "";
+    check(block.includes(`href="${to}.html"`), `${from}: в «Смотрите также» нет ссылки на ${to}`);
+  }
+  // Ограничение «не больше 5 ссылок» по всему каталогу проверяется в блоке data_o.py.
+  // Видимость полей по режиму: скрытое поле не влияет на расчёт, видимое — влияет.
+  const state = async (file, values) => {
+    const dom = await load(file); const d = dom.window.document;
+    for (const [id, v] of Object.entries(values)) { const el = d.getElementById(id); el.value = v; el.dispatchEvent(new dom.window.Event("change", { bubbles: true })); }
+    const hidden = new Set([...d.querySelectorAll(".f")].filter(f => f.style.display === "none").map(f => f.id.replace(/^f_/, "")));
+    dom.window.close(); return hidden;
+  };
+  let hs = await state("stoimost-kvtch-akkumulyatora.html", {});
+  check(!hs.has("pb") && !hs.has("lb"), "stoimost-kvtch-akkumulyatora: в режиме сравнения поля варианта B должны быть видны");
+  hs = await state("stoimost-kvtch-akkumulyatora.html", { mode: "one" });
+  check(["pb", "cb", "ub", "db", "nb", "eb", "lb"].every(id => hs.has(id)) && !hs.has("pa"), "stoimost-kvtch-akkumulyatora: в режиме одного аккумулятора поля B скрыты, поля A видны");
+  hs = await state("kontroller-zaryada-mppt-pwm.html", {});
+  check(["eta", "ovp", "pmax", "iscmax"].every(id => hs.has(id)), "kontroller-zaryada-mppt-pwm: в режиме PWM с основанием NEC поля MPPT и паспортного Isc скрыты");
+  hs = await state("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", base: "own" });
+  check(!hs.has("eta") && !hs.has("ovp") && !hs.has("iscmax") && hs.has("pmax"), "kontroller-zaryada-mppt-pwm: в режиме MPPT видны КПД, перегруз и паспортный Isc, мощность предела — только при своём пределе");
+  hs = await state("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", ovp: "pmax" });
+  check(!hs.has("pmax"), "kontroller-zaryada-mppt-pwm: при пределе мощности производителя поле мощности должно быть видно");
+  hs = await state("vremya-raboty-ibp-peukert.html", {});
+  check(!hs.has("k") && hs.has("c2") && hs.has("h2") && !hs.has("h"), "vremya-raboty-ibp-peukert: при заданном k вторая точка скрыта");
+  hs = await state("vremya-raboty-ibp-peukert.html", { kmode: "two" });
+  check(hs.has("k") && !hs.has("c2") && !hs.has("h2"), "vremya-raboty-ibp-peukert: в режиме двух точек поле k скрыто, вторая точка видна");
+  hs = await state("vremya-raboty-ibp-peukert.html", { chem: "li" });
+  check(["h", "kmode", "k", "c2", "h2"].every(id => hs.has(id)), "vremya-raboty-ibp-peukert: для Li-ion поля Пейкерта и H скрыты");
+  hs = await state("samorazryad-akkumulyatora.html", { chem: "other" });
+  check(hs.has("tref") && hs.has("temp"), "samorazryad-akkumulyatora: для других химий поля температуры скрыты");
+  hs = await state("samorazryad-akkumulyatora.html", {});
+  check(!hs.has("tref") && !hs.has("temp"), "samorazryad-akkumulyatora: для VRLA поля температуры видны");
+}
+
+// --- Партия №4: находки независимого проверяющего (эталоны посчитаны вручную, расчёт — в комментариях) ---
+// MPPT: вход ограничен отдельно от выхода. Victron SmartSolar 250/60 — выход 60 А, Isc массива до 35 А.
+// Isc 40 А: NEC по Morningstar выполнено (1,25·40 = 50 ≤ 60), но 40 > 35 — вывод «больше допустимого на входе».
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", isc: "40", vmp: "75", pw: "2775", umin: "48", umax: "57,6", irated: "60" }, ["1,25·Isc (NEC 690.8) и номинальный ток контроллера50 А ≤ 60 А", "Isc массива и предел на входе MPPT по паспорту40 А > 35 А", "СтатусТок КЗ массива больше допустимого на входе MPPT по паспорту контроллера: 40 А > 35 А"], ["СтатусОценка"]);
+// Перегруз «при соблюдении предела Isc» не объявляется допустимым, если предел нарушен (3400·0,98/48 = 69,42 А > 60 А).
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", isc: "40", vmp: "90", pw: "3400", umin: "48", umax: "57,6", irated: "60", ovp: "isc" }, ["СтатусТок КЗ массива больше допустимого на входе MPPT по паспорту контроллера: 40 А > 35 А"], ["перегруз допускается"]);
+// Граница предела входа: 35 = 35 — в пределах (ток на выходе 2500·0,98/48 = 51,04 А); 35,01 — уже нет.
+await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", isc: "35", vmp: "75", pw: "2500", umin: "48", umax: "57,6", irated: "60" }, ["Isc массива и предел на входе MPPT по паспорту35 А ≤ 35 А", "СтатусОценка: условие по току КЗ выполнено, ток на выходе при STC 51,04 А не больше номинального 60 А"], "boundary");
+await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", isc: "35,01", vmp: "75", pw: "2500", umin: "48", umax: "57,6", irated: "60" }, ["СтатусТок КЗ массива больше допустимого на входе MPPT по паспорту контроллера: 35,01 А > 35 А"], "boundary");
+// Без паспортного предела входа у MPPT — «Недостаточно данных», даже если условие NEC выполнено.
+await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", iscmax: "" }, ["Isc массива и предел на входе MPPT по паспортупредел не задан", "СтатусНедостаточно данных: для MPPT предел тока КЗ массива на входе задаёт паспорт контроллера — он не задан; условие 1,25·Isc по NEC в трактовке Morningstar выполнено"]);
+// Запас Vmp у MPPT: Victron работает при превышении напряжения массива над АКБ не меньше 1 В. 15,4 − 14,4 = 1 В —
+// риск; 15,41 В — оценка (ток на выходе 300·0,98/12 = 24,5 А).
+await calculate("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", vmp: "15,4", pw: "300" }, ["СтатусРиск недозаряда: Vmp массива при STC выше наибольшего напряжения заряда только на 1 В"], "boundary");
+await calculateWithout("kontroller-zaryada-mppt-pwm.html", { tip: "mppt", vmp: "15,41", pw: "300" }, ["СтатусОценка: условие по току КЗ выполнено, ток на выходе при STC 24,5 А не больше номинального 30 А"], ["Риск"], "boundary");
+// PWM: верхняя оценка мощности в АКБ ограничена мощностью массива. При 18 В: Imp = 345/19 = 18,158 А,
+// 18·18,158 = 326,8 Вт; 18·19,83 = 356,9 Вт > 345 → 345 Вт; доли 94,74…100 %.
+await calculate("kontroller-zaryada-mppt-pwm.html", { umin: "18", umax: "18,2" }, ["Мощность в АКБ при 18 В — от U·Imp до U·Isc326,8…345 Вт из 345 Вт (94,74…100 %)", "СтатусОценка: условие по току КЗ выполнено; PWM передаст в АКБ около 94,74…100 % мощности массива при STC"]);
+// Ток разряда сборки: температура вне паспорта не маскирует превышение — 3000/32,5 = 92,31 А > 80 А.
+await calculate("tok-razryada-liion-sborki.html", { temp: "no", pl: "3000", ppk: "", tl: "" }, ["СтатусТок нагрузки 92,31 А больше допустимого длительного тока сборки 80 А по паспорту ячейки; к тому же температура ячеек вне паспортного диапазона", "не меньше 92,31 А длительно — больше допустимого тока ячеек"]);
+// Замечание бота-ревьюера к PR #24 (не воспроизвелось, закреплено тестом): пик нагрузки задан, импульсного тока
+// ячейки в паспорте нет — предел BMS только длительный, без «— А не дольше — с»: условие строки — паспортный
+// импульс ячейки (ipl), а не пик нагрузки (ilp). 4000 Вт / 32,5 В = 123,1 А.
+await calculateWithout("tok-razryada-liion-sborki.html", { ppk: "4000", tl: "10" }, ["Пиковый ток нагрузки123,1 А в течение 10 с", "Предел тока разряда в настройке BMSне выше 80 А длительно — по паспорту ячеек"], ["не дольше —", "— А", "NaN", "undefined"]);
+// Режим C-rate при P = 4: 8C · 2,5 А·ч = 20 А на ячейку, 80 А на сборку (а не 320 А).
+await calculate("tok-razryada-liion-sborki.html", { spec: "c", crc: "8", crp: "", tpk: "" }, ["Допустимый длительный ток сборки C-rate · C · P80 А"]);
+// Балансировка: тепло E = U·ΔQ не зависит от доли времени D — 4,2·0,15 = 0,63 Вт·ч; время при D = 50 % вдвое больше:
+// 0,15 / (4,2/65 · 0,5) = 4,643 ч.
+await calculate("balansirovka-yacheek-bms.html", { duty: "50" }, ["Тепло в цепи балансировки E = U·ΔQ0,63 Вт·ч", "4,643 ч"]);
+// Граница напряжения ячейки: 5 В — ещё Li-ion (5/65 = 76,92 мА), 5,01 В — ошибка.
+await calculate("balansirovka-yacheek-bms.html", { u: "5" }, ["76,92 мА"], "boundary");
+await invalid("balansirovka-yacheek-bms.html", { u: "5,01" }, "Напряжение ячейки при балансировке");
+// Разные батареи важнее риска предохранителя: статус — «Недостаточно данных», а не «Риск срабатывания».
+await calculateWithout("tok-vyravnivaniya-akb.html", { same: "diff", inf: "5" }, ["СтатусНедостаточно данных: батареи разные"], ["СтатусРиск срабатывания"]);
+// Пейкерт по двум точкам: 100 А·ч / 20 ч = 5 А и 50 А·ч / 10 ч = 5 А — показатель не определить.
+await invalid("vremya-raboty-ibp-peukert.html", { kmode: "two", c2: "50", h2: "10" }, "Токи разряда двух точек совпадают");
+// Саморазряд: остаток не уходит ниже нуля — строка именно «0 %», а не «−50 %».
+await calculate("samorazryad-akkumulyatora.html", { r: "5", temp: "20", m: "30" }, ["Заряд через 30 мес. — линейно, как у Panasonic0 %"]);
 
 // Coverage guard считает фактически выполненные сценарии. Простое load()
 // больше не выдаётся за проверку формулы. Минимум один сценарий предотвращает
