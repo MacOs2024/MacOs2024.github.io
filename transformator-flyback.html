@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Трансформатор обратноходового преобразователя — ВольтКальк</title>
+<meta name="description" content="Прикидка трансформатора обратноходового (flyback) преобразователя по Fairchild AN-4137: коэффициент трансформации по отражённому напряжению, наибольший коэффициент заполнения, индуктивность первичной обмотки на границе прерывистого тока, пиковый и действующий ток, число витков по Bmax и Ae, немагнитный зазор и напряжение на ключе.">
+<link rel="canonical" href="https://macos2024.github.io/transformator-flyback.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Трансформатор обратноходового преобразователя — ВольтКальк">
+<meta property="og:description" content="Прикидка трансформатора обратноходового (flyback) преобразователя по Fairchild AN-4137: коэффициент трансформации по отражённому напряжению, наибольший коэффициент заполнения, индуктивность первичной обмотки на границе прерывистого тока, пиковый и действующий ток, число витков по Bmax и Ae, немагнитный зазор и напряжение на ключе.">
+<meta property="og:url" content="https://macos2024.github.io/transformator-flyback.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Трансформатор обратноходового преобразователя","url":"https://macos2024.github.io/transformator-flyback.html","description":"Прикидка трансформатора обратноходового (flyback) преобразователя по Fairchild AN-4137: коэффициент трансформации по отражённому напряжению, наибольший коэффициент заполнения, индуктивность первичной обмотки на границе прерывистого тока, пиковый и действующий ток, число витков по Bmax и Ae, немагнитный зазор и напряжение на ключе.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Трансформатор обратноходового преобразователя","item":"https://macos2024.github.io/transformator-flyback.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему индуктивность «не больше»?","acceptedAnswer":{"@type":"Answer","text":"В прерывистом режиме ток каждый такт спадает до нуля. Если индуктивность больше граничной, при наименьшем входном напряжении и полной нагрузке ток перестанет спадать — преобразователь уйдёт в непрерывный режим, и формулы прикидки к нему неприменимы."}},{"@type":"Question","name":"Как выбрать отражённое напряжение?","acceptedAnswer":{"@type":"Answer","text":"Больше Vor — больше коэффициент заполнения и меньше пиковый ток, но выше напряжение на ключе. Fairchild в AN-4137 выбирает его так, чтобы Vвх max + Vor было 65–70 % VDSS ключа: остальное нужно на выброс от индуктивности рассеяния."}},{"@type":"Question","name":"Почему фактический зазор больше расчётного?","acceptedAnswer":{"@type":"Answer","text":"Поле у зазора выпучивается за пределы керна, эффективная площадь растёт, и при том же зазоре индуктивность выше. Формула без выпучивания поэтому даёт зазор меньше нужного: у TDK E 25/13/7 при 0,5 мм — на четверть. Зазор уточняют по измеренной индуктивности."}},{"@type":"Question","name":"Проверяет ли калькулятор изоляцию трансформатора?","acceptedAnswer":{"@type":"Answer","text":"Нет. Изоляция между первичной и вторичной обмотками, пути утечки и воздушные зазоры задаются стандартом на изделие, например IEC 62368-1, и паспортами провода и каркаса. Калькулятор считает только электрические и магнитные величины."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Трансформатор обратноходового преобразователя</h1>
+<p class="intro">Трансформатор flyback не просто передаёт мощность, а накапливает энергию в зазоре сердечника и отдаёт её в паузе. Калькулятор делает прикидку по методике <b>Fairchild AN-4137</b> для прерывистого тока: витки, индуктивность, зазор и напряжение на ключе. Сетевой трансформатор 50 Гц считает <a href="raschet-transformatora.html">калькулятор трансформатора</a>, витки по AL для заданной индуктивности — <a href="toroid-turns-al.html">калькулятор витков по AL</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Трансформатор обратноходового преобразователя</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_vdcmin"><label for="vdcmin">Наименьшее постоянное напряжение на входе Vвх min</label><div class="fw"><input id="vdcmin" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">В</span></div><div class="hint">Наименьшее напряжение на входном конденсаторе с учётом провалов пульсаций — по энергии, которую конденсатор отдаёт между подзарядами (см. текст ниже)</div></div><div class="f" id="f_vdcmax"><label for="vdcmax">Наибольшее постоянное напряжение на входе Vвх max</label><div class="fw"><input id="vdcmax" type="text" inputmode="decimal" autocomplete="off" value="375" placeholder=""><span class="u">В</span></div><div class="hint">√2 · наибольшее действующее напряжение сети: 265 В → 375 В</div></div><div class="f" id="f_vo"><label for="vo">Выходное напряжение Vвых</label><div class="fw"><input id="vo" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_vfo"><label for="vfo">Падение на выходном диоде VF</label><div class="fw"><input id="vfo" type="text" inputmode="decimal" autocomplete="off" value="0,5" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_po"><label for="po">Выходная мощность Pвых</label><div class="fw"><input id="po" type="text" inputmode="decimal" autocomplete="off" value="24" placeholder=""><span class="u">Вт</span></div></div><div class="f" id="f_eta"><label for="eta">Ожидаемый КПД</label><div class="fw"><input id="eta" type="text" inputmode="decimal" autocomplete="off" value="85" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_fs"><label for="fs">Частота преобразования fs</label><div class="fw"><input id="fs" type="text" inputmode="decimal" autocomplete="off" value="65" placeholder=""><span class="u">кГц</span></div></div><div class="f" id="f_vor"><label for="vor">Отражённое напряжение Vor</label><div class="fw"><input id="vor" type="text" inputmode="decimal" autocomplete="off" value="75" placeholder=""><span class="u">В</span></div><div class="hint">Выбирают так, чтобы Vвх max + Vor с выбросом уложилось в VDSS ключа; AN-4137 для ключа на 650 В и универсальной сети советует Dmax 0,45–0,5</div></div><div class="f" id="f_ae"><label for="ae">Сечение сердечника Ae по паспорту</label><div class="fw"><input id="ae" type="text" inputmode="decimal" autocomplete="off" value="52,5" placeholder=""><span class="u">мм²</span></div><div class="hint">Пример — TDK E 25/13/7 (EF 25): Ae = 52,5 мм²</div></div><div class="f" id="f_bmax"><label for="bmax">Наибольшая индукция Bmax</label><div class="fw"><input id="bmax" type="text" inputmode="decimal" autocomplete="off" value="0,3" placeholder=""><span class="u">Тл</span></div><div class="hint">Ниже индукции насыщения материала при рабочей температуре: у TDK N87 — 0,39 Тл при 100 °C. AN-4137 при отсутствии данных берёт 0,35–0,4 Тл вместе с расчётом по порогу ограничения тока</div></div><div class="f" id="f_al"><label for="al">AL сердечника без зазора по паспорту</label><div class="fw"><input id="al" type="text" inputmode="decimal" autocomplete="off" value="1850" placeholder=""><span class="u">нГн/виток²</span></div><div class="hint">E 25/13/7 из N87 — 1850 нГн (+30/−20 %). Пусто — сопротивление самого сердечника не учитывается, зазор чуть завышен</div></div><div class="f" id="f_vdss"><label for="vdss">VDSS ключа по паспорту</label><div class="fw"><input id="vdss" type="text" inputmode="decimal" autocomplete="off" value="650" placeholder=""><span class="u">В</span></div><div class="hint">Пусто — напряжение на ключе не с чем сравнить</div></div><div class="f" id="f_ilim"><label for="ilim">Порог ограничения тока контроллера</label><div class="fw"><input id="ilim" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">А</span></div><div class="hint">Наибольшее значение по паспорту контроллера. AN-4137 считает витки по нему: при запуске и перегрузке ток доходит до порога. Пусто — витки по пиковому току</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Трансформатор flyback: как считается</h2>
+<div class="formula">n = V<sub>or</sub> / (V<sub>вых</sub> + V<sub>F</sub>),&nbsp;&nbsp;D<sub>max</sub> = V<sub>or</sub> / (V<sub>or</sub> + V<sub>вх min</sub>)<br>L<sub>p</sub> = (V<sub>вх min</sub>·D<sub>max</sub>)² / (2·P<sub>вх</sub>·f<sub>s</sub>),&nbsp;&nbsp;P<sub>вх</sub> = P<sub>вых</sub> / η<br>I<sub>пик</sub> = 2·P<sub>вх</sub> / (V<sub>вх min</sub>·D<sub>max</sub>),&nbsp;&nbsp;I<sub>RMS</sub> = I<sub>пик</sub>·√(D<sub>max</sub>/3)<br>N<sub>p</sub> ≥ L<sub>p</sub>·I / (B<sub>max</sub>·A<sub>e</sub>),&nbsp;&nbsp;N<sub>s</sub> = ⌈N<sub>p</sub> / n⌉<br>g ≈ μ<sub>0</sub>·A<sub>e</sub>·(N<sub>p</sub>²/L<sub>p</sub> − 1/A<sub>L</sub>) — без выпучивания поля<br>V<sub>ключа</sub> = V<sub>вх max</sub> + V<sub>or</sub> (без выброса),&nbsp;&nbsp;V<sub>диода</sub> = V<sub>вых</sub> + V<sub>вх max</sub> / n</div>
+<p><b>Как работает трансформатор flyback.</b> Пока ключ открыт, ток первичной обмотки растёт, и энергия ½·L<sub>p</sub>·I² копится в зазоре сердечника; вторичная цепь заперта диодом. Когда ключ закрывается, энергия уходит через вторичную обмотку в нагрузку. На первичной обмотке в это время — отражённое напряжение V<sub>or</sub> = n·(V<sub>вых</sub> + V<sub>F</sub>), и ключ видит V<sub>вх</sub> + V<sub>or</sub>. В режиме прерывистого тока (DCM) ток успевает упасть до нуля до следующего такта.</p>
+<p><b>Отражённое напряжение и заполнение.</b> На границе прерывистого тока вольт-секунды при открытом и закрытом ключе равны: V<sub>вх</sub>·D = V<sub>or</sub>·(1 − D), откуда D<sub>max</sub> = V<sub>or</sub>/(V<sub>or</sub> + V<sub>вх min</sub>); в AN-4137 то же записано как V<sub>RO</sub> = D<sub>max</sub>/(1 − D<sub>max</sub>)·V<sub>DC min</sub>. Больше V<sub>or</sub> — больше заполнение и меньше пиковый ток, но выше напряжение на ключе. Fairchild советует выбирать D<sub>max</sub> так, чтобы номинальное напряжение на ключе было 65–70 % его VDSS — остальное уходит на выброс от индуктивности рассеяния; для ключа на 650 В и универсальной сети это D<sub>max</sub> 0,45–0,5.</p>
+<p><b>Индуктивность на границе DCM.</b> В прерывистом режиме ток каждый такт растёт от нуля: I<sub>пик</sub> = V<sub>вх</sub>·D/(L<sub>p</sub>·f<sub>s</sub>), а энергия такта ½·L<sub>p</sub>·I<sub>пик</sub>², умноженная на f<sub>s</sub>, равна входной мощности. Отсюда L<sub>p</sub> = (V<sub>вх min</sub>·D<sub>max</sub>)²/(2·P<sub>вх</sub>·f<sub>s</sub>) — формула AN-4137 с K<sub>RF</sub> = 1, то есть для DCM. Это наибольшая индуктивность: при большей ток при наименьшем входном напряжении и полной нагрузке перестанет спадать до нуля. Токи — по уравнениям AN-4137: I<sub>пик</sub> = I<sub>EDC</sub> + ΔI/2 и I<sub>RMS</sub> = √((3·I<sub>EDC</sub>² + (ΔI/2)²)·D<sub>max</sub>/3), где I<sub>EDC</sub> = P<sub>вх</sub>/(V<sub>DC min</sub>·D<sub>max</sub>), а в DCM ΔI = 2·I<sub>EDC</sub>. Получается треугольник: I<sub>пик</sub> = 2·P<sub>вх</sub>/(V<sub>вх min</sub>·D<sub>max</sub>), I<sub>RMS</sub> = I<sub>пик</sub>·√(D<sub>max</sub>/3).</p>
+<p><b>Число витков.</b> Потокосцепление обмотки L·I равно N·Φ = N·B·A<sub>e</sub> (OpenStax), поэтому индукция при токе I — B = L<sub>p</sub>·I/(N<sub>p</sub>·A<sub>e</sub>), и витков нужно не меньше L<sub>p</sub>·I/(B<sub>max</sub>·A<sub>e</sub>). AN-4137 подставляет сюда не пиковый ток, а порог ограничения тока контроллера: при запуске и перегрузке ток доходит именно до него; если порог задан, калькулятор так и делает. Вторичных витков N<sub>s</sub> = ⌈N<sub>p</sub>/n⌉, первичных — ⌈n·N<sub>s</sub>⌉: фактический коэффициент трансформации не меньше расчётного, и отражённое напряжение не падает — прерывистый режим сохраняется.</p>
+<p><b>Зазор.</b> Магнитная цепь с зазором: L = μ<sub>0</sub>·N²·A<sub>e</sub>/(g + l<sub>e</sub>/μ<sub>r</sub>), а сердечник без зазора даёт A<sub>L</sub> = μ<sub>0</sub>·μ<sub>r</sub>·A<sub>e</sub>/l<sub>e</sub>. Отсюда g = μ<sub>0</sub>·A<sub>e</sub>·(N²/L − 1/A<sub>L</sub>) — та же структура, что у формулы зазора в AN-4137, здесь в единицах СИ. Это длина без выпучивания поля. Dixon (TI, SLUP127) поясняет: поле у зазора выходит за пределы керна, эффективная площадь больше, и индуктивность выше расчётной — значит, нужный зазор больше. Таблица TDK для E 25/13/7 из N87 показывает масштаб: A<sub>L</sub> = 151 нГн получается при зазоре 0,5 мм, а формула без выпучивания дала бы 0,40 мм; при 0,16 мм расхождение около 4 %, при 1 мм — около 45 %. Поэтому зазор уточняют по измеренной индуктивности. g — общая длина зазора в магнитной цепи: при зазоре в среднем керне это его длина; прокладка под все керны даёт два зазора последовательно, и её толщина — около g/2, если сечение крайних кернов вместе равно среднему.</p>
+<p><b>Напряжения.</b> Ключ без учёта выброса видит V<sub>вх max</sub> + V<sub>or</sub>, выходной диод — V<sub>вых</sub> + V<sub>вх max</sub>/n (AN-4137). Выброс от индуктивности рассеяния здесь не считается: его ограничивает снаббер, и он рассчитывается отдельно. Наименьшее напряжение на входном конденсаторе считают по энергии, которую конденсатор отдаёт между подзарядами: ½·C·(2·U<sub>сети min</sub>² − V<sub>DC min</sub>²) = P<sub>вх</sub>·(1 − D<sub>ch</sub>)/(2·f<sub>сети</sub>), где D<sub>ch</sub> — доля полупериода, когда конденсатор подзаряжается; в AN-4137 она около 0,2.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="raschet-transformatora.html">Калькулятор сетевого трансформатора</a> — методика для 50 Гц, для импульсных трансформаторов она не подходит. <a href="toroid-turns-al.html">Калькулятор витков по AL</a> даёт витки для заданной индуктивности, но не проверяет индукцию и зазор. <a href="drossel-impulsnogo.html">Дроссель импульсного преобразователя</a> — накопительный дроссель понижающей и повышающей схем.</p>
+<p><b>Безопасность.</b> Первичная сторона обратноходового преобразователя связана с сетью; гальваническую развязку даёт сам трансформатор. Изоляцию между обмотками, пути утечки и воздушные зазоры калькулятор не проверяет и вердикта о них не даёт — это требования стандарта безопасности на изделие (например, IEC 62368-1) и паспортов провода, каркаса и изоляционных материалов. Входной конденсатор после сетевого выпрямителя хранит опасный заряд и после отключения: разряжайте его через <a href="discharge-resistor-capacitor.html">резистор разряда</a> и проверяйте отсутствие напряжения прибором.</p>
+<h2>Трансформатор flyback: пример расчёта</h2>
+<p>Блок питания 12 В 2 А (24 Вт) от универсальной сети: на входе от 100 до 375 В, КПД 85 %, 65 кГц, V<sub>or</sub> = 75 В, диод с V<sub>F</sub> = 0,5 В. Коэффициент трансформации 75/12,5 = 6, D<sub>max</sub> = 75/175 = 0,4286, входная мощность 28,24 Вт. Индуктивность первичной обмотки — не больше (100·0,4286)²/(2·28,24·65 000) = <b>500,4 мкГн</b>, пиковый ток 1,318 А, действующий 0,498 А.</p>
+<p>Сердечник TDK E 25/13/7 из N87: A<sub>e</sub> = 52,5 мм², A<sub>L</sub> без зазора 1850 нГн. При B<sub>max</sub> = 0,3 Тл нужно не меньше 41,86 витка: вторичных 7, первичных <b>42</b>, индукция 0,299 Тл. Зазор без выпучивания μ<sub>0</sub>·52,5·10⁻⁶·(42²/500,4·10⁻⁶ − 1/1850·10⁻⁹) ≈ <b>0,1969 мм</b> — фактически нужен чуть больше. Ключ без выброса видит 375 + 75 = 450 В — 69,23 % от 650 В; выходной диод — 12 + 375/6 = 74,5 В, пиковый ток вторичной обмотки 7,906 А.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему индуктивность «не больше»?</h3><p>В прерывистом режиме ток каждый такт спадает до нуля. Если индуктивность больше граничной, при наименьшем входном напряжении и полной нагрузке ток перестанет спадать — преобразователь уйдёт в непрерывный режим, и формулы прикидки к нему неприменимы.</p><h3>Как выбрать отражённое напряжение?</h3><p>Больше Vor — больше коэффициент заполнения и меньше пиковый ток, но выше напряжение на ключе. Fairchild в AN-4137 выбирает его так, чтобы Vвх max + Vor было 65–70 % VDSS ключа: остальное нужно на выброс от индуктивности рассеяния.</p><h3>Почему фактический зазор больше расчётного?</h3><p>Поле у зазора выпучивается за пределы керна, эффективная площадь растёт, и при том же зазоре индуктивность выше. Формула без выпучивания поэтому даёт зазор меньше нужного: у TDK E 25/13/7 при 0,5 мм — на четверть. Зазор уточняют по измеренной индуктивности.</p><h3>Проверяет ли калькулятор изоляцию трансформатора?</h3><p>Нет. Изоляция между первичной и вторичной обмотками, пути утечки и воздушные зазоры задаются стандартом на изделие, например IEC 62368-1, и паспортами провода и каркаса. Калькулятор считает только электрические и магнитные величины.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.onsemi.com/download/application-notes/pdf/an-4137.pdf" rel="nofollow noopener" target="_blank">AN-4137. Design Guidelines for Off-line Flyback Converters Using Fairchild Power Switch (FPS)</a> — Fairchild Semiconductor, ныне onsemi — Редакция 2003, переиздание onsemi; формулы видны в выдаче — раздел VRO = Dmax/(1 − Dmax)·VDCmin; Lm = (VDCmin·Dmax)²/(2·Pin·fs·KRF), KRF = 1 для DCM, IEDC = Pin/(VDCmin·Dmax); Ids,peak = IEDC + ΔI/2; Ids,rms = √((3·IEDC² + (ΔI/2)²)·Dmax/3), Np,min = Lm·Ilim/(Bsat·Ae)·10⁶; при отсутствии данных Bsat = 0,35–0,4 Тл, зазор G через Ae, Np, Lm и AL без зазора, Vds,ном = VDCmax + VRO — 65–70 % VDSS с учётом выброса; для ключа на 650 В Dmax 0,45–0,5, обратное напряжение выходного диода Vo + VDCmax·(Vo + VF)/VRO; VDCmin — по Pin, Dch ≈ 0,2, ёмкости и частоте сети — обращение 02.10.2026</li><li><a href="https://www.ti.com/lit/ml/slup127/slup127.pdf" rel="nofollow noopener" target="_blank">Magnetics Design 5 — Inductor and Flyback Transformer Design (SLUP127)</a> — Texas Instruments (Unitrode), L. H. Dixon; часть Magnetics Design Handbook SLUP132 — Редакция на дату обращения; положения видны в выдаче — раздел поле у зазора выходит за пределы керна: эффективная площадь и индуктивность больше расчётных, эмпирическая поправка — прибавить длину зазора к размерам сечения среднего керна, в DCM размах индукции велик — у flyback это особенно заметно — обращение 02.10.2026</li><li><a href="https://www.tdk-electronics.tdk.com/inf/80/db/fer/e_25_13_7.pdf" rel="nofollow noopener" target="_blank">Ferrites and accessories — E 25/13/7 (EF 25)</a> — TDK Electronics (EPCOS) — Редакция паспорт на дату обращения; значения видны в выдаче — раздел Ae = 52,5 мм², le = 57,5 мм, N87 без зазора: AL = 1850 нГн (+30/−20 %), с зазором: 0,16 мм — 347 нГн, 0,25 мм — 250 нГн, 0,5 мм — 151 нГн, 1,0 мм — 91 нГн — обращение 02.10.2026</li><li><a href="https://www.tdk-electronics.tdk.com/download/528882/990c299b916e9f3eb7e44ad563b7f0b9/pdf-n87.pdf" rel="nofollow noopener" target="_blank">SIFERRIT material N87</a> — TDK Electronics (EPCOS) — Редакция паспорт материала на дату обращения; значения видны в выдаче — раздел Bs = 490 мТл при 25 °C и 390 мТл при 100 °C (1200 А/м, 10 кГц) — обращение 02.10.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/14-3-self-inductance-and-inductors" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 14.3 Self-Inductance and Inductors — L = N·Φ/I — обращение 02.10.2026</li><li><a href="https://standards.iteh.ai/catalog/standards/iec/5137689e-3cf2-4688-bacf-bdf22282cc7f/iec-62368-1-2023" rel="nofollow noopener" target="_blank">IEC 62368-1. Audio/video, information and communication technology equipment — Part 1: Safety requirements</a> — IEC — Редакция Ed. 4.0, 2023; видно в выдаче — раздел требования безопасности к аудио-, видео- и ИТ-оборудованию с номинальным напряжением до 600 В; заменяет IEC 60950-1 и IEC 60065 — обращение 02.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Режим прерывистого тока: граница DCM при наименьшем входном напряжении и полной нагрузке (AN-4137, KRF = 1).</li><li>Входное напряжение постоянное в пределах такта; КПД задан для всего преобразователя.</li><li>Индукция — по пиковому току или, если задан, по порогу ограничения тока контроллера; число витков округляется вверх.</li><li>Зазор — по магнитной цепи без выпучивания поля; при заданном AL учитывается сопротивление самого сердечника.</li></ul><p><b>Границы применимости:</b></p><ul><li>Выброс от индуктивности рассеяния и снаббер не рассчитываются — напряжение на ключе фактически выше Vвх max + Vor.</li><li>Потери в сердечнике и обмотках, сечение провода и заполнение окна не рассчитываются.</li><li>Непрерывный режим тока (CCM) не рассматривается.</li><li>Изоляция между обмотками, пути утечки и воздушные зазоры не проверяются — требования стандарта на изделие (например, IEC 62368-1).</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="toroid-turns-al.html">Витки на кольце по AL</a></li><li><a href="raschet-transformatora.html">Расчёт сетевого трансформатора 50 Гц</a></li><li><a href="drossel-impulsnogo.html">Дроссель импульсного преобразователя</a></li><li><a href="discharge-resistor-capacitor.html">Резистор разряда конденсатора</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function lt(a,b){return a<b*(1-1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?lt(r,lim):gt(r,lim))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function pl(s,one,few,many,frac){if(/[,·]/.test(s))return frac;var n=Math.abs(parseInt(s,10))%100,n1=n%10;if(n>10&&n<20)return many;if(n1===1)return one;if(n1>=2&&n1<=4)return few;return many;}
+function yr(s){return s+' '+pl(s,'год','года','лет','года');}
+
+function calc(){
+var v1=P('vdcmin'),v2=P('vdcmax'),vo=P('vo'),vf=P('vfo'),po=P('po'),eta=P('eta'),fk=P('fs'),vor=P('vor'),ae=P('ae'),bm=P('bmax');
+if([v1,v2,vo,vf,po,eta,fk,vor,ae,bm].some(isNaN))return err('Заполните числами входные напряжения, выход, мощность, КПД, частоту, отражённое напряжение, Ae и Bmax.');
+if(!(v1>0)||v2<v1||v2>1500)return err('Входное напряжение: 0 < наименьшее ≤ наибольшее ≤ 1500 В.');
+if(vo<=0||vo>1000)return err('Выходное напряжение — больше 0 и не больше 1000 В.');
+if(vf<0||vf>5)return err('Падение на выходном диоде — от 0 до 5 В.');
+if(po<=0)return err('Выходная мощность должна быть больше нуля.');
+if(eta<=0||eta>100)return err('КПД задаётся в процентах: больше 0 и не больше 100.');
+if(fk<1||fk>1000)return err('Частота преобразования — от 1 до 1000 кГц.');
+if(vor<=0)return err('Отражённое напряжение должно быть больше нуля.');
+if(ae<=0)return err('Сечение сердечника Ae должно быть больше нуля.');
+if(bm<0.01||bm>2)return err('Наибольшая индукция — от 0,01 до 2 Тл.');
+var al=OPT('al'),vd=OPT('vdss'),il=OPT('ilim');
+if(al!==null){if(isNaN(al))return err('AL — число в нГн на виток². Если его нет, оставьте поле пустым.');if(al<=0)return err('AL должен быть больше нуля.');}
+if(vd!==null){if(isNaN(vd))return err('VDSS — число в вольтах. Если его нет, оставьте поле пустым.');if(vd<=0)return err('VDSS должно быть больше нуля.');}
+if(il!==null){if(isNaN(il))return err('Порог ограничения тока — число в амперах. Если его нет, оставьте поле пустым.');if(il<=0)return err('Порог ограничения тока должен быть больше нуля.');}
+var fs=fk*1e3,A=ae*1e-6,pin=po/(eta/100),n=vor/(vo+vf),d=vor/(vor+v1),lp=Math.pow(v1*d,2)/(2*pin*fs),ie=pin/(v1*d),di=v1*d/(lp*fs),ip=ie+di/2,irms=Math.sqrt((3*ie*ie+di*di/4)*d/3);
+var useLim=il!==null&&ge(il,ip),ib=useLim?il:ip,npm=lp*ib/(bm*A);
+if(!isFinite(npm)||npm>1e5)return err('Значения вне диапазона надёжного расчёта.');
+var ns=Math.ceil(npm/n*(1-1e-12)),np=Math.ceil(n*ns*(1-1e-12)),na=np/ns,va=na*(vo+vf),bp=lp*ip/(np*A),mu=4e-7*Math.PI,g=mu*A*(np*np/lp-(al===null?0:1/(al*1e-9))),vds=v2+va,vdo=vo+v2/na,isk=na*ip;
+if(![pin,lp,ip,irms,g,vds,vdo,isk].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var h=row('Входная мощность Pвых / η',fmt(pin)+' Вт')+
+ row('Коэффициент трансформации n = Vor / (Vвых + VF)',fmt(n))+
+ row('Наибольший коэффициент заполнения Dmax = Vor / (Vor + Vвх min)',fmt(d))+
+ row('Индуктивность первичной обмотки на границе DCM (Vвх min·Dmax)² / (2·Pвх·fs)','не больше '+fmt(lp*1e6)+' мкГн')+
+ row('Пиковый ток первичной обмотки 2·Pвх / (Vвх min·Dmax)',(il===null?fmt(ip):fx(ip,il))+' А')+
+ row('Действующий ток первичной обмотки Iпик·√(Dmax/3)',fmt(irms)+' А')+
+ row('Наименьшее число витков Lp·I / (Bmax·Ae)',fmt(npm)+' — по '+(useLim?'порогу ограничения тока '+fmt(il)+' А':'пиковому току'))+
+ row('Витки первичной / вторичной обмотки',np+' / '+ns+' — n = '+fmt(na)+', Vor = '+fmt(va)+' В')+
+ row('Индукция при пиковом токе Lp·Iпик / (Np·Ae)',fmt(bp)+' Тл');
+if(useLim)h+=row('Индукция при токе ограничения',fmt(lp*il/(np*A))+' Тл');
+h+=(g>0?row('Немагнитный зазор без учёта выпучивания '+(al===null?'μ0·Np²·Ae / Lp':'μ0·Ae·(Np²/Lp − 1/AL)'),fmt(g*1000)+' мм — общая длина зазора в магнитной цепи'):row('Немагнитный зазор','не нужен: без зазора AL·Np² = '+fmt(al*np*np/1000)+' мкГн не больше Lp'))+
+ row('Напряжение на ключе Vвх max + Vor без выброса',(vd===null?fmt(vds):fx(vds,vd))+' В'+(vd===null?'':' — '+fx(100*vds/vd,70)+' % от VDSS '+fx(vd,vds)+' В'))+
+ row('Обратное напряжение на выходном диоде Vвых + Vвх max / n',fmt(vdo)+' В')+
+ row('Пиковый ток вторичной обмотки n·Iпик',fmt(isk)+' А');
+var st;
+if(vd!==null&&gt(vds,vd))st='Напряжение на ключе Vвх max + Vor = '+fx(vds,vd)+' В больше VDSS '+fx(vd,vds)+' В — даже без выброса от индуктивности рассеяния';
+else if(il!==null&&lt(il,ip))st='Пиковый ток '+fx(ip,il)+' А больше порога ограничения тока '+fx(il,ip)+' А — при наименьшем входном напряжении заданная мощность не будет отдана';
+else if(vd===null)st='Недостаточно данных: VDSS ключа не задано — напряжение на ключе без выброса '+fmt(vds)+' В не с чем сравнить';
+else if(gt(vds,0.7*vd))st='Риск: Vвх max + Vor = '+fx(100*vds/vd,70)+' % от VDSS — Fairchild AN-4137 закладывает 65–70 %, остальное — запас на выброс от индуктивности рассеяния';
+else st='Оценка: Lp не больше '+fmt(lp*1e6)+' мкГн, '+np+' / '+ns+' витков'+(g>0?', зазор около '+fmt(g*1000)+' мм без учёта выпучивания':'')+'; напряжение на ключе без выброса '+fmt(vds)+' В — '+fx(100*vds/vd,70)+' % от VDSS'+(il===null?'; насыщение при токе ограничения контроллера не проверено — порог не задан':'');
+var nt='Прикидка по Fairchild AN-4137 для прерывистого тока: граница DCM — при наименьшем входном напряжении и полной нагрузке; при большем напряжении и меньшей нагрузке ток тем более прерывистый. ';
+nt+='Выброс напряжения от индуктивности рассеяния здесь не считается — его ограничивает снаббер, и напряжение на ключе фактически выше Vвх max + Vor. ';
+nt+='Зазор — без выпучивания поля: оно увеличивает индуктивность, и нужный зазор больше расчётного; его уточняют по измеренной индуктивности. ';
+nt+='Изоляцию между обмотками, пути утечки и воздушные зазоры калькулятор не проверяет — это требования стандарта на изделие (например, IEC 62368-1) и паспортов провода и каркаса. ';
+nt+='Первичная сторона и конденсатор сетевого выпрямителя находятся под опасным напряжением и после отключения — разряжайте конденсатор резистором и проверяйте отсутствие напряжения прибором.';
+out(h+row('Статус',st)+note(nt));
+}
+
+</script>
+</body>
+</html>
