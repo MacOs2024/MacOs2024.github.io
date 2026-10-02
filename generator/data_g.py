@@ -807,7 +807,7 @@ if(String($('umin').value).trim()!==''){um=P('umin');
 var e=eff/100,s=p/c,sinv=s*z,inom=p/(e*ub),idc=um===null?inom:p/(e*um);
 var du=ub*drop/100,sec=2*0.0175*l*idc/du;
 var ryad=[4,6,10,16,25,35,50,70,95,120,150,185,240];
-var st=0;for(var j=0;j<ryad.length;j++){if(ryad[j]>=sec){st=ryad[j];break;}}
+var st=0;for(var j=0;j<ryad.length;j++){if(ryad[j]>=sec*(1-1e-9)){st=ryad[j];break;}}
 var used=st||sec,duReal=2*0.0175*l*idc/used,pred=duReal*idc,at=um===null?'':' при наибольшем токе';
 var stt=um===null?'Недостаточно данных: не задано наименьшее входное напряжение инвертора. Ток и сечение посчитаны при номинальном напряжении '+fmt(ub,4)+' В и занижены — у разряженной батареи напряжение ниже, а ток выше':'Оценка: наибольший ток '+fmt(idc,5)+' А — при наименьшем входном напряжении '+fmt(um,4)+' В; при номинальном '+fmt(ub,4)+' В ток '+fmt(inom,5)+' А';
 out(row('Полная мощность нагрузки',si(s,'В·А'))+

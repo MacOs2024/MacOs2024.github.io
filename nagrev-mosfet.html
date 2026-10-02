@@ -231,10 +231,10 @@ if(typeof init==='function')init();
 });
 
 
-function gt(a,b){return a>b+Math.abs(b)*1e-12;}
-function ge(a,b){return a>=b-Math.abs(b)*1e-12;}
-function lt(a,b){return a<b-Math.abs(b)*1e-12;}
-function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?lt(r,lim):gt(r,lim))return fmt(x,p);}return fmt(x,12);}
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?lt(r,lim):gt(r,lim))return fmt(x,p);}return fmt(x,12);}
 function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
 function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
 
@@ -276,6 +276,7 @@ else{var rj=R*Math.exp(B*(tj-25)),pj=i*i*rj,pt=pj+ps,g=B*(tj-tl);
  if(B>0)h+=row('Петлевое усиление G = Rθ·dP/dTj',fmt(g,3)+' — ошибка в Rθ или потерях усиливается в 1/(1 − G) = '+fmt(1/(1-g),3)+' раза');
  var ex=gt(tj,t2);
  if(tm!==null&&gt(tj,tm))st='Расчётная температура кристалла '+fx(tj,tm)+' °C больше Tj max '+fx(tm,tj)+' °C';
+ else if(tm===null&&gt(tj,250))st='Расчётная температура кристалла '+fmt(tj,4)+' °C выше 250 °C — выше любой Tj max, которую принимает калькулятор: такой режим недопустим, уменьшите ток или тепловое сопротивление';
  else if(tm===null)st='Недостаточно данных: Tj max из паспорта не задана; оценка Tj ≈ '+fmt(tj,4)+' °C';
  else st=(ex?'Оценка с экстраполяцией: ':'Оценка: ')+'Tj ≈ '+fx(tj,tm)+' °C не больше Tj max '+fx(tm,tj)+' °C'+(ex?' — Tj выше второй точки графика '+fmt(t2)+' °C, Rds(on) продолжено по модели':'');}
 if(B>0)h+=row('Граница теплового разгона по модели','ток '+si(ic,'А')+', Tj на границе '+fmt(tb,4)+' °C');
