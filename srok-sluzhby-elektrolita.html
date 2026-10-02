@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ток пульсаций и срок службы электролита — ВольтКальк</title>
+<meta name="description" content="Проверка электролитического конденсатора фильтра: допустимый ток пульсаций по паспорту с поправками на частоту и температуру, нагрев сердцевины, срок службы по правилу удвоения на каждые 10 °C с множителем нагрева Nippon Chemi-Con и запас по напряжению против пикового.">
+<link rel="canonical" href="https://macos2024.github.io/srok-sluzhby-elektrolita.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Ток пульсаций и срок службы электролита — ВольтКальк">
+<meta property="og:description" content="Проверка электролитического конденсатора фильтра: допустимый ток пульсаций по паспорту с поправками на частоту и температуру, нагрев сердцевины, срок службы по правилу удвоения на каждые 10 °C с множителем нагрева Nippon Chemi-Con и запас по напряжению против пикового.">
+<meta property="og:url" content="https://macos2024.github.io/srok-sluzhby-elektrolita.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Ток пульсаций и срок службы электролита","url":"https://macos2024.github.io/srok-sluzhby-elektrolita.html","description":"Проверка электролитического конденсатора фильтра: допустимый ток пульсаций по паспорту с поправками на частоту и температуру, нагрев сердцевины, срок службы по правилу удвоения на каждые 10 °C с множителем нагрева Nippon Chemi-Con и запас по напряжению против пикового.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Ток пульсаций и срок службы электролита","item":"https://macos2024.github.io/srok-sluzhby-elektrolita.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему ток пульсаций так сокращает срок службы?","acceptedAnswer":{"@type":"Answer","text":"Ток пульсаций греет сердцевину пропорционально квадрату тока, а срок примерно вдвое короче на каждые 10 °C нагрева. Ток вдвое больше номинального даёт вчетверо больший нагрев — при ΔT0 = 5 °C это уже 20 °C."}},{"@type":"Question","name":"Какую формулу срока службы брать?","acceptedAnswer":{"@type":"Answer","text":"Из паспорта или технического руководства своей серии. Nippon Chemi-Con, Nichicon, Rubycon и Cornell Dubilier записывают зависимость от тока пульсаций и напряжения по-разному. Калькулятор считает по формуле Nippon Chemi-Con и при неизвестном K показывает диапазон."}},{"@type":"Question","name":"Можно ли просто взять конденсатор на большее напряжение?","acceptedAnswer":{"@type":"Answer","text":"Запас по напряжению нужен, но срок службы задают температура и ток пульсаций. Конденсатор на большее напряжение той же ёмкости обычно крупнее и допускает больший ток — сравните его паспорт."}},{"@type":"Question","name":"Почему оценка ограничена 15 годами?","acceptedAnswer":{"@type":"Answer","text":"Rubycon и Nippon Chemi-Con принимают 15 лет как предел расчёта: со временем меняются свойства уплотнения, и формула по температуре перестаёт описывать старение."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Ток пульсаций и срок службы электролита</h1>
+<p class="intro">Электролит стареет тем быстрее, чем горячее его сердцевина, а греет её ток пульсаций. Калькулятор сравнивает ток с <b>паспортом</b> конденсатора и оценивает срок службы. Ток пульсаций можно измерить, получить моделированием или оценить на странице <a href="diody-vypryamitelya.html">диодов выпрямителя</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Ток пульсаций и срок службы электролита</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_i"><label for="i">Ток пульсаций через конденсатор (действующий)</label><div class="fw"><input id="i" type="text" inputmode="decimal" autocomplete="off" value="1,585" placeholder=""><span class="u">А</span></div><div class="hint">Измерен, получен моделированием или оценён на странице диодов выпрямителя (здесь — мост 12 В, 0,5 А, 4700 мкФ)</div></div><div class="f" id="f_ir"><label for="ir">Номинальный ток пульсаций по паспорту</label><div class="fw"><input id="ir" type="text" inputmode="decimal" autocomplete="off" value="1,91" placeholder=""><span class="u">А</span></div><div class="hint">При частоте и температуре паспорта; пример — Nichicon UVZ1V472MHD (4700 мкФ, 35 В): 1,91 А при 120 Гц и 105 °C</div></div><div class="f" id="f_kf"><label for="kf">Коэффициент частоты для вашей частоты пульсаций</label><div class="fw"><input id="kf" type="text" inputmode="decimal" autocomplete="off" value="0,9" placeholder=""></div><div class="hint">Из таблицы паспорта. Для 100 Гц без своей колонки берите коэффициент ближайшей меньшей частоты — с запасом</div></div><div class="f" id="f_kt"><label for="kt">Поправка допустимого тока по температуре среды</label><div class="fw"><input id="kt" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""></div><div class="hint">Если паспорт разрешает больший ток при более холодной среде; пусто — 1</div></div><div class="f" id="f_t0"><label for="t0">Верхняя граница категории температур T0</label><div class="fw"><input id="t0" type="text" inputmode="decimal" autocomplete="off" value="105" placeholder=""><span class="u">°C</span></div></div><div class="f" id="f_l0"><label for="l0">Паспортный срок службы L0 при T0</label><div class="fw"><input id="l0" type="text" inputmode="decimal" autocomplete="off" value="2000" placeholder=""><span class="u">ч</span></div></div><div class="f" id="f_lmode"><label for="lmode">Паспортный срок задан</label><div class="fw"><select id="lmode"><option value="ripple" selected>С номинальным током пульсаций</option><option value="volt">При номинальном напряжении без тока пульсаций</option></select></div></div><div class="f" id="f_dt0"><label for="dt0">Нагрев сердцевины при номинальном токе пульсаций ΔT0</label><div class="fw"><input id="dt0" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">°C</span></div><div class="hint">По данным изготовителя: Rubycon для snap-in на 105 °C — 5 °C, на 85 °C — 10 °C; Nichicon для snap-in выше 315 В — не больше 5 °C при 105 °C. Для радиальных серий — по их документации</div></div><div class="f" id="f_kexp"><label for="kexp">Показатель K: срок удваивается при снижении нагрева на K °C</label><div class="fw"><input id="kexp" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">°C</span></div><div class="hint">По паспорту или руководству серии; у Nippon Chemi-Con — от 5 до 10 в зависимости от изделия. Пусто — показывается диапазон</div></div><div class="f" id="f_ta"><label for="ta">Температура среды у конденсатора Ta</label><div class="fw"><input id="ta" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">°C</span></div><div class="hint">Внутри корпуса рядом с конденсатором, в самом тёплом режиме</div></div><div class="f" id="f_ur"><label for="ur">Номинальное напряжение конденсатора</label><div class="fw"><input id="ur" type="text" inputmode="decimal" autocomplete="off" value="35" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_vpk"><label for="vpk">Наибольшее пиковое напряжение на конденсаторе</label><div class="fw"><input id="vpk" type="text" inputmode="decimal" autocomplete="off" value="18,67" placeholder=""><span class="u">В</span></div><div class="hint">С учётом повышенной сети и роста напряжения без нагрузки — его считает страница диодов выпрямителя</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Срок службы электролитического конденсатора: как считается</h2>
+<div class="formula">I<sub>доп</sub> = I<sub>ном</sub>·K<sub>f</sub>·K<sub>T</sub>&nbsp;&nbsp;&nbsp;ΔT = ΔT<sub>0</sub>·(I / (I<sub>ном</sub>·K<sub>f</sub>))²&nbsp;&nbsp;&nbsp;T<sub>серд</sub> = T<sub>a</sub> + ΔT<br>L = L<sub>0</sub>·2<sup>(T<sub>0</sub> − T<sub>a</sub>)/10</sup>·2<sup>(ΔT<sub>реф</sub> − ΔT)/K</sup>,&nbsp;&nbsp;ΔT<sub>реф</sub> = ΔT<sub>0</sub>, если паспортный срок задан с номинальным током пульсаций, иначе 0<br>Не больше 15 лет;&nbsp;&nbsp;U<sub>пик</sub> ≤ U<sub>ном</sub></div>
+<p><b>Что изнашивается.</b> Срок службы электролитического конденсатора кончается, когда из него уходит электролит — через уплотнение, тем быстрее, чем выше температура. Изготовители описывают это правилом удвоения: на каждые 10 °C ниже срок примерно вдвое больше. Nichicon указывает такой коэффициент около 2 для температуры среды примерно 60–95 °C, Nippon Chemi-Con строит на нём формулы срока, Cornell Dubilier называет его классическим правилом «удвоения на каждые 10 °C».</p>
+<p><b>Нагрев током пульсаций.</b> Ток пульсаций выделяет в ESR мощность I²·ESR, и сердцевина нагревается пропорционально квадрату тока: ΔT = ΔT<sub>0</sub>·(I/I<sub>0</sub>)², где ΔT<sub>0</sub> — нагрев при номинальном токе (Nippon Chemi-Con). Величина ΔT<sub>0</sub> — данные изготовителя: у Rubycon для защёлкивающихся (snap-in) конденсаторов на 105 °C — 5 °C, на 85 °C — 10 °C; у Nichicon для snap-in выше 315 В нагрев сердцевины при 105 °C ограничен 5 °C. Для радиальных серий берите значение из их документации.</p>
+<p><b>Поправки по частоте и температуре.</b> ESR электролита с ростом частоты падает, поэтому паспорт даёт коэффициенты допустимого тока по частоте: у серии Nichicon VZ — 1,00 при 120 Гц, при 50 Гц — 0,75…0,90 в зависимости от ёмкости (в пересказе выдачи). Мост от сети 50 Гц даёт пульсации 100 Гц; если такой колонки нет, берите коэффициент ближайшей меньшей частоты — с запасом. Нагрев калькулятор считает от тока I<sub>ном</sub>·K<sub>f</sub> — коэффициент частоты применяется один раз. Поправку по температуре среды, если паспорт её даёт, калькулятор применяет только к допустимому току: она уже означает, что при более холодной среде разрешён больший нагрев, и в формулу нагрева не входит — иначе она была бы учтена дважды.</p>
+<p><b>Формулы изготовителей различаются.</b> Nippon Chemi-Con: L<sub>x</sub> = L<sub>o</sub>·2<sup>(T<sub>o</sub> − T<sub>x</sub>)/10</sup>·2<sup>−ΔT/K</sup>, если срок в паспорте задан при номинальном напряжении, и L<sub>x</sub> = L<sub>r</sub>·2<sup>(T<sub>o</sub> − T<sub>x</sub>)/10</sup>·2<sup>(ΔT<sub>o</sub> − ΔT)/K</sup>, если с номинальным током пульсаций; K — от 5 до 10 в зависимости от изделия и условий (показатели степени видны в пересказе выдачи). При K = 10 это то же правило 10 °C, применённое к температуре сердцевины. Cornell Dubilier считает срок как L<sub>b</sub>·M<sub>v</sub>·2<sup>(T<sub>m</sub> − T<sub>c</sub>)/10</sup> с множителем напряжения M<sub>v</sub> = 4,3 − 3,3·V<sub>a</sub>/V<sub>r</sub> — для своих изделий. Nichicon перемножает паспортный срок и множители по температуре, току пульсаций и напряжению; ниже номинального напряжения множитель напряжения у Nichicon равен 1. Rubycon для snap-in вводит коэффициент частоты, коэффициент размера и напряжение и ограничивает нагрев 30 °C. Калькулятор считает по формуле Nippon Chemi-Con; если K неизвестен, он показывает диапазон для K от 5 до 10. Формула из паспорта или руководства вашей серии имеет приоритет.</p>
+<p><b>Предел 15 лет.</b> Rubycon и Nippon Chemi-Con предупреждают: если расчёт даёт больше 15 лет, принимают 15 — со временем меняются свойства уплотнения, и экстраполяция по температуре перестаёт работать.</p>
+<p><b>Напряжение.</b> Пиковое напряжение на конденсаторе не должно превышать номинальное — с учётом повышенной сети (отклонение до 10 % по ГОСТ 32144-2013) и роста напряжения без нагрузки. Его считает страница <a href="diody-vypryamitelya.html">диодов выпрямителя</a>, а для дроссельного фильтра без нагрузки напряжение поднимается почти до амплитуды — см. <a href="drosselnyy-filtr-vypryamitelya.html">дроссельный фильтр</a>. Калькулятор сравнивает пиковое напряжение с номинальным и показывает запас; рекомендуемый запас у изготовителей свой.</p>
+<p><b>Безопасность.</b> Конденсатор хранит заряд и после отключения — разряжайте его через <a href="discharge-resistor-capacitor.html">резистор разряда</a> и проверяйте отсутствие напряжения прибором; не замыкайте выводы накоротко. Энергию заряда считает <a href="energiya-kondensatora.html">калькулятор энергии конденсатора</a>. Если конденсатор стоит в цепи, связанной с сетью, изоляцию, пути утечки и воздушные зазоры задают стандарт безопасности на изделие (например, IEC 62368-1) и паспорта — калькулятор их не проверяет.</p>
+<h2>Срок службы электролитического конденсатора: пример расчёта</h2>
+<p>Конденсатор Nichicon UVZ1V472MHD: 4700 мкФ, 35 В, номинальный ток пульсаций 1,91 А при 120 Гц и 105 °C, 2000 ч при 105 °C с током пульсаций. Мост от сети 50 Гц даёт пульсации 100 Гц — коэффициент возьмём по 50-герцевой колонке, 0,9: допустимо 1,91·0,9 = <b>1,719 А</b>. При нагрузке 0,5 А страница диодов выпрямителя оценивает ток пульсаций в 1,585 А — меньше допустимого. Нагрев при ΔT<sub>0</sub> = 5 °C (величина для snap-in, у радиальной серии уточните её у изготовителя): 5·(1,585/1,719)² = 4,251 °C. При 50 °C у конденсатора срок 2000·2<sup>5,5</sup>·2<sup>(5 − 4,251)/K</sup> — от 95 330 ч (10,88 года) при K = 10 до 100 400 ч (11,46 года) при K = 5. Пиковое напряжение при сети +10 % 18,67 В — запас 46,66 % до 35 В.</p>
+<p>При токе нагрузки 1 А ток пульсаций 2,6 А больше допустимых 1,719 А: нужен конденсатор с большим допустимым током или два в параллель — ток разделится между ними.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему ток пульсаций так сокращает срок службы?</h3><p>Ток пульсаций греет сердцевину пропорционально квадрату тока, а срок примерно вдвое короче на каждые 10 °C нагрева. Ток вдвое больше номинального даёт вчетверо больший нагрев — при ΔT0 = 5 °C это уже 20 °C.</p><h3>Какую формулу срока службы брать?</h3><p>Из паспорта или технического руководства своей серии. Nippon Chemi-Con, Nichicon, Rubycon и Cornell Dubilier записывают зависимость от тока пульсаций и напряжения по-разному. Калькулятор считает по формуле Nippon Chemi-Con и при неизвестном K показывает диапазон.</p><h3>Можно ли просто взять конденсатор на большее напряжение?</h3><p>Запас по напряжению нужен, но срок службы задают температура и ток пульсаций. Конденсатор на большее напряжение той же ёмкости обычно крупнее и допускает больший ток — сравните его паспорт.</p><h3>Почему оценка ограничена 15 годами?</h3><p>Rubycon и Nippon Chemi-Con принимают 15 лет как предел расчёта: со временем меняются свойства уплотнения, и формула по температуре перестаёт описывать старение.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.chemi-con.co.jp/products/relatedfiles/capacitor/catalog/al-technote-e.pdf" rel="nofollow noopener" target="_blank">Judicious Use of Aluminum Electrolytic Capacitors (Technical Note)</a> — Nippon Chemi-Con — Редакция редакция на дату обращения; формулы видны в выдаче, показатели степени — в пересказе — раздел Lx = Lo·2^((To − Tx)/10)·2^(−ΔT/K) — срок задан при номинальном напряжении, Lx = Lr·2^((To − Tx)/10)·2^((ΔTo − ΔT)/K) — срок задан с номинальным током пульсаций, K — от 5 до 10 в зависимости от изделия и условий; ΔT = (Ix/Io)²·ΔTo — обращение 02.10.2026</li><li><a href="https://www.chemi-con.co.jp/en/faq/detail.php?id=alLifetime" rel="nofollow noopener" target="_blank">Lifetime of Aluminum Electrolytic Capacitors (FAQ)</a> — Nippon Chemi-Con — Редакция онлайн на дату обращения; видно в выдаче — раздел расчётный срок больше 15 лет принимать равным 15 годам — меняются свойства уплотнения — обращение 02.10.2026</li><li><a href="https://www.nichicon.co.jp/english/products/pdf/aluminum.pdf" rel="nofollow noopener" target="_blank">General Descriptions of Aluminum Electrolytic Capacitors</a> — Nichicon — Редакция редакция на дату обращения; положения видны в выдаче — раздел срок = паспортный срок × FT × FI × FU — температура, ток пульсаций, напряжение, FT — около 2 на каждые 10 °C при 60–95 °C; FU = 1 ниже номинального напряжения, табл. 2-6: нагрев сердцевины snap-in выше 315 В при 105 °C — не больше 5 °C — обращение 02.10.2026</li><li><a href="https://www.skytex.com.hk/en/details.php?id=194" rel="nofollow noopener" target="_blank">Rubycon Lifetime Calculation Formula of Snap-in type Aluminum Electrolytic Capacitors</a> — Rubycon; публикация дистрибьютора Skytex International — Редакция на дату обращения; параметры видны в выдаче, сама формула — нет — раздел ΔTjo: 10 °C для 85 °C-типов, 5 °C для 105 °C-типов, в формуле — коэффициент частоты, коэффициент размера K (1,75…3,5) и напряжение, ΔTj не больше 30 °C; верхний предел оценки — 15 лет (130 000 ч) — обращение 02.10.2026</li><li><a href="http://www.rubycon.co.jp/en/products/alumi/technote4.html" rel="nofollow noopener" target="_blank">Aluminum Electrolytic Capacitor Technical Notes</a> — Rubycon — Редакция на дату обращения; видно в выдаче — раздел если расчёт даёт больше 15 лет, верхний предел — 15 лет; срок определяет диффузия электролита через уплотнение — обращение 02.10.2026</li><li><a href="https://www.mouser.com/pdfDocs/AluminumElectrolyticappGuide.pdf" rel="nofollow noopener" target="_blank">Aluminum Electrolytic Capacitor Application Guide</a> — Cornell Dubilier (CDE) — Редакция редакция на дату обращения; формула видна в выдаче — раздел Lop = Lb·Mv·2^((Tm − Tc)/10), Tm — наибольшая температура сердцевины, Tc — температура сердцевины, Mv = 4,3 − 3,3·Va/Vr — обращение 02.10.2026</li><li><a href="https://www.digikey.com/en/products/detail/nichicon/UVZ1V472MHD/589066" rel="nofollow noopener" target="_blank">UVZ1V472MHD — серия VZ</a> — Nichicon; карточки дистрибьюторов Digi-Key, Arrow, TME — Редакция на дату обращения; значения видны в выдаче, коэффициенты частоты — в пересказе — раздел 4700 мкФ, 35 В, Ø18 × 35,5 мм; ток пульсаций 1,91 А при 120 Гц; 2000 ч при 105 °C, серия VZ: срок задан с током пульсаций при 105 °C, коэффициент частоты 1,00 при 120 Гц; при 50 Гц — 0,75…0,90 в зависимости от ёмкости — обращение 02.10.2026</li><li><a href="https://docs.cntd.ru/document/1200104301" rel="nofollow noopener" target="_blank">ГОСТ 32144-2013. Электрическая энергия. Совместимость технических средств электромагнитная. Нормы качества электрической энергии в системах электроснабжения общего назначения</a> — Межгосударственный стандарт — Редакция введён приказом Росстандарта от 22.07.2013 № 400-ст; положение видно в выдаче — раздел 4.2.2: положительные и отрицательные отклонения напряжения — не больше 10 % номинального в течение 100 % времени интервала в одну неделю — обращение 02.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Нагрев сердцевины пропорционален квадрату тока пульсаций: ΔT = ΔT0·(I/(Iном·Kf))².</li><li>Срок — по формуле Nippon Chemi-Con: удвоение на каждые 10 °C температуры среды и на каждые K °C нагрева от пульсаций; без K — диапазон K от 5 до 10.</li><li>Температура среды и ток пульсаций постоянны весь срок; оценка больше 15 лет принимается равной 15 годам.</li><li>Поправка по температуре среды применяется только к допустимому току, коэффициент частоты — один раз.</li></ul><p><b>Границы применимости:</b></p><ul><li>Формулы Nichicon, Rubycon и Cornell Dubilier не реализованы — для их изделий считайте по формуле серии.</li><li>Ток пульсаций нескольких частот (сеть и преобразователь) не суммируется — вводите эквивалентный ток по методике изготовителя.</li><li>Влияние напряжения на срок не учитывается; напряжение только сравнивается с номинальным.</li><li>Температура выше верхней границы категории — вне паспорта, срок не оценивается.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="diody-vypryamitelya.html">Диоды выпрямителя с конденсаторным фильтром</a></li><li><a href="pulsacii-vypryamitelya.html">Пульсации выпрямителя с конденсатором</a></li><li><a href="discharge-resistor-capacitor.html">Резистор разряда конденсатора</a></li><li><a href="energiya-kondensatora.html">Энергия и заряд конденсатора</a></li><li><a href="transformator-flyback.html">Трансформатор обратноходового преобразователя</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function lt(a,b){return a<b*(1-1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?lt(r,lim):gt(r,lim))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function pl(s,one,few,many,frac){if(/[,·]/.test(s))return frac;var n=Math.abs(parseInt(s,10))%100,n1=n%10;if(n>10&&n<20)return many;if(n1===1)return one;if(n1>=2&&n1<=4)return few;return many;}
+function yr(s){return s+' '+pl(s,'год','года','лет','года');}
+
+function life(l0,t0,ta,dref,dT,K){return l0*Math.pow(2,(t0-ta)/10)*Math.pow(2,(dref-dT)/K);}
+function lh(x){return fmt(x)+' ч ('+yr(fmt(x/8760))+')';}
+function calc(){
+var i=P('i'),ir=P('ir'),kf=P('kf'),t0=P('t0'),ta=P('ta'),l0=P('l0'),dt0=P('dt0'),wr=S('lmode')==='ripple';
+if([i,ir,kf,t0,ta,l0,dt0].some(isNaN))return err('Заполните числами ток пульсаций, номинальный ток и коэффициент частоты, температуры, паспортный срок и нагрев при номинальном токе.');
+if(i<=0)return err('Ток пульсаций должен быть больше нуля.');
+if(ir<=0)return err('Номинальный ток пульсаций должен быть больше нуля.');
+if(kf<=0||kf>5)return err('Коэффициент частоты — больше 0 и не больше 5.');
+if(t0<40||t0>150)return err('Верхняя граница категории температур — от 40 до 150 °C.');
+if(ta<-55||ta>150)return err('Температура среды — от −55 до 150 °C.');
+if(l0<=0)return err('Паспортный срок службы должен быть больше нуля.');
+if(dt0<=0||dt0>30)return err('Нагрев сердцевины при номинальном токе — больше 0 и не больше 30 °C.');
+var kt=OPT('kt'),kk=OPT('kexp'),ur=OPT('ur'),vp=OPT('vpk');
+if(kt!==null){if(isNaN(kt))return err('Поправка по температуре — число. Если её нет в паспорте, оставьте поле пустым.');if(kt<=0||kt>5)return err('Поправка по температуре — больше 0 и не больше 5.');}
+if(kk!==null){if(isNaN(kk))return err('Показатель K — число. Если его нет, оставьте поле пустым.');if(kk<5||kk>10)return err('Показатель K задаётся от 5 до 10 °C — такой диапазон приводит Nippon Chemi-Con. Если в паспорте вашей серии формула другая, считайте по ней.');}
+if(ur!==null){if(isNaN(ur))return err('Номинальное напряжение — число в вольтах.');if(ur<=0)return err('Номинальное напряжение должно быть больше нуля.');}
+if(vp!==null){if(isNaN(vp))return err('Пиковое напряжение — число в вольтах.');if(vp<=0)return err('Пиковое напряжение должно быть больше нуля.');}
+var iref=ir*kf,ia=iref*(kt===null?1:kt),dT=dt0*Math.pow(i/iref,2),tc=ta+dT,dref=wr?dt0:0,hot=gt(ta,t0),over=gt(i,ia),vbad=ur!==null&&vp!==null&&gt(vp,ur),cap=15*8760,la=NaN,lb=NaN;
+if(!hot){if(kk!==null){la=lb=life(l0,t0,ta,dref,dT,kk);}else{var l5=life(l0,t0,ta,dref,dT,5),l10=life(l0,t0,ta,dref,dT,10);la=Math.min(l5,l10);lb=Math.max(l5,l10);}
+ if(!isFinite(la)||!isFinite(lb))return err('Значения вне диапазона надёжного расчёта.');}
+function span(){if(la>=cap)return 'около 15 лет — по формуле больше, но изготовители ограничивают оценку 15 годами';if(lb-la<=la*1e-9)return 'около '+lh(la);return 'от '+lh(la)+' до '+(lb>=cap?'15 лет — по формуле больше, изготовители ограничивают оценку 15 годами':lh(lb));}
+var h=row('Допустимый ток на вашей частоте при T0: Iном·Kf',fmt(iref)+' А')+
+ row('Допустимый ток при температуре среды'+(kt===null?'':' Iном·Kf·KT'),fx(ia,i)+' А'+(kt===null?' — поправка по температуре не задана, взят ток при T0 (с запасом)':''))+
+ row('Ток пульсаций и допустимый',fx(i,ia)+' А '+(over?'>':'≤')+' '+fx(ia,i)+' А')+
+ row('Нагрев сердцевины ΔT = ΔT0·(I / (Iном·Kf))²',fmt(dT)+' °C, температура сердцевины '+fmt(tc)+' °C');
+h+=row('Срок службы L0·2^((T0 − Ta)/10)·2^(('+(wr?'ΔT0':'0')+' − ΔT)/K)'+(kk!==null?', K = '+fmt(kk):', K от 5 до 10'),hot?'не оценивается: температура среды выше T0':(over?'не оценивается: ток пульсаций больше допустимого по паспорту':span()));
+h+=row('Пиковое напряжение и номинальное',(ur!==null&&vp!==null)?fx(vp,ur)+' В '+(vbad?'>':'≤')+' '+fx(ur,vp)+' В'+(vbad?'':' — запас '+fmt(100*(ur-vp)/ur)+' %'):'не проверено — '+(ur===null&&vp===null?'не заданы номинальное и пиковое напряжение':(ur===null?'не задано номинальное напряжение':'не задано пиковое напряжение')));
+var st;
+if(vbad)st='Пиковое напряжение '+fx(vp,ur)+' В больше номинального '+fx(ur,vp)+' В';
+else if(hot)st='Температура среды '+fx(ta,t0)+' °C выше верхней границы категории '+fx(t0,ta)+' °C — режим вне паспорта, срок не оценивается';
+else if(over)st='Ток пульсаций '+fx(i,ia)+' А больше допустимого по паспорту '+fx(ia,i)+' А';
+else if(ur===null||vp===null)st='Недостаточно данных: запас по напряжению не проверен — '+(ur===null&&vp===null?'не заданы номинальное и пиковое напряжение':(ur===null?'не задано номинальное напряжение':'не задано пиковое напряжение'));
+else st='Оценка: срок службы '+span()+' при '+fmt(ta)+' °C и токе пульсаций '+fmt(i)+' А';
+var n='Формулы изготовителей различаются. Nippon Chemi-Con записывает срок как L0·2^((T0 − Ta)/10)·2^((ΔT0 − ΔT)/K), если паспортный срок задан с номинальным током пульсаций, и с нулём вместо ΔT0, если без него; K — от 5 до 10 по изделию и условиям. Cornell Dubilier считает по температуре сердцевины с множителем напряжения, Nichicon — произведением множителей по температуре, току пульсаций и напряжению, Rubycon — со своими коэффициентами частоты и размера. Формула из паспорта или руководства вашей серии имеет приоритет. ';
+if(kk===null)n+='K не задан — показан диапазон для K от 5 до 10. ';
+n+='Поправка допустимого тока по температуре в нагрев не входит: она лишь разрешает больший нагрев при более холодной среде. Коэффициент частоты учитывает зависимость ESR от частоты, поэтому нагрев считается от тока Iном·Kf. ';
+n+='По Nichicon удвоение срока на каждые 10 °C выполняется примерно в диапазоне 60–95 °C; вне его — экстраполяция. Rubycon и Nippon Chemi-Con ограничивают оценку 15 годами. ';
+n+='Конденсатор хранит заряд и после отключения — разряжайте его резистором.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

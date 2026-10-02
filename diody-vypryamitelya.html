@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Диоды выпрямителя с конденсаторным фильтром — ВольтКальк</title>
+<meta name="description" content="Расчёт диодов выпрямителя с конденсаторным фильтром для моста, схемы со средней точкой и однополупериодной: амплитуда, пульсации, угол проводимости, средний, пиковый и действующий ток диода, ток пульсаций конденсатора, обратное напряжение и бросок тока при включении в сравнении с VRRM, IF(AV) и IFSM из паспорта.">
+<link rel="canonical" href="https://macos2024.github.io/diody-vypryamitelya.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Диоды выпрямителя с конденсаторным фильтром — ВольтКальк">
+<meta property="og:description" content="Расчёт диодов выпрямителя с конденсаторным фильтром для моста, схемы со средней точкой и однополупериодной: амплитуда, пульсации, угол проводимости, средний, пиковый и действующий ток диода, ток пульсаций конденсатора, обратное напряжение и бросок тока при включении в сравнении с VRRM, IF(AV) и IFSM из паспорта.">
+<meta property="og:url" content="https://macos2024.github.io/diody-vypryamitelya.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Диоды выпрямителя с конденсаторным фильтром","url":"https://macos2024.github.io/diody-vypryamitelya.html","description":"Расчёт диодов выпрямителя с конденсаторным фильтром для моста, схемы со средней точкой и однополупериодной: амплитуда, пульсации, угол проводимости, средний, пиковый и действующий ток диода, ток пульсаций конденсатора, обратное напряжение и бросок тока при включении в сравнении с VRRM, IF(AV) и IFSM из паспорта.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Диоды выпрямителя с конденсаторным фильтром","item":"https://macos2024.github.io/diody-vypryamitelya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему пиковый ток диода в десять раз больше тока нагрузки?","acceptedAnswer":{"@type":"Answer","text":"Диод открыт только у вершины синусоиды — в примере 1,7 мс из 10 мс. За это время он должен отдать весь заряд, который нагрузка забрала за полупериод, поэтому импульс получается высоким. Чем больше ёмкость, тем меньше пульсации, короче импульс и выше его пик."}},{"@type":"Question","name":"Зачем снижать IF(AV) при ёмкостной нагрузке?","acceptedAnswer":{"@type":"Answer","text":"IF(AV) в паспорте задан для активной или индуктивной нагрузки. С конденсатором тот же средний ток идёт короткими высокими импульсами, действующее значение больше, и диод греется сильнее. Diodes Incorporated и Rectron в паспортах 1N5400–1N5408 требуют снижать ток на 20 %; у других изделий — по их паспорту."}},{"@type":"Question","name":"Почему бросок при включении считается по наихудшему случаю?","acceptedAnswer":{"@type":"Answer","text":"Разряженный конденсатор в первый момент — почти короткое замыкание, и ток ограничивают только сопротивления обмоток, ESR и термистор. Наибольший он, если включение попадает на пик напряжения. В другой фазе бросок меньше, поэтому превышение IFSM калькулятор называет риском, а не вердиктом."}},{"@type":"Question","name":"Чем этот расчёт отличается от калькулятора пульсаций?","acceptedAnswer":{"@type":"Answer","text":"Калькулятор пульсаций выпрямителя считает размах пульсаций и наименьшее напряжение. Здесь по тем же пульсациям оцениваются угол проводимости и токи диодов и конденсатора, обратное напряжение и бросок при включении — всё, что нужно сравнить с паспортом диода и конденсатора."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Диоды выпрямителя с конденсаторным фильтром</h1>
+<p class="intro">Диод выпрямителя с конденсатором работает короткими импульсами тока у вершины синусоиды. Калькулятор оценивает эти импульсы, обратное напряжение и бросок при включении и сравнивает их с <b>паспортом диода</b>. Только размах пульсаций считает <a href="pulsacii-vypryamitelya.html">калькулятор пульсаций выпрямителя</a>, только потери моста — <a href="diode-bridge-loss.html">калькулятор падения и нагрева диодного моста</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Диоды выпрямителя с конденсаторным фильтром</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_sch"><label for="sch">Схема выпрямителя</label><div class="fw"><select id="sch"><option value="bridge" selected>Мост: четыре диода, в цепи тока два</option><option value="ct">Двухполупериодная со средней точкой: два диода</option><option value="half">Однополупериодная: один диод</option></select></div></div><div class="f" id="f_us"><label for="us">Действующее напряжение обмотки U</label><div class="fw"><input id="us" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">В</span></div><div class="hint">Под нагрузкой. Для схемы со средней точкой — напряжение каждой половины обмотки</div></div><div class="f" id="f_dup"><label for="dup">Наибольшее превышение напряжения над номинальным δ</label><div class="fw"><input id="dup" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">%</span></div><div class="hint">Отклонение напряжения сети — до 10 % по ГОСТ 32144-2013; рост напряжения обмотки без нагрузки добавьте по паспорту трансформатора</div></div><div class="f" id="f_f"><label for="f">Частота сети</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">Гц</span></div></div><div class="f" id="f_il"><label for="il">Ток нагрузки I (постоянный)</label><div class="fw"><input id="il" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_vf"><label for="vf">Прямое падение на одном диоде Vf</label><div class="fw"><input id="vf" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">В</span></div><div class="hint">Наибольшее по паспорту при токе, близком к пиковому: у 1N5400–1N5408 (Diodes Incorporated) — не больше 1,0 В при 3 А</div></div><div class="f" id="f_rmode"><label for="rmode">Размах пульсаций</label><div class="fw"><select id="rmode"><option value="c" selected>Рассчитать по ёмкости и току нагрузки</option><option value="v">Задать: измерен или получен моделированием</option></select></div></div><div class="f" id="f_c"><label for="c">Ёмкость фильтра C</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="4700" placeholder=""><span class="u">мкФ</span></div><div class="hint">По ней считаются пульсации и длительность броска при включении. Если пульсации заданы, ёмкость нужна только для броска</div></div><div class="f" id="f_dv"><label for="dv">Размах пульсаций ΔV</label><div class="fw"><input id="dv" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_vrrm"><label for="vrrm">VRRM диода по паспорту</label><div class="fw"><input id="vrrm" type="text" inputmode="decimal" autocomplete="off" value="1000" placeholder=""><span class="u">В</span></div><div class="hint">Повторяющееся обратное напряжение; у 1N5408 — 1000 В. Пусто — сравнения не будет</div></div><div class="f" id="f_ifav"><label for="ifav">IF(AV) одного диода по паспорту</label><div class="fw"><input id="ifav" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">А</span></div><div class="hint">Средний прямой ток; у 1N5400–1N5408 — 3 А при 105 °C. У моста-сборки паспорт даёт ток всего моста — на один диод введите половину</div></div><div class="f" id="f_der"><label for="der">Снижение IF(AV) при ёмкостной нагрузке по паспорту</label><div class="fw"><input id="der" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">%</span></div><div class="hint">Diodes Incorporated и Rectron в паспортах 1N5400–1N5408 и 1N4001–1N4007 требуют снижать ток на 20 %. Нет такого указания — 0</div></div><div class="f" id="f_ifsm"><label for="ifsm">IFSM диода по паспорту</label><div class="fw"><input id="ifsm" type="text" inputmode="decimal" autocomplete="off" value="200" placeholder=""><span class="u">А</span></div><div class="hint">Неповторяющийся ударный ток — полусинусоида; у 1N5400–1N5408 — 200 А за 8,3 мс, у 1N4001–1N4007 — 30 А</div></div><div class="f" id="f_tfsm"><label for="tfsm">Длительность импульса IFSM по паспорту</label><div class="fw"><input id="tfsm" type="text" inputmode="decimal" autocomplete="off" value="8,3" placeholder=""><span class="u">мс</span></div></div><div class="f" id="f_rw"><label for="rw">Сопротивление обмоток, приведённое ко вторичной</label><div class="fw"><input id="rw" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">Ом</span></div><div class="hint">Rвтор + Rперв·(Uвтор/Uперв)² — по омметру или паспорту трансформатора. Это сопротивление ограничивает бросок при включении</div></div><div class="f" id="f_esr"><label for="esr">ESR конденсатора</label><div class="fw"><input id="esr" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">мОм</span></div><div class="hint">По паспорту; пусто — не учитывается, бросок получится больше — с запасом</div></div><div class="f" id="f_ntc"><label for="ntc">NTC-термистор: сопротивление в холодном состоянии</label><div class="fw"><input id="ntc" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">Ом</span></div><div class="hint">По паспорту термистора при 25 °C; термистора нет — оставьте пустым</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Диоды выпрямителя: как считается</h2>
+<div class="formula">V<sub>p</sub> = √2·U − n·V<sub>f</sub> (n = 2 у моста, 1 у остальных),&nbsp;&nbsp;ΔV = I / (f<sub>п</sub>·C),&nbsp;&nbsp;f<sub>п</sub> = 2f или f<br>θ = arccos(1 − ΔV/V<sub>p</sub>),&nbsp;&nbsp;t<sub>c</sub> = θ / (2πf)<br>Треугольный импульс: I<sub>пик</sub> = 2·I·t<sub>п</sub> / t<sub>c</sub>,&nbsp;&nbsp;I<sub>д,ср</sub> = I·t<sub>п</sub> / T,&nbsp;&nbsp;I<sub>д,RMS</sub> = I<sub>пик</sub>·√(t<sub>c</sub> / (3T))<br>I<sub>C,RMS</sub> = I<sub>пик</sub>·√(3·t<sub>c</sub>·(4·t<sub>п</sub> − 3·t<sub>c</sub>)) / (6·t<sub>п</sub>)<br>U<sub>обр</sub>: мост √2·U·(1 + δ), средняя точка и однополупериодная 2·√2·U·(1 + δ)<br>Бросок: I<sub>вкл</sub> = √2·U·(1 + δ) / (R<sub>обм</sub> + ESR + R<sub>NTC</sub>),&nbsp;&nbsp;τ = R·C</div>
+<p><b>Почему ток импульсный.</b> Диод открыт, только пока напряжение обмотки выше напряжения на конденсаторе: от момента, когда синусоида догоняет наименьшее напряжение V<sub>p</sub> − ΔV, до её вершины. Отсюда угол проводимости: cos θ = (V<sub>p</sub> − ΔV)/V<sub>p</sub>. Sedra и Smith записывают то же условие как V<sub>p</sub>·cos(ωΔt) = V<sub>p</sub> − V<sub>r</sub> и при малых пульсациях получают ωΔt ≈ √(2V<sub>r</sub>/V<sub>p</sub>). За этот короткий интервал диод отдаёт весь заряд, который нагрузка забрала за период пульсаций, поэтому его ток во много раз больше тока нагрузки. Размах пульсаций — та же оценка, что у Sedra и Smith: ΔV = I/(f<sub>п</sub>·C), разряд конденсатора током нагрузки за весь период пульсаций.</p>
+<p><b>Модель импульса.</b> В методике Petry (журнал Ilha Digital, 2012; основана на Unitrode, 1986, и Barbi, 2005) ток диода упрощённо треугольный: наибольший в начале проводимости, к вершине синусоиды спадает до нуля, ток нагрузки постоянный. Заряд треугольника ½·I<sub>пик</sub>·t<sub>c</sub> равен заряду нагрузки за период импульсов I·t<sub>п</sub>, откуда I<sub>пик</sub> = 2·I·t<sub>п</sub>/t<sub>c</sub>. Ток конденсатора — ток диода минус ток нагрузки; его действующее значение у Petry — I<sub>пик</sub>·√(3·t<sub>c</sub>·(4·t<sub>п</sub> − 3·t<sub>c</sub>))/(6·t<sub>п</sub>). Действующий ток диода — того же треугольника, но один импульс за период сети T: каждый диод проводит раз за период. Sedra и Smith оценивают пиковый ток как ток конденсатора в начале проводимости плюс ток нагрузки: I·(1 + 2π√(V<sub>p</sub>/(2ΔV))) для двухполупериодной схемы — практически то же, разница в одну I. Обе формулы — оценка: они не учитывают сопротивление обмоток и индуктивность рассеяния, которые растягивают импульс и снижают пик. Точно токи дают моделирование или измерение.</p>
+<p><b>Схемы.</b> В мосте ток течёт через два диода последовательно, каждый проводит раз за период сети — средний ток диода I/2, а обратное напряжение равно амплитуде обмотки. В схеме со средней точкой в цепи один диод, средний ток тоже I/2, но закрытый диод видит напряжение всей обмотки — 2·√2·U. В однополупериодной схеме диод несёт весь ток I, пульсации вдвое больше при той же ёмкости, а обратное напряжение — сумма напряжения конденсатора и обратной полуволны, 2V<sub>p</sub> (Engineering LibreTexts). Обратное напряжение и напряжение конденсатора калькулятор считает при повышенном напряжении (отклонение сети до 10 % допускает ГОСТ 32144-2013) и без вычета V<sub>f</sub> — с запасом.</p>
+<p><b>Паспорт диода.</b> VRRM должно быть не меньше обратного напряжения. IF(AV) в паспорте задан для активной или индуктивной нагрузки; Diodes Incorporated и Rectron в паспортах 1N5400–1N5408 и 1N4001–1N4007 требуют при ёмкостной нагрузке снижать его на 20 %. IFSM — неповторяющийся ударный ток в виде полусинусоиды 8,3 мс на номинальной нагрузке: у 1N5400–1N5408 — 200 А, у 1N4001–1N4007 — 30 А. Если паспорт даёт повторяющийся пиковый ток IFRM, сравните с ним оценку пикового тока.</p>
+<p><b>Бросок при включении.</b> Разряженный конденсатор в момент включения — почти короткое замыкание (Ametherm): ток ограничивают только сопротивления цепи — обмоток, приведённое ко вторичной, ESR конденсатора и NTC-термистор, если он стоит. Наихудший случай — включение на пике напряжения: I = √2·U·(1 + δ)/R. Сопротивление диодов и индуктивность рассеяния снижают бросок, поэтому оценка сверху. Импульс спадает с постоянной времени τ = R·C. Если пик не больше IFSM, а τ не длиннее импульса, для которого задан IFSM, то и интеграл I²·τ/2 не больше I²<sub>FSM</sub>·t/2 полусинусоиды — калькулятор пишет «Оценка». Пик больше IFSM — «Риск»: так бывает при наихудшей фазе включения. Затянутый бросок сравнивают с графиком допустимого ударного тока от числа периодов в паспорте — «Недостаточно данных».</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="pulsacii-vypryamitelya.html">Калькулятор пульсаций выпрямителя</a> считает только размах пульсаций и наименьшее напряжение, <a href="diode-bridge-loss.html">калькулятор моста</a> — падение и потери 2V<sub>f</sub>·I. Эта страница выбирает сами диоды: обратное напряжение, средний, пиковый и действующий ток, бросок при включении и сравнение с паспортом. Ток пульсаций конденсатора отсюда проверяют на странице <a href="srok-sluzhby-elektrolita.html">срока службы электролита</a>; если импульсы тока слишком велики, их сглаживает <a href="drosselnyy-filtr-vypryamitelya.html">дроссельный фильтр</a>.</p>
+<p><b>Безопасность.</b> Калькулятор рассчитан на выпрямитель после сетевого трансформатора: низковольтная обмотка гальванически отделена от сети. Изоляцию трансформатора, пути утечки и воздушные зазоры он не проверяет — это требования стандарта безопасности на изделие (например, IEC 62368-1) и паспорта трансформатора. Конденсатор фильтра хранит заряд и после отключения: разряжайте его через <a href="discharge-resistor-capacitor.html">резистор разряда</a> и проверяйте отсутствие напряжения прибором; не замыкайте выводы накоротко.</p>
+<h2>Диоды выпрямителя: пример расчёта</h2>
+<p>Мост на обмотке 12 В (под нагрузкой), 50 Гц, ток 1 А, конденсатор 4700 мкФ, диоды 1N5408 с V<sub>f</sub> до 1 В. Амплитуда на конденсаторе 16,97 − 2 = <b>14,97 В</b>, пульсации 1/(100·0,0047) = 2,128 В, наименьшее напряжение 12,84 В. Угол проводимости arccos(1 − 2,128/14,97) = 30,92°, то есть 1,718 мс из 10 мс. Средний ток диода 0,5 А, а пиковый — около <b>11,64 А</b> (2·1·10/1,718); по Sedra и Smith — 12,79 А. Действующий ток диода 1,97 А, обмотки 2,786 А, конденсатора <b>2,6 А</b> — в 2,6 раза больше тока нагрузки. При сети +10 % обратное напряжение 18,67 В при VRRM 1000 В, средний ток 0,5 А при допустимых 3 − 20 % = 2,4 А.</p>
+<p>Бросок: если сопротивление обмоток, приведённое ко вторичной, 0,5 Ом, а ESR 40 мОм, наихудший бросок 18,67/0,54 = <b>34,57 А</b> с τ = 0,54·0,0047 = 2,538 мс — меньше IFSM 200 А и короче 8,3 мс. Для 1N4007 с IFSM 30 А тот же бросок больше паспортного — калькулятор выдаст «Риск перегрузки»; помогут NTC-термистор или диоды с большим IFSM.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему пиковый ток диода в десять раз больше тока нагрузки?</h3><p>Диод открыт только у вершины синусоиды — в примере 1,7 мс из 10 мс. За это время он должен отдать весь заряд, который нагрузка забрала за полупериод, поэтому импульс получается высоким. Чем больше ёмкость, тем меньше пульсации, короче импульс и выше его пик.</p><h3>Зачем снижать IF(AV) при ёмкостной нагрузке?</h3><p>IF(AV) в паспорте задан для активной или индуктивной нагрузки. С конденсатором тот же средний ток идёт короткими высокими импульсами, действующее значение больше, и диод греется сильнее. Diodes Incorporated и Rectron в паспортах 1N5400–1N5408 требуют снижать ток на 20 %; у других изделий — по их паспорту.</p><h3>Почему бросок при включении считается по наихудшему случаю?</h3><p>Разряженный конденсатор в первый момент — почти короткое замыкание, и ток ограничивают только сопротивления обмоток, ESR и термистор. Наибольший он, если включение попадает на пик напряжения. В другой фазе бросок меньше, поэтому превышение IFSM калькулятор называет риском, а не вердиктом.</p><h3>Чем этот расчёт отличается от калькулятора пульсаций?</h3><p>Калькулятор пульсаций выпрямителя считает размах пульсаций и наименьшее напряжение. Здесь по тем же пульсациям оцениваются угол проводимости и токи диодов и конденсатора, обратное напряжение и бросок при включении — всё, что нужно сравнить с паспортом диода и конденсатора.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://catdir.loc.gov/catdir/enhancements/fy0636/2003066178-t.html" rel="nofollow noopener" target="_blank">Microelectronic Circuits</a> — A. S. Sedra, K. C. Smith; Oxford University Press — Редакция 5-я редакция, 2004 (оглавление — каталог Библиотеки Конгресса); формулы видны в выдаче в лекционных материалах по учебнику — раздел The Rectifier with a Filter Capacitor — The Peak Rectifier, Vr = IL/(fC); интервал проводимости из Vp·cos(ωΔt) = Vp − Vr, при малых пульсациях ωΔt ≈ √(2Vr/Vp) — обращение 02.10.2026</li><li><a href="https://svbitec.wordpress.com/wp-content/uploads/2013/07/320lecture8.pdf" rel="nofollow noopener" target="_blank">Lecture 8: Peak Rectifiers</a> — лекция по выпрямителям на основе Sedra/Smith (копия svbitec.wordpress.com), вторичный источник — Редакция PDF на дату обращения; формулы видны в выдаче, знак корня при извлечении текста потерян — раздел iDav = iCav + IL = IL(1 + π√(2Vp/Vr)), iDmax ≈ IL(1 + 2π√(2Vp/Vr)) — обращение 02.10.2026</li><li><a href="https://ilhadigital.florianopolis.ifsc.edu.br/index.php/ilhadigital/article/view/38" rel="nofollow noopener" target="_blank">Metodologia de projeto de retificadores com filtro capacitivo</a> — C. A. Petry; Revista Ilha Digital, IFSC — Редакция т. 3, с. 77–85, 2012; методика основана на Unitrode (1986) и Barbi (2005); положения видны в выдаче — раздел ток диода упрощённо треугольный с пиком ID1max, ток нагрузки постоянный Io, время проводимости tc через arccos(VC1min/VC1max), действующий ток конденсатора ID1max·√(3·tc·(4·tr − 3·tc))/(6·tr), tr — период импульсов тока — обращение 02.10.2026</li><li><a href="https://eng.libretexts.org/Workbench/Electronics_(Final)/02:_Diode_Circuits/2.02:_Rectification" rel="nofollow noopener" target="_blank">2.2: Rectification</a> — Engineering LibreTexts, учебный материал (вторичный источник) — Редакция онлайн-редакция на дату обращения; видно в выдаче — раздел однополупериодная схема с конденсатором: обратное напряжение на диоде 2Vp — обращение 02.10.2026</li><li><a href="https://www.mouser.com/datasheet/2/115/ds28007-41625.pdf" rel="nofollow noopener" target="_blank">1N5400–1N5408. 3.0A Rectifier</a> — Diodes Incorporated — Редакция DS28007 Rev. 8-3; значения видны в выдаче — раздел IO = 3,0 А при TA = 105 °C; VRRM до 1000 В (1N5408); VFM не больше 1,0 В при 3,0 А, IFSM = 200 А — полусинусоида 8,3 мс на номинальной нагрузке, однофазная однополупериодная схема 60 Гц, активная или индуктивная нагрузка; при ёмкостной нагрузке ток снижать на 20 % — обращение 02.10.2026</li><li><a href="https://www.diodes.com/assets/Datasheets/ds28002.pdf" rel="nofollow noopener" target="_blank">1N4001–1N4007. 1.0A Rectifier</a> — Diodes Incorporated — Редакция DS28002 Rev. 11-3; значения видны в выдаче — раздел IO = 1,0 А; IFSM = 30 А — полусинусоида 8,3 мс, при ёмкостной нагрузке ток снижать на 20 % — обращение 02.10.2026</li><li><a href="https://www.rectron.com/public/product_datasheets/1n5400-1n5408.pdf" rel="nofollow noopener" target="_blank">1N5400 thru 1N5408</a> — Rectron — Редакция паспорт на дату обращения; видно в выдаче — раздел при ёмкостной нагрузке ток снижать на 20 % — обращение 02.10.2026</li><li><a href="https://www.ametherm.com/blog/inrush-current/calculate-inrush-current-three-steps" rel="nofollow noopener" target="_blank">Inrush Current Calculators and How to Select an Inrush Current Limiter</a> — Ametherm — Редакция онлайн-статья на дату обращения; положения видны в выдаче — раздел конденсаторы фильтра при включении — почти короткое замыкание, наименьшее сопротивление ограничителя Rmin = Vpeak / Ipeak — обращение 02.10.2026</li><li><a href="https://docs.cntd.ru/document/1200104301" rel="nofollow noopener" target="_blank">ГОСТ 32144-2013. Электрическая энергия. Совместимость технических средств электромагнитная. Нормы качества электрической энергии в системах электроснабжения общего назначения</a> — Межгосударственный стандарт — Редакция введён приказом Росстандарта от 22.07.2013 № 400-ст; положение видно в выдаче — раздел 4.2.2: положительные и отрицательные отклонения напряжения — не больше 10 % номинального в течение 100 % времени интервала в одну неделю — обращение 02.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Ток нагрузки постоянный; напряжение обмотки синусоидальное, его действующее значение задано под нагрузкой.</li><li>Пульсации ΔV = I/(fп·C): конденсатор разряжается током нагрузки весь период пульсаций.</li><li>Ток диода — треугольный импульс от начала проводимости до вершины синусоиды (Petry, 2012), заряд импульса равен заряду нагрузки за период импульсов.</li><li>Обратное напряжение и напряжение конденсатора — при повышенном на δ напряжении и без вычета Vf.</li><li>Бросок — включение на пике напряжения при разряженном конденсаторе; цепь ограничена только введёнными сопротивлениями.</li></ul><p><b>Границы применимости:</b></p><ul><li>Сопротивление обмоток и индуктивность рассеяния в форме тока не учитываются — реальные пиковый и действующий токи обычно меньше оценки.</li><li>Размах пульсаций больше половины амплитуды — вне области оценки.</li><li>Нагрев диодов, восстановление и ток утечки не рассчитываются; IFRM и тепловой режим проверяются по паспорту.</li><li>Изоляция трансформатора, пути утечки и воздушные зазоры не проверяются — требования стандарта на изделие (например, IEC 62368-1).</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="pulsacii-vypryamitelya.html">Пульсации выпрямителя с конденсатором</a></li><li><a href="diode-bridge-loss.html">Падение и нагрев диодного моста</a></li><li><a href="srok-sluzhby-elektrolita.html">Ток пульсаций и срок службы электролита</a></li><li><a href="drosselnyy-filtr-vypryamitelya.html">Дроссельный LC-фильтр выпрямителя</a></li><li><a href="discharge-resistor-capacitor.html">Резистор разряда конденсатора</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b*(1+1e-12);}
+function lt(a,b){return a<b*(1-1e-12);}
+function ge(a,b){return a>=b*(1-1e-12);}
+function le(a,b){return a<=b*(1+1e-12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?lt(r,lim):gt(r,lim))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function pl(s,one,few,many,frac){if(/[,·]/.test(s))return frac;var n=Math.abs(parseInt(s,10))%100,n1=n%10;if(n>10&&n<20)return many;if(n1===1)return one;if(n1>=2&&n1<=4)return few;return many;}
+function yr(s){return s+' '+pl(s,'год','года','лет','года');}
+
+function sync(){hideF('dv',S('rmode')!=='v');}
+function init(){$('rmode').addEventListener('change',sync);sync();}
+function calc(){
+var s=S('sch'),br=s==='bridge',half=s==='half',vm=S('rmode')==='v';
+var us=P('us'),dup=P('dup'),f=P('f'),il=P('il'),vf=P('vf'),der=P('der');
+if([us,dup,f,il,vf,der].some(isNaN))return err('Заполните числами напряжение обмотки, превышение напряжения, частоту, ток нагрузки, падение на диоде и снижение тока при ёмкостной нагрузке.');
+if(us<=0||us>1000)return err('Напряжение обмотки — больше 0 и не больше 1000 В.');
+if(dup<0||dup>50)return err('Превышение напряжения задаётся от 0 до 50 %.');
+if(f<10||f>1000)return err('Частота сети — от 10 до 1000 Гц.');
+if(il<=0)return err('Ток нагрузки должен быть больше нуля.');
+if(vf<0||vf>5)return err('Прямое падение на диоде — от 0 до 5 В.');
+if(der<0||der>=100)return err('Снижение тока при ёмкостной нагрузке — от 0 до 100 % (не включая 100); если в паспорте его нет, введите 0.');
+var c=OPT('c'),vr=OPT('vrrm'),ia=OPT('ifav'),fs=OPT('ifsm'),tfm=OPT('tfsm'),rw=OPT('rw'),es=OPT('esr'),nt=OPT('ntc');
+if(c!==null){if(isNaN(c))return err('Ёмкость — число в микрофарадах.');if(c<=0)return err('Ёмкость должна быть больше нуля.');}
+if(vr!==null){if(isNaN(vr))return err('VRRM — число в вольтах. Если его нет в паспорте, оставьте поле пустым.');if(vr<=0)return err('VRRM должно быть больше нуля.');}
+if(ia!==null){if(isNaN(ia))return err('IF(AV) — число в амперах. Если его нет в паспорте, оставьте поле пустым.');if(ia<=0)return err('IF(AV) должен быть больше нуля.');}
+if(fs!==null){if(isNaN(fs))return err('IFSM — число в амперах. Если его нет в паспорте, оставьте поле пустым.');if(fs<=0)return err('IFSM должен быть больше нуля.');}
+if(tfm!==null){if(isNaN(tfm))return err('Длительность импульса IFSM — число в миллисекундах.');if(tfm<=0)return err('Длительность импульса IFSM должна быть больше нуля.');}
+if(fs!==null&&tfm===null)return err('Для IFSM задайте длительность импульса из паспорта — обычно 8,3 или 10 мс.');
+if(rw!==null){if(isNaN(rw))return err('Сопротивление обмоток — число в омах. Если его нет, оставьте поле пустым.');if(rw<0)return err('Сопротивление обмоток не может быть отрицательным.');}
+if(es!==null){if(isNaN(es))return err('ESR — число в миллиомах. Если его нет, оставьте поле пустым.');if(es<0)return err('ESR не может быть отрицательным.');}
+if(nt!==null){if(isNaN(nt))return err('Сопротивление термистора — число в омах. Если термистора нет, оставьте поле пустым.');if(nt<0)return err('Сопротивление термистора не может быть отрицательным.');}
+var nd=br?2:1,fr=half?f:2*f,tr=1/fr,T=1/f,k=1+dup/100,vp=Math.SQRT2*us-nd*vf,dv;
+if(!(vp>0))return err('Падение на диодах не меньше амплитуды напряжения обмотки — проверьте напряжение и Vf.');
+if(vm){dv=P('dv');if(isNaN(dv))return err('Введите размах пульсаций.');if(dv<=0)return err('Размах пульсаций должен быть больше нуля.');}
+else{if(c===null)return err('Введите ёмкость фильтра — по ней считается размах пульсаций.');dv=il/(fr*c*1e-6);}
+if(gt(dv,vp/2))return err('Размах пульсаций '+fmt(dv)+' В больше половины амплитуды '+fmt(vp)+' В — вне области оценки: формулы выведены для пульсаций, малых по сравнению с амплитудой. Увеличьте ёмкость или считайте моделированием.');
+var th=Math.acos(1-dv/vp),tc=th/(2*Math.PI*f),ip=2*il*tr/tc,ida=il*tr/T,idr=ip*Math.sqrt(tc/(3*T)),icr=ip*Math.sqrt(3*tc*(4*tr-3*tc))/(6*tr),iwr=br?Math.SQRT2*idr:idr;
+var vc=Math.SQRT2*us*k,piv=(br?1:2)*vc,iok=ia===null?NaN:ia*(1-der/100);
+var rs=(rw===null?0:rw)+(es===null?0:es/1000)+(nt===null?0:nt),iin=rs>0?vc/rs:NaN,tau=(rs>0&&c!==null)?rs*c*1e-6:NaN;
+if(![vp,dv,th,ip,idr,icr,piv].every(isFinite)||(rs>0&&!isFinite(iin)))return err('Значения вне диапазона надёжного расчёта.');
+var h=row('Амплитуда на конденсаторе Vp = √2·U − '+(br?'2·Vf':'Vf'),fmt(vp)+' В')+
+ row('Частота пульсаций',fmt(fr)+' Гц')+
+ row(vm?'Размах пульсаций ΔV — задан':'Размах пульсаций ΔV = I / (fп·C)',fmt(dv)+' В, наименьшее напряжение '+fmt(vp-dv)+' В')+
+ row('Угол проводимости θ = arccos(1 − ΔV/Vp)',fmt(th*180/Math.PI)+'° — '+fmt(tc*1000)+' мс из '+fmt(tr*1000)+' мс')+
+ row('Средний ток диода',fmt(ida)+' А')+
+ row('Пиковый повторяющийся ток диода — оценка',fmt(ip)+' А')+
+ row('Действующий ток диода — оценка',fmt(idr)+' А')+
+ row(br?'Действующий ток обмотки √2·Iд — оценка':(half?'Действующий ток обмотки — оценка':'Действующий ток каждой половины обмотки — оценка'),fmt(iwr)+' А')+
+ row('Ток пульсаций конденсатора (действующий) — оценка',fmt(icr)+' А')+
+ row('Напряжение на конденсаторе без нагрузки при +'+fmt(dup)+' %',fmt(vc)+' В');
+h+=row('Обратное напряжение на диоде '+(br?'√2·U':'2·√2·U')+' при +'+fmt(dup)+' %',vr===null?fmt(piv)+' В — VRRM не задано':fx(piv,vr)+' В '+(gt(piv,vr)?'>':'≤')+' VRRM '+fx(vr,piv)+' В');
+h+=row('Средний ток диода и допустимый по паспорту',ia===null?fmt(ida)+' А — IF(AV) не задан':fx(ida,iok)+' А '+(gt(ida,iok)?'>':'≤')+' '+fx(iok,ida)+' А'+(der>0?' (IF(AV) '+fmt(ia)+' А минус '+fmt(der)+' %)':''));
+if(rs>0)h+=row('Наихудший бросок при включении √2·U·(1+δ) / R',(fs===null?fmt(iin):fx(iin,fs))+' А при R = '+fmt(rs)+' Ом'+(isNaN(tau)?'':', τ = R·C = '+(fs===null?fmt(tau*1000):fx(tau*1000,tfm))+' мс')+(fs===null?'':'; IFSM '+fx(fs,iin)+' А за '+fmt(tfm)+' мс'));
+else h+=row('Бросок при включении','не оценён — нужны сопротивление обмоток, ESR или NTC');
+var st,miss=[];
+if(vr===null)miss.push('VRRM');if(ia===null)miss.push('IF(AV)');if(fs===null)miss.push('IFSM');
+if(vr!==null&&gt(piv,vr))st='Обратное напряжение на диоде '+fx(piv,vr)+' В больше VRRM '+fx(vr,piv)+' В';
+else if(ia!==null&&gt(ida,iok))st='Средний ток диода '+fx(ida,iok)+' А больше допустимого по паспорту '+fx(iok,ida)+' А'+(der>0?' — IF(AV) с учётом снижения на '+fmt(der)+' % для ёмкостной нагрузки':'');
+else if(fs!==null&&rs>0&&gt(iin,fs))st='Риск перегрузки диодов при включении: наихудший бросок '+fx(iin,fs)+' А больше IFSM '+fx(fs,iin)+' А';
+else{var why=[];
+ if(miss.length)why.push('нет паспортных значений '+miss.join(', '));
+ if(!(rs>0))why.push('бросок при включении не оценён — нужны сопротивление обмоток, ESR или NTC');
+ else if(fs!==null&&isNaN(tau))why.push('длительность броска не оценена — нужна ёмкость');
+ else if(fs!==null&&gt(tau*1000,tfm))why.push('бросок затянут: τ = '+fx(tau*1000,tfm)+' мс больше длительности импульса IFSM '+fmt(tfm)+' мс — сравните с графиком ударного тока от числа периодов в паспорте');
+ st=why.length?'Недостаточно данных: '+why.join('; '):'Оценка: обратное напряжение, средний ток и наихудший бросок при включении не больше VRRM, IF(AV) и IFSM по паспорту';}
+var n='Токи — оценка по треугольной форме импульса тока диода (Petry, 2012): импульс начинается, когда напряжение обмотки догоняет напряжение конденсатора, спадает к нулю на вершине синусоиды и несёт весь заряд нагрузки за период пульсаций. Сопротивление обмоток и индуктивность рассеяния растягивают импульс — реальные пиковый и действующий токи обычно меньше. ';
+n+='Обратное напряжение и напряжение конденсатора посчитаны при повышенном напряжении и без вычета Vf — с запасом. ';
+if(half)n+='В однополупериодной схеме через обмотку идёт постоянная составляющая тока и подмагничивает сердечник — допустимость такого режима проверяют по паспорту трансформатора. ';
+if(rs>0)n+='Бросок — наихудший случай: включение на пике напряжения при разряженном конденсаторе; сопротивление диодов и индуктивность рассеяния его снижают. ';
+n+='Ток пульсаций конденсатора сравните с допустимым по паспорту на странице срока службы электролита. Конденсатор хранит заряд и после отключения — разряжайте его резистором.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
