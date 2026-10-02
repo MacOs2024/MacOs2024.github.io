@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Резистор затвора и драйвер MOSFET и IGBT — ВольтКальк</title>
+<meta name="description" content="Расчёт цепи затвора MOSFET и IGBT: ток затвора на плато Миллера при включении и выключении, длительность плато Qgd/Iз и время переключения, мощность драйвера Qg·ΔV·f и её распределение по сопротивлениям, оценка ложного включения ΔVgs ≈ Crss·dv/dt·R против порога при нагреве, резистор затвор–исток.">
+<link rel="canonical" href="https://macos2024.github.io/rezistor-zatvora-mosfet.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Резистор затвора и драйвер MOSFET и IGBT — ВольтКальк">
+<meta property="og:description" content="Расчёт цепи затвора MOSFET и IGBT: ток затвора на плато Миллера при включении и выключении, длительность плато Qgd/Iз и время переключения, мощность драйвера Qg·ΔV·f и её распределение по сопротивлениям, оценка ложного включения ΔVgs ≈ Crss·dv/dt·R против порога при нагреве, резистор затвор–исток.">
+<meta property="og:url" content="https://macos2024.github.io/rezistor-zatvora-mosfet.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Резистор затвора и драйвер MOSFET и IGBT","url":"https://macos2024.github.io/rezistor-zatvora-mosfet.html","description":"Расчёт цепи затвора MOSFET и IGBT: ток затвора на плато Миллера при включении и выключении, длительность плато Qgd/Iз и время переключения, мощность драйвера Qg·ΔV·f и её распределение по сопротивлениям, оценка ложного включения ΔVgs ≈ Crss·dv/dt·R против порога при нагреве, резистор затвор–исток.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Резистор затвора и драйвер MOSFET и IGBT","item":"https://macos2024.github.io/rezistor-zatvora-mosfet.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Как выбрать внешний резистор затвора?","acceptedAnswer":{"@type":"Answer","text":"Меньший резистор ускоряет переключение и снижает потери переключения, но увеличивает dv/dt, звон и помехи; больший — наоборот. Для цепи выключения есть верхний предел: наведённое через ёмкость Миллера напряжение должно оставаться ниже порога при нагреве — калькулятор его считает. Часто ставят раздельные резисторы включения и выключения."}},{"@type":"Question","name":"Зачем отрицательное напряжение выключения?","acceptedAnswer":{"@type":"Answer","text":"Оно добавляет запас против ложного включения: затвор сидит ниже нуля, и наведённому напряжению нужно дойти до порога от отрицательного уровня. Зато растёт перепад, а с ним мощность драйвера Qg·(Vвкл − Vвыкл)·f."}},{"@type":"Question","name":"Нужен ли резистор между затвором и истоком?","acceptedAnswer":{"@type":"Answer","text":"TI рекомендует его, чтобы затвор не оставался без цепи к истоку, когда драйвер обесточен. Номинал берут по документации драйвера и ключа; калькулятор показывает, как выбранный резистор снижает напряжение на затворе и нагружает драйвер."}},{"@type":"Question","name":"Почему в паспорте драйвера ток больше рассчитанного?","acceptedAnswer":{"@type":"Answer","text":"Паспорт даёт пиковый ток при определённых условиях — по сути в начале фронта. На плато Миллера напряжение на затворе уже поднялось, и ток меньше: (Vвкл − Vпл) / R. Время переключения задаёт именно ток на плато."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Резистор затвора и драйвер MOSFET и IGBT</h1>
+<p class="intro">Резистор затвора задаёт, как быстро переключается ключ и насколько он защищён от ложного включения соседним ключом. Калькулятор считает токи затвора на плато Миллера, время переключения, мощность драйвера и наведённое напряжение на затворе закрытого ключа. Потери переключения при этих временах считает страница <a href="poteri-buck-preobrazovatelya.html">потерь buck-преобразователя</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Резистор затвора и драйвер MOSFET и IGBT</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_von"><label for="von">Напряжение драйвера при включении Vвкл</label><div class="fw"><input id="von" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_voff"><label for="voff">Напряжение драйвера при выключении Vвыкл</label><div class="fw"><input id="voff" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">В</span></div><div class="hint">0 В при однополярном питании драйвера; отрицательное — при двуполярном</div></div><div class="f" id="f_rsrc"><label for="rsrc">Выходное сопротивление драйвера на подтяжку к питанию</label><div class="fw"><input id="rsrc" type="text" inputmode="decimal" autocomplete="off" value="0,85" placeholder=""><span class="u">Ом</span></div><div class="hint">По паспорту драйвера. Пример: Infineon 1EDN751x — 0,85 Ом</div></div><div class="f" id="f_rsnk"><label for="rsnk">Выходное сопротивление драйвера на сток к Vвыкл</label><div class="fw"><input id="rsnk" type="text" inputmode="decimal" autocomplete="off" value="0,35" placeholder=""><span class="u">Ом</span></div><div class="hint">По паспорту драйвера. Пример: Infineon 1EDN751x — 0,35 Ом</div></div><div class="f" id="f_rgmode"><label for="rgmode">Внешний резистор затвора</label><div class="fw"><select id="rgmode"><option value="one" selected>Один резистор для включения и выключения</option><option value="two">Раздельные резисторы включения и выключения</option></select></div></div><div class="f" id="f_rg"><label for="rg">Внешний резистор затвора Rg</label><div class="fw"><input id="rg" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">Ом</span></div></div><div class="f" id="f_rgon"><label for="rgon">Внешний резистор цепи включения Rg,вкл</label><div class="fw"><input id="rgon" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">Ом</span></div></div><div class="f" id="f_rgoff"><label for="rgoff">Внешний резистор цепи выключения Rg,выкл</label><div class="fw"><input id="rgoff" type="text" inputmode="decimal" autocomplete="off" value="4,7" placeholder=""><span class="u">Ом</span></div><div class="hint">Падение на диоде цепи выключения калькулятор не учитывает</div></div><div class="f" id="f_rgi"><label for="rgi">Внутреннее сопротивление затвора ключа Rg,вн</label><div class="fw"><input id="rgi" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">Ом</span></div><div class="hint">По паспорту ключа</div></div><div class="f" id="f_vpl"><label for="vpl">Напряжение плато Миллера Vпл</label><div class="fw"><input id="vpl" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">В</span></div><div class="hint">По графику заряда затвора из паспорта при вашем токе</div></div><div class="f" id="f_qgd"><label for="qgd">Заряд плато Qgd (у IGBT — Qgc)</label><div class="fw"><input id="qgd" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">нКл</span></div><div class="hint">По паспорту; с ростом напряжения сток–исток он растёт (Nexperia)</div></div><div class="f" id="f_qgs2"><label for="qgs2">Заряд Qgs2 — от порога до плато</label><div class="fw"><input id="qgs2" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">нКл</span></div><div class="hint">Необязательное: для оценки полного времени переключения</div></div><div class="f" id="f_qg"><label for="qg">Полный заряд затвора Qg на перепад от Vвыкл до Vвкл</label><div class="fw"><input id="qg" type="text" inputmode="decimal" autocomplete="off" value="60" placeholder=""><span class="u">нКл</span></div><div class="hint">По графику заряда затвора из паспорта для вашего перепада напряжения</div></div><div class="f" id="f_fsw"><label for="fsw">Частота переключения</label><div class="fw"><input id="fsw" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">кГц</span></div></div><div class="f" id="f_crss"><label for="crss">Ёмкость Миллера Crss (у IGBT — Cres)</label><div class="fw"><input id="crss" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">пФ</span></div><div class="hint">По паспорту. Crss сильно растёт при малом напряжении сток–исток, а паспорт даёт её при одном напряжении</div></div><div class="f" id="f_dvdt"><label for="dvdt">Скорость нарастания напряжения на закрытом ключе dv/dt</label><div class="fw"><input id="dvdt" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">В/нс</span></div><div class="hint">Её задаёт включение соседнего ключа полумоста: по осциллограмме или по расчёту его переключения</div></div><div class="f" id="f_vth"><label for="vth">Минимальное пороговое напряжение Vth min при 25 °C</label><div class="fw"><input id="vth" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">В</span></div><div class="hint">По паспорту — минимальное, а не типовое</div></div><div class="f" id="f_kth"><label for="kth">Нормированный порог при наибольшей Tj</label><div class="fw"><input id="kth" type="text" inputmode="decimal" autocomplete="off" value="0,8" placeholder=""><span class="u">о. е.</span></div><div class="hint">Отношение порога при наибольшей рабочей температуре к значению при 25 °C — по графику из паспорта. Пустое поле — сравнение только с порогом при 25 °C и «Недостаточно данных»</div></div><div class="f" id="f_rgs"><label for="rgs">Резистор затвор–исток Rgs</label><div class="fw"><input id="rgs" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">кОм</span></div><div class="hint">Необязательное. Удерживает ключ закрытым при обесточенном драйвере (TI); значение — по документации драйвера и ключа</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Резистор затвора и драйвер: как считается</h2>
+<div class="formula">Rвкл = Rдр↑ + Rg,вкл + Rg,вн,&nbsp;&nbsp;Rвыкл = Rдр↓ + Rg,выкл + Rg,вн<br>Iз,вкл = (Vвкл − Vпл) / Rвкл,&nbsp;&nbsp;Iз,выкл = (Vпл − Vвыкл) / Rвыкл,&nbsp;&nbsp;в начале фронта (Vвкл − Vвыкл) / R<br>tпл = Qgd / Iз,&nbsp;&nbsp;tпер ≈ (Qgs2 + Qgd) / Iз<br>Pдр = Qg·(Vвкл − Vвыкл)·fsw;&nbsp;&nbsp;на каждом фронте ≈ Pдр/2, делится пропорционально сопротивлениям<br>ΔVgs ≈ Crss·(dv/dt)·Rэкв,&nbsp;&nbsp;Rэкв = Rg,вн + (Rдр↓ + Rg,выкл) ∥ Rgs;&nbsp;&nbsp;риск, если ΔVgs ≥ Vth,min(Tj) − Vвыкл</div>
+<p><b>Ток затвора на плато Миллера.</b> Пока на затворе плато, напряжение на нём почти постоянно, и ток задаёт разность напряжения драйвера и плато на сопротивлении цепи: Iз = (Vвкл − Vпл) / Rз — так в руководстве Nexperia AN90059, где Rз — сумма внутреннего сопротивления затвора ключа, внешнего резистора и выходного сопротивления драйвера. При выключении ток задаёт само напряжение плато — до нуля или до отрицательного уровня драйвера. Пример Nexperia: BUK7S1R0-40H, драйвер 10 и 0 В, 10 Ом, плато около 4,2 В — 0,58 А при включении и 0,42 А при выключении. В начале фронта, пока затвор ещё на уровне выключения, ток больше: (Vвкл − Vвыкл) / R.</p>
+<p><b>Время переключения.</b> На плато заряжается ёмкость затвор–сток и меняется напряжение на ключе; длительность плато — Qgd / Iз (TI SLVAEQ9: t = Qgd / Ig). Если задан Qgs2 — заряд от порога до плато, за который нарастает ток, — время переключения ≈ (Qgs2 + Qgd) / Iз. Пример из базы знаний Infineon: IGBT IGD08N120S7 с драйвером 1EDN751x, Qge + Qgc = 36 нКл, драйвер 15 В, плато 9,9 В, выходное сопротивление драйвера 0,85 Ом. Для 100 нс нужен ток 0,36 А и полное сопротивление 14,17 Ом, внешний резистор — 13,32 Ом; с ближайшим большим 15 Ом время — 112 нс. Калькулятор этот пример воспроизводит. Скорость нарастания напряжения при этом ≈ ΔV / tпл — её и «видит» соседний ключ полумоста.</p>
+<p><b>Мощность драйвера.</b> За период драйвер заряжает и разряжает затвор, и мощность Qg·Vдр·f не зависит от того, как быстро это происходит (TI SLUA618, Balogh). Она рассеивается в выходном сопротивлении драйвера, внешнем резисторе и внутреннем сопротивлении затвора ключа; чем меньше внешний резистор, тем большая доля приходится на сам драйвер. На каждом фронте ток во всех последовательных сопротивлениях один и тот же, поэтому мощность делится между ними пропорционально сопротивлениям; деление поровну между включением и выключением — приближение, точное для линейной ёмкости. При двуполярном питании перепад — Vвкл − Vвыкл, а Qg берут по графику заряда затвора для этого перепада.</p>
+<p><b>Ложное включение через ёмкость Миллера.</b> Когда включается соседний ключ полумоста, напряжение на закрытом ключе быстро нарастает, и ток Crss·dv/dt через ёмкость Миллера течёт через сопротивления цепи затвора на исток. Если падение на них достигает порога, ключ приоткрывается, и через полумост идёт сквозной ток. TI (SLUA618) задаёт допустимую скорость dv/dt = Vth / (R·Cgd) с порогом при наибольшей температуре; база знаний Infineon — Vgs = Rg·Cgd·dv/dt. Wu (International Rectifier) уточняет: часть тока уходит в ёмкость затвор–исток, поэтому реальный выброс меньше этой оценки. С другой стороны, Crss при малом напряжении сток–исток намного больше паспортной, а порог с нагревом снижается (Nexperia AN11158, Infineon). Поэтому калькулятор сравнивает оценку с минимальным порогом при наибольшей температуре кристалла, а без него выдаёт «Недостаточно данных». Infineon: чем выше dv/dt и температура, тем меньше должен быть резистор цепи выключения. Отрицательное напряжение выключения добавляет запас — оно входит в сравнение.</p>
+<p><b>Резистор затвор–исток.</b> TI в паспорте и FAQ драйвера UCC21520 рекомендует резистор между затвором и истоком, чтобы притянуть затвор к истоку, когда выход драйвера обесточен и не определён; он также помогает против ложного включения через ёмкость Миллера, пока драйвер ещё не включился. Числового значения в паспорте TI мы не нашли, поэтому калькулятор номинал не советует, а показывает цену выбранного: делитель с сопротивлением драйвера снижает напряжение на затворе открытого ключа, а сам резистор нагружает драйвер током и мощностью. Не оставляйте затвор без цепи к истоку: без неё он заряжается утечками и наводками.</p>
+<p><b>Изоляция.</b> Изоляцию драйвера, пути утечки и зазоры калькулятор не считает. В сетевом преобразователе драйвер верхнего ключа и его питание находятся под напряжением силовой цепи — требования к изоляции берут из паспорта драйвера и норм на изделие.</p>
+<p><b>Связь с другими страницами.</b> Сопротивления цепи затвора и время фронтов переносят на страницу <a href="poteri-buck-preobrazovatelya.html">потерь buck-преобразователя</a>, а получившиеся потери ключа — на страницу <a href="nagrev-mosfet.html">нагрева MOSFET</a>. Резистор в цепи базы биполярного транзистора считает <a href="bazovyy-rezistor-tranzistora.html">другой калькулятор</a>: там ток базы нужен постоянно, а затвору — только на время перезаряда.</p>
+<h2>Резистор затвора и драйвер: пример расчёта</h2>
+<p>Драйвер Infineon 1EDN751x (0,85 Ом к плюсу, 0,35 Ом к минусу питания) на 12 В управляет условным ключом: внутренний Rg 1 Ом, плато 5 В, Qgd 20 нКл, Qgs2 5 нКл, Qg 60 нКл, Crss 10 пФ, Vth min 3 В и 0,8 от него при нагреве; внешний резистор 10 Ом. Ток на плато (12 − 5)/11,85 = 0,5907 А при включении и 5/11,35 = 0,4405 А при выключении, плато длится 33,86 и 45,4 нс. При 100 кГц драйвер отдаёт 60 нКл · 12 В · 100 кГц = 72 мВт: 62,1 мВт — во внешних резисторах, 3,692 мВт — в драйвере, 6,21 мВт — внутри ключа. Соседний ключ включается со скоростью 20 В/нс: ΔVgs ≈ 10 пФ · 20 В/нс · 11,35 Ом = 2,27 В — ниже порога при нагреве 2,4 В, но запас мал: при 26 В/нс уже «Риск ложного включения». Допустимая скорость — 21,15 В/нс, наибольший внешний резистор выключения — 10,65 Ом.</p>
+<p>Пример Nexperia: драйвер 10 и 0 В, суммарное сопротивление 10 Ом, плато 4,2 В — 0,58 А при включении и 0,42 А при выключении. Пример Infineon: IGBT с зарядом 36 нКл до конца плато, драйвер 15 В, плато 9,9 В, выходное сопротивление драйвера 0,85 Ом — с резистором 13,32 Ом плато длится 100 нс, с 15 Ом — 111,9 нс; в статье Infineon — 112 нс.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Как выбрать внешний резистор затвора?</h3><p>Меньший резистор ускоряет переключение и снижает потери переключения, но увеличивает dv/dt, звон и помехи; больший — наоборот. Для цепи выключения есть верхний предел: наведённое через ёмкость Миллера напряжение должно оставаться ниже порога при нагреве — калькулятор его считает. Часто ставят раздельные резисторы включения и выключения.</p><h3>Зачем отрицательное напряжение выключения?</h3><p>Оно добавляет запас против ложного включения: затвор сидит ниже нуля, и наведённому напряжению нужно дойти до порога от отрицательного уровня. Зато растёт перепад, а с ним мощность драйвера Qg·(Vвкл − Vвыкл)·f.</p><h3>Нужен ли резистор между затвором и истоком?</h3><p>TI рекомендует его, чтобы затвор не оставался без цепи к истоку, когда драйвер обесточен. Номинал берут по документации драйвера и ключа; калькулятор показывает, как выбранный резистор снижает напряжение на затворе и нагружает драйвер.</p><h3>Почему в паспорте драйвера ток больше рассчитанного?</h3><p>Паспорт даёт пиковый ток при определённых условиях — по сути в начале фронта. На плато Миллера напряжение на затворе уже поднялось, и ток меньше: (Vвкл − Vпл) / R. Время переключения задаёт именно ток на плато.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://assets.nexperia.com/documents/application-note/AN90059.pdf" rel="nofollow noopener" target="_blank">AN90059. Power MOSFET gate driver fundamentals</a> — Nexperia — Редакция Rev. 1 — 22 апреля 2025; формулы и пример видны в выдаче — раздел IG,pl = (Vdrive − Vpl)/RG(tot); RG(tot) = RG(int) + RG(ext) + Rout(driver), пример BUK7S1R0-40H: 10/0 В, 10 Ом, Vpl ≈ 4,2 В — 0,58 и −0,42 А, с ростом VDS растёт QGD — обращение 01.10.2026</li><li><a href="https://community.infineon.com/t5/Knowledge-Base-Articles/Calculation-of-Gate-Resistance-in-Driver-Circuit/ta-p/960842" rel="nofollow noopener" target="_blank">Calculation of Gate Resistance in Driver Circuit</a> — Infineon Developer Community, Knowledge Base Article — Редакция онлайн-статья на дату обращения; пример виден в выдаче — раздел пример IGD08N120S7 и 1EDN751x: Qge + Qgc = 36 нКл, 15 В, Vge* = 9,9 В, 100 нс — 0,36 А, 14,17 Ом, Rgon = 13,32 Ом; 15 Ом — 112 нс, Rgoff тем меньше, чем выше dv/dt и температура — обращение 01.10.2026</li><li><a href="https://www.infineon.com/dgdl/Infineon-1EDN751x_1EDN851x-DataSheet-v02_03-EN.pdf?fileId=5546d462576f34750157e176df0b3ca7" rel="nofollow noopener" target="_blank">EiceDRIVER 1EDN751x / 1EDN851x. Data Sheet</a> — Infineon Technologies — Редакция v02_03; выходные сопротивления видны в выдаче — раздел выходное сопротивление 0,85 Ом к плюсу и 0,35 Ом к минусу питания — обращение 01.10.2026</li><li><a href="https://www.ti.com/lit/pdf/slvaeq9" rel="nofollow noopener" target="_blank">An Accurate Approach for Calculating the Efficiency of a Synchronous Buck Converter Using the MOSFET Plateau Voltage (SLVAEQ9)</a> — Texas Instruments — Редакция июль 2020; положения видны в пересказе выдачи — раздел t = QGS2/IG и QGD/IG — обращение 01.10.2026</li><li><a href="https://www.ti.com/lit/pdf/slua618" rel="nofollow noopener" target="_blank">Fundamentals of MOSFET and IGBT Gate Driver Circuits (SLUA618A)</a> — Texas Instruments, Laszlo Balogh — Редакция март 2017, редакция A — октябрь 2018; положения видны в выдаче — раздел PGATE = VDRV·QG·fDRV; заряд идёт через выходное сопротивление драйвера, внешний и внутренний резисторы, мощность не зависит от скорости заряда, dv/dt_max = VTH / ((RLO + RGATE + RG,I)·CGD) — обращение 01.10.2026</li><li><a href="https://community.infineon.com/t5/Knowledge-Base-Articles/Effect-of-dv-dt-on-gate-voltage-of-the-power-MOSFET/ta-p/761094" rel="nofollow noopener" target="_blank">Effect of dv/dt on gate voltage of the power MOSFET</a> — Infineon Developer Community, Knowledge Base Article — Редакция онлайн-статья на дату обращения; формула видна в выдаче — раздел VGS = RG·CGD·dv/dt; dv/dt = Vth / (Rg·Cgd) — обращение 01.10.2026</li><li><a href="https://www.infineon.com/assets/row/public/documents/24/54/syncbuckturnon.pdf" rel="nofollow noopener" target="_blank">Cdv/dt Induced Turn-On in Synchronous Buck Regulators</a> — International Rectifier (ныне Infineon), Thomas Wu — Редакция статья на дату обращения; механизм виден в выдаче, замкнутая формула — в её пересказе — раздел наведённое напряжение зависит от dv/dt, Cgd, Cgs и полного сопротивления затвора; часть тока уходит в Cgs — обращение 01.10.2026</li><li><a href="https://assets.nexperia.com/documents/application-note/AN11158.pdf" rel="nofollow noopener" target="_blank">AN11158. Understanding power MOSFET data sheet parameters</a> — Nexperia — Редакция Rev. 7.0 — 18 февраля 2025; положение видно в выдаче — раздел пороговое напряжение VGS(th) с ростом температуры снижается — обращение 01.10.2026</li><li><a href="https://www.ti.com/lit/ds/symlink/ucc21520.pdf" rel="nofollow noopener" target="_blank">UCC21520, UCC21520A Isolated Dual-Channel Gate Drivers — Gate to Source Resistor Selection; [FAQ] UCC21520: Parallel resistor between Gate and Source</a> — Texas Instruments: паспорт и FAQ форума E2E — Редакция редакции на дату обращения; назначение резистора видно в выдаче, числового значения в паспорте не найдено — раздел резистор затвор–исток притягивает затвор к истоку при обесточенном драйвере, помогает против ложного включения через ёмкость Миллера до включения драйвера — обращение 01.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>На плато Миллера напряжение затвора постоянно и равно Vпл; ток за интервал Qgs2 принят равным току на плато.</li><li>Мощность драйвера делится поровну между фронтами, внутри фронта — пропорционально сопротивлениям.</li><li>Ток Миллера при ложном включении — Crss·dv/dt целиком через сопротивления цепи затвора (оценка сверху).</li><li>Падение на диоде цепи выключения и индуктивность цепи затвора не учитываются.</li></ul><p><b>Границы применимости:</b></p><ul><li>Crss, Qgd и плато зависят от напряжения и тока; паспортные значения даны для своих условий.</li><li>Звон в цепи затвора, индуктивность общего истока и активный Miller clamp драйвера не моделируются.</li><li>Номинал резистора затвор–исток калькулятор не советует: его выбирают по документации драйвера и ключа.</li><li>Изоляцию драйвера, пути утечки и зазоры калькулятор не считает.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="poteri-buck-preobrazovatelya.html">Потери и КПД понижающего преобразователя (buck)</a></li><li><a href="nagrev-mosfet.html">Нагрев MOSFET с учётом роста Rds(on)</a></li><li><a href="bazovyy-rezistor-tranzistora.html">Базовый резистор транзисторного ключа</a></li><li><a href="rcd-snabber-flyback.html">RCD-снаббер обратноходового преобразователя</a></li><li><a href="snabber-rc.html">RC-снаббер для подавления выбросов</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-12;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-12;}
+function lt(a,b){return a<b-Math.abs(b)*1e-12;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?r<lim:r>lim)return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+
+function sync(){var two=S('rgmode')==='two';hideF('rg',two);hideF('rgon',!two);hideF('rgoff',!two);}
+function init(){$('rgmode').addEventListener('change',sync);sync();}
+function calc(){
+var two=S('rgmode')==='two',von=P('von'),voff=P('voff'),rs=P('rsrc'),rk=P('rsnk'),rgi=P('rgi'),vpl=P('vpl'),qgd=P('qgd'),qg=P('qg'),f=P('fsw'),crss=P('crss'),dv=P('dvdt'),vth=P('vth'),qs=OPT('qgs2'),kth=OPT('kth'),rgs=OPT('rgs'),ron,roff;
+if([von,voff,rs,rk,rgi,vpl,qgd,qg,f,crss,dv,vth].some(isNaN))return err('Заполните числами напряжения и сопротивления драйвера, внутренний Rg, напряжение плато, Qgd, Qg, частоту, Crss, dv/dt и пороговое напряжение.');
+if(two){ron=P('rgon');roff=P('rgoff');if(isNaN(ron)||isNaN(roff))return err('Введите внешние резисторы цепей включения и выключения.');}
+else{ron=P('rg');if(isNaN(ron))return err('Введите внешний резистор затвора.');roff=ron;}
+if(rs<0||rk<0||rgi<0||ron<0||roff<0)return err('Сопротивления не могут быть отрицательными.');
+if(voff>0)return err('Напряжение выключения — 0 В или отрицательное: при положительном уровне затвор не разряжается до нуля.');
+if(!(vth>0))return err('Пороговое напряжение должно быть больше нуля.');
+if(!(vpl>vth))return err('Напряжение плато должно быть выше порогового напряжения — проверьте данные паспорта.');
+if(!(von>vpl))return err('Напряжение включения драйвера должно быть выше напряжения плато, иначе ключ не откроется полностью.');
+if(qgd<=0||qg<=0||f<=0||crss<=0||dv<=0)return err('Qgd, Qg, частота, Crss и dv/dt должны быть больше нуля.');
+if(qs!==null){if(isNaN(qs))return err('Qgs2 — число в нанокулонах. Если его нет, оставьте поле пустым.');if(qs<0)return err('Qgs2 не может быть отрицательным.');}
+if(!(qg>qgd+(qs===null?0:qs)))return err('Полный заряд затвора Qg должен быть больше Qgd'+(qs===null?'':' + Qgs2')+' — проверьте данные паспорта.');
+if(kth!==null){if(isNaN(kth))return err('Нормированный порог — число. Если графика нет, оставьте поле пустым.');if(kth<=0||kth>1)return err('Нормированный порог при нагреве — больше 0 и не больше 1: у MOSFET и IGBT порог с ростом температуры снижается.');}
+if(rgs!==null){if(isNaN(rgs))return err('Резистор затвор–исток — число в килоомах. Если его нет, оставьте поле пустым.');if(rgs<=0)return err('Резистор затвор–исток должен быть больше нуля.');}
+var Ron=rs+ron+rgi,Roff=rk+roff+rgi;
+if(!(Ron>0&&Roff>0))return err('Суммарное сопротивление цепи затвора должно быть больше нуля.');
+var Q=qgd*1e-9,QG=qg*1e-9,F=f*1e3,C=crss*1e-12,DV=dv*1e9,sw=von-voff;
+var ion=(von-vpl)/Ron,ioff=(vpl-voff)/Roff,pd=QG*sw*F,ph=pd/2;
+var RG=rgs===null?null:rgs*1e3,rd=rk+roff,rp=RG===null?rd:rd*RG/(rd+RG),re=rgi+rp,vg=C*DV*re,vt=kth===null?vth:vth*kth,mg=vt-voff;
+var ml=voff<0?'запаса до порога Vth − Vвыкл ':'порога ';
+var h=row('Сопротивление цепи затвора: включение / выключение',fmt(Ron,4)+' / '+fmt(Roff,4)+' Ом')+
+ row('Ток затвора в начале фронта: включение / выключение',si(sw/Ron,'А')+' / '+si(sw/Roff,'А'))+
+ row('Ток затвора на плато Миллера: включение / выключение',si(ion,'А')+' / '+si(ioff,'А'))+
+ row('Длительность плато Qgd / Iз: включение / выключение',si(Q/ion,'с')+' / '+si(Q/ioff,'с'));
+if(qs!==null)h+=row('Время переключения (Qgs2 + Qgd) / Iз: включение / выключение',si((qs*1e-9+Q)/ion,'с')+' / '+si((qs*1e-9+Q)/ioff,'с'));
+h+=row('Мощность драйвера Qg·(Vвкл − Vвыкл)·fsw',si(pd,'Вт')+', средний ток от источника Qg·fsw — '+si(QG*F,'А'))+
+ row('Из неё: в драйвере / во внешних резисторах / во внутреннем Rg ключа',si(ph*(rs/Ron+rk/Roff),'Вт')+' / '+si(ph*(ron/Ron+roff/Roff),'Вт')+' / '+si(ph*rgi*(1/Ron+1/Roff),'Вт'));
+if(RG!==null){var vgo=von*RG/(RG+rs+ron);
+ h+=row('Напряжение на затворе открытого ключа с Rgs',fmt(vgo,4)+' В из '+fmt(von)+' В')+
+  row('Ток и мощность Rgs при открытом ключе',si(vgo/RG,'А')+', '+si(vgo*vgo/RG,'Вт'));
+ if(voff<0){var vgf=voff*RG/(RG+rd);h+=row('Напряжение на затворе закрытого ключа с Rgs',fmt(vgf,4)+' В из '+fmt(voff)+' В');}}
+h+=row('Наведённое напряжение ΔVgs ≈ Crss·dv/dt·Rэкв',fx(vg,mg)+' В при Rэкв = '+fmt(re,4)+' Ом')+
+ row(kth===null?'Порог для сравнения — Vth min при 25 °C':'Порог для сравнения — Vth min при наибольшей Tj',fmt(vt,4)+' В'+(voff<0?'; запас до порога со смещением '+fmt(voff)+' В — '+fmt(mg,4)+' В':''));
+if(kth!==null){var rx=mg/(C*DV)-rgi,xm;
+ h+=row('Наибольшая dv/dt без ложного включения',fmt(mg/(C*re)/1e9,4)+' В/нс');
+ if(!(rx>0))xm='нет: даже без внешнего резистора наведённое напряжение не ниже порога';
+ else if(RG!==null&&!(rx<RG))xm='не ограничен этим условием';
+ else{var x=(RG===null?rx:rx*RG/(RG-rx))-rk;xm=x>0?fmt(x,4)+' Ом':'нет: даже без внешнего резистора наведённое напряжение не ниже порога';}
+ h+=row('Наибольший внешний резистор цепи выключения по условию ложного включения',xm);}
+var st;
+if(ge(vg,mg))st='Риск ложного включения: наведённое напряжение ΔVgs ≈ '+fx(vg,mg)+' В не ниже '+ml+(kth===null?'при 25 °C ':'при нагреве ')+fx(mg,vg)+' В';
+else if(kth===null)st='Недостаточно данных: порог при рабочей температуре не задан; при 25 °C наведённое напряжение ΔVgs ≈ '+fx(vg,mg)+' В ниже '+ml+fx(mg,vg)+' В, но с нагревом порог снижается';
+else st='Оценка: наведённое напряжение ΔVgs ≈ '+fx(vg,mg)+' В ниже '+ml+'при нагреве '+fx(mg,vg)+' В';
+var n='Ток затвора на плато — (Vвкл − Vпл)/Rвкл и (Vпл − Vвыкл)/Rвыкл (Nexperia), длительность плато — Qgd / Iз (TI). Мощность Qg·ΔV·fsw (TI SLUA618) рассеивается в сопротивлениях цепи затвора: внутри фронта ток в них один, поэтому мощность делится пропорционально сопротивлениям, а поровну между включением и выключением — приближение. ';
+n+='ΔVgs ≈ Crss·dv/dt·R (TI SLUA618, Infineon) — оценка сверху: часть тока Миллера уходит в ёмкость затвор–исток (Wu), и реальный выброс меньше; зато при малом напряжении сток–исток Crss больше паспортной. Порог с нагревом снижается (Nexperia, Infineon), поэтому сравнивать нужно с минимальным порогом при наибольшей Tj. ';
+if(RG!==null)n+='Резистор Rgs учтён параллельно цепи выключения драйвера. ';
+n+='Изоляцию драйвера, пути утечки и зазоры калькулятор не считает: в сетевом преобразователе драйвер верхнего ключа и его питание находятся под напряжением силовой цепи.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
