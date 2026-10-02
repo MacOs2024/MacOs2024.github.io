@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Потери и КПД понижающего преобразователя (buck) — ВольтКальк</title>
+<meta name="description" content="Расчёт потерь и КПД понижающего (buck) преобразователя по паспортным данным ключей: коэффициент заполнения с учётом падений, действующие токи, проводимость и переключение MOSFET, заряд Coss, мёртвое время, обратное восстановление, заряд затворов, DCR и сердечник дросселя, ток контроллера — и какая статья главная.">
+<link rel="canonical" href="https://macos2024.github.io/poteri-buck-preobrazovatelya.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Потери и КПД понижающего преобразователя (buck) — ВольтКальк">
+<meta property="og:description" content="Расчёт потерь и КПД понижающего (buck) преобразователя по паспортным данным ключей: коэффициент заполнения с учётом падений, действующие токи, проводимость и переключение MOSFET, заряд Coss, мёртвое время, обратное восстановление, заряд затворов, DCR и сердечник дросселя, ток контроллера — и какая статья главная.">
+<meta property="og:url" content="https://macos2024.github.io/poteri-buck-preobrazovatelya.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Потери и КПД понижающего преобразователя (buck)","url":"https://macos2024.github.io/poteri-buck-preobrazovatelya.html","description":"Расчёт потерь и КПД понижающего (buck) преобразователя по паспортным данным ключей: коэффициент заполнения с учётом падений, действующие токи, проводимость и переключение MOSFET, заряд Coss, мёртвое время, обратное восстановление, заряд затворов, DCR и сердечник дросселя, ток контроллера — и какая статья главная.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Потери и КПД понижающего преобразователя (buck)","item":"https://macos2024.github.io/poteri-buck-preobrazovatelya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему расчётный КПД выше измеренного?","acceptedAnswer":{"@type":"Answer","text":"Часть потерь калькулятор не видит: звон и снабберы, ESR конденсаторов, дорожки, индуктивность общего истока, а пустые необязательные поля — DCR, сердечник, ток контроллера — не учитываются вовсе, и об этом сказано в результате. Кроме того, Rds(on) и Coss в паспорте даны для своих условий. Расчёт показывает, какая статья главная, — уточнять её стоит измерением."}},{"@type":"Question","name":"Что выгоднее — синхронная схема или диод?","acceptedAnswer":{"@type":"Answer","text":"Диод теряет Vf·Iout·(1 − D): при низком выходном напряжении D мало, диод проводит почти весь период, и его потери велики. Синхронный ключ вместо этого теряет I²·Rds(on) и мёртвое время. Сравните обе схемы переключателем с одинаковыми остальными данными."}},{"@type":"Question","name":"Где взять Qgs2 и напряжение плато?","acceptedAnswer":{"@type":"Answer","text":"Из графика заряда затвора в паспорте: Qgs2 — участок от порогового напряжения до начала плато, Qgd — длина плато, напряжение плато — его высота при токе, близком к вашему. В паспортах Infineon (IR) Qgs2 указан отдельно или в составе Qsw = Qgs2 + Qgd."}},{"@type":"Question","name":"Как перейти к нагреву ключа?","acceptedAnswer":{"@type":"Answer","text":"В результате есть строки «для расчёта нагрева»: действующий ток ключа и потери, не зависящие от Rds(on). Их вводят на странице нагрева MOSFET — там потери проводимости пересчитываются с ростом Rds(on) по температуре кристалла."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Потери и КПД понижающего преобразователя (buck)</h1>
+<p class="intro">Калькулятор раскладывает потери понижающего преобразователя по статьям — ключи, переключение, ёмкости, мёртвое время, затворы, дроссель — и показывает КПД и главную статью. Идеальное отношение напряжений даёт <a href="buck-boost-duty.html">калькулятор коэффициента заполнения</a>, индуктивность по пульсациям — <a href="drossel-impulsnogo.html">калькулятор дросселя импульсного преобразователя</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Потери и КПД понижающего преобразователя (buck)</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_top"><label for="top">Схема</label><div class="fw"><select id="top"><option value="sync" selected>Синхронная: верхний и нижний MOSFET</option><option value="diode">С диодом: верхний MOSFET и диод</option></select></div></div><div class="f" id="f_vin"><label for="vin">Входное напряжение Vin</label><div class="fw"><input id="vin" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_vout"><label for="vout">Выходное напряжение Vout</label><div class="fw"><input id="vout" type="text" inputmode="decimal" autocomplete="off" value="3,3" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_iout"><label for="iout">Ток нагрузки Iout</label><div class="fw"><input id="iout" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">А</span></div></div><div class="f" id="f_fsw"><label for="fsw">Частота переключения fsw</label><div class="fw"><input id="fsw" type="text" inputmode="decimal" autocomplete="off" value="500" placeholder=""><span class="u">кГц</span></div></div><div class="f" id="f_rip"><label for="rip">Пульсации тока дросселя</label><div class="fw"><select id="rip"><option value="l" selected>Рассчитать по индуктивности L</option><option value="di">Задать размах тока ΔI</option></select></div></div><div class="f" id="f_l"><label for="l">Индуктивность дросселя L</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="3,3" placeholder=""><span class="u">мкГн</span></div><div class="hint">Индуктивность при рабочем токе по паспорту дросселя</div></div><div class="f" id="f_di"><label for="di">Размах тока дросселя ΔI, от впадины до пика</label><div class="fw"><input id="di" type="text" inputmode="decimal" autocomplete="off" value="1,5" placeholder=""><span class="u">А</span></div><div class="hint">Измеренный или из расчёта дросселя</div></div><div class="f" id="f_rh"><label for="rh">Rds(on) верхнего ключа при рабочей температуре</label><div class="fw"><input id="rh" type="text" inputmode="decimal" autocomplete="off" value="8" placeholder=""><span class="u">мОм</span></div><div class="hint">При вашем напряжении затвора и ожидаемой температуре кристалла: максимум при 25 °C из паспорта, умноженный на нормированный множитель с графика Rds(on) от Tj. Калькулятор не умножает его на температурный множитель повторно</div></div><div class="f" id="f_rl"><label for="rl">Rds(on) нижнего ключа при рабочей температуре</label><div class="fw"><input id="rl" type="text" inputmode="decimal" autocomplete="off" value="4" placeholder=""><span class="u">мОм</span></div><div class="hint">Так же, как для верхнего ключа</div></div><div class="f" id="f_vfd"><label for="vfd">Прямое напряжение диода Vf при токе нагрузки</label><div class="fw"><input id="vfd" type="text" inputmode="decimal" autocomplete="off" value="0,45" placeholder=""><span class="u">В</span></div><div class="hint">По прямой характеристике из паспорта диода при вашем токе и температуре</div></div><div class="f" id="f_vdrv"><label for="vdrv">Напряжение драйвера — амплитуда на затворе</label><div class="fw"><input id="vdrv" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_qgh"><label for="qgh">Полный заряд затвора Qg верхнего ключа</label><div class="fw"><input id="qgh" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">нКл</span></div><div class="hint">По паспорту при вашем напряжении драйвера</div></div><div class="f" id="f_qgl"><label for="qgl">Полный заряд затвора Qg нижнего ключа</label><div class="fw"><input id="qgl" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">нКл</span></div></div><div class="f" id="f_sw"><label for="sw">Время переключения верхнего ключа</label><div class="fw"><select id="sw"><option value="q" selected>Рассчитать по зарядам затвора и цепи драйвера</option><option value="t">Задать времена фронтов</option></select></div></div><div class="f" id="f_qgs2"><label for="qgs2">Заряд Qgs2 — от порога до плато</label><div class="fw"><input id="qgs2" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">нКл</span></div><div class="hint">В паспортах Infineon (IR) его дают отдельно или в составе Qsw = Qgs2 + Qgd. Если дан только Qgs, Qgs2 — его часть после порогового напряжения по графику заряда затвора</div></div><div class="f" id="f_qgd"><label for="qgd">Заряд Qgd — плато Миллера</label><div class="fw"><input id="qgd" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">нКл</span></div><div class="hint">По паспорту; с ростом напряжения сток–исток Qgd растёт (Nexperia) — берите значение при напряжении, близком к Vin</div></div><div class="f" id="f_vpl"><label for="vpl">Напряжение плато Миллера</label><div class="fw"><input id="vpl" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">В</span></div><div class="hint">По графику заряда затвора из паспорта при токе, близком к току нагрузки</div></div><div class="f" id="f_rgon"><label for="rgon">Сопротивление цепи затвора при включении</label><div class="fw"><input id="rgon" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><span class="u">Ом</span></div><div class="hint">Сумма: выходное сопротивление драйвера на подтяжку к питанию, внешний резистор затвора и внутренний Rg ключа. Подробно — на странице резистора затвора</div></div><div class="f" id="f_rgoff"><label for="rgoff">Сопротивление цепи затвора при выключении</label><div class="fw"><input id="rgoff" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">Ом</span></div><div class="hint">Сумма: сопротивление драйвера на сток к нулю, внешний резистор и внутренний Rg ключа</div></div><div class="f" id="f_tr"><label for="tr">Полное время включения — рост тока и спад напряжения</label><div class="fw"><input id="tr" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">нс</span></div><div class="hint">Если измерен только спад напряжения на узле переключения, прибавьте время нарастания тока — иначе потери занижены. Паспортные tr и tf сняты в условиях испытаний производителя и к вашей схеме относятся приблизительно</div></div><div class="f" id="f_tf"><label for="tf">Полное время выключения — рост напряжения и спад тока</label><div class="fw"><input id="tf" type="text" inputmode="decimal" autocomplete="off" value="8" placeholder=""><span class="u">нс</span></div></div><div class="f" id="f_vsd"><label for="vsd">Прямое напряжение внутреннего диода нижнего ключа Vsd</label><div class="fw"><input id="vsd" type="text" inputmode="decimal" autocomplete="off" value="0,8" placeholder=""><span class="u">В</span></div><div class="hint">По паспорту при токе, близком к току нагрузки</div></div><div class="f" id="f_tdt"><label for="tdt">Мёртвое время на каждом фронте</label><div class="fw"><input id="tdt" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">нс</span></div><div class="hint">По паспорту контроллера или драйвера; при адаптивном мёртвом времени — по измерению</div></div><div class="f" id="f_cossh"><label for="cossh">Выходная ёмкость Coss верхнего ключа</label><div class="fw"><input id="cossh" type="text" inputmode="decimal" autocomplete="off" value="300" placeholder=""><span class="u">пФ</span></div><div class="hint">По паспорту. Coss зависит от напряжения сток–исток, а паспортное значение дано при одном напряжении</div></div><div class="f" id="f_cossl"><label for="cossl">Ёмкость нижнего ключа Coss или диода Cj</label><div class="fw"><input id="cossl" type="text" inputmode="decimal" autocomplete="off" value="600" placeholder=""><span class="u">пФ</span></div><div class="hint">Необязательное. Пустое поле — учитывается только Coss верхнего ключа, как в формуле ROHM</div></div><div class="f" id="f_qrr"><label for="qrr">Заряд обратного восстановления Qrr</label><div class="fw"><input id="qrr" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">нКл</span></div><div class="hint">Необязательное: внутреннего диода нижнего ключа или кремниевого диода — по паспорту при близких токе и скорости спада тока. У диода Шоттки обратного восстановления практически нет</div></div><div class="f" id="f_dcr"><label for="dcr">Сопротивление обмотки дросселя DCR</label><div class="fw"><input id="dcr" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">мОм</span></div><div class="hint">Необязательное: по паспорту дросселя с учётом нагрева обмотки</div></div><div class="f" id="f_pcore"><label for="pcore">Потери в сердечнике дросселя</label><div class="fw"><input id="pcore" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">Вт</span></div><div class="hint">Необязательное: по данным или онлайн-инструменту производителя дросселя для ваших частоты и размаха тока</div></div><div class="f" id="f_iq"><label for="iq">Ток потребления контроллера Iq</label><div class="fw"><input id="iq" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">мА</span></div><div class="hint">Необязательное: по паспорту контроллера при вашей частоте</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Потери buck-преобразователя: как считается</h2>
+<div class="formula">Синхронная схема: D = (Vout + Iout·(R2 + DCR)) / (Vin − Iout·R1 + Iout·R2)<br>С диодом: D = (Vout + Vf + Iout·DCR) / (Vin − Iout·R1 + Vf)<br>ΔI = (Vin − Vout)·D / (fsw·L),&nbsp;&nbsp;Iд,др = √(Iout² + ΔI²/12),&nbsp;&nbsp;Iд1 = √D·Iд,др,&nbsp;&nbsp;Iд2 = √(1 − D)·Iд,др<br>Pпров1 = Iд1²·R1,&nbsp;&nbsp;Pпров2 = Iд2²·R2,&nbsp;&nbsp;Pдиода = Vf·Iout·(1 − D)<br>Pпер = ½·Vin·fsw·(Iвп·tвкл + Iпик·tвыкл),&nbsp;&nbsp;tвкл = (Qgs2 + Qgd)·Rвкл / (Vдр − Vпл),&nbsp;&nbsp;tвыкл = (Qgs2 + Qgd)·Rвыкл / Vпл<br>PCoss = ½·(Coss1 + C2)·Vin²·fsw,&nbsp;&nbsp;PQrr = Qrr·Vin·fsw,&nbsp;&nbsp;Pмёртв = Vsd·2·Iout·tм·fsw<br>Pзатв = (Qg1 + Qg2)·Vдр·fsw,&nbsp;&nbsp;PDCR = Iд,др²·DCR,&nbsp;&nbsp;Pконтр = Vin·Iq,&nbsp;&nbsp;КПД = Vout·Iout / (Vout·Iout + ΣP)</div>
+<p><b>Откуда статьи потерь.</b> TI в руководстве SLVA390A называет три главные причины потерь в понижающем преобразователе: проводимость дросселя, проводимость ключей и переключение. ROHM в руководстве 64AN035E даёт полный перечень для синхронной схемы: проводимость верхнего и нижнего ключей, переключение верхнего, заряд выходной ёмкости Coss, мёртвое время, заряд затворов и собственное потребление контроллера, а для схемы с диодом — прямое падение диода Vf·Iout·(1 − D). Калькулятор суммирует статьи и делит выходную мощность на входную. Потери в сердечнике дросселя, его DCR и ток контроллера вводятся по паспортам; пустое поле не подменяется числом, а попадает в список «не учтены».</p>
+<p><b>Коэффициент заполнения.</b> В установившемся режиме среднее напряжение на дросселе равно нулю — то же равенство вольт-секунд, из которого на <a href="buck-boost-duty.html">странице коэффициента заполнения</a> выведено D = Vout/Vin. Если учесть падения — I·R1 на верхнем ключе, I·R2 или Vf на нижнем ключе или диоде, I·DCR на обмотке, — получаются формулы в рамке: D немного больше идеального. Размах тока — формула TI SLVA477B. Ток дросселя — треугольник вокруг Iout с размахом ΔI; его действующее значение √(Iout² + ΔI²/12), верхний ключ проводит долю периода D, нижний — 1 − D, отсюда √D и √(1 − D).</p>
+<p><b>Переключение.</b> Пока верхний ключ переключается, на нём одновременно и напряжение, и ток. Если фронты считать линейными, за фронт теряется ½·Vin·I·t — так считают ROHM и Infineon. Infineon берёт токи в моменты переключения: в понижающей схеме ключ включается при токе впадины Iout − ΔI/2, а выключается при пиковом Iout + ΔI/2. Время фронта можно ввести по измерению или рассчитать по зарядам затвора: на интервале Qgs2 растёт ток, на плато Миллера Qgd спадает напряжение (TI SLVAEQ9: t = Qgs2/Ig и Qgd/Ig). Ток затвора на плато — (Vдр − Vпл)/Rвкл при включении и Vпл/Rвыкл при выключении; его подробный расчёт — на <a href="rezistor-zatvora-mosfet.html">странице резистора затвора</a>. Нижний ключ переключается при почти нулевом напряжении: ток переходит между каналом и внутренним диодом в мёртвое время, поэтому его потери переключения не учитываются.</p>
+<p><b>Ёмкости, мёртвое время, восстановление.</b> При каждом включении верхний ключ разряжает свою выходную ёмкость: ½·Coss·Vin²·fsw (ROHM, Coss = Cds + Cgd). Одновременно через его канал до Vin заряжается ёмкость нижнего ключа или диода; при заряде ёмкости от источника через сопротивление теряется половина взятой энергии, отсюда ½·C2·Vin²·fsw. Microchip (AN1471) учитывает заряд Coss обоих ключей, ROHM — только верхнего, поэтому ёмкость нижнего — необязательное поле. Coss зависит от напряжения, а паспорт даёт её при одном напряжении сток–исток, так что эта статья — оценка. В мёртвое время ток дросселя идёт через внутренний диод нижнего ключа: ROHM считает Vsd·Iout·(tDr + tDf)·fsw, при одинаковом мёртвом времени на обоих фронтах это 2·Vsd·Iout·tм·fsw. Если задан Qrr, учитывается и обратное восстановление диода — Qrr·Vin·fsw в верхнем ключе, как в формуле энергии включения Infineon.</p>
+<p><b>Затворы и контроллер.</b> Каждый период драйвер заряжает затворы: Qg·Vдр·fsw на каждый ключ (ROHM, TI SLUA618). Эта мощность рассеивается в драйвере и резисторах цепи затвора, а не в канале ключа. Собственное потребление контроллера Vin·Iq (ROHM) заметно при малой нагрузке. Если драйвер питается от Vin через линейный стабилизатор, затворы фактически берут Qg·Vin·fsw — калькулятор считает по напряжению драйвера.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="buck-boost-duty.html">Калькулятор коэффициента заполнения</a> даёт идеальное отношение напряжений без потерь, <a href="drossel-impulsnogo.html">калькулятор дросселя</a> подбирает индуктивность по допустимым пульсациям. Эта страница при уже выбранных ключах и дросселе показывает, куда уходит мощность. Потери верхнего и нижнего ключей и их действующие токи переносят на страницу <a href="nagrev-mosfet.html">нагрева MOSFET</a>: там Rds(on) пересчитывается по температуре кристалла, а тепловой режим проверяется по Tj max.</p>
+<p><b>Что не учтено.</b> Индуктивность общего истока (её разбирает TI SLPA009), звон на фронтах и потери в снабберах, ESR входного и выходного конденсаторов, сопротивление дорожек, зависимость потерь переключения от температуры, разрывный режим. Изоляцию, пути утечки и зазоры калькулятор не считает — если преобразователь питается от выпрямленной сети, их требования берут из норм на изделие.</p>
+<h2>Потери buck-преобразователя: пример расчёта</h2>
+<p>Условный синхронный преобразователь 12 → 3,3 В, 5 А, 500 кГц, дроссель 3,3 мкГн с DCR 10 мОм. Верхний ключ: 8 мОм при рабочей температуре, Qg 10 нКл, Qgs2 2 нКл, Qgd 3 нКл, плато 3 В, Coss 300 пФ; нижний: 4 мОм, Qg 20 нКл, Coss 600 пФ. Драйвер 5 В, сопротивление цепи затвора 3 Ом при включении и 2 Ом при выключении, мёртвое время 20 нс, Vsd 0,8 В, контроллер потребляет 2 мА. Все значения условные.</p>
+<p>Коэффициент заполнения с учётом падений — 0,2813 вместо идеальных 0,275. Размах тока (12 − 3,3)·0,2813 / (500 кГц · 3,3 мкГн) = 1,483 А, действующий ток верхнего ключа 2,662 А, нижнего — 4,254 А. Ток затвора на плато — (5 − 3)/3 = 0,6667 А при включении и 3/2 = 1,5 А при выключении, фронты 7,5 и 3,333 нс. Потери: DCR дросселя 251,8 мВт, переключение верхнего ключа 153,2 мВт, мёртвое время 80 мВт, затворы 75 мВт, проводимость нижнего ключа 72,4 мВт и верхнего 56,67 мВт, Coss 32,4 мВт, контроллер 24 мВт — всего 745,5 мВт, <b>КПД 95,68 %</b>. Главная статья — DCR дросселя; обратное восстановление и сердечник не заданы и в сумму не вошли, о чём сказано в результате.</p>
+<p>Та же схема с диодом (Vf 0,45 В) вместо нижнего ключа: D = 0,3062, средний ток диода 3,469 А, его потери 1,561 Вт — 74 % всех потерь, <b>КПД 88,67 %</b>. При низком выходном напряжении диод проводит большую часть периода, и синхронный ключ выгоднее.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему расчётный КПД выше измеренного?</h3><p>Часть потерь калькулятор не видит: звон и снабберы, ESR конденсаторов, дорожки, индуктивность общего истока, а пустые необязательные поля — DCR, сердечник, ток контроллера — не учитываются вовсе, и об этом сказано в результате. Кроме того, Rds(on) и Coss в паспорте даны для своих условий. Расчёт показывает, какая статья главная, — уточнять её стоит измерением.</p><h3>Что выгоднее — синхронная схема или диод?</h3><p>Диод теряет Vf·Iout·(1 − D): при низком выходном напряжении D мало, диод проводит почти весь период, и его потери велики. Синхронный ключ вместо этого теряет I²·Rds(on) и мёртвое время. Сравните обе схемы переключателем с одинаковыми остальными данными.</p><h3>Где взять Qgs2 и напряжение плато?</h3><p>Из графика заряда затвора в паспорте: Qgs2 — участок от порогового напряжения до начала плато, Qgd — длина плато, напряжение плато — его высота при токе, близком к вашему. В паспортах Infineon (IR) Qgs2 указан отдельно или в составе Qsw = Qgs2 + Qgd.</p><h3>Как перейти к нагреву ключа?</h3><p>В результате есть строки «для расчёта нагрева»: действующий ток ключа и потери, не зависящие от Rds(on). Их вводят на странице нагрева MOSFET — там потери проводимости пересчитываются с ростом Rds(on) по температуре кристалла.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.ti.com/lit/pdf/slva390" rel="nofollow noopener" target="_blank">Calculating Efficiency (SLVA390A)</a> — Texas Instruments, Arvind Raj — Редакция февраль 2010, редакция A — март 2020; видно в выдаче — раздел три главные причины потерь: проводимость дросселя, проводимость ключей, переключение, пошаговый расчёт КПД и потерь — обращение 01.10.2026</li><li><a href="https://fscdn.rohm.com/en/products/databook/applinote/ic/power/switching_regulator/buck_converter_efficiency_app-e.pdf" rel="nofollow noopener" target="_blank">Efficiency of Buck Converter. Application Note</a> — ROHM Semiconductor — Редакция No. 64AN035E Rev.004, ноябрь 2022; формулы видны в выдаче — раздел P_SW-H = ½·VIN·IOUT·(tr + tf)·fSW, P_COSS = ½·COSS-H·VIN²·fSW, COSS-H = CDS-H + CGD-H, P_ON-D = IOUT·VF·(1 − VOUT/VIN), проводимость верхнего ключа — по доле D, нижнего — по 1 − D, потери заряда затворов верхнего и нижнего ключей — Qg·VGS·fSW — обращение 01.10.2026</li><li><a href="https://techweb.rohm.com/product/power-ic/dcdc/6486/" rel="nofollow noopener" target="_blank">Losses in Synchronous Rectifying Step-Down Converters (серия статей TechWeb)</a> — ROHM Semiconductor, TechWeb — Редакция онлайн-статьи на дату обращения: потери мёртвого времени, заряда затвора, собственного потребления контроллера; видны в выдаче — раздел мёртвое время: PD = VD·IO·(tDr + tDf)·fSW, заряд затвора: Qg × напряжение драйвера × частота, контроллер: напряжение питания × ток потребления — обращение 01.10.2026</li><li><a href="https://www.infineon.com/gated/infineon-70-41484-applicationnotes-en_f72138ac-8173-4b5c-8c8e-63dd1e039074" rel="nofollow noopener" target="_blank">MOSFET Power Losses Calculation Using the Data-Sheet Parameters</a> — Infineon Technologies, D. Graovac, M. Pürschel, A. Kiep — Редакция Application Note V1.1, июль 2006; формулы видны в выдаче — раздел EonM = UDD·IDon·(tri + tfu)/2 + Qrr·UDD; EoffM = UDD·IDoff·(tru + tfi)/2, PswM = (EonM + EoffM)·fsw; PCM = RDSon·IDrms² — обращение 01.10.2026</li><li><a href="https://www.ti.com/lit/pdf/slvaeq9" rel="nofollow noopener" target="_blank">An Accurate Approach for Calculating the Efficiency of a Synchronous Buck Converter Using the MOSFET Plateau Voltage (SLVAEQ9)</a> — Texas Instruments — Редакция июль 2020; положения видны в пересказе выдачи — раздел интервалы переключения: t = QGS2/IG и QGD/IG, нижний ключ переключается при нулевом напряжении — его потери переключения пренебрежимо малы, потери ключей: переключение, проводимость, заряд затвора, Coss, внутренний диод нижнего ключа в мёртвое время — обращение 01.10.2026</li><li><a href="https://ww1.microchip.com/downloads/en/Appnotes/01471A.pdf" rel="nofollow noopener" target="_blank">AN1471. Efficiency Analysis of a Synchronous Buck Converter using Microsoft Office Excel-Based Loss Calculator</a> — Microchip Technology, Joseph Depew — Редакция DS01471A, 2012; положения видны в выдаче, уравнение Coss — нет — раздел выходная ёмкость COSS = CGD + CDS обоих ключей заряжается каждый период, сопротивления драйвера и затвора в расчёте времени переключения — обращение 01.10.2026</li><li><a href="https://www.ti.com/lit/pdf/slva477" rel="nofollow noopener" target="_blank">Basic Calculation of a Buck Converter&#x27;s Power Stage (SLVA477B)</a> — Texas Instruments, Brigitte Hauke — Редакция редакция B — август 2015; формула размаха тока видна в выдаче — раздел ΔIL = (VIN − VOUT)·D / (fS·L) — обращение 01.10.2026</li><li><a href="https://www.ti.com/lit/slpa009" rel="nofollow noopener" target="_blank">Power Loss Calculation With Common Source Inductance Consideration for Synchronous Buck Converters (SLPA009A)</a> — Texas Instruments — Редакция июнь 2011, редакция A — июль 2011; видно в выдаче — раздел индуктивность общего истока в синхронном buck — на этой странице не учитывается — обращение 01.10.2026</li><li><a href="https://assets.nexperia.com/documents/application-note/AN11158.pdf" rel="nofollow noopener" target="_blank">AN11158. Understanding power MOSFET data sheet parameters</a> — Nexperia — Редакция Rev. 7.0 — 18 февраля 2025; положение видно в выдаче — раздел с ростом VDS растут QGD и QG(tot) — плато Миллера длиннее — обращение 01.10.2026</li><li><a href="https://www.infineon.com/assets/row/public/documents/24/49/infineon-irf7834-datasheet-en.pdf?fileId=5546d462533600a40153560c2e5c1d1f" rel="nofollow noopener" target="_blank">IRF7834PbF HEXFET Power MOSFET. Data Sheet</a> — International Rectifier (ныне Infineon) — Редакция редакция 9/21/04 по выдаче; обозначения видны в выдаче, как и в других паспортах HEXFET — раздел Qgs2 — заряд затвор–исток после порога (Post-Vth), Qsw — заряд переключения, Qgs2 + Qgd — обращение 01.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Непрерывный ток дросселя, линейные пульсации; ток впадины больше нуля.</li><li>Rds(on), Vf, Vsd, Coss, Qg, Qgs2, Qgd вводятся по паспорту для рабочих условий; Rds(on) — уже при рабочей температуре.</li><li>Фронты переключения линейные: энергия ½·Vin·I·t; ток затвора за фронт равен току на плато Миллера.</li><li>Нижний ключ переключается при нулевом напряжении; мёртвое время одинаково на обоих фронтах.</li><li>D — из равенства вольт-секунд с падениями на ключах, диоде и DCR; ΔI — по формуле TI SLVA477B.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не учитываются индуктивность общего истока, звон и снабберы, ESR конденсаторов, сопротивление дорожек.</li><li>Coss нелинейна; паспортное значение при одном напряжении даёт оценку, а не точный расчёт.</li><li>Разрывный режим и режимы с отрицательным током дросселя не рассматриваются.</li><li>Изоляцию, пути утечки и зазоры калькулятор не считает.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="buck-boost-duty.html">Коэффициент заполнения импульсного преобразователя</a></li><li><a href="drossel-impulsnogo.html">Дроссель импульсного преобразователя</a></li><li><a href="nagrev-mosfet.html">Нагрев MOSFET с учётом роста Rds(on)</a></li><li><a href="rezistor-zatvora-mosfet.html">Резистор затвора и драйвер MOSFET и IGBT</a></li><li><a href="raschet-radiatora.html">Расчёт радиатора для транзистора и микросхемы</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-12;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-12;}
+function lt(a,b){return a<b-Math.abs(b)*1e-12;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-12)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?lt(r,lim):gt(r,lim))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+
+function sync(){var s=S('top')==='sync',l=S('rip')==='l',q=S('sw')==='q';
+hideF('rl',!s);hideF('qgl',!s);hideF('vsd',!s);hideF('tdt',!s);hideF('vfd',s);
+hideF('l',!l);hideF('di',l);
+hideF('qgs2',!q);hideF('qgd',!q);hideF('vpl',!q);hideF('rgon',!q);hideF('rgoff',!q);hideF('tr',q);hideF('tf',q);}
+function init(){$('top').addEventListener('change',sync);$('rip').addEventListener('change',sync);$('sw').addEventListener('change',sync);sync();}
+function calc(){
+var s=S('top')==='sync',lm=S('rip')==='l',q=S('sw')==='q';
+var vin=P('vin'),vo=P('vout'),io=P('iout'),f=P('fsw'),rh=P('rh'),vd=P('vdrv'),qh=P('qgh'),ch=P('cossh');
+if([vin,vo,io,f,rh,vd,qh,ch].some(isNaN))return err('Заполните числами: Vin, Vout, ток нагрузки, частоту, Rds(on) верхнего ключа, напряжение драйвера, Qg и Coss верхнего ключа.');
+if(vin<=0||vo<=0||io<=0||f<=0)return err('Напряжения, ток нагрузки и частота должны быть больше нуля.');
+if(!(vo<vin))return err('У понижающего преобразователя Vout меньше Vin. Отношение напряжений других схем — на странице коэффициента заполнения.');
+if(rh<=0||vd<=0||qh<=0||ch<=0)return err('Rds(on) верхнего ключа, напряжение драйвера, Qg и Coss должны быть больше нуля.');
+f*=1e3;rh/=1e3;qh*=1e-9;ch*=1e-12;
+var rl=0,ql=0,vsd=0,tdt=0,vf=0;
+if(s){rl=P('rl');ql=P('qgl');vsd=P('vsd');tdt=P('tdt');
+ if([rl,ql,vsd,tdt].some(isNaN))return err('Для синхронной схемы заполните числами Rds(on) и Qg нижнего ключа, прямое напряжение его внутреннего диода и мёртвое время.');
+ if(rl<=0||ql<=0||vsd<=0||tdt<=0)return err('Rds(on) и Qg нижнего ключа, напряжение внутреннего диода и мёртвое время должны быть больше нуля.');
+ rl/=1e3;ql*=1e-9;tdt*=1e-9;}
+else{vf=P('vfd');if(isNaN(vf))return err('Введите прямое напряжение диода.');if(vf<=0)return err('Прямое напряжение диода должно быть больше нуля.');}
+var cl=OPT('cossl'),qrr=OPT('qrr'),dcr=OPT('dcr'),pco=OPT('pcore'),iq=OPT('iq');
+if(cl!==null){if(isNaN(cl))return err('Ёмкость нижнего ключа или диода — число в пикофарадах. Если её нет, оставьте поле пустым.');if(cl<=0)return err('Ёмкость нижнего ключа или диода должна быть больше нуля.');cl*=1e-12;}
+if(qrr!==null){if(isNaN(qrr))return err('Qrr — число в нанокулонах. Если его нет, оставьте поле пустым.');if(qrr<=0)return err('Qrr должен быть больше нуля.');qrr*=1e-9;}
+if(dcr!==null){if(isNaN(dcr))return err('DCR — число в миллиомах. Если его нет, оставьте поле пустым.');if(dcr<=0)return err('DCR должно быть больше нуля.');dcr/=1e3;}
+if(pco!==null){if(isNaN(pco))return err('Потери в сердечнике — число в ваттах. Если их нет, оставьте поле пустым.');if(pco<0)return err('Потери в сердечнике не могут быть отрицательными.');}
+if(iq!==null){if(isNaN(iq))return err('Ток контроллера — число в миллиамперах. Если его нет, оставьте поле пустым.');if(iq<0)return err('Ток контроллера не может быть отрицательным.');iq*=1e-3;}
+var rd=dcr===null?0:dcr;
+if(!(vo+io*(rh+rd)<vin))return err('Падение на верхнем ключе и DCR не оставляет запаса: Vout + Iout·(Rds(on) + DCR) не меньше Vin — такое Vout при этом токе не получить.');
+var d=s?(vo+io*(rl+rd))/(vin-io*rh+io*rl):(vo+vf+io*rd)/(vin-io*rh+vf),di;
+if(lm){var l=P('l');if(isNaN(l))return err('Введите индуктивность дросселя.');if(l<=0)return err('Индуктивность должна быть больше нуля.');di=(vin-vo)*d/(f*l*1e-6);}
+else{di=P('di');if(isNaN(di))return err('Введите размах тока дросселя.');if(di<0)return err('Размах тока не может быть отрицательным.');}
+var iv=io-di/2,ip=io+di/2;
+if(!(iv>0))return err('Размах тока ΔI = '+fmt(di)+' А не меньше 2·Iout: ток дросселя спадает до нуля, и преобразователь уходит в разрывный режим. Формулы страницы — для непрерывного тока; индуктивность для него подбирает калькулятор дросселя.');
+var ton,toff,ign=NaN,igf=NaN;
+if(q){var qs=P('qgs2'),qd=P('qgd'),vp=P('vpl'),ra=P('rgon'),rb=P('rgoff');
+ if([qs,qd,vp,ra,rb].some(isNaN))return err('Заполните числами Qgs2, Qgd, напряжение плато и сопротивления цепи затвора.');
+ if(qs<0)return err('Qgs2 не может быть отрицательным.');
+ if(qd<=0||ra<=0||rb<=0)return err('Qgd и сопротивления цепи затвора должны быть больше нуля.');
+ if(!(vp>0&&vp<vd))return err('Напряжение плато — больше 0 и меньше напряжения драйвера, иначе ключ не откроется.');
+ if(gt((qs+qd)*1e-9,qh))return err('Qgs2 + Qgd больше полного заряда затвора Qg — проверьте данные паспорта.');
+ ign=(vd-vp)/ra;igf=vp/rb;ton=(qs+qd)*1e-9/ign;toff=(qs+qd)*1e-9/igf;}
+else{ton=P('tr');toff=P('tf');if(isNaN(ton)||isNaN(toff))return err('Введите времена фронтов включения и выключения.');if(ton<=0||toff<=0)return err('Времена фронтов должны быть больше нуля.');ton*=1e-9;toff*=1e-9;}
+var T=1/f;
+if(!(ton+toff<d*T))return err('Фронты включения и выключения вместе ('+si(ton+toff,'с')+') не короче открытого состояния D·T = '+si(d*T,'с')+': ключ не успевает открыться полностью, модель неприменима.');
+if(s&&!(2*tdt<(1-d)*T))return err('Два мёртвых времени ('+si(2*tdt,'с')+') не короче закрытого состояния верхнего ключа (1 − D)·T = '+si((1-d)*T,'с')+'.');
+var i2=io*io+di*di/12,ilr=Math.sqrt(i2),a=[],miss=[];
+var p1=d*i2*rh,psw=0.5*vin*f*(iv*ton+ip*toff),pco2=0.5*(ch+(cl===null?0:cl))*vin*vin*f,prr=qrr===null?0:qrr*vin*f;
+a.push(['проводимость верхнего ключа',p1],['переключение верхнего ключа',psw],['заряд ёмкостей Coss',pco2]);
+if(qrr!==null)a.push(['обратное восстановление',prr]);
+var p2,pdt=0;
+if(s){p2=(1-d)*i2*rl;pdt=2*vsd*io*tdt*f;a.push(['проводимость нижнего ключа',p2],['мёртвое время',pdt]);}
+else{p2=vf*io*(1-d);a.push(['прямое падение диода',p2]);}
+a.push(['заряд затворов',(qh+ql)*vd*f]);
+if(dcr!==null)a.push(['DCR дросселя',i2*dcr]);
+if(pco!==null)a.push(['сердечник дросселя',pco]);
+if(iq!==null)a.push(['собственное потребление контроллера',vin*iq]);
+if(cl===null)miss.push('ёмкость нижнего ключа или диода');
+if(qrr===null)miss.push('обратное восстановление');
+if(dcr===null)miss.push('DCR дросселя');
+if(pco===null)miss.push('потери в сердечнике');
+if(iq===null)miss.push('ток контроллера');
+var pt=0,k=0;for(var j=0;j<a.length;j++){pt+=a[j][1];if(a[j][1]>a[k][1])k=j;}
+var po=vo*io,eta=po/(po+pt);
+if(![d,di,pt,eta].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var h=row('Схема',s?'синхронная, два MOSFET':'верхний MOSFET и диод')+
+ row('Коэффициент заполнения D с учётом падений',fmt(d,4)+' (идеальный Vout / Vin = '+fmt(vo/vin,4)+')')+
+ row('Размах тока дросселя ΔI',si(di,'А')+(lm?' — по индуктивности':' — задан'))+
+ row('Ток дросселя: впадина / пик',si(iv,'А')+' / '+si(ip,'А'))+
+ row('Действующий ток дросселя',si(ilr,'А'))+
+ row('Действующий ток верхнего ключа',si(Math.sqrt(d*i2),'А'))+
+ (s?row('Действующий ток нижнего ключа',si(Math.sqrt((1-d)*i2),'А')):row('Средний ток диода',si(io*(1-d),'А')));
+if(q)h+=row('Ток затвора на плато: включение / выключение',si(ign,'А')+' / '+si(igf,'А'));
+h+=row('Фронты верхнего ключа: включение / выключение',si(ton,'с')+' / '+si(toff,'с'));
+for(var m=0;m<a.length;m++)h+=row('Потери: '+a[m][0],si(a[m][1],'Вт')+' — '+fmt(100*a[m][1]/pt,3)+' %');
+if(miss.length)h+=row('Не заданы и не учтены',miss.join(', '));
+h+=row('Сумма потерь',si(pt,'Вт'))+row('Выходная мощность Vout·Iout',si(po,'Вт'))+row('Входная мощность',si(po+pt,'Вт'))+row('КПД',fmt(100*eta,4)+' %')+
+ row('Верхний ключ — для расчёта нагрева','Iд = '+si(Math.sqrt(d*i2),'А')+', потери, не зависящие от Rds(on), — '+si(psw+pco2+prr,'Вт'))+
+ (s?row('Нижний ключ — для расчёта нагрева','Iд = '+si(Math.sqrt((1-d)*i2),'А')+', мёртвое время — '+si(pdt,'Вт')):row('Диод — потери проводимости',si(p2,'Вт')));
+var st='Оценка: КПД ≈ '+fmt(100*eta,4)+' %, главная статья потерь — '+a[k][0]+' ('+fmt(100*a[k][1]/pt,3)+' % потерь)'+(miss.length?'; не заданы и не учтены: '+miss.join(', '):'');
+var n='Переключение посчитано линейной аппроксимацией фронтов: за фронт на ключе одновременно напряжение Vin и ток, энергия ½·Vin·I·t (Infineon, ROHM); ключ включается при токе впадины, выключается при пиковом. ';
+if(q)n+='Время фронта — заряд Qgs2 + Qgd, делённый на ток затвора на плато (TI SLVAEQ9); на самом деле ток затвора за время Qgs2 немного больше, чем на плато, и время чуть меньше. ';
+n+=s?'Нижний ключ переключается при почти нулевом напряжении — ток переходит между каналом и внутренним диодом, — поэтому его потери переключения не учитываются (TI). ':'Ёмкость и заряд диода заряжаются при включении верхнего ключа — эти потери входят в статьи Coss и обратного восстановления. ';
+n+='Rds(on) берётся как введено, при рабочей температуре; нагрев ключа с ростом Rds(on) считает страница нагрева MOSFET. Coss зависит от напряжения, поэтому статья Coss — оценка. Не учтены индуктивность общего истока (TI SLPA009), звон и снабберы, ESR конденсаторов, сопротивление дорожек, питание драйвера от Vin через линейный стабилизатор (тогда затворы берут Qg·Vin·fsw).';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
