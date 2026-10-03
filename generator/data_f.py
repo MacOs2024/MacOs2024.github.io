@@ -1202,7 +1202,7 @@ faqs=[
  ("Когда лучше взять полевой транзистор?",
   "При токах от нескольких сотен миллиампер: логическому MOSFET ток затвора в статике не нужен вовсе, а сопротивление открытого канала в единицы миллиом даёт потери на порядок меньше. Для управления от 3,3 В берите транзистор с пометкой logic level."),
 ],
-related=["rezistor-svetodioda","zakon-oma","shim-srednee-napryazhenie"],
+related=["rezistor-svetodioda","zakon-oma","shim-srednee-napryazhenie","rezistor-zatvora-mosfet"],
 ),
 
 dict(
@@ -1254,7 +1254,7 @@ faqs=[
  ("Как влияет частота на габариты?",
   "Чем выше частота, тем меньше требуется индуктивность и ёмкость, а значит компактнее дроссель и конденсаторы. Платой становятся динамические потери на переключение, которые растут пропорционально частоте."),
 ],
-related=["drossel-impulsnogo","linear-regulator-loss","shim-srednee-napryazhenie"],
+related=["drossel-impulsnogo","linear-regulator-loss","shim-srednee-napryazhenie","poteri-buck-preobrazovatelya"],
 ),
 
 dict(
@@ -1648,7 +1648,7 @@ faqs=[
  ("Можно ли ставить электролитический конденсатор в кроссовер?",
   "Обычный полярный — нет, через него идёт переменный сигнал обеих полярностей. Применяют неполярные плёночные или специальные биполярные электролитические конденсаторы для акустики."),
 ],
-related=["rc-filtr","rezonans-lc","impedans-rlc"],
+related=["rc-filtr","rezonans-lc","impedans-rlc","drosselnyy-filtr-vypryamitelya"],
 ),
 
 ]
