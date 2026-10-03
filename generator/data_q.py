@@ -40,7 +40,9 @@ ACCESSED = "02.10.2026"
 # цифр вывода заведомо различают числа за пределами допуска. Без допуска
 # порог вроде 1,91·0,9 = 1,7189999999999999 «обгонялся» округлённым
 # 1,719 на один ULP, и превышение 1,7191 > 1,719 показывалось как
-# «1,719 больше 1,719» (найдено тестом партии №5). OPT: необязательное поле —
+# «1,719 больше 1,719» (найдено тестом партии №5). Цифры добавляются и тогда,
+# когда число и порог округляются до одной записи: иначе вышло бы «4,857 ниже
+# 4,857» (второй отзыв к PR #25). OPT: необязательное поле —
 # пустое даёт null, нечисловое — NaN (строгий ввод сохраняется). pl()/yr() —
 # форма слова «год» по показанной строке числа.
 Q_JS = r'''
@@ -48,7 +50,7 @@ function gt(a,b){return a>b+Math.abs(b)*1e-9;}
 function lt(a,b){return a<b-Math.abs(b)*1e-9;}
 function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
 function le(a,b){return a<=b+Math.abs(b)*1e-9;}
-function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if(x<lim?lt(r,lim):gt(r,lim))return fmt(x,p);}return fmt(x,12);}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
 function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
 function pl(s,one,few,many,frac){if(/[,·]/.test(s))return frac;var n=Math.abs(parseInt(s,10))%100,n1=n%10;if(n>10&&n<20)return many;if(n1===1)return one;if(n1>=2&&n1<=4)return few;return many;}
 function yr(s){return s+' '+pl(s,'год','года','лет','года');}
@@ -89,7 +91,7 @@ OPENSTAX_L = dict(
     organization="OpenStax, Rice University",
     edition="онлайн-редакция 2016",
     accessed=ACCESSED,
-    url="https://openstax.org/books/university-physics-volume-2/pages/14-3-self-inductance-and-inductors",
+    url="https://openstax.org/books/university-physics-volume-2/pages/14-2-self-inductance-and-inductors",
 )
 
 
@@ -742,7 +744,7 @@ sources=[
       sections=["Bs = 490 мТл при 25 °C и 390 мТл при 100 °C (1200 А/м, 10 кГц)"],
       accessed=ACCESSED,
       url="https://www.tdk-electronics.tdk.com/download/528882/990c299b916e9f3eb7e44ad563b7f0b9/pdf-n87.pdf"),
- dict(OPENSTAX_L, sections=["14.3 Self-Inductance and Inductors — L = N·Φ/I"]),
+ dict(OPENSTAX_L, sections=["14.2 Self-Inductance and Inductors — L = N·Φ/I"]),
  dict(title="IEC 62368-1. Audio/video, information and communication technology equipment — Part 1: Safety requirements",
       organization="IEC",
       edition="Ed. 4.0, 2023; видно в выдаче",
