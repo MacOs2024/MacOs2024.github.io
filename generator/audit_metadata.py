@@ -196,10 +196,10 @@ SCHNEIDER_POWER = source(
     "https://www.electrical-installation.org/enwiki/Power_and_reactive_energy",
 )
 NFPA_STANDALONE_INVERTER = dict(
-    title="NFPA 70, National Electrical Code, 710.12 Stand-Alone Inverter Input Circuit Current",
-    organization="National Fire Protection Association; формулировка видна в выдаче поиска (UpCodes, учебные материалы по NEC), сам документ не открывался",
-    edition="NFPA 70-2020 и 70-2023, 710.12; в NFPA 70-2017 то же требование — 690.8(A)(4)",
-    sections=["710.12: maximum current is the stand-alone continuous inverter input current rating when the inverter is producing rated power at the lowest input voltage"],
+    title="NFPA 70, National Electrical Code — входной ток автономного инвертора (только для сравнения)",
+    organization="National Fire Protection Association; формулировка видна только в выдаче поиска (UpCodes, учебные материалы по NEC), текст NFPA 70 не открывался",
+    edition="не подтверждена: в выдаче поиска — статья 710.12; номер статьи и редакцию по самому NFPA 70 не проверяли",
+    sections=["только для сравнения, расчёт страницы на это не опирается: в выдаче — наибольший входной ток автономного инвертора при номинальной мощности инвертора и наименьшем входном напряжении"],
     accessed="01.10.2026",
     url="https://up.codes/s/stand-alone-inverter-input-circuit-current",
 )
@@ -479,7 +479,7 @@ add(
     "estimate", [VICTRON_WIRING, NFPA_STANDALONE_INVERTER],
     [
         "Результат не проверяет паспортный ток батареи, BMS, предохранитель, допустимый нагрев кабеля, качество соединений и старение.",
-        "Ток считается по введённой мощности нагрузки; NEC 710.12 берёт номинальную мощность инвертора — если инвертор мощнее нагрузки, пересчитайте с его мощностью.",
+        "Ток считается по введённой мощности нагрузки из баланса мощности P = КПД·U·I; кабель и предохранитель на сам инвертор считают по его номинальной мощности — введите её вместо мощности нагрузки.",
         "Без наименьшего входного напряжения инвертора ток и сечение считаются при номинальном напряжении и занижены.",
     ],
 )
