@@ -95,7 +95,7 @@ const infoPages = ["privacy.html", "about.html"];
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
   .sort();
-check(htmlFiles.length === 150, `Ожидалось 150 HTML-файлов, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 148, `Ожидалось 148 HTML-файлов, найдено ${htmlFiles.length}`);
 
 // Совет закоротить заряженный конденсатор перемычкой, отвёрткой или
 // закороткой опасен: при запасённой энергии это даёт дугу и разбрызгивание
@@ -1123,7 +1123,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 150, `В sitemap должно быть 150 URL (корень + about + 148 калькуляторов), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 148, `В sitemap должно быть 148 URL (корень + about + 146 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 
@@ -3277,77 +3277,7 @@ await invalid("drosselnyy-filtr-vypryamitelya.html", { rdc: "x" }, "Сопрот
 await invalid("drosselnyy-filtr-vypryamitelya.html", { rdc: "-1" }, "Сопротивление не может быть отрицательным");
 await invalid("drosselnyy-filtr-vypryamitelya.html", { us: "1", vf: "1" }, "Падения на диодах и сопротивлении не меньше");
 
-// --- 3. srok-sluzhby-elektrolita: Nippon Chemi-Con, Nichicon, Rubycon, CDE ---
-// Эталон 1 (по умолчанию, Nichicon UVZ1V472MHD): допустимо 1,91·0,9 = 1,719 А; ΔT = 5·(1,585/1,719)² = 4,251 °C, сердцевина 54,25 °C;
-// L = 2000·2^5,5·2^((5 − 4,251)/K): K = 10 → 95 330 ч (10,88 года), K = 5 → 100 400 ч (11,46 года); запас (35 − 18,67)/35 = 46,66 %.
-// Эквивалентная температура (другой путь): Tэкв = 50 + (4,251 − 5)·10/K, L = 2000/2^((Tэкв − 105)/10) — то же.
-await calculateWithout("srok-sluzhby-elektrolita.html", {}, ["Допустимый ток на вашей частоте при T0: Iном·Kf1,719 А",
-  "Допустимый ток при температуре среды1,719 А — поправка по температуре не задана, взят ток при T0 (с запасом)", "Ток пульсаций и допустимый1,585 А ≤ 1,719 А",
-  "Нагрев сердцевины ΔT = ΔT0·(I / (Iном·Kf))²4,251 °C, температура сердцевины 54,25 °C",
-  "Срок службы L0·2^((T0 − Tx)/10)·2^((ΔT0 − ΔT)/K), K от 5 до 10, Tx = Taот 95330 ч (10,88 года) до 100400 ч (11,46 года)",
-  "Пиковое напряжение и номинальное18,67 В ≤ 35 В — запас 46,66 %", "СтатусОценка: срок службы от 95330 ч (10,88 года) до 100400 ч (11,46 года) при 50 °C и токе пульсаций 1,585 А",
-  "K не задан — показан диапазон", "приоритет"], ["больше допустимого", "Недостаточно"]);
-await calculate("srok-sluzhby-elektrolita.html", { kexp: "5" }, ["K = 5, Tx = Taоколо 100400 ч (11,46 года)", "СтатусОценка: срок службы около 100400 ч (11,46 года)"]);
-await calculate("srok-sluzhby-elektrolita.html", { kexp: "10" }, ["K = 10, Tx = Taоколо 95330 ч (10,88 года)"]);
-// Срок задан без тока пульсаций: ΔTреф = 0 → L = 2000·2^5,5·2^(−4,251/K): K = 5 → 50 210 ч (5,731 года), K = 10 → 67 410 ч (7,695 года).
-await calculate("srok-sluzhby-elektrolita.html", { lmode: "volt" }, ["2^((0 − ΔT)/K), K от 5 до 10, Tx = Taот 50210 ч (5,731 года) до 67410 ч (7,695 года)"]);
-// Проверка партии (P1): Nippon Chemi-Con — Tx в формуле срока не ниже 40 °C. Пример проверяющего: T0 = 85 °C, L0 = 1000 ч,
-// Ta = 25 °C, 0,5 А, ΔT0 = 10 °C, K = 10: ΔT = 10·(0,5/1,719)² = 0,846 °C; 1000·2^4,5·2^((10 − 0,846)/10) = 42 680 ч, а не 120 700 ч.
-await calculate("srok-sluzhby-elektrolita.html", { t0: "85", l0: "1000", ta: "25", i: "0,5", dt0: "10", kexp: "10" }, ["K = 10, Tx = 40 °C вместо 25 °Cоколо 42680 ч (4,872 года)",
-  "СтатусОценка: срок службы около 42680 ч (4,872 года) при 25 °C (в формуле — 40 °C, по правилу Nippon Chemi-Con)"]);
-// Второй пример: T0 = 85, L0 = 2000, Ta = 20, 0,5 А, K = 5 → 2000·2^4,5·2^((5 − 0,423)/5) = 85 350 ч (9,744 года), а не «около 15 лет».
-await calculate("srok-sluzhby-elektrolita.html", { t0: "85", ta: "20", i: "0,5", kexp: "5" }, ["около 85350 ч (9,744 года)"]);
-// Граница: 39,9 °C считается как 40 °C — по формуле 190 700 ч, то есть «около 15 лет»; при 40 °C подпись Tx = Ta.
-await calculate("srok-sluzhby-elektrolita.html", { ta: "39,9", kexp: "10" }, ["K = 10, Tx = 40 °C вместо 39,9 °Cоколо 15 лет"], "boundary");
-await calculate("srok-sluzhby-elektrolita.html", { ta: "40", kexp: "10" }, ["K = 10, Tx = Taоколо 15 лет"], "boundary");
-// T0 входит в расчёт (мутация проверяющего M07): T0 = 85 °C при 50 °C — от 23 830 ч (K = 10) до 25 100 ч (K = 5).
-await calculate("srok-sluzhby-elektrolita.html", { t0: "85" }, ["от 23830 ч (2,721 года) до 25100 ч (2,866 года)"]);
-// Поправка по температуре расширяет только допустимый ток (1,719·1,4 = 2,407 А), нагрев — от 1,719 А: ΔT = 5·(2,3/1,719)² = 8,951 °C;
-// L: K = 5 → 52 340 ч (5,975 года), K = 10 → 68 830 ч (7,857 года). Двойного учёта поправки нет.
-await calculate("srok-sluzhby-elektrolita.html", { kt: "1,4", i: "2,3" }, ["Допустимый ток при температуре среды Iном·Kf·KT2,407 А", "2,3 А ≤ 2,407 А",
-  "8,951 °C, температура сердцевины 58,95 °C", "от 52340 ч (5,975 года) до 68830 ч (7,857 года)"]);
-// Превышение тока — однозначный вывод, срок не оценивается.
-await calculateWithout("srok-sluzhby-elektrolita.html", { i: "2,6" }, ["Ток пульсаций и допустимый2,6 А > 1,719 А", "11,44 °C",
-  "не оценивается: ток пульсаций больше допустимого по паспорту", "СтатусТок пульсаций 2,6 А больше допустимого по паспорту 1,719 А"], ["Оценка", " ч ("]);
-// Граница тока: 1,719 А ровно — не больше, нагрев = ΔT0, срок не зависит от K: 2000·2^5,5 = 90 510 ч (10,33 года); 1,7191 А — превышение.
-await calculate("srok-sluzhby-elektrolita.html", { i: "1,719" }, ["1,719 А ≤ 1,719 А", "около 90510 ч (10,33 года)"], "boundary");
-await calculate("srok-sluzhby-elektrolita.html", { i: "1,7191" }, ["СтатусТок пульсаций 1,7191 А больше допустимого по паспорту 1,719 А"], "boundary");
-// Граница температуры: 105 °C — ещё в паспорте: L = 2000·2^0·2^(0,749/K) — от 2107 ч (0,2405 года) до 2219 ч (0,2533 года); 110 °C — вне паспорта.
-await calculate("srok-sluzhby-elektrolita.html", { ta: "105" }, ["от 2107 ч (0,2405 года) до 2219 ч (0,2533 года)"], "boundary");
-await calculateWithout("srok-sluzhby-elektrolita.html", { ta: "110" }, ["не оценивается: температура среды выше T0", "СтатусТемпература среды 110 °C выше верхней границы категории 105 °C — режим вне паспорта"], [" ч ("], "boundary");
-// Предел 15 лет (Rubycon, Chemi-Con): при 20 °C по формуле 762 700…803 300 ч — принимается 15 лет; при 45,7 °C — 128 400 ч (14,66 года)
-// при K = 10 и 135 300 ч (больше 131 400 ч) при K = 5 — верхняя граница ограничена.
-await calculate("srok-sluzhby-elektrolita.html", { ta: "20" }, ["около 15 лет — по формуле больше, но изготовители ограничивают оценку 15 годами"], "boundary");
-await calculate("srok-sluzhby-elektrolita.html", { ta: "45,7" }, ["от 128400 ч (14,66 года) до 15 лет — по формуле больше, изготовители ограничивают оценку 15 годами"], "boundary");
-// Напряжение: 36 В > 35 В — однозначно и первым, даже при превышении тока; 35 В = 35 В — запас 0 %.
-await calculateWithout("srok-sluzhby-elektrolita.html", { vpk: "36", i: "2,6" }, ["36 В > 35 В", "СтатусПиковое напряжение 36 В больше номинального 35 В"], ["СтатусТок пульсаций"]);
-await calculate("srok-sluzhby-elektrolita.html", { vpk: "35" }, ["35 В ≤ 35 В — запас 0 %"], "boundary");
-// Нет данных по напряжению — «Недостаточно данных», а не молчаливое «выполняется»; срок при этом показан.
-await calculateWithout("srok-sluzhby-elektrolita.html", { ur: "" }, ["не проверено — не задано номинальное напряжение", "СтатусНедостаточно данных: запас по напряжению не проверен — не задано номинальное напряжение", "от 95330 ч"], ["СтатусОценка"]);
-await calculate("srok-sluzhby-elektrolita.html", { vpk: "" }, ["СтатусНедостаточно данных: запас по напряжению не проверен — не задано пиковое напряжение"]);
-await calculate("srok-sluzhby-elektrolita.html", { ur: "", vpk: "" }, ["не заданы номинальное и пиковое напряжение"]);
-// Температура выше паспорта важнее превышения тока.
-await calculate("srok-sluzhby-elektrolita.html", { ta: "110", i: "2,6" }, ["СтатусТемпература среды 110 °C выше верхней границы категории"]);
-await invalid("srok-sluzhby-elektrolita.html", { i: "abc" }, "Заполните числами");
-await invalid("srok-sluzhby-elektrolita.html", { i: "0" }, "Ток пульсаций должен быть больше нуля");
-await invalid("srok-sluzhby-elektrolita.html", { ir: "0" }, "Номинальный ток пульсаций должен быть больше нуля");
-await invalid("srok-sluzhby-elektrolita.html", { kf: "0" }, "Коэффициент частоты — больше 0 и не больше 5");
-await invalid("srok-sluzhby-elektrolita.html", { kf: "6" }, "Коэффициент частоты — больше 0 и не больше 5");
-await invalid("srok-sluzhby-elektrolita.html", { t0: "30" }, "Верхняя граница категории температур — от 40 до 150 °C");
-await invalid("srok-sluzhby-elektrolita.html", { ta: "-60" }, "Температура среды — от −55 до 150 °C");
-await invalid("srok-sluzhby-elektrolita.html", { l0: "0" }, "Паспортный срок службы должен быть больше нуля");
-await invalid("srok-sluzhby-elektrolita.html", { dt0: "0" }, "Нагрев сердцевины при номинальном токе — больше 0 и не больше 30 °C");
-await invalid("srok-sluzhby-elektrolita.html", { dt0: "31" }, "Нагрев сердцевины при номинальном токе — больше 0 и не больше 30 °C");
-await invalid("srok-sluzhby-elektrolita.html", { kt: "x" }, "Поправка по температуре — число");
-await invalid("srok-sluzhby-elektrolita.html", { kt: "0" }, "Поправка по температуре — больше 0 и не больше 5");
-await invalid("srok-sluzhby-elektrolita.html", { kexp: "4" }, "Показатель K задаётся от 5 до 10");
-await invalid("srok-sluzhby-elektrolita.html", { kexp: "11" }, "Показатель K задаётся от 5 до 10");
-await invalid("srok-sluzhby-elektrolita.html", { kexp: "x" }, "Показатель K — число");
-await invalid("srok-sluzhby-elektrolita.html", { ur: "x" }, "Номинальное напряжение — число в вольтах");
-await invalid("srok-sluzhby-elektrolita.html", { ur: "0" }, "Номинальное напряжение должно быть больше нуля");
-await invalid("srok-sluzhby-elektrolita.html", { vpk: "-1" }, "Пиковое напряжение должно быть больше нуля");
-
-// --- 4. transformator-flyback: Fairchild AN-4137, TI SLUP127, паспорта TDK E 25/13/7 и N87 ---
+// --- 3. transformator-flyback: Fairchild AN-4137, TI SLUP127, паспорта TDK E 25/13/7 и N87 ---
 // Эталон 1 (по умолчанию): Pвх = 24/0,85 = 28,24 Вт; n = 75/12,5 = 6; D = 75/175 = 0,4286; Lp = (42,857)²/(2·28,24·65 000) = 500,4 мкГн;
 // проверка энергией: ½·500,4 мкГн·1,3176²·65 000 = 28,24 Вт. Iпик = 2·28,24/42,857 = 1,318 А; IRMS = 1,318·√(0,4286/3) = 0,498 А;
 // Np ≥ 500,4e-6·1,3176/(0,3·52,5e-6) = 41,86 → Ns = ⌈41,86/6⌉ = 7, Np = 42; B = 6,593e-4/(42·52,5e-6) = 0,299 Тл;
@@ -3423,7 +3353,7 @@ await invalid("transformator-flyback.html", { ilim: "x" }, "Порог огра�
 // ссылки, безопасность сетевых схем, атрибуция источников.
 {
   kind = "structural";
-  const batch5 = ["diody-vypryamitelya", "drosselnyy-filtr-vypryamitelya", "srok-sluzhby-elektrolita", "transformator-flyback"];
+  const batch5 = ["diody-vypryamitelya", "drosselnyy-filtr-vypryamitelya", "transformator-flyback"];
   const read = file => fs.readFileSync(path.join(sourceDir, file), "utf8");
   const visible = file => read(file).replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
   const registry = read("ENGINEERING_AUDIT.md");
@@ -3448,15 +3378,6 @@ await invalid("transformator-flyback.html", { ilim: "x" }, "Порог огра�
       `${slug}: совет замкнуть конденсатор накоротко`);
     check(!/под напряжением[^.]{0,40}(измеряйте|работайте|подключайте)/i.test(text), `${slug}: совет работать под напряжением`);
   }
-  // Интеграция партии: страницы двух файлов связаны — трансформатор flyback и RCD-снаббер ссылаются друг на друга
-  // в тексте и в «Смотрите также». Битые ссылки ловит общая проверка каталога выше.
-  for (const [from, to] of [["transformator-flyback", "rcd-snabber-flyback"], ["rcd-snabber-flyback", "transformator-flyback"]]) {
-    const html = read(`${from}.html`);
-    const article = html.match(/<p class="intro">[\s\S]*?<section class="related">/)?.[0] ?? "";
-    const related = html.match(/<section class="related">([\s\S]*?)<\/section>/)?.[1] ?? "";
-    check(article.includes(`href="${to}.html"`), `${from}: в тексте нет ссылки на ${to}`);
-    check(related.includes(`href="${to}.html"`), `${from}: в «Смотрите также» нет ссылки на ${to}`);
-  }
   // Каждый переключатель влияет на расчёт, ненужные поля скрыты.
   const vis = (d, id) => d.getElementById(`f_${id}`)?.style.display !== "none";
   const change = (dom, id, value) => { const el = dom.window.document.getElementById(id); el.value = value; el.dispatchEvent(new dom.window.Event("change", { bubbles: true })); };
@@ -3468,7 +3389,7 @@ await invalid("transformator-flyback.html", { ilim: "x" }, "Порог огра�
   // Пустые необязательные поля не дают «—» вместо числа и не протекают NaN.
   for (const [file, values] of [["diody-vypryamitelya.html", {}], ["diody-vypryamitelya.html", { vrrm: "", ifav: "", ifsm: "", tfsm: "", rw: "0,5" }],
     ["diody-vypryamitelya.html", { rmode: "v", c: "", rw: "0,5" }], ["drosselnyy-filtr-vypryamitelya.html", {}],
-    ["srok-sluzhby-elektrolita.html", { ur: "", vpk: "", kt: "", kexp: "" }], ["transformator-flyback.html", { al: "", vdss: "", ilim: "" }]]) {
+    ["transformator-flyback.html", { al: "", vdss: "", ilim: "" }]]) {
     const dm = await load(file); setValues(dm.window.document, values); dm.window.document.getElementById("go").click();
     const res = dm.window.document.getElementById("res").textContent.replace(/\s+/g, " ");
     check(!/—\s(А|В|мс|Ом|мкГн|мм|Тл|°C|ч|Гц|Вт|%)(?![а-яА-Я])/.test(res) && !/NaN|Infinity|undefined/.test(res),
@@ -3476,9 +3397,8 @@ await invalid("transformator-flyback.html", { ilim: "x" }, "Порог огра�
     dm.window.close();
   }
   // Не дублировать соседние страницы, а ссылаться на них.
-  const links = { "diody-vypryamitelya": ["pulsacii-vypryamitelya", "diode-bridge-loss", "srok-sluzhby-elektrolita"],
+  const links = { "diody-vypryamitelya": ["pulsacii-vypryamitelya", "diode-bridge-loss"],
     "drosselnyy-filtr-vypryamitelya": ["lc-filtr-raschet", "diody-vypryamitelya"],
-    "srok-sluzhby-elektrolita": ["diody-vypryamitelya"],
     "transformator-flyback": ["raschet-transformatora", "toroid-turns-al"] };
   for (const [from, list] of Object.entries(links)) {
     const article = read(`${from}.html`).match(/<p class="intro">[\s\S]*?<section class="related">/)?.[0] ?? "";
@@ -3487,7 +3407,7 @@ await invalid("transformator-flyback.html", { ilim: "x" }, "Порог огра�
   // Входящие ссылки на новые страницы из «Смотрите также» существующих.
   const inbound = [["pulsacii-vypryamitelya", "diody-vypryamitelya"], ["pulsacii-vypryamitelya", "drosselnyy-filtr-vypryamitelya"],
     ["diode-bridge-loss", "diody-vypryamitelya"], ["lc-filtr-raschet", "drosselnyy-filtr-vypryamitelya"],
-    ["discharge-resistor-capacitor", "srok-sluzhby-elektrolita"], ["raschet-transformatora", "transformator-flyback"],
+    ["raschet-transformatora", "transformator-flyback"],
     ["toroid-turns-al", "transformator-flyback"]];
   for (const [from, to] of inbound) {
     const block = read(`${from}.html`).match(/<section class="related">([\s\S]*?)<\/section>/)?.[1] ?? "";
@@ -3500,9 +3420,6 @@ await invalid("transformator-flyback.html", { ilim: "x" }, "Порог огра�
   const dr = visible("drosselnyy-filtr-vypryamitelya.html");
   check(/Radiotron/.test(dr) && /ARRL/.test(dr) && /QST/.test(dr) && /не ослабляет пульсации/.test(dr) && /растёт к пиковому/.test(dr),
     "drosselnyy-filtr-vypryamitelya: нет атрибуции критической индуктивности или проверки резонанса");
-  const sr = visible("srok-sluzhby-elektrolita.html");
-  check(/Nippon Chemi-Con/.test(sr) && /Cornell Dubilier/.test(sr) && /Nichicon/.test(sr) && /Rubycon/.test(sr) && /имеет приоритет/.test(sr) && /15 лет/.test(sr),
-    "srok-sluzhby-elektrolita: формулы срока не приписаны изготовителям или нет оговорки о приоритете паспорта серии");
   const fl = visible("transformator-flyback.html");
   check(/AN-4137/.test(fl) && /выпучивани/.test(fl) && /SLUP127/.test(fl) && /индуктивности рассеяния/.test(fl) && /опасный заряд/.test(fl),
     "transformator-flyback: нет атрибуции AN-4137, оговорки о выпучивании, о выбросе или о заряде входного конденсатора");
@@ -3596,51 +3513,7 @@ await invalid("poteri-buck-preobrazovatelya.html", { rgon: "0" }, "Qgd и соп
 await invalid("poteri-buck-preobrazovatelya.html", { sw: "t", tr: "0" }, "Времена фронтов должны быть больше нуля");
 await invalid("poteri-buck-preobrazovatelya.html", { sw: "t", tf: "" }, "Введите времена фронтов");
 
-// --- 2. rcd-snabber-flyback: Fairchild AN-4147 (формулы — в её публикации на EDN), ADI DS32, TI (Kollman) ---
-// Эталон 1 (по умолчанию): ts = 10 мкГн·1,2 А/(200 − 100) В = 120 нс; энергия ½·10 мкГн·1,2² = 7,2 мкДж;
-// P = 7,2 мкДж·65 кГц·200/100 = 0,936 Вт, из них сверх энергии рассеяния 0,468 Вт; R = 200²/0,936 = 42,74 кОм
-// (то же по ADI DS32: 200·100/(65 кГц·7,2 мкДж)); ΔV = 10 % = 20 В, C = 200/(20·42,74 кОм·65 кГц) = 3,6 нФ;
-// Vds = 375 + 200 + 10 = 585 В ≤ 0,8·800 = 640 В — «Оценка».
-await calculate("rcd-snabber-flyback.html", {}, ["Отношение Vsn / Vor2 — в диапазоне 2–2,5 из AN-4147", "Время спада тока рассеяния ts = Llk·Ipk / (Vsn − Vor)120 нс", "Энергия рассеяния за период ½·Llk·Ipk²7,2 мкДж", "Мощность снаббера P = ½·Llk·Ipk²·fsw·Vsn / (Vsn − Vor)936 мВт", "Из неё сверх энергии рассеяния — отнято у выхода468 мВт", "Резистор Rsn = Vsn² / P42,74 кОм, мощность не меньше 936 мВт", "Конденсатор Csn = Vsn / (ΔV·Rsn·fsw)3,6 нФ при пульсациях ΔV = 20 В", "Наибольшее напряжение на конденсаторе Vsn + ΔV/2210 В", "Наибольшее напряжение на ключе Vin max + Vsn + ΔV/2585 В", "СтатусОценка: расчётное наибольшее напряжение на ключе 585 В не больше 80 % VDSS = 640 В"]);
-// Эталон 2: Vor = 6·(12 + 0,7) = 76,2 В, Vsn = 150 В (1,969 Vor): P = ½·5 мкГн·2²·100 кГц·150/73,8 = 2,033 Вт;
-// R = 150²/2,033 = 11,07 кОм; ΔV = 6 % = 9 В; Vds = 375 + 150 + 4,5 = 529,5 В > 0,8·650 = 520 В — запас меньше заданного.
-await calculate("rcd-snabber-flyback.html", { llk: "5", ipk: "2", fsw: "100", vm: "n", n: "6", vo: "12", vf: "0,7", vsn: "150", rip: "6", vdss: "650" }, ["Отражённое напряжение Vor = n·(Vo + Vf)76,2 В", "Отношение Vsn / Vor1,969 — ниже диапазона 2–2,5 из AN-4147: потери снаббера растут", "Время спада тока рассеяния ts = Llk·Ipk / (Vsn − Vor)135,5 нс", "Энергия рассеяния за период ½·Llk·Ipk²10 мкДж", "Мощность снаббера P = ½·Llk·Ipk²·fsw·Vsn / (Vsn − Vor)2,033 Вт", "Из неё сверх энергии рассеяния — отнято у выхода1,033 Вт", "Резистор Rsn = Vsn² / P11,07 кОм, мощность не меньше 2,033 Вт", "Конденсатор Csn = Vsn / (ΔV·Rsn·fsw)15,06 нФ при пульсациях ΔV = 9 В", "Наибольшее напряжение на конденсаторе Vsn + ΔV/2154,5 В", "Наибольшее напряжение на ключе Vin max + Vsn + ΔV/2529,5 В", "СтатусЗапас по напряжению меньше заданного: расчётное напряжение на ключе 529,5 В — больше 80 % VDSS = 520 В"]);
-// Эталон 3 (TI, Kollman): Vsn/Vor = 1,5 — множитель 1,5/0,5 = 3, P = 3·7,2 мкДж·65 кГц = 1,404 Вт.
-await calculate("rcd-snabber-flyback.html", { vsn: "150" }, ["Отношение Vsn / Vor1,5 — ниже диапазона 2–2,5 из AN-4147: потери снаббера растут", "Время спада тока рассеяния ts = Llk·Ipk / (Vsn − Vor)240 нс", "Энергия рассеяния за период ½·Llk·Ipk²7,2 мкДж", "Мощность снаббера P = ½·Llk·Ipk²·fsw·Vsn / (Vsn − Vor)1,404 Вт", "Из неё сверх энергии рассеяния — отнято у выхода936 мВт", "Резистор Rsn = Vsn² / P16,03 кОм, мощность не меньше 1,404 Вт", "Конденсатор Csn = Vsn / (ΔV·Rsn·fsw)9,6 нФ при пульсациях ΔV = 15 В", "Наибольшее напряжение на конденсаторе Vsn + ΔV/2157,5 В", "Наибольшее напряжение на ключе Vin max + Vsn + ΔV/2532,5 В", "СтатусОценка: расчётное наибольшее напряжение на ключе 532,5 В не больше 80 % VDSS = 640 В"]);
-// Однозначное превышение по введённым данным — первым; без VDSS — «Недостаточно данных», не «Оценка».
-await calculateWithout("rcd-snabber-flyback.html", { vdss: "550" }, ["Отношение Vsn / Vor2 — в диапазоне 2–2,5 из AN-4147", "Время спада тока рассеяния ts = Llk·Ipk / (Vsn − Vor)120 нс", "Энергия рассеяния за период ½·Llk·Ipk²7,2 мкДж", "Мощность снаббера P = ½·Llk·Ipk²·fsw·Vsn / (Vsn − Vor)936 мВт", "Из неё сверх энергии рассеяния — отнято у выхода468 мВт", "Резистор Rsn = Vsn² / P42,74 кОм, мощность не меньше 936 мВт", "Конденсатор Csn = Vsn / (ΔV·Rsn·fsw)3,6 нФ при пульсациях ΔV = 20 В", "Наибольшее напряжение на конденсаторе Vsn + ΔV/2210 В", "Наибольшее напряжение на ключе Vin max + Vsn + ΔV/2585 В", "СтатусРасчётное напряжение на ключе 585 В больше VDSS 550 В"], ["Оценка"]);
-await calculateWithout("rcd-snabber-flyback.html", { vdss: "" }, ["Отношение Vsn / Vor2 — в диапазоне 2–2,5 из AN-4147", "Время спада тока рассеяния ts = Llk·Ipk / (Vsn − Vor)120 нс", "Энергия рассеяния за период ½·Llk·Ipk²7,2 мкДж", "Мощность снаббера P = ½·Llk·Ipk²·fsw·Vsn / (Vsn − Vor)936 мВт", "Из неё сверх энергии рассеяния — отнято у выхода468 мВт", "Резистор Rsn = Vsn² / P42,74 кОм, мощность не меньше 936 мВт", "Конденсатор Csn = Vsn / (ΔV·Rsn·fsw)3,6 нФ при пульсациях ΔV = 20 В", "Наибольшее напряжение на конденсаторе Vsn + ΔV/2210 В", "Наибольшее напряжение на ключе Vin max + Vsn + ΔV/2585 В", "СтатусНедостаточно данных: VDSS ключа не задано — расчётное наибольшее напряжение на ключе 585 В не с чем сравнить"], ["Оценка"]);
-// Границы: 585 В ровно при 80 % от 731,25 В — «Оценка»; от 731,24 В — уже меньше запаса, у порога 584,99 В, а не 585.
-// Vds = VDSS ровно — не «больше VDSS»; 584,99 В — больше. Отношение Vsn/Vor у границ 2 и 2,5 — без округления через порог.
-// Vsn = 100,9 В: ts = 1,2·10/0,9 = 13,33 мкс меньше периода 15,38 мкс; 100,7 В — ts больше периода; Vsn = Vor — ошибка.
-await calculate("rcd-snabber-flyback.html", { vdss: "731,25" }, ["СтатусОценка: расчётное наибольшее напряжение на ключе 585 В не больше 80 % VDSS = 585 В"], "boundary");
-await calculate("rcd-snabber-flyback.html", { vdss: "731,24" }, ["СтатусЗапас по напряжению меньше заданного: расчётное напряжение на ключе 585 В — больше 80 % VDSS = 584,99 В"], "boundary");
-await calculateWithout("rcd-snabber-flyback.html", { vdss: "585" }, ["СтатусЗапас по напряжению меньше заданного: расчётное напряжение на ключе 585 В — больше 80 % VDSS = 468 В"], ["больше VDSS"], "boundary");
-await calculate("rcd-snabber-flyback.html", { vdss: "584,99" }, ["СтатусРасчётное напряжение на ключе 585 В больше VDSS 584,99 В"], "boundary");
-await calculate("rcd-snabber-flyback.html", { vsn: "199,9" }, ["Отношение Vsn / Vor1,999 — ниже диапазона 2–2,5 из AN-4147: потери снаббера растут"], "boundary");
-await calculate("rcd-snabber-flyback.html", { vsn: "250" }, ["Отношение Vsn / Vor2,5 — в диапазоне 2–2,5 из AN-4147"], "boundary");
-await calculate("rcd-snabber-flyback.html", { vsn: "250,1" }, ["Отношение Vsn / Vor2,501 — выше диапазона 2–2,5 из AN-4147: выше напряжение на ключе"], "boundary");
-// Vsn = 100,9 В при Vin min = 375 В: (1 − D)·T = 375/475/65 кГц = 12,15 мкс, ts = 12/0,9 = 13,33 мкс — уже не укладывается.
-await calculateWithout("rcd-snabber-flyback.html", { vsn: "100,9", vinmin: "375" }, ["Ток индуктивности рассеяния спадал бы 13,33 мкс — не меньше (1 − D)·T = 12,15 мкс"], ["Статус"], "boundary");
-await calculateWithout("rcd-snabber-flyback.html", { vsn: "100" }, ["Напряжение клампа Vsn = 100 В не выше отражённого Vor = 100 В"], ["Статус"], "boundary");
-await calculate("rcd-snabber-flyback.html", { rip: "20" }, ["при пульсациях ΔV = 40 В"], "boundary");
-await calculate("rcd-snabber-flyback.html", { kv: "100" }, ["СтатусОценка: расчётное наибольшее напряжение на ключе 585 В не больше 100 % VDSS = 800 В"], "boundary");
-await invalid("rcd-snabber-flyback.html", { vsn: "90" }, "не выше отражённого Vor");
-await invalid("rcd-snabber-flyback.html", { vsn: "90" }, "энергия трансформатора уходит в резистор клампа вместо выхода");
-await invalid("rcd-snabber-flyback.html", { llk: "10 мкГн" }, "Заполните числами индуктивность рассеяния");
-await invalid("rcd-snabber-flyback.html", { ipk: "0" }, "Индуктивности, ток, частота и напряжения должны быть больше нуля");
-await invalid("rcd-snabber-flyback.html", { rip: "0" }, "Пульсации на конденсаторе клампа — больше 0 и не больше 20 %");
-await invalid("rcd-snabber-flyback.html", { rip: "20,01" }, "Пульсации на конденсаторе клампа — больше 0 и не больше 20 %");
-await invalid("rcd-snabber-flyback.html", { kv: "0" }, "Допустимая доля VDSS — больше 0 и не больше 100 %");
-await invalid("rcd-snabber-flyback.html", { kv: "100,1" }, "Допустимая доля VDSS — больше 0 и не больше 100 %");
-await invalid("rcd-snabber-flyback.html", { vm: "n", vo: "" }, "Введите коэффициент трансформации, выходное напряжение");
-await invalid("rcd-snabber-flyback.html", { vm: "n", n: "0" }, "Коэффициент трансформации и выходное напряжение должны быть больше нуля");
-await invalid("rcd-snabber-flyback.html", { vm: "n", vf: "-0,1" }, "Прямое напряжение диода не может быть отрицательным");
-await invalid("rcd-snabber-flyback.html", { vor: "0" }, "Отражённое напряжение должно быть больше нуля");
-await invalid("rcd-snabber-flyback.html", { vdss: "abc" }, "VDSS — число в вольтах");
-await invalid("rcd-snabber-flyback.html", { vdss: "0" }, "VDSS должно быть больше нуля");
-
-// --- 3. nagrev-mosfet: Infineon Rds(on)(Tj) = R25·(1 + α/100)^(Tj − 25), onsemi AND9016 ---
+// --- 2. nagrev-mosfet: Infineon Rds(on)(Tj) = R25·(1 + α/100)^(Tj − 25), onsemi AND9016 ---
 // Эталон 1 (по умолчанию): α = 100·(1,9^(1/125) − 1) = 0,5148 %/°C; Rθ = 1 + 0,5 + 20 = 21,5 °C/Вт;
 // без роста Rds(on): 40 + 21,5·(0,5 + 8²·0,02) = 78,27 °C; итерация T = 40 + 21,5·(0,5 + 1,28·1,9^((T − 25)/125)) → 88,97 °C
 // (W-функция даёт то же); Rds(on) = 20·1,9^(63,97/125) = 27,78 мОм; G = ln 1,9/125·(88,97 − 50,75) = 0,196;
@@ -3682,7 +3555,7 @@ await invalid("nagrev-mosfet.html", { rjc: "-1" }, "Тепловые сопро�
 await invalid("nagrev-mosfet.html", { rjc: "0", rcs: "0", rsa: "0" }, "Суммарное тепловое сопротивление должно быть больше нуля");
 await invalid("nagrev-mosfet.html", { rsa: "" }, "Введите тепловые сопротивления кристалл–корпус");
 
-// --- 4. rezistor-zatvora-mosfet: Nexperia AN90059, Infineon, TI SLUA618A, Wu (IR), TI UCC21520 ---
+// --- 3. rezistor-zatvora-mosfet: Nexperia AN90059, Infineon, TI SLUA618A, Wu (IR), TI UCC21520 ---
 // Эталон 1 (по умолчанию, драйвер 1EDN751x 0,85/0,35 Ом): Rвкл = 0,85 + 10 + 1 = 11,85 Ом, Rвыкл = 0,35 + 10 + 1 = 11,35 Ом;
 // ток на плато 7/11,85 = 590,7 мА и 5/11,35 = 440,5 мА; плато 20 нКл/0,5907 А = 33,86 нс; P = 60 нКл·12 В·100 кГц = 72 мВт,
 // во внешних резисторах 36·(10/11,85 + 10/11,35) = 62,1 мВт; ΔVgs = 10 пФ·20 В/нс·11,35 Ом = 2,27 В < 3·0,8 = 2,4 В;
@@ -3736,7 +3609,7 @@ await invalid("rezistor-zatvora-mosfet.html", { rgmode: "two", rgoff: "" }, "В�
 // оставлять затвор без цепи к истоку нет, номинал Rgs не подставляется.
 {
   kind = "structural";
-  const batch5 = ["poteri-buck-preobrazovatelya", "rcd-snabber-flyback", "nagrev-mosfet", "rezistor-zatvora-mosfet"];
+  const batch5 = ["poteri-buck-preobrazovatelya", "nagrev-mosfet", "rezistor-zatvora-mosfet"];
   const read = file => fs.readFileSync(path.join(sourceDir, file), "utf8");
   const visible = file => read(file).replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
   const registry = read("ENGINEERING_AUDIT.md");
@@ -3777,10 +3650,6 @@ await invalid("rezistor-zatvora-mosfet.html", { rgmode: "two", rgoff: "" }, "В�
   hs = await state("poteri-buck-preobrazovatelya.html", { top: "diode", rip: "di", sw: "t" });
   check(["rl", "qgl", "vsd", "tdt", "l", "qgs2", "qgd", "vpl", "rgon", "rgoff"].every(id => hs.has(id)) && !["vfd", "di", "tr", "tf"].some(id => hs.has(id)),
     "poteri-buck-preobrazovatelya: режимы «с диодом», «ΔI задан» и «времена фронтов» показывают свои поля");
-  hs = await state("rcd-snabber-flyback.html", {});
-  check(["n", "vo", "vf"].every(id => hs.has(id)) && !hs.has("vor"), "rcd-snabber-flyback: в режиме «задать Vor» поля коэффициента трансформации скрыты");
-  hs = await state("rcd-snabber-flyback.html", { vm: "n" });
-  check(hs.has("vor") && !["n", "vo", "vf"].some(id => hs.has(id)), "rcd-snabber-flyback: в режиме n·(Vo + Vf) поле Vor скрыто");
   hs = await state("nagrev-mosfet.html", {});
   check(hs.has("rja") && !["rjc", "rcs", "rsa"].some(id => hs.has(id)), "nagrev-mosfet: в режиме радиатора поле Rθja скрыто");
   hs = await state("nagrev-mosfet.html", { path: "ja" });
@@ -3791,7 +3660,7 @@ await invalid("rezistor-zatvora-mosfet.html", { rgmode: "two", rgoff: "" }, "В�
   check(!hs.has("rgon") && !hs.has("rgoff") && hs.has("rg"), "rezistor-zatvora-mosfet: при раздельных резисторах общий скрыт");
   // Не дублировать соседние страницы, а ссылаться на них.
   const links = { "poteri-buck-preobrazovatelya": ["buck-boost-duty", "drossel-impulsnogo", "nagrev-mosfet", "rezistor-zatvora-mosfet"],
-    "rcd-snabber-flyback": ["snabber-rc", "nagrev-mosfet"], "nagrev-mosfet": ["raschet-radiatora", "poteri-buck-preobrazovatelya"],
+    "nagrev-mosfet": ["raschet-radiatora", "poteri-buck-preobrazovatelya"],
     "rezistor-zatvora-mosfet": ["poteri-buck-preobrazovatelya", "nagrev-mosfet", "bazovyy-rezistor-tranzistora"] };
   for (const [from, list] of Object.entries(links)) {
     const article = read(`${from}.html`).match(/<p class="intro">[\s\S]*?<section class="related">/)?.[0] ?? "";
@@ -3799,7 +3668,7 @@ await invalid("rezistor-zatvora-mosfet.html", { rgmode: "two", rgoff: "" }, "В�
   }
   // Входящие ссылки на новые страницы из «Смотрите также» существующих.
   const inbound = [["buck-boost-duty", "poteri-buck-preobrazovatelya"], ["raschet-radiatora", "nagrev-mosfet"], ["linear-regulator-loss", "nagrev-mosfet"],
-    ["bazovyy-rezistor-tranzistora", "rezistor-zatvora-mosfet"], ["snabber-rc", "rcd-snabber-flyback"]];
+    ["bazovyy-rezistor-tranzistora", "rezistor-zatvora-mosfet"]];
   for (const [from, to] of inbound) {
     const block = read(`${from}.html`).match(/<section class="related">([\s\S]*?)<\/section>/)?.[1] ?? "";
     check(block.includes(`href="${to}.html"`), `${from}: в «Смотрите также» нет ссылки на ${to}`);
@@ -3809,10 +3678,6 @@ await invalid("rezistor-zatvora-mosfet.html", { rgmode: "two", rgoff: "" }, "В�
   check(/SLVA390A/.test(buckText) && /64AN035E/.test(buckText) && /SLVA477B/.test(buckText) && /SLPA009/.test(buckText) && /AN1471/.test(buckText)
     && /не умножает его на температурный множитель повторно/.test(buckText),
     "poteri-buck-preobrazovatelya: формулы не приписаны источникам или нет оговорки о повторном температурном множителе");
-  const rcdText = visible("rcd-snabber-flyback.html");
-  check(/AN-4147/.test(rcdText) && /2–2,5/.test(rcdText) && /80 %/.test(rcdText) && /90 %/.test(rcdText) && /Kollman/.test(rcdText) && /DS32/.test(rcdText)
-    && /обязано быть больше Vor/.test(rcdText) && /обесточенного трансформатора/.test(rcdText),
-    "rcd-snabber-flyback: нет правил AN-4147, объяснения Vsn > Vor или измерения на обесточенном трансформаторе");
   const heatText = visible("nagrev-mosfet.html");
   check(/\(1 \+ α\/100\)/.test(heatText) && /Infineon/.test(heatText) && /AND9016/.test(heatText) && /Риск теплового разгона/.test(heatText)
     && /обратная: там мощность задана/.test(heatText), "nagrev-mosfet: нет модели Infineon, тепловой цепи onsemi или отличия от расчёта радиатора");
@@ -3822,7 +3687,7 @@ await invalid("rezistor-zatvora-mosfet.html", { rgmode: "two", rgoff: "" }, "В�
   // Необязательные поля пустые — результат остаётся полезным: есть статус, нет прочерков вместо чисел.
   // Прочерк fmt()/si() для нечислового значения прилипает к подписи («потерь—»); в нормальном выводе тире всегда с пробелом.
   for (const [file, values] of [["poteri-buck-preobrazovatelya.html", {}], ["poteri-buck-preobrazovatelya.html", { cossl: "", qrr: "", dcr: "", pcore: "", iq: "" }],
-    ["rcd-snabber-flyback.html", { vdss: "" }], ["nagrev-mosfet.html", { psw: "", tjmax: "" }], ["rezistor-zatvora-mosfet.html", { qgs2: "", kth: "", rgs: "" }]]) {
+    ["nagrev-mosfet.html", { psw: "", tjmax: "" }], ["rezistor-zatvora-mosfet.html", { qgs2: "", kth: "", rgs: "" }]]) {
     const dom = await load(file); const d = dom.window.document;
     for (const [id, v] of Object.entries(values)) { const el = d.getElementById(id); el.value = v; el.dispatchEvent(new dom.window.Event("change", { bubbles: true })); }
     d.getElementById("go").click();
@@ -3850,10 +3715,6 @@ await calculateWithout("rezistor-zatvora-mosfet.html", { qgs2: "" }, ["Стат�
 // переключение 153,3 мВт + Coss 32,4 мВт + Qrr 10 нКл·12 В·500 кГц = 60 мВт → 245,7 мВт; без Qrr — 185,7 мВт; Iд = √(0,2826·25,18) = 2,668 А.
 await calculate("poteri-buck-preobrazovatelya.html", { qrr: "10" }, ["Верхний ключ — для расчёта нагреваIд = 2,668 А, потери, не зависящие от Rds(on), — 245,7 мВт"]);
 await calculate("poteri-buck-preobrazovatelya.html", {}, ["Верхний ключ — для расчёта нагреваIд = 2,668 А, потери, не зависящие от Rds(on), — 185,7 мВт"]);
-// Средний ток диода клампа — P/Vsn = 0,936/200 = 4,68 мА (мутация M16: P/(Vsn − Vor) дала бы 9,36 мА).
-await calculate("rcd-snabber-flyback.html", {}, ["средний 4,68 мА"]);
-// P2: в прерывистом режиме с постоянной частотой пиковый ток от входного напряжения не зависит — прежнее «обычно меньше» убрано.
-await calculateWithout("rcd-snabber-flyback.html", {}, ["В прерывистом режиме с постоянной частотой пиковый ток при той же мощности от входного напряжения не зависит"], ["пиковый ток обычно меньше"], "structural");
 // Делитель Rgs при открытом ключе — без внутреннего Rg, ток через него не течёт (мутация M23): 12·100/(100 + 0,85 + 10) = 10,83 В,
 // ток 108,3 мА, мощность 1,172 Вт; при двуполярном драйвере закрытый затвор: −5·100/(100 + 0,35 + 10) = −4,531 В (мутация M24).
 await calculate("rezistor-zatvora-mosfet.html", { rgs: "0,1" }, ["Напряжение на затворе открытого ключа с Rgs10,83 В из 12 В", "Ток и мощность Rgs при открытом ключе108,3 мА, 1,172 Вт"]);
@@ -3868,13 +3729,10 @@ await calculate("raschet-invertora.html", { p: "1400", cos: "1", zap: "1", ub: "
 // при противоположном вердикте.
 await calculate("rezistor-zatvora-mosfet.html", { dvdt: "21,14537444930749" }, ["СтатусРиск ложного включения"], "boundary");
 await calculateWithout("transformator-flyback.html", { vdss: "642,8571428565" }, ["СтатусОценка", "70 % от VDSS"], ["70,0000000001"], "boundary");
-await calculateWithout("rcd-snabber-flyback.html", { vsn: "250,00000000025003" }, ["— в диапазоне 2–2,5 из AN-4147"], ["выше диапазона"], "boundary");
 
 // --- Партия №5: второй отзыв бота-ревьюера к PR #25 ---
-// Эталоны — независимые модели в scratchpad b5fix2: ref_gate.py решает узловые уравнения цепи затвора
-// (закон токов Кирхгофа) и ищет пределы делением отрезка по абсолютному напряжению на затворе;
-// ref_rcd.py находит заполнение моделированием тока намагничивания во времени, а границу
-// индуктивности — моделированием клампа с выпрямителем вторичной стороны.
+// Эталоны — независимая модель scratchpad b5fix2/ref_gate.py: узловые уравнения цепи затвора
+// (закон токов Кирхгофа), пределы — делением отрезка по абсолютному напряжению на затворе.
 // (а) Rgs нагружает драйвер: 5 Ом — затвор открытого ключа 12·5/(5 + 10,85) = 3,785 В ниже плато 5 В → ошибка, а не 590,7 мА.
 await invalid("rezistor-zatvora-mosfet.html", { rgs: "0,005" }, "напряжение на затворе открытого ключа 3,785 В не выше напряжения плато 5 В");
 // Граница: Rgs = 5·10,85/7 = 7,75 Ом даёт ровно 5 В — ошибка; 7,7 Ом — 4,981 В; 7,8 Ом — 5,019 В, ток плато 3,389 мА.
@@ -3894,21 +3752,6 @@ await calculate("rezistor-zatvora-mosfet.html", { voff: "-5", rgs: "0,01", dvdt:
 await calculate("rezistor-zatvora-mosfet.html", { voff: "-5", rgs: "0,05", dvdt: "60" }, ["С Rgs затвор видит эквивалентный источник: включение / выключение9,86 В через 9,915 Ом / -4,143 В через 9,575 Ом", "Ток затвора на плато Миллера: включение / выключение490,2 мА / 954,8 мА", "Наведённое напряжение ΔVgs ≈ Crss·dv/dt·Rэкв5,745 В при Rэкв = 9,575 Ом", "Наибольшая dv/dt без ложного включения68,33 В/нс", "Наибольший внешний резистор цепи выключения по условию ложного включения11,71 Ом", "СтатусОценка: наведённое напряжение ΔVgs ≈ 5,745 В ниже запаса до порога Vth − Vз,выкл при нагреве 6,543 В"]);
 await calculate("rezistor-zatvora-mosfet.html", { voff: "-5", rgs: "0,05", dvdt: "40" }, ["Наибольший внешний резистор цепи выключения по условию ложного включения19,09 Ом"]);
 await calculate("rezistor-zatvora-mosfet.html", { voff: "-5", rgs: "0,1" }, ["Ток затвора на плато Миллера: включение / выключение540 мА / 918,3 мА", "Наибольшая dv/dt без ложного включения66,78 В/нс", "Наибольший внешний резистор цепи выключения по условию ложного включения40,1 Ом"]);
-// (в) Ток рассеяния должен спасть за (1 − D)·T, D = Vor/(Vor + Vin min) (AN-4137). По умолчанию D = 0,5, (1 − D)·T = 7,692 мкс;
-// граница ts = 12 мкс·В/(Vsn − 100) = 7,692 мкс при Vsn = 101,56 В — включительно ошибка.
-await calculate("rcd-snabber-flyback.html", {}, ["Время спада тока рассеяния ts = Llk·Ipk / (Vsn − Vor)120 нс", "Закрытое состояние ключа при Vin min (1 − D)·T, D = Vor / (Vor + Vin min)7,692 мкс при D = 0,5", "Индуктивность первичной обмотки и граница модели Llk·Vsn / (Vsn − Vor)640 мкГн > 20 мкГн"]);
-await calculate("rcd-snabber-flyback.html", { vsn: "101,57", lp: "700" }, ["Время спада тока рассеяния ts = Llk·Ipk / (Vsn − Vor)7,643 мкс", "Закрытое состояние ключа при Vin min (1 − D)·T, D = Vor / (Vor + Vin min)7,692 мкс при D = 0,5", "Индуктивность первичной обмотки и граница модели Llk·Vsn / (Vsn − Vor)700 мкГн > 646,9 мкГн"], "boundary");
-await calculateWithout("rcd-snabber-flyback.html", { vsn: "101,56" }, ["Ток индуктивности рассеяния спадал бы 7,692 мкс — не меньше (1 − D)·T = 7,692 мкс при наибольшем заполнении D = Vor / (Vor + Vin min) = 0,5 (AN-4137)"], ["Статус"], "boundary");
-await calculateWithout("rcd-snabber-flyback.html", { vsn: "101,55" }, ["Ток индуктивности рассеяния спадал бы 7,742 мкс — не меньше (1 − D)·T = 7,692 мкс"], ["Статус"], "boundary");
-// Пример бота: Llk 10 мкГн, Ipk 1,2 А, 65 кГц, Vor 100 В, Vsn 101 В, D = 0,4 (Vin min 150 В): ts = 12 мкс > 9,231 мкс — ошибка,
-// хотя 12 мкс < периода 15,38 мкс. При Vin min = Vin max = 375 В D = 0,2105 и (1 − D)·T = 12,15 мкс — ток успевает спасть.
-await calculateWithout("rcd-snabber-flyback.html", { vsn: "101", vinmin: "150" }, ["Ток индуктивности рассеяния спадал бы 12 мкс — не меньше (1 − D)·T = 9,231 мкс при наибольшем заполнении D = Vor / (Vor + Vin min) = 0,4 (AN-4137)", "формулы клампа неприменимы"], ["Статус"]);
-await calculate("rcd-snabber-flyback.html", { vsn: "101", vinmin: "375", lp: "1011" }, ["Время спада тока рассеяния ts = Llk·Ipk / (Vsn − Vor)12 мкс", "Закрытое состояние ключа при Vin min (1 − D)·T, D = Vor / (Vor + Vin min)12,15 мкс при D = 0,2105", "Индуктивность первичной обмотки и граница модели Llk·Vsn / (Vsn − Vor)1,011 мГн > 1,01 мГн"], "boundary");
-await calculate("rcd-snabber-flyback.html", { llk: "5", ipk: "2", fsw: "100", vm: "n", n: "6", vo: "12", vf: "0,7", vsn: "150" }, ["Закрытое состояние ключа при Vin min (1 − D)·T, D = Vor / (Vor + Vin min)5,675 мкс при D = 0,4325", "Индуктивность первичной обмотки и граница модели Llk·Vsn / (Vsn − Vor)640 мкГн > 10,16 мкГн"]);
-await calculate("rcd-snabber-flyback.html", { vsn: "150" }, ["Индуктивность первичной обмотки и граница модели Llk·Vsn / (Vsn − Vor)640 мкГн > 30 мкГн"]);
-await invalid("rcd-snabber-flyback.html", { vinmin: "0" }, "Наименьшее входное напряжение — больше нуля и не больше наибольшего");
-await invalid("rcd-snabber-flyback.html", { vinmin: "375,1" }, "Наименьшее входное напряжение — больше нуля и не больше наибольшего");
-await invalid("rcd-snabber-flyback.html", { vinmin: "сто" }, "наименьшее и наибольшее входное напряжение");
 
 // --- Партия №5: третий отзыв бота-ревьюера к PR #25 ---
 // (а) buck: в два мёртвых времени ток идёт через внутренний диод, канал нижнего ключа проводит D2 = 1 − D − 2·tм·fsw,
@@ -3925,14 +3768,6 @@ await calculateWithout("poteri-buck-preobrazovatelya.html", { top: "diode" }, ["
 // δ = 0 — токи при номинале, как раньше; δ = 20 % — Vp = 16,97·1,2 − 2 = 18,36 В, θ = 27,85°, пик 12,92 А.
 await calculateWithout("diody-vypryamitelya.html", { dup: "0" }, ["Амплитуда на конденсаторе Vp = √2·U − 2·Vf14,97 В", "Угол проводимости θ = arccos(1 − ΔV/Vp)30,92° — 1,718 мс из 10 мс", "Пиковый повторяющийся ток диода — оценка11,64 А", "Действующий ток диода — оценка1,97 А", "Действующий ток обмотки √2·Iд — оценка2,786 А", "Ток пульсаций конденсатора (действующий) — оценка2,6 А"], ["при +0 % — оценка", "Токи импульса посчитаны"]);
 await calculate("diody-vypryamitelya.html", { dup: "20" }, ["Амплитуда на конденсаторе Vp = √2·U − 2·Vf14,97 В; при +20 % — 18,36 В", "Угол проводимости θ = arccos(1 − ΔV/Vp) при +20 %27,85° — 1,547 мс из 10 мс", "Пиковый повторяющийся ток диода при +20 % — оценка12,92 А", "Действующий ток диода при +20 % — оценка2,076 А", "Действующий ток обмотки √2·Iд при +20 % — оценка2,935 А", "Ток пульсаций конденсатора (действующий) при +20 % — оценка2,76 А", "Размах пульсаций ΔV = I / (fп·C)2,128 В, наименьшее напряжение 12,84 В"]);
-// (в) RCD: Lp обязательна. Пример бота: Vsn = 101 В, граница Lp > 10·101/1 = 1010 мкГн; трансформатор на 500 мкГн — ошибка,
-// а не R, C и «Оценка». Граница включительно: 1010 мкГн — ошибка, 1011 мкГн — расчёт (тест выше). Vin min = 375 В, чтобы прошла
-// проверка спада: ts = 12 мкс < 12,15 мкс.
-await calculateWithout("rcd-snabber-flyback.html", { vsn: "101", vinmin: "375", lp: "500" }, ["Индуктивность первичной обмотки 500 мкГн не больше границы Llk·Vsn / (Vsn − Vor) = 1,01 мГн", "в кламп уходит энергия намагничивания, а не только рассеяния. Формулы клампа неприменимы"], ["Статус", "Резистор Rsn"], "boundary");
-await calculateWithout("rcd-snabber-flyback.html", { vsn: "101", vinmin: "375", lp: "1010" }, ["Индуктивность первичной обмотки 1,01 мГн не больше границы Llk·Vsn / (Vsn − Vor) = 1,01 мГн"], ["Статус"], "boundary");
-await calculateWithout("rcd-snabber-flyback.html", { vsn: "101,57" }, ["Индуктивность первичной обмотки 640 мкГн не больше границы Llk·Vsn / (Vsn − Vor) = 646,9 мкГн"], ["Статус"], "boundary");
-await invalid("rcd-snabber-flyback.html", { lp: "0" }, "Индуктивности, ток, частота и напряжения должны быть больше нуля");
-await invalid("rcd-snabber-flyback.html", { lp: "много" }, "Заполните числами индуктивность рассеяния и первичной обмотки");
 
 // --- Партия №5: четвёртый отзыв бота-ревьюера к PR #25 ---
 // При отрицательном Vвыкл Rgs нагружает драйвер и в закрытом состоянии: Vз,выкл = −5·10/(10 + 10,35) = −2,457 В,
