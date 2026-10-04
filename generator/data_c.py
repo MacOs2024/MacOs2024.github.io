@@ -213,7 +213,7 @@ faqs=[
  ("Намотал — как проверить, что расчёт удался?",
   "Включите первичную обмотку без нагрузки через предохранитель и замерьте ток холостого хода: норма — порядка 1–5% номинального первичного тока. Большой ток ХХ и гул — витков мало или сталь хуже, чем принято в расчёте: увеличьте K и перемотайте."),
 ],
-related=["moshchnost-toka", "raschet-radiatora", "soprotivlenie-provoda"],
+related=["moshchnost-toka", "raschet-radiatora", "soprotivlenie-provoda", "transformator-flyback"],
 ),
 
 # ─── 23. Радиатор ────────────────────────────────────────────────────────────
@@ -265,7 +265,7 @@ faqs=[
  ("Можно ли крепить транзистор к радиатору без изолирующей прокладки?",
   "Только если радиатор изолирован от схемы и корпуса устройства: у большинства приборов фланец электрически соединён с одним из выводов. Прокладка добавляет 0,5–1 °C/Вт — учитывайте её в расчёте."),
 ],
-related=["raschet-transformatora", "zakon-oma", "rezistor-svetodioda"],
+related=["raschet-transformatora", "zakon-oma", "rezistor-svetodioda", "nagrev-mosfet"],
 review_status="agent-reviewed",
 sources=[
  dict(title="Heat Sink Selection Guide for Thermally Enhanced SO8-FL",

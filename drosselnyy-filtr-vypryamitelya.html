@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Дроссельный LC-фильтр выпрямителя — ВольтКальк</title>
+<meta name="description" content="Расчёт дроссельного Г-образного LC-фильтра после двухполупериодного выпрямителя: критическая индуктивность непрерывного тока, выходное напряжение 0,9·U в непрерывном режиме, пульсации по L и C, резонансная частота против частоты пульсаций и рост напряжения к пиковому при токе ниже критического.">
+<link rel="canonical" href="https://macos2024.github.io/drosselnyy-filtr-vypryamitelya.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Дроссельный LC-фильтр выпрямителя — ВольтКальк">
+<meta property="og:description" content="Расчёт дроссельного Г-образного LC-фильтра после двухполупериодного выпрямителя: критическая индуктивность непрерывного тока, выходное напряжение 0,9·U в непрерывном режиме, пульсации по L и C, резонансная частота против частоты пульсаций и рост напряжения к пиковому при токе ниже критического.">
+<meta property="og:url" content="https://macos2024.github.io/drosselnyy-filtr-vypryamitelya.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Дроссельный LC-фильтр выпрямителя","url":"https://macos2024.github.io/drosselnyy-filtr-vypryamitelya.html","description":"Расчёт дроссельного Г-образного LC-фильтра после двухполупериодного выпрямителя: критическая индуктивность непрерывного тока, выходное напряжение 0,9·U в непрерывном режиме, пульсации по L и C, резонансная частота против частоты пульсаций и рост напряжения к пиковому при токе ниже критического.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Дроссельный LC-фильтр выпрямителя","item":"https://macos2024.github.io/drosselnyy-filtr-vypryamitelya.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему напряжение с дросселем ниже, чем с конденсатором?","acceptedAnswer":{"@type":"Answer","text":"С конденсатором на входе выпрямитель заряжает его почти до амплитуды √2·U. Дроссель пропускает только среднее значение выпрямленной синусоиды — 2√2·U/π ≈ 0,9·U. Зато оно почти не зависит от тока, а ток диодов идёт без коротких импульсов."}},{"@type":"Question","name":"Что будет, если индуктивность меньше критической?","acceptedAnswer":{"@type":"Answer","text":"Ток дросселя станет прерывистым: фильтр начнёт вести себя как фильтр с конденсатором на входе, напряжение вырастет и будет сильно зависеть от нагрузки — без нагрузки до пикового. Помогают больший дроссель или нагрузочный резистор не больше Vdc/Iкр — его считает калькулятор; без учёта конденсатора это около 3ωL."}},{"@type":"Question","name":"Почему важна резонансная частота?","acceptedAnswer":{"@type":"Answer","text":"Г-образный LC-фильтр — колебательный контур. Если частота пульсаций близка к его резонансу, пульсации не ослабляются, а усиливаются. Резонанс выбирают заметно ниже удвоенной частоты сети — тогда ослабление растёт примерно как квадрат отношения частот."}},{"@type":"Question","name":"Чем этот фильтр отличается от LC-фильтра Баттерворта?","acceptedAnswer":{"@type":"Answer","text":"Фильтр Баттерворта — сигнальный: он рассчитывается на частоту среза и ровную АЧХ при активной нагрузке. Дроссельный фильтр выпрямителя рассчитывают по непрерывности тока дросселя и ослаблению пульсаций на удвоенной частоте сети."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Дроссельный LC-фильтр выпрямителя</h1>
+<p class="intro">С дросселем на входе фильтра выпрямитель отдаёт не пиковое, а среднее выпрямленное напряжение, и ток диодов идёт без коротких импульсов — если ток дросселя не прерывается. Калькулятор проверяет это условие и считает пульсации. Сигнальный ФНЧ Баттерворта на заданную частоту среза считает <a href="lc-filtr-raschet.html">калькулятор LC-фильтра</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Дроссельный LC-фильтр выпрямителя</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_sch"><label for="sch">Схема выпрямителя</label><div class="fw"><select id="sch"><option value="bridge" selected>Мост: два диода в цепи тока</option><option value="ct">Со средней точкой: один диод в цепи тока</option></select></div></div><div class="f" id="f_us"><label for="us">Действующее напряжение обмотки U</label><div class="fw"><input id="us" type="text" inputmode="decimal" autocomplete="off" value="24" placeholder=""><span class="u">В</span></div><div class="hint">Для схемы со средней точкой — каждой половины обмотки</div></div><div class="f" id="f_f"><label for="f">Частота сети</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">Гц</span></div></div><div class="f" id="f_dup"><label for="dup">Наибольшее превышение напряжения над номинальным δ</label><div class="fw"><input id="dup" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">%</span></div><div class="hint">Отклонение напряжения сети — до 10 % по ГОСТ 32144-2013; рост напряжения обмотки без нагрузки добавьте по паспорту трансформатора</div></div><div class="f" id="f_vf"><label for="vf">Прямое падение на диоде Vf</label><div class="fw"><input id="vf" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_il"><label for="il">Ток нагрузки I</label><div class="fw"><input id="il" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">А</span></div><div class="hint">Проверьте и наименьший рабочий ток: непрерывность тока дросселя нарушается при нём первой</div></div><div class="f" id="f_l"><label for="l">Индуктивность дросселя L</label><div class="fw"><input id="l" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><span class="u">мГн</span></div><div class="hint">При рабочем токе — с учётом подмагничивания, по паспорту дросселя</div></div><div class="f" id="f_c"><label for="c">Ёмкость конденсатора C</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="4700" placeholder=""><span class="u">мкФ</span></div></div><div class="f" id="f_rdc"><label for="rdc">Сопротивление дросселя и обмоток постоянному току</label><div class="fw"><input id="rdc" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">Ом</span></div><div class="hint">Сопротивление дросселя по паспорту плюс сопротивление обмоток, приведённое ко вторичной. Пусто — не учитывается, напряжение получится завышенным</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Дроссельный LC-фильтр выпрямителя: как считается</h2>
+<div class="formula">Непрерывный ток дросселя: V<sub>dc</sub> = 2√2·U/π − n·V<sub>f</sub> − I·R ≈ 0,9·U − …<br>Пульсации на входе: амплитуда гармоники 2f — V<sub>2</sub> = 4√2·U/(3π) = (2/3)·2√2·U/π<br>На выходе: V<sub>2</sub> / |1 + r/R<sub>н</sub> − (2ω)²LC + j·2ω(L/R<sub>н</sub> + rC)|, r — сопротивление дросселя и обмоток;&nbsp;&nbsp;без нагрузки — V<sub>2</sub>·X<sub>C</sub>/(X<sub>L</sub> − X<sub>C</sub>)<br>Непрерывность: I ≥ I<sub>перем</sub> = V<sub>2</sub>/|j·2ωL + Z<sub>C</sub>∥R<sub>н</sub>|; без конденсатора L<sub>кр</sub> = 2√2·U/(3π·ω·I) ≈ R<sub>н</sub>/(3ω)<br>f<sub>0</sub> = 1/(2π√(LC)) — заметно ниже 2f</div>
+<p><b>Как работает дроссельный вход.</b> Если ток дросселя ни на миг не падает до нуля, диоды выпрямителя проводят всё время, и на входе фильтра — полное выпрямленное напряжение независимо от нагрузки. Дроссель пропускает его постоянную составляющую 2√2·U/π ≈ 0,9·U, а переменную задерживает. Поэтому выходное напряжение ниже, чем с конденсатором на входе (там оно близко к амплитуде), зато почти не зависит от тока, а ток диодов и обмотки — почти прямоугольный, без коротких высоких импульсов.</p>
+<p><b>Откуда пульсации.</b> Выпрямленная синусоида V<sub>m</sub>·|sin ωt| раскладывается в ряд Фурье, и его коэффициенты — элементарные интегралы по полупериоду. Постоянная составляющая — среднее значение: (1/π)·∫<sub>0</sub><sup>π</sup> V<sub>m</sub>·sin x dx = 2V<sub>m</sub>/π. Амплитуда гармоники с частотой 2k·f: (2/π)·|∫<sub>0</sub><sup>π</sup> V<sub>m</sub>·sin x·cos 2kx dx| = 4V<sub>m</sub>/(π·(4k² − 1)), то есть 4V<sub>m</sub>/(π·(n² − 1)) для n = 2k = 2, 4, 6…; интеграл берётся заменой sin x·cos 2kx = ½·(sin (2k + 1)x − sin (2k − 1)x). В действующих значениях это 0,9·U для постоянной и 1,27·U/(n² − 1) для гармоник. Тесты сверяют эти коэффициенты с численным интегрированием. Первая, на удвоенной частоте сети, — 4V<sub>m</sub>/(3π), то есть 2/3 постоянной составляющей; следующая в пять раз меньше и ослабляется фильтром вчетверо сильнее, поэтому в оценку не входит.</p>
+<p><b>Ослабление.</b> Дроссель и конденсатор с нагрузкой — делитель напряжения; его коэффициент на частоте ω′ = 2ω равен 1/|1 + r/R<sub>н</sub> − ω′²LC + jω′(L/R<sub>н</sub> + rC)| (комплексные сопротивления, OpenStax); сопротивление дросселя и обмоток r стоит последовательно с L и для переменного тока, поэтому входит и в передачу, и в переменный ток дросселя V<sub>2</sub>/|r + j·2ωL + Z<sub>C</sub>∥R<sub>н</sub>| — у резонанса оно его заметно демпфирует. Без нагрузки это X<sub>C</sub>/(X<sub>L</sub> − X<sub>C</sub>) — так ослабление записывают и в учебных материалах, там же коэффициент пульсаций Г-фильтра (√2/3)·X<sub>C</sub>/X<sub>L</sub>; обе записи — частные случаи того же делителя. Фильтр — колебательный контур с резонансом f<sub>0</sub> = 1/(2π√(LC)). Если частота пульсаций близка к f<sub>0</sub>, он не ослабляет пульсации, а усиливает: калькулятор считает коэффициент передачи с нагрузкой и при значении не меньше 1 пишет «Фильтр не ослабляет пульсации». Резонанс выбирают заметно ниже 2f.</p>
+<p><b>Критическая индуктивность.</b> Почти всё напряжение пульсаций падает на дросселе, и его переменный ток — V<sub>2</sub>/(2ωL). Ток дросселя не прерывается, пока постоянный ток нагрузки не меньше амплитуды переменного: I ≥ V<sub>2</sub>/(2ωL), откуда L ≥ 2√2·U/(3π·ω·I) ≈ R<sub>н</sub>/(3ω). В справочниках это та же величина в числах: Radiotron Designer's Handbook — R<sub>н</sub>/1130 при 60 Гц, ARRL Handbook — R/1100. Оба положения видны только в пересказе на форумах и приведены лишь для сравнения: расчёт страницы на эти числа не опирается, он следует из ряда Фурье и комплексных сопротивлений. При 50 Гц 3ω ≈ 942. В статье QST 1952 года через неё выражено, насколько пиковый ток превышает средний: L = E/(10·P·I) для P процентов при 60 Гц. Эта классическая оценка не учитывает конденсатор: на частоте 2f его сопротивление вычитается из сопротивления дросселя, и переменный ток больше — примерно в 1/(1 − (f<sub>0</sub>/2f)²) раз. Поэтому калькулятор считает переменный ток через полное сопротивление дросселя и конденсатора с нагрузкой, V<sub>2</sub>/|j·2ωL + Z<sub>C</sub>∥R<sub>н</sub>|, а классическую оценку показывает рядом: при f<sub>0</sub> = 16 Гц разница около 3 %, при 49 Гц — почти треть. Моделирование цепи во времени это подтвердило. При постоянном токе нагрузки переменный ток дросселя обычно растёт вместе с напряжением сети, и запас до прерывистого режима при повышенной сети меньше. Поэтому переменный ток, критическую индуктивность, наименьший ток непрерывного режима и пиковый ток калькулятор показывает при номинальной сети и при сети +δ с тем же током нагрузки, а вывод о непрерывности делает по худшему из двух. Постоянное напряжение и пульсации — при номинальной сети.</p>
+<p><b>Ток ниже критического.</b> Тогда ток дросселя прерывается, фильтр ведёт себя всё больше как фильтр с конденсатором на входе, и напряжение растёт к пиковому √2·U − n·V<sub>f</sub>, а без нагрузки при повышенной сети — до √2·U·(1 + δ). Поэтому конденсатор рассчитывают на пиковое напряжение, а не на V<sub>dc</sub>, а чтобы ток не прерывался, ставят нагрузочный резистор не больше V<sub>dc</sub>/I<sub>кр</sub>: без учёта конденсатора это около 3ωL, с ним — меньше, калькулятор считает точнее. Резистор подбирают по номинальной сети — для резистора это худший случай: его ток растёт с напряжением быстрее переменного тока дросселя. Мощность резистора калькулятор показывает и при повышенной сети. В низковольтном источнике на большой ток такой резистор рассеивает десятки ватт — выгоднее увеличить индуктивность или держать минимальную нагрузку.</p>
+<p><b>Чем отличается от LC-фильтра Баттерворта.</b> <a href="lc-filtr-raschet.html">Калькулятор LC-фильтра</a> считает сигнальный ФНЧ второго порядка на заданную частоту среза для источника с малым сопротивлением и активной нагрузки — там важна ровная АЧХ. Здесь источник — выпрямитель, главное — непрерывность тока дросселя и постоянное напряжение, а фильтр должен ослабить пульсации на частоте 2f. Конденсаторный фильтр без дросселя считают <a href="pulsacii-vypryamitelya.html">калькулятор пульсаций</a> и страница <a href="diody-vypryamitelya.html">диодов выпрямителя</a>.</p>
+<p><b>Безопасность.</b> Расчёт — для выпрямителя после сетевого трансформатора с гальванической развязкой. Изоляцию, пути утечки и воздушные зазоры калькулятор не проверяет — это требования стандарта безопасности на изделие (например, IEC 62368-1) и паспортов. Конденсатор хранит заряд и после отключения: разряжайте его через <a href="discharge-resistor-capacitor.html">резистор разряда</a>.</p>
+<h2>Дроссельный LC-фильтр выпрямителя: пример расчёта</h2>
+<p>Мост на обмотке 24 В, 50 Гц, ток 2 А, дроссель 20 мГн, конденсатор 4700 мкФ, V<sub>f</sub> = 1 В. Постоянная составляющая 2·33,94/π = 21,61 В, на нагрузке 21,61 − 2 = <b>19,61 В</b> (сопротивление дросселя и обмоток не учтено). Гармоника 100 Гц на входе — 14,41 В амплитуды. Резонансная частота 16,42 Гц — в 6,092 раза ниже частоты пульсаций; коэффициент передачи 0,02768, на выходе <b>0,7973 В</b> размаха (1,438 %). Переменный ток дросселя — 1,178 А, а при сети +10 % и том же токе нагрузки — 1,296 А. Критическая индуктивность при 2 А — 12 мГн, при сети +10 % — 13,15 мГн (без учёта конденсатора 11,46 мГн), а 20 мГн больше. Ток непрерывен, пока нагрузка не меньше 1,178 А, а при сети +10 % — не меньше 1,296 А.</p>
+<p>При токе 0,5 А ток дросселя станет прерывистым, и напряжение пойдёт вверх — без нагрузки до <b>37,34 В</b> при сети +10 %: конденсатор нужен на 50 В, а не на 25. Нагрузочный резистор для непрерывного тока без нагрузки — не больше 16,64 Ом, но он рассеивает 23,1 Вт, а при сети +10 % — 28,47 Вт. Если взять 470 мкФ, резонанс поднимется до 51,91 Гц, коэффициент передачи вырастет до 0,3335, а пульсации — до 9,607 В размаха.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему напряжение с дросселем ниже, чем с конденсатором?</h3><p>С конденсатором на входе выпрямитель заряжает его почти до амплитуды √2·U. Дроссель пропускает только среднее значение выпрямленной синусоиды — 2√2·U/π ≈ 0,9·U. Зато оно почти не зависит от тока, а ток диодов идёт без коротких импульсов.</p><h3>Что будет, если индуктивность меньше критической?</h3><p>Ток дросселя станет прерывистым: фильтр начнёт вести себя как фильтр с конденсатором на входе, напряжение вырастет и будет сильно зависеть от нагрузки — без нагрузки до пикового. Помогают больший дроссель или нагрузочный резистор не больше Vdc/Iкр — его считает калькулятор; без учёта конденсатора это около 3ωL.</p><h3>Почему важна резонансная частота?</h3><p>Г-образный LC-фильтр — колебательный контур. Если частота пульсаций близка к его резонансу, пульсации не ослабляются, а усиливаются. Резонанс выбирают заметно ниже удвоенной частоты сети — тогда ослабление растёт примерно как квадрат отношения частот.</p><h3>Чем этот фильтр отличается от LC-фильтра Баттерворта?</h3><p>Фильтр Баттерворта — сигнальный: он рассчитывается на частоту среза и ровную АЧХ при активной нагрузке. Дроссельный фильтр выпрямителя рассчитывают по непрерывности тока дросселя и ослаблению пульсаций на удвоенной частоте сети.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.rfcafe.com/references/qst/power-supply-filters-qst-december-1952.htm" rel="nofollow noopener" target="_blank">Power-Supply Filters</a> — QST (ARRL), декабрь 1952; перепечатка RF Cafe — Редакция видно в выдаче — раздел дроссельный вход: напряжение пульсаций падает на реактивном сопротивлении дросселя (I·XL), колено нагрузочной характеристики зависит от индуктивности входного дросселя, чтобы пиковый ток превышал средний не больше чем на P %: L = E/(10·P·I) при 60 Гц — обращение 02.10.2026</li><li><a href="https://antiqueradios.com/forums/viewtopic.php?t=76566" rel="nofollow noopener" target="_blank">Radiotron Designer&#x27;s Handbook</a> — под ред. F. Langford-Smith; положение в пересказе Antique Radio Forums — Редакция 4-я редакция, 1953; видно в выдаче только в пересказе форума — раздел наименьшая индуктивность входного дросселя двухполупериодного выпрямителя при 60 Гц — RL/1130, RL = напряжение / ток; только для сравнения, расчёт страницы на неё не опирается — обращение 02.10.2026</li><li><a href="http://amfone.net/Amforum/index.php?topic=37557.0%3Bwap2" rel="nofollow noopener" target="_blank">The ARRL Handbook</a> — ARRL; положение в пересказе форума AMfone — Редакция раздел 7.8.6, год издания в выдаче не виден — раздел критическая индуктивность L = R/A, A = 1100 для 60 Гц, R — нагрузочный резистор; только для сравнения, расчёт страницы на неё не опирается — обращение 02.10.2026</li><li><a href="https://www.idc-online.com/technical_references/pdfs/electronic_engineering/Filter_Circuits.pdf" rel="nofollow noopener" target="_blank">Filter Circuits; What is Choke Filter? L-Section Filter</a> — IDC Online, Electronics Coach — учебные материалы (вторичные источники) — Редакция на дату обращения; видно в выдаче — раздел критическая индуктивность Lc = Rc/(6πf) — для сравнения, коэффициент пульсаций Г-фильтра (√2/3)·XC/XL — частный случай делителя на странице — обращение 02.10.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/15-3-rlc-series-circuits-with-ac" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 15.3 RLC Series Circuits with AC — реактивные сопротивления XL = ωL, XC = 1/(ωC), резонанс ω0 = 1/√(LC) — обращение 02.10.2026</li><li><a href="https://docs.cntd.ru/document/1200104301" rel="nofollow noopener" target="_blank">ГОСТ 32144-2013. Электрическая энергия. Совместимость технических средств электромагнитная. Нормы качества электрической энергии в системах электроснабжения общего назначения</a> — Межгосударственный стандарт — Редакция введён приказом Росстандарта от 22.07.2013 № 400-ст; положение видно в выдаче — раздел 4.2.2: положительные и отрицательные отклонения напряжения — не больше 10 % номинального в течение 100 % времени интервала в одну неделю — обращение 02.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Двухполупериодный выпрямитель — мост или схема со средней точкой; в непрерывном режиме на входе фильтра полное выпрямленное напряжение.</li><li>Пульсации — только первая гармоника 2f; высшие гармоники ослабляются сильнее и не учитываются.</li><li>Переменный ток дросселя — первая гармоника 2f через дроссель и конденсатор с нагрузкой, V2/|j·2ωL + Zc∥Rн|; ток непрерывен, пока ток нагрузки не меньше его амплитуды.</li><li>Индуктивность и ёмкость постоянны; сопротивление дросселя и обмоток стоит последовательно с L — оно входит и в постоянное напряжение, и в переменный ток и передачу пульсаций.</li></ul><p><b>Границы применимости:</b></p><ul><li>В режиме прерывистого тока напряжение не рассчитывается — указаны только границы: от напряжения непрерывного режима до пикового.</li><li>Насыщение дросселя и его нагрев не проверяются — пиковый ток сравнивают с паспортом дросселя.</li><li>Переходный процесс при включении и скачках нагрузки не моделируется.</li><li>Изоляция трансформатора, пути утечки и воздушные зазоры не проверяются.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="lc-filtr-raschet.html">Пассивный LC-фильтр Баттерворта</a></li><li><a href="diody-vypryamitelya.html">Диоды выпрямителя с конденсаторным фильтром</a></li><li><a href="pulsacii-vypryamitelya.html">Пульсации выпрямителя с конденсатором</a></li><li><a href="rezonans-lc.html">Резонансная частота LC-контура</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function pl(s,one,few,many,frac){if(/[,·]/.test(s))return frac;var n=Math.abs(parseInt(s,10))%100,n1=n%10;if(n>10&&n<20)return many;if(n1===1)return one;if(n1>=2&&n1<=4)return few;return many;}
+function yr(s){return s+' '+pl(s,'год','года','лет','года');}
+
+function calc(){
+var br=S('sch')==='bridge',us=P('us'),f=P('f'),dup=P('dup'),vf=P('vf'),il=P('il'),l=P('l'),c=P('c'),rd=OPT('rdc');
+if([us,f,dup,vf,il,l,c].some(isNaN))return err('Заполните числами напряжение обмотки, частоту, превышение напряжения, падение на диоде, ток нагрузки, индуктивность и ёмкость.');
+if(us<=0||us>1000)return err('Напряжение обмотки — больше 0 и не больше 1000 В.');
+if(f<10||f>1000)return err('Частота сети — от 10 до 1000 Гц.');
+if(dup<0||dup>50)return err('Превышение напряжения задаётся от 0 до 50 %.');
+if(vf<0||vf>5)return err('Прямое падение на диоде — от 0 до 5 В.');
+if(il<=0)return err('Ток нагрузки должен быть больше нуля.');
+if(l<=0||c<=0)return err('Индуктивность и ёмкость должны быть больше нуля.');
+if(rd!==null){if(isNaN(rd))return err('Сопротивление дросселя и обмоток — число в омах. Если его нет, оставьте поле пустым.');if(rd<0)return err('Сопротивление не может быть отрицательным.');}
+var r=rd===null?0:rd,Lh=l/1000,Cf=c*1e-6,w=2*Math.PI*f,wr=2*w,vm=Math.SQRT2*us,vd0=2*vm/Math.PI,nd=br?2:1,vdc=vd0-nd*vf-il*r;
+if(!(vdc>0))return err('Падения на диодах и сопротивлении не меньше выпрямленного напряжения — проверьте данные.');
+// Непрерывность — при номинальной сети и при сети +δ с тем же током нагрузки: при постоянном токе нагрузки переменный
+// ток дросселя обычно растёт с напряжением. Вывод — по худшему из двух. Постоянное напряжение и пульсации — при номинале.
+// Нагрузочный резистор — по номинальной сети: для резистора это худший случай, его ток растёт быстрее переменного.
+var k=1+dup/100,dl=dup>0,ul=' при сети +'+fmt(dup)+' %',v2=4*vm/(3*Math.PI),xl=wr*Lh,xc=1/(wr*Cf),v0=vd0-nd*vf;
+function zp(R){var a=wr*R*Cf;return [R/(1+a*a),-R*a/(1+a*a)];}
+function cc(q){var a=v2*q,b=vd0*q-nd*vf;
+ function iac(I){var vd=b-I*r;if(!(vd>0))return NaN;var z=zp(vd/I);return a/Math.sqrt((r+z[0])*(r+z[0])+(xl+z[1])*(xl+z[1]));}
+ var z0=zp((b-il*r)/il),vi=a/il,lc=vi>r+z0[0]?(Math.sqrt(vi*vi-(r+z0[0])*(r+z0[0]))-z0[1])/wr:0,ic=NaN,ia=iac(il);
+ if(xl>xc){var lo=0,hi=a/(xl-xc);if(r>0)hi=Math.min(hi,b/r*(1-1e-12));for(var j=0;j<200;j++){var m=(lo+hi)/2;if(iac(m)>m)lo=m;else hi=m;}var q0=(lo+hi)/2;if(Math.abs(iac(q0)-q0)<=q0*1e-9)ic=q0;}
+ var hc=isFinite(ic);return {v0:b,ia:ia,lc:lc,ic:ic,hc:hc,dcm:hc?lt(il,ic):lt(il,ia)};}
+var N=cc(1),H=dl?cc(k):N,rl=vdc/il,lc0=v2/(wr*il),ic=N.ic,hc=N.hc;
+function two(a,b){return dl?a+' при номинале, '+b+ul:a;}
+function lcs(x){return x>0?fx(x*1000,l)+' мГн':'любая';}
+var re=1+r/rl-wr*wr*Lh*Cf,im=xl/rl+wr*r*Cf,g=1/Math.sqrt(re*re+im*im),vr=v2*g,f0=1/(2*Math.PI*Math.sqrt(Lh*Cf)),vnl=Math.SQRT2*us*k,piv=(br?1:2)*vnl,vb=v0-ic*r,rb=vb/ic,vbh=H.v0*rb/(rb+r),pk=vm-nd*vf,vdh=H.v0-il*r,pkh=vm*k-nd*vf;
+if(![vdc,v2,N.ia,N.lc,H.ia,H.lc,g,vr,f0].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var dN=N.dcm,dH=H.dcm,lm=Math.max(N.lc,H.lc);
+var h=row('Постоянная составляющая выпрямленного напряжения 2√2·U/π',fmt(vd0)+' В')+
+ row(r>0?'Напряжение на нагрузке за вычетом '+(br?'двух диодов':'диода')+' и падения I·R':'Напряжение на нагрузке за вычетом '+(br?'двух диодов':'диода'),fmt(vdc)+' В'+(rd===null?' — сопротивление дросселя и обмоток не задано':''))+
+ row('Пульсации на входе фильтра: амплитуда гармоники 2f, 4√2·U/(3π)',fmt(v2)+' В на '+fmt(2*f)+' Гц')+
+ row('Резонансная частота f0 = 1/(2π√(LC))',fmt(f0)+' Гц — '+(gt(2*f,f0)?'частота пульсаций выше в '+fmt(2*f/f0)+' раза':(lt(2*f,f0)?'выше частоты пульсаций '+fmt(2*f)+' Гц':'равна частоте пульсаций')))+
+ row(r>0?'Коэффициент передачи пульсаций 1/|1 + r/R − (2ω)²LC + j·2ω(L/R + rC)|':'Коэффициент передачи пульсаций 1/|1 − (2ω)²LC + j·2ωL/R|',fx(g,1))+
+ row('Пульсации на выходе — размах по первой гармонике',dN?'не оцениваются: ток дросселя прерывистый':fmt(2*vr)+' В ('+fmt(100*vr/(Math.SQRT2*vdc))+' % действующего от постоянного)')+
+ row(r>0?'Переменный ток дросселя на 2f: V2 / |r + j·2ωL + Zc∥Rн|':'Переменный ток дросселя на 2f: V2 / |j·2ωL + Zc∥Rн|',two(fmt(N.ia)+' А',fmt(H.ia)+' А')+'; без учёта конденсатора V2/(2ωL) — '+fmt(v2/xl)+' А')+
+ row('Критическая индуктивность при токе '+fmt(il)+' А с учётом конденсатора и нагрузки',two(lcs(N.lc),lcs(H.lc))+', задано '+fx(l,lm*1000)+' мГн; без конденсатора 2√2·U/(3π·ω·I) ≈ Rн/(3ω) — '+fmt(lc0*1000)+' мГн')+
+ row('Наименьший ток непрерывного режима при этой L',xl>xc?(N.hc||H.hc?two(N.hc?fx(N.ic,il)+' А':'не достигается',H.hc?fx(H.ic,il)+' А':'не достигается'):'не достигается: раньше падение на сопротивлении дросселя и обмоток съедает выпрямленное напряжение'):'не оценивается: резонанс фильтра не ниже частоты пульсаций')+
+ row('Пиковый ток дросселя I + Iперем',two(fmt(il+N.ia)+' А',fmt(il+H.ia)+' А'))+
+ row('Нагрузочный резистор, чтобы ток не прерывался без нагрузки',hc?'не больше '+fmt(rb)+' Ом — рассеивает '+fmt(vb*vb/rb)+' Вт'+(dl?', при сети +'+fmt(dup)+' % — '+fmt(vbh*vbh/rb)+' Вт':''):'не оценивается')+
+ row('Без нагрузки напряжение растёт до пикового √2·U·(1 + δ)',fmt(vnl)+' В — на него рассчитывают конденсатор')+
+ row('Обратное напряжение на диоде '+(br?'√2·U·(1 + δ)':'2·√2·U·(1 + δ)'),fmt(piv)+' В');
+var st;
+if(!lt(g,1))st='Фильтр не ослабляет пульсации: коэффициент передачи '+fx(g,1)+' — резонансная частота '+fmt(f0)+' Гц '+(lt(f0,2*f)?'слишком близка к частоте пульсаций':'не ниже частоты пульсаций')+' '+fmt(2*f)+' Гц';
+else if(dN)st='Ток дросселя прерывистый: ток нагрузки '+(N.hc?fx(il,N.ic)+' А меньше наименьшего тока непрерывного режима '+fx(N.ic,il):fx(il,N.ia)+' А меньше переменного тока дросселя '+fx(N.ia,il))+' А — напряжение выше '+fmt(vdc)+' В и с уменьшением нагрузки растёт к пиковому '+fmt(pk)+' В; формулы непрерывного режима здесь неприменимы';
+else if(dH)st='Ток дросселя прерывистый'+ul+': ток нагрузки '+(H.hc?fx(il,H.ic)+' А меньше наименьшего тока непрерывного режима при этой сети '+fx(H.ic,il):fx(il,H.ia)+' А меньше переменного тока дросселя при этой сети '+fx(H.ia,il))+' А, при номинале ток непрерывный. При сети +'+fmt(dup)+' % напряжение выше '+fmt(vdh)+' В и с уменьшением нагрузки растёт к пиковому '+fmt(pkh)+' В; формулы непрерывного режима там неприменимы';
+else st='Оценка: ток дросселя непрерывный'+(dl?' при номинале и'+ul:'')+', на нагрузке около '+fmt(vdc)+' В, пульсации около '+fmt(2*vr)+' В размаха';
+var n='Непрерывный режим: выпрямитель отдаёт полное выпрямленное напряжение, его постоянная составляющая 2√2·U/π ≈ 0,9·U, первая гармоника пульсаций — 2/3 от неё на удвоенной частоте сети. Высшие гармоники (4f, 6f) ослабляются сильнее и в оценку не входят. ';
+n+='Переменный ток дросселя — первая гармоника через дроссель и конденсатор с нагрузкой. Классическая формула Lкр ≈ Rн/(3ω) ток через конденсатор не учитывает и занижает критический ток примерно в 1/(1 − (f0/2f)²) раз: при f0 = 49 Гц — почти на треть; это подтвердило моделирование цепи во времени. '+(dl?'Переменный ток, критическая индуктивность, наименьший ток непрерывного режима и пиковый ток показаны при номинальной сети и при сети +'+fmt(dup)+' % с тем же током нагрузки: при постоянном токе нагрузки переменный ток дросселя обычно растёт с напряжением. Вывод о непрерывности — по худшему из двух. Нагрузочный резистор подобран по номинальной сети: для резистора это худший случай, его ток растёт с напряжением быстрее переменного тока дросселя. Постоянное напряжение и пульсации — при номинальной сети. ':'');
+n+='LC-фильтр — колебательный контур: при включении и скачках нагрузки напряжение кратковременно превышает установившееся, поэтому конденсатор выбирают с запасом. ';
+n+='Пиковый ток дросселя сравните с током насыщения по паспорту дросселя. Конденсатор хранит заряд и после отключения — разряжайте его резистором.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

@@ -195,6 +195,14 @@ SCHNEIDER_POWER = source(
     ["Power and reactive energy", "three-phase circuits", "motor current"],
     "https://www.electrical-installation.org/enwiki/Power_and_reactive_energy",
 )
+NFPA_STANDALONE_INVERTER = dict(
+    title="NFPA 70, National Electrical Code — входной ток автономного инвертора (только для сравнения)",
+    organization="National Fire Protection Association; формулировка видна только в выдаче поиска (UpCodes, учебные материалы по NEC), текст NFPA 70 не открывался",
+    edition="не подтверждена: в выдаче поиска — статья 710.12; номер статьи и редакцию по самому NFPA 70 не проверяли",
+    sections=["только для сравнения, расчёт страницы на это не опирается: в выдаче — наибольший входной ток автономного инвертора при номинальной мощности инвертора и наименьшем входном напряжении"],
+    accessed="01.10.2026",
+    url="https://up.codes/s/stand-alone-inverter-input-circuit-current",
+)
 NFPA_CONDUIT = source(
     "NFPA 70 National Electrical Code — Chapter 9, Table 1 и Notes to Tables",
     "National Fire Protection Association",
@@ -462,9 +470,18 @@ add(
 )
 add(
     "batareya-posledovatelno-parallelno power-bank-runtime "
-    "vremya-raboty-akkumulyatora raschet-akb-avtonomnoy raschet-invertora sechenie-po-dline-12v",
+    "vremya-raboty-akkumulyatora raschet-akb-avtonomnoy sechenie-po-dline-12v",
     "estimate", [VICTRON_WIRING],
     ["Результат не проверяет паспортный ток батареи, BMS, предохранитель, допустимый нагрев кабеля, качество соединений и старение."],
+)
+add(
+    "raschet-invertora",
+    "estimate", [VICTRON_WIRING, NFPA_STANDALONE_INVERTER],
+    [
+        "Результат не проверяет паспортный ток батареи, BMS, предохранитель, допустимый нагрев кабеля, качество соединений и старение.",
+        "Ток считается по введённой мощности нагрузки из баланса мощности P = КПД·U·I; кабель и предохранитель на сам инвертор считают по его номинальной мощности — введите её вместо мощности нагрузки.",
+        "Без наименьшего входного напряжения инвертора ток и сечение считаются при номинальном напряжении и занижены.",
+    ],
 )
 add(
     "tok-elektrodvigatelya moshchnost-nasosa",
