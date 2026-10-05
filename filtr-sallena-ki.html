@@ -242,6 +242,7 @@ function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м']
 function db(x){return 20*Math.log(Math.abs(x))/Math.LN10;}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 function sp(x,u){return si(Number(x.toPrecision(12)),u);}
+function rng(x,l,u){var lo_=x-l<u-x;return fx(x,lo_?l:u)+' В в пределах '+(lo_?fx(l,x):fmt(l,4))+' … '+(lo_?fmt(u,4):fx(u,x))+' В';}
 
 function sync(){var m=S('mode'),an=m==='an',hp=S('typ')==='hp';
 hideF('r1',!an);hideF('r2',!an);hideF('c1',!an);hideF('c2',!an);hideF('rb',!an);hideF('ra',!an);
@@ -312,9 +313,9 @@ var fr=hp?fm:Math.max(f0,f3);
 if(gb===null)miss.push('GBW ОУ');
 if(sr===null||vin===null)miss.push('скорость нарастания ОУ и амплитуда сигнала');
 if(fr===null){if(gb!==null||sr!==null)miss.push('наибольшая частота сигнала');}
-else{if(gb!==null){var gr=100*K*fr;h+=row('GBW по правилу TI: не меньше 100·K·f',sp(gr,'Гц')+' при f = '+sp(fr,'Гц')+'; GBW ОУ '+sp(gb,'Гц'));
+else{if(gb!==null){var gr=100*K*fr;h+=row('GBW по правилу TI: не меньше 100·K·f',sx(gr,gb,'Гц')+' при f = '+sp(fr,'Гц')+'; GBW ОУ '+sx(gb,gr,'Гц'));
   if(lt(gb,gr))risk.push('GBW ОУ '+sx(gb,gr,'Гц')+' меньше 100·K·f = '+sx(gr,gb,'Гц')+' по правилу TI — частота и добротность отклонятся от расчёта');}
- if(sr!==null&&vin!==null){var sq=2*Math.PI*fr*Math.max(K,gp)*vin/1e6;h+=row('Скорость нарастания по правилу TI: не меньше 2π·f·Gмакс·Vвх',fmt(sq,4)+' В/мкс; SR ОУ '+fmt(sr,4)+' В/мкс');
+ if(sr!==null&&vin!==null){var sq=2*Math.PI*fr*Math.max(K,gp)*vin/1e6;h+=row('Скорость нарастания по правилу TI: не меньше 2π·f·Gмакс·Vвх',fx(sq,sr)+' В/мкс; SR ОУ '+fx(sr,sq)+' В/мкс');
   if(lt(sr,sq))risk.push('скорость нарастания ОУ '+fx(sr,sq)+' В/мкс меньше '+fx(sq,sr)+' В/мкс — выходной синус исказится');}}
 var st;
 if(risk.length)st='Риск: '+risk.join('; ');

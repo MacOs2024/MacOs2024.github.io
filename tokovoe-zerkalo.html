@@ -242,6 +242,7 @@ function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м']
 function db(x){return 20*Math.log(Math.abs(x))/Math.LN10;}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 function sp(x,u){return si(Number(x.toPrecision(12)),u);}
+function rng(x,l,u){var lo_=x-l<u-x;return fx(x,lo_?l:u)+' В в пределах '+(lo_?fx(l,x):fmt(l,4))+' … '+(lo_?fmt(u,4):fx(u,x))+' В';}
 
 function sync(){var t=S('typ');hideF('re',t!=='re');hideF('tre',t!=='re');}
 function init(){$('typ').addEventListener('change',sync);sync();}
