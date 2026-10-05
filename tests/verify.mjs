@@ -95,7 +95,7 @@ const infoPages = ["privacy.html", "about.html"];
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
   .sort();
-check(htmlFiles.length === 151, `Ожидалось 151 HTML-файл, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 152, `Ожидалось 152 HTML-файла, найдено ${htmlFiles.length}`);
 
 // Совет закоротить заряженный конденсатор перемычкой, отвёрткой или
 // закороткой опасен: при запасённой энергии это даёт дугу и разбрызгивание
@@ -1136,7 +1136,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 151, `В sitemap должно быть 151 URL (корень + about + 149 калькуляторов), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 152, `В sitemap должно быть 152 URL (корень + about + 150 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 
@@ -4144,13 +4144,88 @@ await invalid("blokirovochnyy-kondensator.html", { f2: "0,05" }, "Верхняя
 await invalid("blokirovochnyy-kondensator.html", { di: "abc" }, "Заполните числами бросок тока");
 await invalid("blokirovochnyy-kondensator.html", { dv: "0" }, "Допустимый провал должен быть больше нуля");
 
+// --- 4. rc-cep-impuls: закон заряда RC-цепи (OpenStax 10.5), Millman и Taub «Linear wave shaping» ---
+// Эталоны — численное интегрирование цепи во времени методом Рунге — Кутты (scratchpad t/ref4.py): узловые уравнения с Rи и Rн
+// отдельными ветвями, без эквивалента Тевенина; одиночный импульс — до tи + 12τ, меандр — 40τ + 20 периодов, берётся последний
+// период; порог — интерполяцией между шагами. Формулы страницы с моделированием совпали во всех строках ниже.
+// Эталон 1 (по умолчанию, дифференцирующая): τ = 10 кОм·100 пФ = 1 мкс, tи/τ = 10; к концу импульса 5·e⁻¹⁰ = 227 мкВ (0,00454 %);
+// на спаде −5·(1 − e⁻¹⁰) ≈ −5 В; порог 2,5 В — через τ·ln 2 = 693,1 нс (моделирование 693,1 нс): импульс укорочен.
+await calculateWithout("rc-cep-impuls.html", {}, ["Постоянная времени τ = R·C1 мкс", "Отношение tи/τ10", "Выброс на фронте5 В",
+  "К концу импульса U·e^(−tи/τ)227 мкВ — 0,00454 % выброса", "Выброс на спаде −U·(1 − e^(−tи/τ))−5 В", "Время спада до порога t = τ·ln(U/Uпор)693,1 нс",
+  "Длительность выходного импульса выше порога693,1 нс вместо 10 мкс", "СтатусОценка: импульс укорочен до 693,1 нс на уровне 2,5 В (вход 10 мкс); на спаде выброс −5 В",
+  "Источник считается идеальным, нагрузка не учтена"], ["не укорочен", "Недостаточно"]);
+// Нагрузка 10 кОм: R∥Rн = 5 кОм, τ = 0,5 мкс, порог — через 346,6 нс; остаток e⁻²⁰ — меньше 0,0001 %.
+await calculate("rc-cep-impuls.html", { rl: "10" }, ["Постоянная времени τ = (Rи + R∥Rн)·C500 нс", "К концу импульса U·e^(−tи/τ)меньше 0,0001 % выброса",
+  "Длительность выходного импульса выше порога346,6 нс вместо 10 мкс", "Сопротивление источника и нагрузка учтены через эквивалентную схему"]);
+// Источник 1 кОм и нагрузка 10 кОм: τ = (1 + 5) кОм·100 пФ = 0,6 мкс, амплитуда 5·5/6 = 4,167 В; порог — через 0,6·ln(4,167/2,5) = 306,5 нс.
+await calculate("rc-cep-impuls.html", { rs: "1000", rl: "10" }, ["Постоянная времени τ = (Rи + R∥Rн)·C600 нс", "Амплитуда на выходе: k = R∥Rн/(Rи + R∥Rн)4,167 В — k = 0,8333",
+  "Выброс на спаде −U·(1 − e^(−tи/τ))−4,167 В", "Длительность выходного импульса выше порога306,5 нс вместо 10 мкс"]);
+// Укорочения нет: C = 10 нФ, τ = 100 мкс; к концу импульса 5·e^(−0,1) = 4,524 В выше порога; нужно τ < 10 мкс/ln 2 = 14,43 мкс.
+await calculateWithout("rc-cep-impuls.html", { c: "10", c_unit: "1e-09" }, ["К концу импульса U·e^(−tи/τ)4,524 В — 90,48 % выброса", "Выброс на спаде −U·(1 − e^(−tи/τ))−475,8 мВ",
+  "Длительность выходного импульса выше порога10 мкс — весь входной импульс",
+  "СтатусВыходной импульс не укорочен: к концу входного импульса выход 4,524 В ещё не ниже порога 2,5 В — нужно τ меньше tи/ln(U/Uпор) = 14,43 мкс"], ["Оценка"]);
+// Порог не достигнут: источник 30 кОм — амплитуда 5·10/40 = 1,25 В.
+await calculate("rc-cep-impuls.html", { rs: "30", rs_unit: "1000.0" }, ["Амплитуда на выходе: k = R∥Rн/(Rи + R∥Rн)1,25 В — k = 0,25",
+  "СтатусВыход не достигает порога: амплитуда 1,25 В не выше порога 2,5 В — делитель сопротивления источника и нагрузки ослабил импульс"]);
+// Без порога — время спада до 10 % и 1 %: τ·ln 10 = 2,303 мкс и τ·ln 100 = 4,605 мкс.
+await calculateWithout("rc-cep-impuls.html", { up: "" }, ["Спад до 10 % и 1 % выброса: τ·ln 10 и τ·ln 1002,303 мкс и 4,605 мкс",
+  "СтатусОценка: к концу импульса выход спадает до 0,00454 % выброса; на спаде выброс −5 В"], ["Время спада до порога", "не укорочен"]);
+// Интегрирующая, τ = 100 мкс: к концу импульса 5·(1 − e^(−0,1)) = 475,8 мВ (9,516 %), отклонение 1 − 0,09516/0,1 = 4,837 %; до 2,5 В —
+// 100·ln 2 = 69,31 мкс, импульс 10 мкс короче — не пройдёт (моделирование: порог не пересечён).
+await calculate("rc-cep-impuls.html", { sch: "int", c: "10", c_unit: "1e-09" }, ["Напряжение к концу импульса U·(1 − e^(−tи/τ))475,8 мВ — 9,516 % от U",
+  "Отклонение от линейного нарастания 1 − (1 − e^(−x))/x, x = tи/τ4,837 %", "Порог за время импульсане достигается: нужно 69,31 мкс, импульс 10 мкс",
+  "СтатусОценка: импульс не пройдёт порог 2,5 В — к концу импульса только 475,8 мВ, а до порога нужно 69,31 мкс при импульсе 10 мкс"]);
+// Интегрирующая, τ = 10 мкс: 3,161 В (63,21 %), отклонение 36,79 %; порог через 10·ln 2 = 6,931 мкс, после импульса ниже порога через
+// 10·ln(3,161/2,5) = 2,345 мкс — выше порога с 6,931 до 12,34 мкс (моделирование 6,931 и 12,34 мкс); спад до 1 % — 46,05 мкс.
+await calculate("rc-cep-impuls.html", { sch: "int", c: "1", c_unit: "1e-09" }, ["Напряжение к концу импульса U·(1 − e^(−tи/τ))3,161 В — 63,21 % от U",
+  "Отклонение от линейного нарастания 1 − (1 − e^(−x))/x, x = tи/τ36,79 %", "После импульса спадает U1·e^(−t/τ): до 1 % — за τ·ln 10046,05 мкс",
+  "Задержка до порога t = τ·ln(U/(U − Uпор))6,931 мкс", "Выход выше порогас 6,931 мкс до 12,34 мкс после фронта — 5,413 мкс",
+  "СтатусОценка: к концу импульса 3,161 В (63,21 % от U), порог 2,5 В пройден через 6,931 мкс; отклонение от линейного нарастания 36,79 %"]);
+// Граница порога интегрирующей цепи: нагрузка 10 кОм делит до 2,5 В — ровно порог, «не достигается»; при пороге 2,4999 В задержка
+// 5·ln(2,5/0,0001) = 50,63 мкс больше импульса. τ = (10∥10) кОм·1 нФ = 5 мкс; к концу импульса 2,5·(1 − e⁻²) = 2,162 В, отклонение 56,77 %.
+await calculate("rc-cep-impuls.html", { sch: "int", c: "1", c_unit: "1e-09", rl: "10" }, ["Постоянная времени τ = ((Rи + R)∥Rн)·C5 мкс",
+  "Установившееся напряжение: k = Rн/(Rи + R + Rн)2,5 В — k = 0,5", "2,162 В — 86,47 % от k·U", "56,77 %",
+  "СтатусПорог не достигается: установившееся напряжение 2,5 В не выше порога 2,5 В"], "boundary");
+await calculate("rc-cep-impuls.html", { sch: "int", c: "1", c_unit: "1e-09", rl: "10", up: "2,4999" }, ["Задержка до порога t = τ·ln(U/(U − Uпор))50,63 мкс",
+  "СтатусОценка: импульс не пройдёт порог 2,5 В — к концу импульса только 2,162 В, а до порога нужно 50,63 мкс при импульсе 10 мкс"], "boundary");
+// Интегрирующая, меандр T = 100 мкс, τ = 100 мкс: a = e^(−0,5); 5/(1 + a) = 3,112 В, 5a/(1 + a) = 1,888 В, размах 5·tanh(0,25) = 1,225 В
+// (моделирование: 3,112 и 1,888 В, среднее 2,5 В); отличие от треугольника 1 − tanh(0,25)/0,25 = 2,033 %; порог 2,5 В — через 21,91 мкс.
+await calculate("rc-cep-impuls.html", { sch: "int", c: "10", c_unit: "1e-09", sig: "sq" }, ["Отношение T/τ1", "Установившийся размах ΔU = U·tanh(T/(4τ))1,225 В",
+  "Наибольшее и наименьшее напряжение3,112 В и 1,888 В", "Среднее — половина U2,5 В", "Отличие от треугольника 1 − tanh(y)/y, y = T/(4τ)2,033 %",
+  "Установление от включения — около 5τ500 мкс", "Пересечение порогачерез 21,91 мкс после фронта и через 21,91 мкс после спада"]);
+// Порог 3 В: после фронта 100·ln((5 − 1,888)/2) = 44,22 мкс, после спада 100·ln(3,112/3) = 3,675 мкс (моделирование — те же).
+await calculate("rc-cep-impuls.html", { sch: "int", c: "10", c_unit: "1e-09", sig: "sq", up: "3" }, ["Пересечение порогачерез 44,22 мкс после фронта и через 3,675 мкс после спада"]);
+await calculate("rc-cep-impuls.html", { sch: "int", c: "10", c_unit: "1e-09", sig: "sq", up: "3,2" }, ["СтатусОценка: размах 1,225 В вокруг 2,5 В — выход всё время не выше порога 3,2 В, переключений нет"]);
+await calculate("rc-cep-impuls.html", { sch: "int", c: "10", c_unit: "1e-09", sig: "sq", up: "1,5" }, ["СтатусОценка: размах 1,225 В вокруг 2,5 В — выход всё время не ниже порога 1,5 В, переключений нет"]);
+// Дифференцирующая, меандр, τ = 1 мкс ≪ T: выбросы ±5 В, к концу полупериода — меньше 0,0001 % (моделирование 1,8 пВ), спад вершины 100 %.
+await calculateWithout("rc-cep-impuls.html", { sig: "sq" }, ["Выброс на фронте U/(1 + e^(−T/(2τ)))5 В", "К концу полупериода U·e^(−T/(2τ))/(1 + e^(−T/(2τ)))меньше 0,0001 % от U",
+  "Спад вершины U·tanh(T/(4τ))5 В — 100 % от U", "Выброс на спаде−5 В", "СтатусОценка: выбросы ±5 В, выход выше порога 693,1 нс из 50 мкс; спад вершины 100 %"], ["Длительность импульса"]);
+// Дифференцирующая, меандр, τ = T = 100 мкс: выбросы ±3,112 В, к концу полупериода 1,888 В, спад 1,225 В (24,49 %); порог — через 21,91 мкс.
+await calculate("rc-cep-impuls.html", { c: "10", c_unit: "1e-09", sig: "sq" }, ["Выброс на фронте U/(1 + e^(−T/(2τ)))3,112 В", "К концу полупериода U·e^(−T/(2τ))/(1 + e^(−T/(2τ)))1,888 В",
+  "Спад вершины U·tanh(T/(4τ))1,225 В — 24,49 % от U", "Длительность выходного импульса выше порога τ·ln(Uвыбр/Uпор)21,91 мкс"]);
+await calculate("rc-cep-impuls.html", { c: "10", c_unit: "1e-09", sig: "sq", up: "1,5" }, ["Длительность выходного импульса выше порога50 мкс — весь полупериод",
+  "СтатусВыходной импульс не укорочен: к концу полупериода выход 1,888 В ещё не ниже порога 1,5 В"]);
+await calculate("rc-cep-impuls.html", { c: "10", c_unit: "1e-09", sig: "sq", up: "4" }, ["СтатусВыход не достигает порога: выброс 3,112 В не выше порога 4 В"]);
+// Граница укорочения: порог 5·e^(−0,1) = 4,524187090179797 В — выход опускается до него ровно к концу импульса: «не укорочен»;
+// на 10⁻⁵ выше — укорочен до 100·ln(5/4,52423) = 9,999 мкс.
+await calculate("rc-cep-impuls.html", { c: "10", c_unit: "1e-09", up: "4.524187090179797" }, ["Длительность выходного импульса выше порога10 мкс — весь входной импульс", "СтатусВыходной импульс не укорочен"], "boundary");
+await calculate("rc-cep-impuls.html", { c: "10", c_unit: "1e-09", up: "4.524232332050699" }, ["Длительность выходного импульса выше порога9,999 мкс вместо 10 мкс", "СтатусОценка: импульс укорочен до 9,999 мкс"], "boundary");
+await invalid("rc-cep-impuls.html", { u: "0" }, "Амплитуда импульса — больше 0 и не больше 1000 В");
+await invalid("rc-cep-impuls.html", { r: "0" }, "Сопротивление и ёмкость должны быть больше нуля");
+await invalid("rc-cep-impuls.html", { c: "abc" }, "Заполните числами амплитуду импульса, сопротивление и ёмкость");
+await invalid("rc-cep-impuls.html", { sig: "sq", T: "" }, "Введите период меандра числом");
+await invalid("rc-cep-impuls.html", { ti: "x" }, "Введите длительность импульса числом");
+await invalid("rc-cep-impuls.html", { up: "0" }, "Порог должен быть больше нуля");
+await invalid("rc-cep-impuls.html", { rs: "-1" }, "Сопротивление источника не может быть отрицательным");
+await invalid("rc-cep-impuls.html", { rl: "0" }, "Сопротивление нагрузки должно быть больше нуля");
+
 // Структурные проверки партии №6: запрещённые формы вердикта, карточка
 // источника, реестр, каталог, видимость полей по режиму (правило 7), ссылки на
 // соседние страницы вместо дублирования, входящие ссылки, атрибуция источников,
 // пустые необязательные поля без прочерков вместо чисел.
 {
   kind = "structural";
-  const batch6 = ["kvarc-kondensatory", "delitel-chastoty", "blokirovochnyy-kondensator"];
+  const batch6 = ["kvarc-kondensatory", "delitel-chastoty", "blokirovochnyy-kondensator", "rc-cep-impuls"];
   const read = file => fs.readFileSync(path.join(sourceDir, file), "utf8");
   const visible = file => read(file).replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
   const registry = read("ENGINEERING_AUDIT.md");
@@ -4185,10 +4260,15 @@ await invalid("blokirovochnyy-kondensator.html", { dv: "0" }, "Допустим�
   check(!hs.has("chip") && hs.has("bits"), "delitel-chastoty: в режиме двоичного счётчика виден выбор микросхемы");
   hs = await state("delitel-chastoty.html", { mode: "int" });
   check(hs.has("chip") && hs.has("bits"), "delitel-chastoty: в режиме целочисленного делителя оба выбора скрыты");
+  hs = await state("rc-cep-impuls.html", {});
+  check(hs.has("T") && !hs.has("ti"), "rc-cep-impuls: для одиночного импульса видна длительность, скрыт период");
+  hs = await state("rc-cep-impuls.html", { sig: "sq" });
+  check(!hs.has("T") && hs.has("ti"), "rc-cep-impuls: для меандра виден период, скрыта длительность");
   // Не дублировать соседние страницы, а ссылаться на них.
   const links = { "kvarc-kondensatory": ["soedinenie-kondensatorov", "delitel-chastoty", "rezonans-lc"],
     "delitel-chastoty": ["kvarc-kondensatory", "shim-srednee-napryazhenie", "ne555-astabilnyy"],
-    "blokirovochnyy-kondensator": ["rc-filtr", "impedans-rlc", "linear-regulator-loss"] };
+    "blokirovochnyy-kondensator": ["rc-filtr", "impedans-rlc", "linear-regulator-loss"],
+    "rc-cep-impuls": ["rc-filtr", "zaryad-kondensatora", "ne555-monostabilnyy"] };
   for (const [from, list] of Object.entries(links)) {
     const article = read(`${from}.html`).match(/<p class="intro">[\s\S]*?<section class="related">/)?.[0] ?? "";
     for (const to of list) check(article.includes(`href="${to}.html"`), `${from}: в тексте нет ссылки на ${to}`);
@@ -4196,7 +4276,8 @@ await invalid("blokirovochnyy-kondensator.html", { dv: "0" }, "Допустим�
   // Входящие ссылки на новые страницы из «Смотрите также» существующих.
   const inbound = [["soedinenie-kondensatorov", "kvarc-kondensatory"], ["reaktivnoe-soprotivlenie", "kvarc-kondensatory"],
     ["ne555-astabilnyy", "delitel-chastoty"], ["shim-srednee-napryazhenie", "delitel-chastoty"],
-    ["impedans-rlc", "blokirovochnyy-kondensator"], ["linear-regulator-loss", "blokirovochnyy-kondensator"]];
+    ["impedans-rlc", "blokirovochnyy-kondensator"], ["linear-regulator-loss", "blokirovochnyy-kondensator"],
+    ["rc-filtr", "rc-cep-impuls"], ["ne555-monostabilnyy", "rc-cep-impuls"]];
   for (const [from, to] of inbound) {
     const block = read(`${from}.html`).match(/<section class="related">([\s\S]*?)<\/section>/)?.[1] ?? "";
     check(block.includes(`href="${to}.html"`), `${from}: в «Смотрите также» нет ссылки на ${to}`);
@@ -4213,10 +4294,15 @@ await invalid("blokirovochnyy-kondensator.html", { dv: "0" }, "Допустим�
   check(/MT-101/.test(bk) && /SPRAC76/.test(bk) && /Murata/.test(bk) && /KYOCERA AVX/.test(bk) && /TDK/.test(bk) && /Q = C·U/.test(bk)
     && /0,35\/tфр/.test(bk) && /без индуктивности монтажа/.test(bk) && /не подставляет вместо них ноль молча/.test(bk),
     "blokirovochnyy-kondensator: нет атрибуции MT-101, SPRAC76, DC bias изготовителей, вывода баланса заряда, полосы 0,35/tфр или оговорки о монтаже");
+  const rc = visible("rc-cep-impuls.html");
+  check(/OpenStax/.test(rc) && /Millman/.test(rc) && /U·tanh\(T\/\(4τ\)\)/.test(rc) && /установившемся режиме конец паузы совпадает/.test(rc)
+    && /0,67 %/.test(rc) && /допустимым напряжением входа следующего каскада/.test(rc),
+    "rc-cep-impuls: нет закона заряда OpenStax, ссылки на Millman и Taub, вывода размаха меандра из периодичности или оговорки об отрицательном выбросе");
   // Необязательные поля пустые — результат остаётся полезным: есть статус, нет прочерков вместо чисел.
   for (const [file, values] of [["kvarc-kondensatory.html", {}], ["kvarc-kondensatory.html", { gm: "", tol: "", esr: "", c0: "", cm: "" }],
     ["delitel-chastoty.html", {}], ["delitel-chastoty.html", { ppm: "", tolp: "", mode: "bin" }], ["delitel-chastoty.html", { mode: "int" }],
-    ["blokirovochnyy-kondensator.html", {}], ["blokirovochnyy-kondensator.html", { esr: "", esl: "", f2: "" }]]) {
+    ["blokirovochnyy-kondensator.html", {}], ["blokirovochnyy-kondensator.html", { esr: "", esl: "", f2: "" }],
+    ["rc-cep-impuls.html", {}], ["rc-cep-impuls.html", { up: "", rs: "", rl: "" }], ["rc-cep-impuls.html", { sch: "int", sig: "sq", up: "" }]]) {
     const dom = await load(file); const d = dom.window.document;
     for (const [id, v] of Object.entries(values)) { const el = d.getElementById(id); el.value = v; el.dispatchEvent(new dom.window.Event("change", { bubbles: true })); }
     d.getElementById("go").click();
