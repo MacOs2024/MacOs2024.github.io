@@ -95,7 +95,7 @@ const infoPages = ["privacy.html", "about.html"];
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
   .sort();
-check(htmlFiles.length === 148, `Ожидалось 148 HTML-файлов, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 152, `Ожидалось 152 HTML-файла, найдено ${htmlFiles.length}`);
 
 // Совет закоротить заряженный конденсатор перемычкой, отвёрткой или
 // закороткой опасен: при запасённой энергии это даёт дугу и разбрызгивание
@@ -1136,7 +1136,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 148, `В sitemap должно быть 148 URL (корень + about + 146 калькуляторов), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 152, `В sitemap должно быть 152 URL (корень + about + 150 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 

@@ -355,7 +355,7 @@ faqs=[
  ("Какое питание подавать на мост?",
   "В режиме баланса — любое разумное. В режиме разбаланса выход прямо пропорционален питанию, поэтому нужен стабилизированный источник, а лучше — измерение отношения выхода к питанию."),
 ],
-related=["delitel-napryazheniya","soedinenie-rezistorov","ntc-termistor"],
+related=["delitel-napryazheniya","soedinenie-rezistorov","ntc-termistor","differencialnyy-usilitel"],
 ),
 
 dict(
@@ -1150,7 +1150,7 @@ faqs=[
  ("Можно ли питать ОУ от одного источника?",
   "Да, но тогда для работы с двуполярным сигналом нужно создать искусственную среднюю точку — обычно делителем на два одинаковых резистора с конденсатором. Иначе схема будет обрабатывать только положительную полуволну."),
 ],
-related=["delitel-napryazheniya","decibel","rc-filtr"],
+related=["delitel-napryazheniya","decibel","rc-filtr","differencialnyy-usilitel","trigger-shmitta"],
 ),
 
 dict(
@@ -1202,7 +1202,7 @@ faqs=[
  ("Когда лучше взять полевой транзистор?",
   "При токах от нескольких сотен миллиампер: логическому MOSFET ток затвора в статике не нужен вовсе, а сопротивление открытого канала в единицы миллиом даёт потери на порядок меньше. Для управления от 3,3 В берите транзистор с пометкой logic level."),
 ],
-related=["rezistor-svetodioda","zakon-oma","shim-srednee-napryazhenie","rezistor-zatvora-mosfet"],
+related=["rezistor-svetodioda","zakon-oma","shim-srednee-napryazhenie","rezistor-zatvora-mosfet","tokovoe-zerkalo"],
 ),
 
 dict(
@@ -1648,7 +1648,7 @@ faqs=[
  ("Можно ли ставить электролитический конденсатор в кроссовер?",
   "Обычный полярный — нет, через него идёт переменный сигнал обеих полярностей. Применяют неполярные плёночные или специальные биполярные электролитические конденсаторы для акустики."),
 ],
-related=["rc-filtr","rezonans-lc","impedans-rlc","drosselnyy-filtr-vypryamitelya"],
+related=["rc-filtr","rezonans-lc","impedans-rlc","drosselnyy-filtr-vypryamitelya","filtr-sallena-ki"],
 ),
 
 ]
