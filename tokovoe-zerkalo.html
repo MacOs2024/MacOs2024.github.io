@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Токовое зеркало на биполярных транзисторах — ВольтКальк</title>
+<meta name="description" content="Расчёт токового зеркала на биполярных транзисторах — простого, с эмиттерными резисторами и Уилсона: опорный ток, выходной ток с учётом β и эффекта Эрли, выходное сопротивление и изменение тока с напряжением на выходе, разброс тока от рассогласования Uбэ и выигрыш от эмиттерных резисторов, граница соответствия по Uкэ нас и мощность каждого транзистора и резистора.">
+<link rel="canonical" href="https://macos2024.github.io/tokovoe-zerkalo.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Токовое зеркало на биполярных транзисторах — ВольтКальк">
+<meta property="og:description" content="Расчёт токового зеркала на биполярных транзисторах — простого, с эмиттерными резисторами и Уилсона: опорный ток, выходной ток с учётом β и эффекта Эрли, выходное сопротивление и изменение тока с напряжением на выходе, разброс тока от рассогласования Uбэ и выигрыш от эмиттерных резисторов, граница соответствия по Uкэ нас и мощность каждого транзистора и резистора.">
+<meta property="og:url" content="https://macos2024.github.io/tokovoe-zerkalo.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Токовое зеркало на биполярных транзисторах","url":"https://macos2024.github.io/tokovoe-zerkalo.html","description":"Расчёт токового зеркала на биполярных транзисторах — простого, с эмиттерными резисторами и Уилсона: опорный ток, выходной ток с учётом β и эффекта Эрли, выходное сопротивление и изменение тока с напряжением на выходе, разброс тока от рассогласования Uбэ и выигрыш от эмиттерных резисторов, граница соответствия по Uкэ нас и мощность каждого транзистора и резистора.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Токовое зеркало на биполярных транзисторах","item":"https://macos2024.github.io/tokovoe-zerkalo.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему выходной ток зеркала больше опорного?","acceptedAnswer":{"@type":"Answer","text":"Из-за эффекта Эрли: у выходного транзистора Uкэ больше, чем у диодного, и при том же Uбэ его коллекторный ток больше в (1 + Uкэ2/VA)/(1 + Uбэ/VA) раз. При VA = 82 В и 10 В на выходе это около 11 %. Ошибку уменьшают эмиттерные резисторы или схема Уилсона."}},{"@type":"Question","name":"Зачем нужны эмиттерные резисторы?","acceptedAnswer":{"@type":"Answer","text":"Они уменьшают влияние разброса Uбэ: рассогласование 2 мВ без них даёт около 8 % разницы токов, а с падением 0,5 В на резисторах — доли процента. Заодно растёт выходное сопротивление. Плата — большее наименьшее напряжение на выходе и требования к точности самих резисторов."}},{"@type":"Question","name":"Что такое граница соответствия?","acceptedAnswer":{"@type":"Answer","text":"Наименьшее напряжение на выходе, при котором выходной транзистор ещё в активном режиме и зеркало держит ток: Uкэ нас по паспорту, плюс падение на RE или Uбэ у схемы Уилсона. Ниже неё ток падает."}},{"@type":"Question","name":"Можно ли собрать зеркало из двух отдельных транзисторов?","acceptedAnswer":{"@type":"Answer","text":"Можно, но у отдельных транзисторов разброс Uбэ обычно больше, чем у согласованной пары в одном корпусе, а нагреваются они по-разному — и Uбэ расходится ещё сильнее. Для точного зеркала берут сдвоенные согласованные транзисторы или ставят эмиттерные резисторы."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Токовое зеркало на биполярных транзисторах</h1>
+<p class="intro">Токовое зеркало повторяет опорный ток, заданный резистором, в выходной транзистор — ток почти не зависит от напряжения на нагрузке. Калькулятор считает опорный и выходной ток с учётом β и эффекта Эрли, выходное сопротивление, разброс от рассогласования транзисторов, границу соответствия и мощности. Ключ в насыщении считает <a href="bazovyy-rezistor-tranzistora.html">калькулятор базового резистора</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Токовое зеркало на биполярных транзисторах</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_typ"><label for="typ">Схема</label><div class="fw"><select id="typ"><option value="simple" selected>Простое: два транзистора</option><option value="re">С эмиттерными резисторами</option><option value="wilson">Уилсона: три транзистора</option></select></div></div><div class="f" id="f_vcc"><label for="vcc">Напряжение питания опорной цепи Vпит</label><div class="fw"><input id="vcc" type="text" inputmode="decimal" autocomplete="off" value="12" placeholder=""><span class="u">В</span></div><div class="hint">Напряжение на верхнем выводе резистора R относительно эмиттеров (общего провода)</div></div><div class="f" id="f_r"><label for="r">Резистор R, задающий опорный ток</label><div class="fw"><input id="r" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="r_unit" class="u" aria-label="Единицы: Резистор R, задающий опорный ток"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_vbe"><label for="vbe">Напряжение база–эмиттер Uбэ при рабочем токе</label><div class="fw"><input id="vbe" type="text" inputmode="decimal" autocomplete="off" value="0,65" placeholder=""><span class="u">В</span></div><div class="hint">По графику Uбэ(Iк) паспорта при токе, близком к опорному. Значение по умолчанию — условное</div></div><div class="f" id="f_beta"><label for="beta">Коэффициент передачи тока β</label><div class="fw"><input id="beta" type="text" inputmode="decimal" autocomplete="off" value="200" placeholder=""></div><div class="hint">Наименьший по паспорту: с ним ошибка зеркала наибольшая. У пары Nexperia BCM847BS hFE — от 200 при 2 мА и 5 В. Паспортный hFE измерен при Uкэ = 5 В и больше β модели в (1 + 5 В/VA) раз — на ошибку это почти не влияет</div></div><div class="f" id="f_va"><label for="va">Напряжение Эрли VA</label><div class="fw"><input id="va" type="text" inputmode="decimal" autocomplete="off" value="82" placeholder=""><span class="u">В</span></div><div class="hint">По паспорту или SPICE-модели, параметр VAF: у Nexperia BCM847BS VAF = 82 В</div></div><div class="f" id="f_tc"><label for="tc">Температура кристаллов</label><div class="fw"><input id="tc" type="text" inputmode="decimal" autocomplete="off" value="25" placeholder=""><span class="u">°C</span></div><div class="hint">Для теплового потенциала VT = k·T/q</div></div><div class="f" id="f_dvbe"><label for="dvbe">Рассогласование пары |ΔUбэ|</label><div class="fw"><input id="dvbe" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><span class="u">мВ</span></div><div class="hint">Необязательное: по паспорту согласованной пары — у Nexperia BCM847BS и BCM857BS не больше 2 мВ при 2 мА. Пусто — разброс тока не оценивается</div></div><div class="f" id="f_re"><label for="re">Эмиттерные резисторы RE, одинаковые</label><div class="fw"><input id="re" type="text" inputmode="decimal" autocomplete="off" value="470" placeholder=""><select id="re_unit" class="u" aria-label="Единицы: Эмиттерные резисторы RE, одинаковые"><option value="1" selected>Ом</option><option value="1000">кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_tre"><label for="tre">Допуск эмиттерных резисторов ±</label><div class="fw"><input id="tre" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">%</span></div><div class="hint">Необязательное: при больших RE разброс тока определяет уже их допуск</div></div><div class="f" id="f_vomin"><label for="vomin">Напряжение на выходе — коллектор выходного транзистора: наименьшее</label><div class="fw"><input id="vomin" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">В</span></div><div class="hint">Относительно общего провода — нижних выводов эмиттеров или RE</div></div><div class="f" id="f_vomax"><label for="vomax">Напряжение на выходе: наибольшее</label><div class="fw"><input id="vomax" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_vcesat"><label for="vcesat">Uкэ нас выходного транзистора по паспорту</label><div class="fw"><input id="vcesat" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div><div class="hint">Необязательное: при токе, близком к выходному. Пусто — граница соответствия не проверяется</div></div><div class="f" id="f_vceo"><label for="vceo">Наибольшее Uкэ по паспорту UКЭО</label><div class="fw"><input id="vceo" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div><div class="hint">Необязательное: у BCM847BS — 45 В</div></div><div class="f" id="f_ptot"><label for="ptot">Допустимая мощность одного транзистора Ptot</label><div class="fw"><input id="ptot" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">мВт</span></div><div class="hint">Необязательное: по паспорту с учётом температуры и монтажа</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Токовое зеркало: как считается</h2>
+<div class="formula">Модель транзистора: Iк = Is·e<sup>Uбэ/VT</sup>·(1 + Uкэ/VA),&nbsp;&nbsp;Iб = Is·e<sup>Uбэ/VT</sup>/β,&nbsp;&nbsp;VT = k·T/q<br>Простое: Iоп = (Vпит − Uбэ)/R,&nbsp;&nbsp;Iвых = Iоп·(1 + Uвых/VA)/(1 + Uбэ/VA + 2/β);&nbsp;&nbsp;при Uвых = Uбэ и VA → ∞: Iвых = Iоп/(1 + 2/β)<br>Rвых = (VA + Uкэ)/Iвых = ro;&nbsp;&nbsp;рассогласование: Iвых ∝ e<sup>ΔUбэ/VT</sup><br>С эмиттерными резисторами: Uбэ1 + Iэ1·RE = Uбэ2 + Iэ2·RE,&nbsp;&nbsp;Iк2/Iк1 = (1 + Uкэ2/VA)/(1 + Uбэ/VA)·e<sup>(Iэ1·RE − Iэ2·RE + ΔUбэ)/VT</sup> — решается численно; разброс ≈ ΔUбэ/(VT + Iэ·RE)<br>Уилсона: Iоп = (Vпит − Uбэ2 − Uбэ3)/R,&nbsp;&nbsp;Iвых/Iоп = 1/(1 + 2/(β·(β + 2))) при VA → ∞,&nbsp;&nbsp;Rвых ≈ β·ro/2<br>Граница соответствия: Uвых ≥ Uкэ нас, у схемы с RE — плюс Iэ·RE, у схемы Уилсона — плюс Uбэ;&nbsp;&nbsp;мощность транзистора Uкэ·Iк + Uбэ·Iб</div>
+<p><b>Простое зеркало — вывод.</b> Q1 включён диодом — коллектор соединён с базой, — и через R течёт опорный ток Iоп = (Vпит − Uбэ)/R. Базы и эмиттеры Q1 и Q2 соединены, поэтому у них одно Uбэ и один множитель Is·e<sup>Uбэ/VT</sup>. Опорный ток делится на коллекторный ток Q1 и токи двух баз: Iоп = Iк1 + Iб1 + Iб2 — это закон токов Кирхгофа для узла баз. При равных Uкэ отсюда Iвых = Iоп/(1 + 2/β); эту формулу базового зеркала приводят Sedra и Smith (Microelectronic Circuits, гл. 8). Эффект Эрли добавляет множитель (1 + Uкэ/VA): у Q1 Uкэ = Uбэ, а у выходного Q2 — напряжение на выходе. Поэтому выходной ток растёт с напряжением на выходе, а выходное сопротивление равно ro = (VA + Uкэ)/Iвых. VA берут из паспорта или из SPICE-модели (параметр VAF): у Nexperia BCM847BS — 82 В.</p>
+<p><b>Рассогласование транзисторов.</b> Даже у согласованной пары напряжения база–эмиттер при одинаковом токе различаются: у Nexperia BCM847BS и BCM857BS — не больше 2 мВ при 2 мА. Ток коллектора экспоненциально зависит от Uбэ, поэтому разница ΔUбэ даёт отношение токов e<sup>ΔUбэ/VT</sup>: 2 мВ при 25 °C — около 8 %. Калькулятор показывает выходной ток при обоих знаках рассогласования.</p>
+<p><b>Эмиттерные резисторы.</b> Резистор RE в эмиттере каждого транзистора вводит отрицательную обратную связь: если ток одного транзистора больше, падение на его RE растёт и его Uбэ уменьшается. По закону напряжений Кирхгофа для контура «базы — эмиттеры — общий провод» Uбэ1 + Iэ1·RE = Uбэ2 + Iэ2·RE. Вместе с экспонентой транзистора это одно уравнение для отношения токов; калькулятор решает его делением отрезка. Рассогласование уменьшается примерно в (1 + Iэ·RE/VT) раз: при падении на RE около 0,5 В вместо 8 % остаются доли процента. Зато теперь важен допуск самих RE — разность падений на разных резисторах действует так же, как ΔUбэ, — и растёт наименьшее напряжение на выходе: к Uкэ нас добавляется Iэ·RE. Выходное сопротивление тоже растёт — эмиттерные резисторы повышают его (ADI, учебник по электронике, гл. 11): обратная связь через RE подавляет эффект Эрли.</p>
+<p><b>Зеркало Уилсона.</b> Третий транзистор Q3 стоит между выходом и диодом Q2, а Q1 сравнивает ток Q2 с опорным и управляет базой Q3. Ошибка по β становится второго порядка — Iвых/Iоп = 1/(1 + 2/(β·(β + 2))), около 2/β², — а выходное сопротивление растёт примерно до β·ro/2: прибавка тока Q3 через ток его базы возвращается обратной связью (Sedra, Smith, разд. 8.6.2). Калькулятор решает уравнения Кирхгофа для трёх транзисторов той же моделью, а оценку β·ro/2 показывает для сравнения. Она предполагает идеальный источник опорного тока; здесь же опорный ток задан резистором и слегка растёт с напряжением на выходе — через Uбэ3 меняется напряжение опорного узла, — поэтому расчётное выходное сопротивление меньше учебной оценки. Плата — опорный узел на 2·Uбэ выше общего провода и наименьшее напряжение на выходе Uбэ + Uкэ нас. У Q1 Uкэ = 2·Uбэ, у Q2 — Uбэ, и эффект Эрли даёт систематическую ошибку около Uбэ/VA; калькулятор её учитывает.</p>
+<p><b>Граница соответствия и мощность.</b> Зеркало держит ток, пока выходной транзистор в активном режиме: напряжение на выходе не ниже Uкэ нас по паспорту, плюс падение на RE или Uбэ у схемы Уилсона. Сверху его ограничивает UКЭО. Мощность каждого транзистора — Uкэ·Iк + Uбэ·Iб; у выходного она растёт с напряжением на выходе и считается при наибольшем. Без паспортных Uкэ нас, UКЭО и Ptot калькулятор пишет «Недостаточно данных».</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="bazovyy-rezistor-tranzistora.html">Базовый резистор транзистора</a> считает ключ в насыщении, а здесь транзисторы работают в активном режиме и задают ток. Токовое зеркало часто питает <a href="rezistor-svetodioda.html">светодиоды</a> вместо гасящего резистора: ток почти не зависит от напряжения на нагрузке. Разностные схемы на ОУ — на странице <a href="differencialnyy-usilitel.html">дифференциального усилителя</a>.</p>
+<h2>Токовое зеркало: пример расчёта</h2>
+<p>Простое зеркало на паре Nexperia BCM847BS: питание опорной цепи 12 В, R = 10 кОм, Uбэ = 0,65 В (условно), β = 200 — наименьший hFE по паспорту, VA = 82 В — из SPICE-модели. Опорный ток (12 − 0,65)/10 кОм = <b>1,135 мА</b>. При 1 В на выходе выходной ток 1,129 мА — 99,44 % опорного: потерю на токи баз почти компенсирует эффект Эрли. При 10 В — 1,251 мА, 110,2 %: ток вырос на 122,4 мкА, выходное сопротивление 73,54 кОм = (82 + 1)/1,129 мА. Рассогласование пары 2 мВ даёт разброс выходного тока от −7,46 до +8,05 %.</p>
+<p>С эмиттерными резисторами по 470 Ом на каждом падает 0,507 В: опорный ток 1,084 мА, выходной 1,074…1,08 мА, выходное сопротивление 1,421 МОм — в 19 раз больше, — а разброс от тех же 2 мВ всего ±0,37 %. С допуском резисторов ±1 % разброс снова растёт, до −2,2…+2,25 %: теперь его задают сами резисторы. Зеркало Уилсона из тех же транзисторов даёт 1,062…1,063 мА и выходное сопротивление 6,765 МОм при учебной оценке β·ro/2 = 7,79 МОм — оценка предполагает идеальный источник опорного тока.</p>
+<p>Uкэ нас, UКЭО и Ptot введите из паспорта своих транзисторов: без них проверка границ — «Недостаточно данных».</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему выходной ток зеркала больше опорного?</h3><p>Из-за эффекта Эрли: у выходного транзистора Uкэ больше, чем у диодного, и при том же Uбэ его коллекторный ток больше в (1 + Uкэ2/VA)/(1 + Uбэ/VA) раз. При VA = 82 В и 10 В на выходе это около 11 %. Ошибку уменьшают эмиттерные резисторы или схема Уилсона.</p><h3>Зачем нужны эмиттерные резисторы?</h3><p>Они уменьшают влияние разброса Uбэ: рассогласование 2 мВ без них даёт около 8 % разницы токов, а с падением 0,5 В на резисторах — доли процента. Заодно растёт выходное сопротивление. Плата — большее наименьшее напряжение на выходе и требования к точности самих резисторов.</p><h3>Что такое граница соответствия?</h3><p>Наименьшее напряжение на выходе, при котором выходной транзистор ещё в активном режиме и зеркало держит ток: Uкэ нас по паспорту, плюс падение на RE или Uбэ у схемы Уилсона. Ниже неё ток падает.</p><h3>Можно ли собрать зеркало из двух отдельных транзисторов?</h3><p>Можно, но у отдельных транзисторов разброс Uбэ обычно больше, чем у согласованной пары в одном корпусе, а нагреваются они по-разному — и Uбэ расходится ещё сильнее. Для точного зеркала берут сдвоенные согласованные транзисторы или ставят эмиттерные резисторы.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-3-kirchhoffs-rules" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.3 Kirchhoff&#x27;s Rules — законы токов и напряжений: из них на странице выведены токи всех трёх схем — обращение 04.10.2026</li><li><a href="https://www.nist.gov/pml/special-publication-330/sp-330-section-2" rel="nofollow noopener" target="_blank">NIST Special Publication 330: The International System of Units (SI)</a> — National Institute of Standards and Technology — Редакция редакция 2019 — раздел раздел 2: определяющие константы SI — k = 1,380649·10⁻²³ Дж/К, e = 1,602176634·10⁻¹⁹ Кл; VT = k·T/q — обращение 04.10.2026</li><li>Microelectronic Circuits, 7th Edition — A. S. Sedra, K. C. Smith; Oxford University Press — Редакция 7-е издание, 2015; номера разделов — по оглавлению в выдаче, текст книги не открывался — раздел гл. 8, разд. 8.2: базовое зеркало, Iвых/Iоп = 1/(1 + 2/β), выходное сопротивление ro, разд. 8.6.2 The Wilson Current Mirror: 1/(1 + 2/(β·(β + 2))), Rвых ≈ β·ro/2 — формулы видны в пересказах выдачи — обращение 04.10.2026</li><li><a href="https://artofelectronics.net/wp-content/uploads/2015/01/AoE_3e_table-of-contents.pdf" rel="nofollow noopener" target="_blank">The Art of Electronics, 3rd Edition</a> — P. Horowitz, W. Hill; Cambridge University Press — Редакция 3-е издание, 2015; раздел — по оглавлению, текст книги не открывался — раздел 2.3.7 Current mirrors, с. 101 — обращение 04.10.2026</li><li><a href="https://wiki.analog.com/university/courses/electronics/text/chapter-11" rel="nofollow noopener" target="_blank">Chapter 11: The Current Mirror</a> — Analog Devices Wiki, University Program — Редакция онлайн-учебник на дату обращения; положения видны в выдаче — раздел эмиттерные резисторы повышают выходное сопротивление зеркала, зеркало Уилсона: ошибка по β второго порядка, высокое выходное сопротивление — обращение 04.10.2026</li><li><a href="https://assets.nexperia.com/documents/data-sheet/BCM847BS.pdf" rel="nofollow noopener" target="_blank">BCM847BS NPN/NPN matched double transistor. Product data sheet</a> — Nexperia — Редакция 27 декабря 2022; значения видны в выдаче — раздел |VBE1 − VBE2| не больше 2 мВ, hFE1/hFE2 не меньше 0,9 при IC = 2 мА, VCE = 5 В, hFE 200…450 при 2 мА и 5 В; VCEO 45 В; IC до 100 мА; применение — токовые зеркала — обращение 04.10.2026</li><li><a href="https://assets.nexperia.com/documents/data-sheet/BCM857BS.pdf" rel="nofollow noopener" target="_blank">BCM857BS PNP/PNP matched double transistor. Product data sheet</a> — Nexperia — Редакция 4 июля 2023; значения видны в выдаче — раздел |VBE1 − VBE2| не больше 2 мВ, hFE1/hFE2 не меньше 0,9 при IC = −2 мА, VCE = −5 В — обращение 04.10.2026</li><li><a href="https://assets.nexperia.com/documents/spice-model/BCM847BS.txt" rel="nofollow noopener" target="_blank">BCM847BS SPICE model</a> — Nexperia — Редакция модель на дату обращения; параметры видны в выдаче — раздел VAF = 82 В, BF = 324,4, IS = 1,822·10⁻¹⁴ А — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Транзисторы в активном режиме: Iк = Is·e^(Uбэ/VT)·(1 + Uкэ/VA), Iб = Is·e^(Uбэ/VT)/β; β и VA одинаковы у всех транзисторов.</li><li>Uбэ эталонного транзистора — введённое значение при рабочем токе; разности Uбэ — по экспоненциальному закону.</li><li>Температура всех транзисторов одинакова и равна введённой; разброс — при обоих знаках |ΔUбэ| и крайних значениях RE.</li></ul><p><b>Границы применимости:</b></p><ul><li>Саморазогрев, тепловая связь транзисторов и зависимость β от тока не учитываются.</li><li>Граница соответствия — по паспортному Uкэ нас; вблизи неё ток начинает падать раньше.</li><li>Сопротивления баз и эмиттеров самих транзисторов, рассогласование β и VA не учитываются.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="bazovyy-rezistor-tranzistora.html">Базовый резистор транзисторного ключа</a></li><li><a href="rezistor-svetodioda.html">Резистор для светодиода</a></li><li><a href="differencialnyy-usilitel.html">Дифференциальный усилитель на ОУ</a></li><li><a href="trigger-shmitta.html">Триггер Шмитта на компараторе или ОУ</a></li><li><a href="stabilitron-rezistor.html">Балластный резистор для стабилитрона</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function db(x){return 20*Math.log(Math.abs(x))/Math.LN10;}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function sp(x,u){return si(Number(x.toPrecision(12)),u);}
+function rng(x,l,u){var lo_=x-l<u-x;return fx(x,lo_?l:u)+' В в пределах '+(lo_?fx(l,x):fmt(l,4))+' … '+(lo_?fmt(u,4):fx(u,x))+' В';}
+
+function sync(){var t=S('typ');hideF('re',t!=='re');hideF('tre',t!=='re');}
+function init(){$('typ').addEventListener('change',sync);sync();}
+function calc(){
+var t=S('typ'),vcc=P('vcc'),R=P('r'),vbe=P('vbe'),b=P('beta'),va=P('va'),tc=P('tc'),v0=P('vomin'),v1=P('vomax');
+if([vcc,R,vbe,b,va,tc,v0,v1].some(isNaN))return err('Заполните числами питание, R, Uбэ, β, VA, температуру и напряжения на выходе.');
+if(R<=0)return err('R должно быть больше нуля.');
+if(!(vbe>=0.2&&vbe<=1.2))return err('Uбэ кремниевого транзистора — от 0,2 до 1,2 В.');
+if(!(b>=10))return err('β — не меньше 10.');
+if(!(va>0))return err('Напряжение Эрли должно быть больше нуля.');
+if(tc<-55||tc>150)return err('Температура — от −55 до 150 °C.');
+if(v0>v1)return err('Наименьшее напряжение на выходе не может быть больше наибольшего.');
+var re=0,tr=null;
+if(t==='re'){re=P('re');tr=OPT('tre');if(isNaN(re))return err('Введите эмиттерные резисторы RE.');if(re<=0)return err('RE должно быть больше нуля; без резисторов выберите простое зеркало.');
+ if(tr!==null){if(isNaN(tr))return err('Допуск RE — число в процентах. Если он неизвестен, оставьте поле пустым.');if(!(tr>=0&&tr<20))return err('Допуск RE — от 0 до 20 %, не включая 20.');}}
+var dv=OPT('dvbe'),vs=OPT('vcesat'),vo=OPT('vceo'),pt=OPT('ptot');
+if(dv!==null){if(isNaN(dv))return err('Рассогласование — число в милливольтах. Если оно неизвестно, оставьте поле пустым.');if(!(dv>=0&&dv<=100))return err('Рассогласование Uбэ — от 0 до 100 мВ.');}
+if(vs!==null){if(isNaN(vs))return err('Uкэ нас — число в вольтах. Если его нет, оставьте поле пустым.');if(vs<=0)return err('Uкэ нас должно быть больше нуля.');}
+if(vo!==null){if(isNaN(vo))return err('UКЭО — число в вольтах. Если его нет, оставьте поле пустым.');if(vo<=0)return err('UКЭО должно быть больше нуля.');}
+if(pt!==null){if(isNaN(pt))return err('Ptot — число в милливаттах. Если его нет, оставьте поле пустым.');if(pt<=0)return err('Ptot должна быть больше нуля.');}
+if(!(vcc>(t==='wilson'?2:1)*vbe))return err('Напряжения питания не хватает: Vпит должно быть больше '+(t==='wilson'?'2·Uбэ = '+fmt(2*vbe,4):'Uбэ = '+fmt(vbe,4))+' В.');
+var VT=1.380649e-23*(tc+273.15)/1.602176634e-19;
+// Модель: Iк = A·(1 + Uкэ/VA), Iб = A/β, A = Is·e^(Uбэ/VT). Uбэ эталонного транзистора — введённое;
+// m — отношение Is выходного (у Уилсона — Q1) к Is второго транзистора пары.
+function simple(m,vo_){var iref=(vcc-vbe)/R,a1=iref/((1+vbe/va)+(1+m)/b),a2=m*a1,ic1=a1*(1+vbe/va),ic2=a2*(1+vo_/va);
+ return {iref:iref,io:ic2,vce:vo_,ie2:a2*(1+vo_/va+1/b),p:[vbe*(ic1+a1/b),vo_*ic2+vbe*a2/b],pr:[iref*(vcc-vbe)]};}
+// С RE: Uбэ1 + Iэ1·RE1 = Uбэ2 + Iэ2·RE2 → x = Iк-множитель A2/A1 = m·e^((Iэ1·RE1 − Iэ2·RE2)/VT);
+// F(ln x) монотонно растёт — корень делением отрезка.
+function rem(m,vo_,r1,r2){var c1=1+vbe/va+1/b,A1,x,vce,ie2;
+ function F(u){x=Math.exp(u);A1=(vcc-vbe)/(R*(c1+x/b)+c1*r1);var ax=A1*x;vce=(vo_-ax*r2*(1+1/b))/(1+ax*r2/va);ie2=ax*(1+vce/va+1/b);return VT*(u-Math.log(m))-(A1*c1*r1-ie2*r2);}
+ var lo=Math.log(m)-40,hi=Math.log(m)+40;for(var k=0;k<200;k++){var mid=(lo+hi)/2;if(F(mid)>0)hi=mid;else lo=mid;}F((lo+hi)/2);
+ var ie1=A1*c1,iref=A1*(c1+x/b),ic2=A1*x*(1+vce/va),vbe2=vbe+ie1*r1-ie2*r2;
+ return {iref:iref,io:ic2,vce:vce,ie1:ie1,ie2:ie2,p:[vbe*ie1,vce*ic2+vbe2*A1*x/b],pr:[iref*iref*R,ie1*ie1*r1,ie2*ie2*r2]};}
+// Уилсон: узел эмиттера Q3 даёт y = A3/A2, узел коллектора Q1 — опорный ток; Uбэ3 = Uбэ + VT·ln y.
+function wil(m,vo_){var y=(1+vbe/va+(1+m)/b)/(1+(vo_-vbe)/va+1/b),vy=2*vbe+VT*Math.log(y),iref=(vcc-vy)/R,a2=iref/(m*(1+vy/va)+y/b);
+ var ic2=a2*(1+vbe/va),ic1=m*a2*(1+vy/va),a3=y*a2,vce3=vo_-vbe,ic3=a3*(1+vce3/va),vbe3=vbe+VT*Math.log(y);
+ return {iref:iref,io:ic3,vce:vce3,vy:vy,ie2:a3*(1+vce3/va+1/b),p:[vy*ic1+vbe*m*a2/b,vbe*(ic2+a2/b),vce3*ic3+vbe3*a3/b],pr:[iref*(vcc-vy)]};}
+var N=t==='simple'?simple:t==='re'?function(m,x){return rem(m,x,re,re);}:wil;
+var A=N(1,v0),B=N(1,v1);
+if(!(A.vce>0))return err('При Uвых = '+fmt(v0,4)+' В выходной транзистор не в активном режиме: Uкэ = '+fmt(A.vce,4)+' В — модель неприменима. Увеличьте наименьшее напряжение на выходе.');
+if(!(A.iref>0&&B.iref>0))return err('Напряжения питания не хватает для опорного тока.');
+if(![A.io,B.io,A.iref].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var h=row('Тепловой потенциал VT = k·T/q',fmt(VT*1000,4)+' мВ при '+fmt(tc)+' °C')+
+ row(t==='simple'?'Опорный ток Iоп = (Vпит − Uбэ)/R':t==='re'?'Опорный ток Iоп = (Vпит − Uбэ − Iэ1·RE)/R':'Опорный ток Iоп = (Vпит − Uбэ2 − Uбэ3)/R при Uвых = '+fmt(v0,4)+' В',si(A.iref,'А'));
+if(t==='re')h+=row('Падение на эмиттерном резисторе Iэ·RE: опорный / выходной транзистор',si(A.ie1*re,'В')+' / '+si(A.ie2*re,'В'));
+h+=row('Выходной ток при Uвых = '+fmt(v0,4)+' В',si(A.io,'А')+' — '+fmt(100*A.io/A.iref,5)+' % от Iоп');
+if(v1>v0)h+=row('Выходной ток при Uвых = '+fmt(v1,4)+' В',si(B.io,'А')+' — '+fmt(100*B.io/B.iref,5)+' % от Iоп')+
+ row('Изменение тока на этом участке',si(B.io-A.io,'А')+' — '+fmt(100*(B.io/A.io-1),4)+' %')+
+ row('Выходное сопротивление ΔUвых/ΔIвых',si((v1-v0)/(B.io-A.io),'Ом'));
+h+=row(t==='wilson'?'Только по β, без эффекта Эрли: 1/(1 + 2/(β·(β + 2)))':'Только по β, без эффекта Эрли: 1/(1 + 2/β)',fmt(t==='wilson'?1/(1+2/(b*(b+2))):1/(1+2/b),6));
+if(t==='wilson')h+=row('Для сравнения: hFE·ro/2 — оценка Sedra/Smith для идеального источника опорного тока, hFE = β·(1 + Uкэ3/VA), ro = (VA + Uкэ3)/Iвых',si(b*(1+A.vce/va)*(va+A.vce)/(2*A.io),'Ом'));
+if(dv!==null){var mp=Math.exp(dv/1000/VT),ms=[mp,1/mp],ios=[],j;
+ if(t==='re'){var rr=tr===null?[re]:[re*(1-tr/100),re*(1+tr/100)];for(j=0;j<2;j++)for(var a=0;a<rr.length;a++)for(var c=0;c<rr.length;c++)ios.push(rem(ms[j],v0,rr[a],rr[c]).io);}
+ else for(j=0;j<2;j++)ios.push(N(ms[j],v0).io);
+ var il=Math.min.apply(null,ios),ih=Math.max.apply(null,ios);
+ h+=row('Разброс выходного тока при Uвых = '+fmt(v0,4)+' В от |ΔUбэ| = '+fmt(dv)+' мВ'+(t==='re'?(tr===null?' — допуск RE не задан':' и допуска RE ±'+fmt(tr)+' %'):''),si(il,'А')+' … '+si(ih,'А')+' — '+fmt(100*(il/A.io-1),3)+' … +'+fmt(100*(ih/A.io-1),3)+' %');
+ if(t==='re'){var s1=simple(mp,v0).io,s0=simple(1/mp,v0).io,sn=simple(1,v0).io;h+=row('Без эмиттерных резисторов было бы',fmt(100*(s0/sn-1),3)+' … +'+fmt(100*(s1/sn-1),3)+' %');}}
+var lim=vs===null?null:t==='simple'?vs:t==='re'?vs+A.ie2*re:vbe+vs;
+h+=row('Наименьшее напряжение на выходе по Uкэ нас — граница соответствия',lim===null?'Uкэ нас не задано':fx(lim,v0)+' В'+(t==='re'?' = Uкэ нас + Iэ2·RE':t==='wilson'?' = Uбэ + Uкэ нас':''));
+var top=vo===null?null:t==='simple'?vo:t==='re'?vo+B.ie2*re:vo+vbe;
+h+=row('Наибольшее напряжение на выходе по UКЭО',top===null?'UКЭО не задано':fx(top,v1)+' В');
+var pp=A.p.concat(B.p),pm=Math.max.apply(null,pp),nm=t==='wilson'?['Q1','Q2','Q3']:['Q1','Q2'];
+h+=row('Мощность транзисторов при Uвых = '+fmt(v1,4)+' В: '+nm.join(' / '),B.p.map(function(x){return si(x,'Вт');}).join(' / '))+
+ row(t==='re'?'Мощность резисторов: R / RE1 / RE2':'Мощность резистора R',B.pr.map(function(x){return si(x,'Вт');}).join(' / '));
+var bad=[],miss=[];
+if(lim===null)miss.push('Uкэ нас');else if(lt(v0,lim))bad.push('при Uвых = '+fx(v0,lim)+' В выходной транзистор уходит в насыщение: нужно не меньше '+fx(lim,v0)+' В — ток зеркала здесь не держится');
+if(top===null)miss.push('UКЭО');else if(gt(B.vce,vo))bad.push('при Uвых = '+fmt(v1,4)+' В Uкэ выходного транзистора '+fx(B.vce,vo)+' В больше UКЭО '+fx(vo,B.vce)+' В');
+if(pt===null)miss.push('Ptot');else if(gt(pm*1000,pt))bad.push('мощность транзистора '+fx(pm*1000,pt)+' мВт больше Ptot '+fx(pt,pm*1000)+' мВт');
+var st,rng=si(A.io,'А')+(v1>v0?' … '+si(B.io,'А'):'')+' при Uвых '+fmt(v0,4)+(v1>v0?' … '+fmt(v1,4):'')+' В';
+if(bad.length)st=cap(bad.join('; '));
+else if(miss.length)st='Недостаточно данных: не заданы '+miss.join(', ')+'; Iвых ≈ '+rng;
+else st='Оценка: Iвых = '+rng+'; выходной транзистор в активном режиме, Uкэ и мощность в пределах паспорта';
+var n='Модель: Iк = Is·e^(Uбэ/VT)·(1 + Uкэ/VA), Iб = Is·e^(Uбэ/VT)/β — ток базы от Uкэ не зависит, как в модели Гуммеля–Пуна. Uбэ эталонного транзистора — введённое значение, разности Uбэ — по экспоненте. Без эффекта Эрли и при равных Uкэ получаются учебные формулы Sedra и Smith. ';
+if(t==='wilson')n+='Опорный ток задан резистором и зависит от Uбэ3, а оно — от напряжения на выходе; поэтому выходное сопротивление меньше оценки β·ro/2 для идеального источника опорного тока. ';
+n+='Температура у всех транзисторов одинакова; саморазогрев выходного транзистора, который у отдельных транзисторов добавляет рассогласование, не учтён. Разброс тока — при обоих знаках ΔUбэ'+(t==='re'?' и крайних значениях RE':'')+'.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

@@ -121,7 +121,7 @@ faqs=[
  ("Почему на границе фильтр «режет» так плавно?",
   "Один RC-каскад даёт спад лишь 6 дБ/октаву — это физика первого порядка. Круче: несколько каскадов, LC-фильтры или активные фильтры на операционных усилителях."),
 ],
-related=["rezonans-lc", "zaryad-kondensatora", "reaktivnoe-soprotivlenie", "snabber-rc", "rc-cep-impuls"],
+related=["rezonans-lc", "zaryad-kondensatora", "reaktivnoe-soprotivlenie", "rc-cep-impuls", "filtr-sallena-ki"],
 ),
 
 # ─── 21. Заряд конденсатора ──────────────────────────────────────────────────

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Триггер Шмитта на компараторе или ОУ — ВольтКальк</title>
+<meta name="description" content="Расчёт триггера Шмитта — компаратора с гистерезисом в инвертирующей и неинвертирующей схеме: верхний и нижний пороги и ширина гистерезиса по резисторам, уровням выхода VOH и VOL и опорному напряжению, выход с открытым коллектором и подтягивающим резистором, разброс порогов по допускам перебором углов, подбор резисторов под заданные пороги, проверка размаха сигнала и синфазного диапазона.">
+<link rel="canonical" href="https://macos2024.github.io/trigger-shmitta.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Триггер Шмитта на компараторе или ОУ — ВольтКальк">
+<meta property="og:description" content="Расчёт триггера Шмитта — компаратора с гистерезисом в инвертирующей и неинвертирующей схеме: верхний и нижний пороги и ширина гистерезиса по резисторам, уровням выхода VOH и VOL и опорному напряжению, выход с открытым коллектором и подтягивающим резистором, разброс порогов по допускам перебором углов, подбор резисторов под заданные пороги, проверка размаха сигнала и синфазного диапазона.">
+<meta property="og:url" content="https://macos2024.github.io/trigger-shmitta.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Триггер Шмитта на компараторе или ОУ","url":"https://macos2024.github.io/trigger-shmitta.html","description":"Расчёт триггера Шмитта — компаратора с гистерезисом в инвертирующей и неинвертирующей схеме: верхний и нижний пороги и ширина гистерезиса по резисторам, уровням выхода VOH и VOL и опорному напряжению, выход с открытым коллектором и подтягивающим резистором, разброс порогов по допускам перебором углов, подбор резисторов под заданные пороги, проверка размаха сигнала и синфазного диапазона.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Триггер Шмитта на компараторе или ОУ","item":"https://macos2024.github.io/trigger-shmitta.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Чем триггер Шмитта отличается от простого компаратора?","acceptedAnswer":{"@type":"Answer","text":"У компаратора один порог, и медленный зашумлённый сигнал пересекает его много раз — выход дребезжит. У триггера Шмитта два порога: после переключения порог сдвигается назад на ширину гистерезиса, и шум меньше этой ширины переключений не вызывает."}},{"@type":"Question","name":"Как выбрать ширину гистерезиса?","acceptedAnswer":{"@type":"Answer","text":"Больше размаха шума на входе с запасом на разброс порогов, но меньше размаха полезного сигнала: сигнал должен пересекать оба порога. Калькулятор проверяет это по введённым наименьшему и наибольшему напряжению сигнала с учётом допусков."}},{"@type":"Question","name":"Почему с открытым коллектором порог не такой, как при VOH = Vподт?","acceptedAnswer":{"@type":"Answer","text":"Ток подтяжки идёт через Rп в цепь обратной связи и в нагрузку, и на Rп падает напряжение: высокий уровень ниже Vподт. Чем меньше резистор обратной связи по сравнению с Rп, тем сильнее разница. Калькулятор считает этот делитель по правилу узлов."}},{"@type":"Question","name":"Можно ли собрать триггер Шмитта на ОУ?","acceptedAnswer":{"@type":"Answer","text":"Можно, формулы те же, VOH и VOL — уровни выхода ОУ в насыщении из паспорта. Но ОУ не рассчитан на насыщение: из него он выходит медленно, и фронты получаются затянутыми. Для быстрых сигналов берут компаратор."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Триггер Шмитта на компараторе или ОУ</h1>
+<p class="intro">Триггер Шмитта — компаратор с положительной обратной связью: два порога вместо одного, и шум на медленном сигнале больше не вызывает дребезга выхода. Калькулятор считает пороги и гистерезис по резисторам и уровням выхода, в том числе для открытого коллектора с подтяжкой, их разброс по допускам и подбирает резисторы под заданные пороги. Опорное напряжение можно получить <a href="delitel-napryazheniya.html">делителем напряжения</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Триггер Шмитта на компараторе или ОУ</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_conf"><label for="conf">Схема</label><div class="fw"><select id="conf"><option value="inv" selected>Инвертирующая: сигнал на инвертирующий вход, порог задают R1–R3</option><option value="non">Неинвертирующая: сигнал через R1 на неинвертирующий вход, Vоп на инвертирующем</option></select></div></div><div class="f" id="f_task"><label for="task">Задача</label><div class="fw"><select id="task"><option value="an" selected>Пороги по резисторам</option><option value="syn">Резисторы по заданным порогам</option></select></div></div><div class="f" id="f_out"><label for="out">Выход компаратора</label><div class="fw"><select id="out"><option value="pp" selected>Двухтактный: уровни VOH и VOL по паспорту</option><option value="oc">Открытый коллектор или сток с подтягивающим резистором</option></select></div></div><div class="f" id="f_vref"><label for="vref">Опорное напряжение Vоп</label><div class="fw"><input id="vref" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">В</span></div><div class="hint">Инвертирующая схема — напряжение на верхнем выводе R1: питание или источник опорного. Неинвертирующая — напряжение на инвертирующем входе</div></div><div class="f" id="f_r1"><label for="r1">R1 — инвертирующая: от Vоп к неинвертирующему входу; неинвертирующая: от источника сигнала к неинвертирующему входу</label><div class="fw"><input id="r1" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="r1_unit" class="u" aria-label="Единицы: R1 — инвертирующая: от Vоп к неинвертирующему входу; неинвертирующая: от источника сигнала к неинвертирующему входу"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_r2"><label for="r2">R2 — инвертирующая: от неинвертирующего входа на общий провод; неинвертирующая: обратная связь с выхода</label><div class="fw"><input id="r2" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="r2_unit" class="u" aria-label="Единицы: R2 — инвертирующая: от неинвертирующего входа на общий провод; неинвертирующая: обратная связь с выхода"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div><div class="hint">В инвертирующей схеме необязательный: пусто — резистора нет</div></div><div class="f" id="f_r3"><label for="r3">R3 — обратная связь с выхода на неинвертирующий вход (инвертирующая схема)</label><div class="fw"><input id="r3" type="text" inputmode="decimal" autocomplete="off" value="1000" placeholder=""><select id="r3_unit" class="u" aria-label="Единицы: R3 — обратная связь с выхода на неинвертирующий вход (инвертирующая схема)"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_vth"><label for="vth">Требуемый верхний порог VTH</label><div class="fw"><input id="vth" type="text" inputmode="decimal" autocomplete="off" value="2,7" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_vtl"><label for="vtl">Требуемый нижний порог VTL</label><div class="fw"><input id="vtl" type="text" inputmode="decimal" autocomplete="off" value="2,3" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_voh"><label for="voh">Высокий уровень выхода VOH</label><div class="fw"><input id="voh" type="text" inputmode="decimal" autocomplete="off" value="4,8" placeholder=""><span class="u">В</span></div><div class="hint">По паспорту при вашем питании и токе выхода — ток калькулятор покажет. По умолчанию — пример TI для TLV7031 при питании 5 В: VOH примерно на 0,2 В ниже питания</div></div><div class="f" id="f_vol"><label for="vol">Низкий уровень выхода VOL</label><div class="fw"><input id="vol" type="text" inputmode="decimal" autocomplete="off" value="0,25" placeholder=""><span class="u">В</span></div><div class="hint">По паспорту при вашем токе. По умолчанию — пример TI для TLV7031: примерно на 0,25 В выше минуса питания</div></div><div class="f" id="f_vpu"><label for="vpu">Напряжение подтяжки Vподт</label><div class="fw"><input id="vpu" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_rp"><label for="rp">Подтягивающий резистор Rп</label><div class="fw"><input id="rp" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="rp_unit" class="u" aria-label="Единицы: Подтягивающий резистор Rп"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_rl"><label for="rl">Нагрузка выхода на общий провод Rн</label><div class="fw"><input id="rl" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="rl_unit" class="u" aria-label="Единицы: Нагрузка выхода на общий провод Rн"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div><div class="hint">Необязательное: пусто — нагрузки нет</div></div><div class="f" id="f_tolr"><label for="tolr">Допуск резисторов ±</label><div class="fw"><input id="tolr" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">%</span></div><div class="hint">Необязательное: по маркировке резисторов; 0 — пренебречь</div></div><div class="f" id="f_dvo"><label for="dvo">Разброс уровней выхода ±</label><div class="fw"><input id="dvo" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div><div class="hint">Отклонение VOH и VOL от введённых — по паспорту при ваших токах; у открытого коллектора — только VOL</div></div><div class="f" id="f_tolv"><label for="tolv">Допуск Vоп и напряжения подтяжки ±</label><div class="fw"><input id="tolv" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">%</span></div></div><div class="f" id="f_vos"><label for="vos">Напряжение смещения компаратора ±</label><div class="fw"><input id="vos" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">мВ</span></div><div class="hint">Наибольшее по паспорту; 0 — пренебречь</div></div><div class="f" id="f_vinmin"><label for="vinmin">Входной сигнал: наименьшее напряжение</label><div class="fw"><input id="vinmin" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div><div class="hint">Необязательное: для проверки, что сигнал пересекает оба порога</div></div><div class="f" id="f_vinmax"><label for="vinmax">Входной сигнал: наибольшее напряжение</label><div class="fw"><input id="vinmax" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_vcmmin"><label for="vcmmin">Синфазный диапазон входов компаратора: нижняя граница</label><div class="fw"><input id="vcmmin" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div><div class="hint">По паспорту компаратора при вашем питании</div></div><div class="f" id="f_vcmmax"><label for="vcmmax">Синфазный диапазон входов компаратора: верхняя граница</label><div class="fw"><input id="vcmmax" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Триггер Шмитта: как считается</h2>
+<div class="formula">Инвертирующая: Vп = (Vоп/R1 + Vвых/R3) / (1/R1 + 1/R2 + 1/R3);&nbsp;&nbsp;VTH = Vп при Vвых = VOH,&nbsp;&nbsp;VTL = Vп при Vвых = VOL<br>гистерезис ΔV = (VOH − VOL)·(1/R3) / (1/R1 + 1/R2 + 1/R3); без R2 слагаемое 1/R2 = 0<br>Неинвертирующая: VTH = Vоп + (Vоп − VOL)·R1/R2,&nbsp;&nbsp;VTL = Vоп − (VOH − Vоп)·R1/R2,&nbsp;&nbsp;ΔV = (VOH − VOL)·R1/R2<br>Открытый коллектор: в высоком состоянии выход — узел делителя: Rп к Vподт, цепь обратной связи и нагрузка — по правилу узлов<br>Подбор, инвертирующая, двухтактный выход: k = ΔV/(VOH − VOL), g = (VTL − k·VOL)/Vоп, R3 = R1·g/k, R2 = R1·g/(1 − k − g)<br>Подбор, неинвертирующая, двухтактный выход: R1/R2 = ΔV/(VOH − VOL), Vоп = (VTH + VOL·R1/R2)/(1 + R1/R2)</div>
+<p><b>Зачем гистерезис.</b> Компаратор с одним порогом на медленном или зашумлённом сигнале переключается много раз подряд: каждый всплеск шума заново пересекает порог. Положительная обратная связь с выхода сдвигает порог в сторону, противоположную переходу: после переключения вход должен уйти назад на ширину гистерезиса, чтобы выход вернулся (TI, SNOA997 и SBOA313). Так компаратор становится триггером Шмитта. Встроенного гистерезиса компаратора — обычно единицы милливольт — для зашумлённого сигнала мало (Maxim, AN3616).</p>
+<p><b>Инвертирующая схема — вывод из делителя.</b> Сигнал идёт на инвертирующий вход, а порог задаёт напряжение неинвертирующего входа Vп. К этому узлу подключены R1 от Vоп, R2 на общий провод (если он есть) и R3 с выхода. Входы компаратора тока не берут, поэтому по правилу узлов Vп — среднее напряжений Vоп, 0 и Vвых, взвешенное проводимостями 1/R1, 1/R2 и 1/R3. Пока выход высокий, порог верхний: VTH = Vп при Vвых = VOH; когда вход поднимется выше, выход падает, и порог опускается до VTL = Vп при Vвых = VOL. TI в SNOA997 записывает то же для выхода от минуса до плюса питания: VA1 = VCC·R2/((R1 ∥ R3) + R2) и VA2 = VCC·(R2 ∥ R3)/(R1 + (R2 ∥ R3)). Это частный случай формулы в рамке при Vоп = VOH = VCC и VOL = 0.</p>
+<p><b>Неинвертирующая схема.</b> Сигнал идёт через R1 на неинвертирующий вход, R2 соединяет этот вход с выходом, а на инвертирующем входе — опорное Vоп. Выход переключается, когда напряжение неинвертирующего входа пересекает Vоп, а ток через R1 тогда равен току через R2: (Vвх − Vоп)/R1 = (Vоп − Vвых)/R2. При низком выходе отсюда верхний порог VTH = Vоп + (Vоп − VOL)·R1/R2, при высоком — нижний VTL = Vоп − (VOH − Vоп)·R1/R2. Выходное сопротивление источника сигнала складывается с R1 и сдвигает пороги, а сам источник в момент переключения отдаёт или принимает ток — калькулятор его показывает.</p>
+<p><b>Открытый коллектор и подтяжка.</b> У компараторов с открытым коллектором или стоком высокий уровень даёт подтягивающий резистор Rп. Ток от Vподт идёт через Rп и дальше через резистор обратной связи в остальную цепь и в нагрузку — один ток через последовательные элементы, — поэтому высокий уровень равен не Vподт, а напряжению узла этого делителя. Калькулятор находит его по правилу узлов вместе с порогом. TI (TIDU020) и Maxim (AN3616) советуют брать резистор обратной связи больше 100·Rп, чтобы делитель мало влиял; калькулятор на это правило не опирается, а считает делитель точно. В низком состоянии транзистор выхода принимает ток Rп, цепи обратной связи и нагрузки — VOL из паспорта берите при этом токе.</p>
+<p><b>Разброс порогов и проверки.</b> TI (SBOA313) называет источники ошибки порогов: допуск резисторов, смещение нуля компаратора и его встроенный гистерезис. Калькулятор перебирает все сочетания крайних значений резисторов, уровней выхода, Vоп, напряжения подтяжки и смещения. Пороги — напряжения узлов линейной цепи: по каждому сопротивлению они меняются дробно-линейно и монотонно, по напряжениям — линейно, поэтому крайние значения лежат в углах. Затем проверяется, что входной сигнал пересекает оба порога с учётом разброса и что напряжение на входах компаратора в момент переключения лежит в его синфазном диапазоне. Без этих данных — «Недостаточно данных»; если пересечение не гарантировано только при разбросе — «Риск».</p>
+<p><b>Подбор резисторов.</b> По заданным VTH и VTL калькулятор подбирает резисторы. В инвертирующей схеме R1 выбираете вы, R2 и R3 рассчитываются; если R2 получается отрицательным, с этим Vоп пороги не получить — калькулятор называет нужное Vоп. В неинвертирующей схеме задаётся R2, а рассчитываются R1 и опорное напряжение — его можно получить <a href="delitel-napryazheniya.html">делителем напряжения</a>. С открытым коллектором уравнения узлов двух состояний сводятся к квадратному уравнению; калькулятор берёт его физический корень и проверяет его прямым расчётом порогов.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="ou-usilenie.html">Калькулятор ОУ</a> считает усилители с отрицательной обратной связью; здесь обратная связь положительная, и выход только переключается. Триггер Шмитта можно сделать и на ОУ, но ОУ медленнее выходит из насыщения, чем компаратор. Похожие пороги в 1/3 и 2/3 питания стоят внутри таймера — его считает <a href="ne555-astabilnyy.html">калькулятор NE555 в автоколебательном режиме</a>.</p>
+<h2>Триггер Шмитта: пример расчёта</h2>
+<p>Компаратор с двухтактным выходом при питании 5 В; уровни выхода — по примеру TI для TLV7031: VOH = 4,8 В, VOL = 0,25 В. Инвертирующая схема: R1 = R2 = 100 кОм от питания 5 В, R3 = 1 МОм. Порог — среднее напряжений 5 В, 0 и выхода с весами 1/100 кОм, 1/100 кОм и 1/1 МОм: при высоком выходе VTH = (5/100 + 4,8/1000)/(2/100 + 1/1000) = <b>2,61 В</b>, при низком VTL = <b>2,393 В</b>, гистерезис 0,2167 В. Допуски резисторов 1 %, уровней выхода ±0,05 В, Vоп 1 % и смещение 5 мВ разносят VTH по 2,554…2,666 В и VTL по 2,337…2,449 В: гистерезис при любом сочетании не меньше 0,1046 В.</p>
+<p>Тот же делитель с компаратором с открытым коллектором и подтяжкой 10 кОм к 5 В: ток подтяжки уходит через R3 в делитель, и высокий уровень выхода — 4,976 В, а не 5 В. Пороги — 2,618 и 2,393 В; в низком состоянии выход принимает 477,1 мкА, и VOL по паспорту нужно брать при этом токе.</p>
+<p>Подбор под VTH = 2,7 В и VTL = 2,3 В при R1 = 100 кОм и двухтактном выходе: R2 = 99,81 кОм, R3 = 518,3 кОм. Неинвертирующая схема с R2 = 1 МОм под те же пороги: R1 = 87,91 кОм и опорное Vоп = 2,502 В. Значения условные; уровни выхода и смещение введите из паспорта своего компаратора.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Чем триггер Шмитта отличается от простого компаратора?</h3><p>У компаратора один порог, и медленный зашумлённый сигнал пересекает его много раз — выход дребезжит. У триггера Шмитта два порога: после переключения порог сдвигается назад на ширину гистерезиса, и шум меньше этой ширины переключений не вызывает.</p><h3>Как выбрать ширину гистерезиса?</h3><p>Больше размаха шума на входе с запасом на разброс порогов, но меньше размаха полезного сигнала: сигнал должен пересекать оба порога. Калькулятор проверяет это по введённым наименьшему и наибольшему напряжению сигнала с учётом допусков.</p><h3>Почему с открытым коллектором порог не такой, как при VOH = Vподт?</h3><p>Ток подтяжки идёт через Rп в цепь обратной связи и в нагрузку, и на Rп падает напряжение: высокий уровень ниже Vподт. Чем меньше резистор обратной связи по сравнению с Rп, тем сильнее разница. Калькулятор считает этот делитель по правилу узлов.</p><h3>Можно ли собрать триггер Шмитта на ОУ?</h3><p>Можно, формулы те же, VOH и VOL — уровни выхода ОУ в насыщении из паспорта. Но ОУ не рассчитан на насыщение: из него он выходит медленно, и фронты получаются затянутыми. Для быстрых сигналов берут компаратор.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-3-kirchhoffs-rules" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.3 Kirchhoff&#x27;s Rules — правило узлов: из него на странице выведены пороги и высокий уровень открытого коллектора — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/pdf/snoa997" rel="nofollow noopener" target="_blank">Inverting Comparator With Hysteresis Circuit (SNOA997A)</a> — Texas Instruments, Analog Engineer&#x27;s Circuit — Редакция июль 2018, редакция A — август 2019 — по выдаче; формулы видны в выдаче — раздел VA1 = VCC·R2/((R1 ∥ R3) + R2), VA2 = VCC·(R2 ∥ R3)/(R1 + (R2 ∥ R3)) — частный случай формулы страницы, TLV7031: VOH примерно на 200 мВ ниже VCC, VOL — на 250 мВ выше VEE; выход двухтактный — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/pdf/sboa313" rel="nofollow noopener" target="_blank">Non-Inverting Comparator with Hysteresis Circuit (SBOA313)</a> — Texas Instruments, Analog Engineer&#x27;s Circuit — Редакция редакция на дату обращения; положения видны в выдаче — раздел точность порогов определяют допуск резисторов, смещение нуля и встроенный гистерезис компаратора — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/pdf/tidu020" rel="nofollow noopener" target="_blank">Comparator with Hysteresis Reference Design (TIDU020)</a> — Texas Instruments, TI Precision Designs — Редакция редакция на дату обращения; положения видны в выдаче — раздел выход с открытым коллектором требует подтягивающего резистора; ошибка мала, если резистор гистерезиса больше 100·Rп — обращение 04.10.2026</li><li><a href="https://www.analog.com/en/resources/technical-articles/guide-to-adding-extra-hysteresis-to-comparators.html" rel="nofollow noopener" target="_blank">Adding Extra Hysteresis to Comparators (Application Note 3616)</a> — Maxim Integrated, ныне Analog Devices — Редакция дата в выдаче неоднозначна; положения видны в выдаче — раздел встроенный гистерезис компараторов — единицы милливольт, у выхода с открытым стоком подтяжка с резистором обратной связи образует делитель; резистор обратной связи берут больше 100 сопротивлений подтяжки — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Входы компаратора не потребляют ток; встроенный гистерезис компаратора не учитывается, смещение нуля сдвигает пороги.</li><li>Двухтактный выход в каждом состоянии — источник напряжения VOH или VOL; у открытого коллектора в низком состоянии — источник VOL, в высоком выход отключён и уровень задаёт делитель Rп с цепью обратной связи и нагрузкой.</li><li>Разброс — все сочетания крайних значений заданных допусков резисторов, уровней выхода, Vоп, напряжения подтяжки и смещения.</li></ul><p><b>Границы применимости:</b></p><ul><li>Скорость переключения, задержка и ёмкости монтажа не учитываются; на ОУ фронты затягиваются выходом из насыщения.</li><li>Синфазный диапазон проверяется только для напряжений в момент переключения и на краях размаха сигнала; предельные входные напряжения — по паспорту.</li><li>Выходное сопротивление источника сигнала в неинвертирующей схеме не вводится: прибавьте его к R1.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="ou-usilenie.html">Операционный усилитель: коэффициент усиления</a></li><li><a href="delitel-napryazheniya.html">Делитель напряжения на резисторах</a></li><li><a href="ne555-astabilnyy.html">Таймер NE555 — астабильный режим</a></li><li><a href="differencialnyy-usilitel.html">Дифференциальный усилитель на ОУ</a></li><li><a href="tokovoe-zerkalo.html">Токовое зеркало на биполярных транзисторах</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function db(x){return 20*Math.log(Math.abs(x))/Math.LN10;}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function sp(x,u){return si(Number(x.toPrecision(12)),u);}
+function rng(x,l,u){var lo_=x-l<u-x;return fx(x,lo_?l:u)+' В в пределах '+(lo_?fx(l,x):fmt(l,4))+' … '+(lo_?fmt(u,4):fx(u,x))+' В';}
+
+function sync(){var inv=S('conf')==='inv',syn=S('task')==='syn',oc=S('out')==='oc';
+hideF('vref',!inv&&syn);hideF('r1',!inv&&syn);hideF('r2',inv&&syn);hideF('r3',!inv||syn);hideF('vth',!syn);hideF('vtl',!syn);
+hideF('voh',oc);hideF('vpu',!oc);hideF('rp',!oc);}
+function init(){$('conf').addEventListener('change',sync);$('task').addEventListener('change',sync);$('out').addEventListener('change',sync);sync();}
+function cp(o){var r={};for(var k in o)r[k]=o[k];return r;}
+// Пороги по правилу узлов. p: inv, oc, R1, R2 (null — нет), R3, Rp, RL (null — нет), Vr, Vpu, VOH, VOL,
+// v — смещение компаратора. pH, pL — напряжение неинвертирующего входа в момент переключения;
+// oh — высокий уровень выхода (у открытого коллектора — узел делителя Rп с цепью обратной связи и нагрузкой);
+// iH, iL — ток из выхода в высоком и низком состоянии (минус — ток втекает в выход), без тока Rп.
+function th(p){var GL=p.RL===null?0:1/p.RL,r={};
+ if(p.inv){var G1=1/p.R1,G2=p.R2===null?0:1/p.R2,G3=1/p.R3,Gs=G1+G2+G3;
+  if(p.oc){var Gp=1/p.Rp,dt=Gs*(Gp+GL+G3)-G3*G3;r.pH=(p.Vr*G1*(Gp+GL+G3)+G3*p.Vpu*Gp)/dt;r.oh=(Gs*p.Vpu*Gp+G3*p.Vr*G1)/dt;}
+  else{r.oh=p.VOH;r.pH=(p.Vr*G1+p.VOH*G3)/Gs;}
+  r.pL=(p.Vr*G1+p.VOL*G3)/Gs;r.vth=r.pH+p.v;r.vtl=r.pL+p.v;r.iH=(r.oh-r.pH)*G3+r.oh*GL;r.iL=(p.VOL-r.pL)*G3+p.VOL*GL;}
+ else{var vp=p.Vr+p.v,q=p.R1/p.R2;r.pH=vp;r.pL=vp;
+  r.oh=p.oc?(p.Vpu/p.Rp+vp/p.R2)/(1/p.Rp+1/p.R2+GL):p.VOH;
+  r.vth=vp+(vp-p.VOL)*q;r.vtl=vp-(r.oh-vp)*q;r.iH=(r.oh-vp)/p.R2+r.oh*GL;r.iL=(p.VOL-vp)/p.R2+p.VOL*GL;}
+ if(p.oc)r.isk=(p.Vpu-p.VOL)/p.Rp-r.iL;
+ return r;}
+// Напряжение неинвертирующего входа неинвертирующей схемы при входе vin: выход низкий (VOL) или высокий.
+function pin(p,vin,high){var G1=1/p.R1,G2=1/p.R2,GL=p.RL===null?0:1/p.RL;
+ if(high&&p.oc){var Gp=1/p.Rp,dt=(G1+G2)*(Gp+GL+G2)-G2*G2;return (vin*G1*(Gp+GL+G2)+G2*p.Vpu*Gp)/dt;}
+ return (vin*G1+(high?p.VOH:p.VOL)*G2)/(G1+G2);}
+function calc(){
+var inv=S('conf')==='inv',syn=S('task')==='syn',oc=S('out')==='oc';
+var vol=P('vol'),voh=NaN,vpu=NaN,rp=NaN;
+if(isNaN(vol))return err('Введите низкий уровень выхода VOL.');
+if(oc){vpu=P('vpu');rp=P('rp');if(isNaN(vpu)||isNaN(rp))return err('Введите напряжение подтяжки и подтягивающий резистор.');if(rp<=0)return err('Подтягивающий резистор должен быть больше нуля.');if(!(vpu>vol))return err('Напряжение подтяжки должно быть выше VOL.');}
+else{voh=P('voh');if(isNaN(voh))return err('Введите высокий уровень выхода VOH.');if(!(voh>vol))return err('VOH должно быть больше VOL.');}
+var rl=OPT('rl');if(rl!==null){if(isNaN(rl))return err('Нагрузка выхода — число. Если её нет, оставьте поле пустым.');if(rl<=0)return err('Нагрузка выхода должна быть больше нуля.');}
+var vr=NaN,R1=NaN,R2=null,R3=NaN,hs='',VTH=NaN,VTL=NaN,i;
+if(!syn||inv){vr=P('vref');if(isNaN(vr))return err('Введите опорное напряжение Vоп.');}
+if(!syn){R1=P('r1');if(isNaN(R1))return err('Введите R1.');
+ if(inv){R2=OPT('r2');R3=P('r3');if(R2!==null&&isNaN(R2))return err('R2 — число. Если резистора нет, оставьте поле пустым.');if(isNaN(R3))return err('Введите R3 — резистор обратной связи.');if(R1<=0||(R2!==null&&R2<=0)||R3<=0)return err('Сопротивления должны быть больше нуля.');}
+ else{R2=P('r2');if(isNaN(R2))return err('Введите R2 — резистор обратной связи.');if(R1<=0||R2<=0)return err('Сопротивления должны быть больше нуля.');}}
+else{VTH=P('vth');VTL=P('vtl');
+ if(isNaN(VTH)||isNaN(VTL))return err('Введите требуемые пороги VTH и VTL.');
+ if(!(VTH>VTL))return err('Верхний порог VTH должен быть больше нижнего VTL.');
+ var GL=rl===null?0:1/rl,rts,D,A,B,C;
+ if(inv){R1=P('r1');if(isNaN(R1))return err('Введите R1.');if(R1<=0)return err('R1 должно быть больше нуля.');
+  var G1=1/R1;
+  if(!oc){var k=(VTH-VTL)/(voh-vol);if(!(k<1))return err('Ширина гистерезиса VTH − VTL не может быть больше VOH − VOL.');
+   if(vr===0)return err('Для подбора резисторов нужно опорное напряжение, отличное от нуля.');
+   var u=VTL-k*vol,g1=u/vr,g2=1-k-g1;
+   if(!(g1>0))return err('С этим Vоп пороги не получить: Vоп должно быть того же знака, что VTL − (VTH − VTL)·VOL/(VOH − VOL) = '+fmt(u,4)+' В.');
+   if(g2<-1e-12)return err('С Vоп = '+fmt(vr,4)+' В такие пороги не получить даже без R2: нужно |Vоп| не меньше '+fmt(Math.abs(u)/(1-k),4)+' В.');
+   R3=R1*g1/k;R2=g2>1e-12?R1*g1/g2:null;}
+  else{if(!(vr>0))return err('Для подбора с открытым коллектором опорное напряжение должно быть больше нуля.');
+   if(!(VTL>vol))return err('Нижний порог должен быть выше VOL.');if(!(VTH<vpu))return err('Верхний порог должен быть ниже напряжения подтяжки.');
+   // Правило узлов в двух состояниях даёт квадратное уравнение для G3 = 1/R3 с одним положительным корнем.
+   var Gp=1/rp,aa=G1*vr*(VTH-VTL),G3=NaN,G2=NaN;A=VTH*(vol-VTL);B=aa+VTH*vol*(Gp+GL)-VTL*vpu*Gp;C=aa*(Gp+GL);D=B*B-4*A*C;
+   if(D>=0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if(rts[i]>0){G3=rts[i];G2=((vr-VTL)*G1+(vol-VTL)*G3)/VTL;break;}}}
+   if(!(G3>0)||G2<-1e-12*G1)return err('С этими Vоп, подтяжкой и R1 такие пороги не получить: увеличьте Vоп или напряжение подтяжки либо уменьшите Rп.');
+   R3=1/G3;R2=G2>1e-12*G1?1/G2:null;}
+  hs=row('Рассчитанные резисторы: R2 / R3',(R2===null?'не нужен':sp(R2,'Ом'))+' / '+sp(R3,'Ом'));}
+ else{R2=P('r2');if(isNaN(R2))return err('Введите R2 — резистор обратной связи.');if(R2<=0)return err('R2 должно быть больше нуля.');
+  if(!oc){var m=(VTH-VTL)/(voh-vol);vr=(VTH+vol*m)/(1+m);R1=m*R2;}
+  else{if(!(VTL>vol))return err('Нижний порог должен быть выше VOL.');
+   // Vоп — корень квадратного уравнения между VOL и VTH; R1/R2 = (VTH − Vоп)/(Vоп − VOL).
+   var Gq=1/rp,Gt=Gq+1/R2+GL,al=vpu*Gq/Gt,bq=(1/R2)/Gt;A=bq;B=al-VTL-vol-(bq-1)*VTH;C=-al*VTH+VTL*vol;D=B*B-4*A*C;
+   if(D>=0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if(rts[i]>vol&&rts[i]<VTH){vr=rts[i];break;}}}
+   if(isNaN(vr))return err('С этими подтяжкой, Rп и R2 такие пороги не получить: увеличьте напряжение подтяжки или уменьшите Rп.');
+   R1=(VTH-vr)/(vr-vol)*R2;}
+  hs=row('Рассчитанные: R1 / опорное напряжение Vоп',sp(R1,'Ом')+' / '+fmt(vr,4)+' В');}}
+var p0={inv:inv,oc:oc,R1:R1,R2:R2,R3:R3,Rp:rp,RL:rl,Vr:vr,Vpu:vpu,VOH:voh,VOL:vol,v:0},r=th(p0);
+if(![r.vth,r.vtl,r.oh].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+if(syn&&!(Math.abs(r.vth-VTH)<=1e-6*Math.max(1,Math.abs(VTH))&&Math.abs(r.vtl-VTL)<=1e-6*Math.max(1,Math.abs(VTL))))return err('Подбор не сошёлся с прямым расчётом порогов — проверьте исходные данные.');
+if(!(r.vth>r.vtl))return err('Гистерезиса нет: верхний порог '+fmt(r.vth,4)+' В не больше нижнего '+fmt(r.vtl,4)+' В — проверьте уровни выхода и резисторы.');
+var tr=OPT('tolr'),dv=OPT('dvo'),tv=OPT('tolv'),vs=OPT('vos'),vi0=OPT('vinmin'),vi1=OPT('vinmax'),c0=OPT('vcmmin'),c1=OPT('vcmmax');
+if(tr!==null){if(isNaN(tr))return err('Допуск резисторов — число в процентах. Если он неизвестен, оставьте поле пустым.');if(!(tr>=0&&tr<20))return err('Допуск резисторов — от 0 до 20 %, не включая 20.');}
+if(dv!==null){if(isNaN(dv))return err('Разброс уровней выхода — число в вольтах. Если он неизвестен, оставьте поле пустым.');if(dv<0)return err('Разброс уровней выхода не может быть отрицательным.');}
+if(tv!==null){if(isNaN(tv))return err('Допуск Vоп — число в процентах. Если он неизвестен, оставьте поле пустым.');if(!(tv>=0&&tv<20))return err('Допуск Vоп и подтяжки — от 0 до 20 %, не включая 20.');}
+if(vs!==null){if(isNaN(vs))return err('Смещение компаратора — число в милливольтах. Если оно неизвестно, оставьте поле пустым.');if(vs<0)return err('Смещение компаратора задаётся модулем — не меньше нуля.');}
+if((vi0===null)!==(vi1===null))return err('Задайте оба крайних напряжения входного сигнала или оставьте оба пустыми.');
+if(vi0!==null){if(isNaN(vi0)||isNaN(vi1))return err('Напряжения входного сигнала — числа в вольтах.');if(!(vi0<vi1))return err('Наименьшее напряжение сигнала должно быть меньше наибольшего.');}
+if((c0===null)!==(c1===null))return err('Задайте обе границы синфазного диапазона или оставьте обе пустыми.');
+if(c0!==null){if(isNaN(c0)||isNaN(c1))return err('Границы синфазного диапазона — числа в вольтах.');if(!(c0<c1))return err('Нижняя граница синфазного диапазона должна быть меньше верхней.');}
+var h=hs+row('Верхний порог VTH — вход растёт, выход переключается в '+(inv?'«низкий»':'«высокий»'),fmt(r.vth,4)+' В')+
+ row('Нижний порог VTL — вход спадает, выход переключается в '+(inv?'«высокий»':'«низкий»'),fmt(r.vtl,4)+' В')+
+ row('Гистерезис VTH − VTL / середина',fmt(r.vth-r.vtl,4)+' / '+fmt((r.vth+r.vtl)/2,4)+' В');
+if(oc)h+=row('Высокий уровень выхода'+(inv?'':' в момент переключения')+' — делитель Rп и цепи обратной связи'+(rl===null?'':' с нагрузкой'),fmt(r.oh,4)+' В при Vподт = '+fmt(vpu,4)+' В');
+if(!inv)h+=row('Напряжение на входах компаратора в момент переключения','Vоп = '+fmt(vr,4)+' В')+
+ row('Ток источника сигнала на порогах VTH / VTL — его сопротивление складывается с R1',si((r.vth-vr)/R1,'А')+' / '+si((r.vtl-vr)/R1,'А'));
+h+=oc?row('Ток в выход в состоянии «низкий» — через Rп и цепь обратной связи',si(r.isk,'А')+' — VOL по паспорту берите при этом токе'):
+ row('Ток из выхода при VOH / при VOL, минус — ток втекает в выход',si(r.iH,'А')+' / '+si(r.iL,'А')+' — VOH и VOL по паспорту берите при этих токах');
+// Разброс: все сочетания крайних значений заданных разбросов. Пороги — напряжения узлов линейной цепи:
+// по каждому сопротивлению дробно-линейны и монотонны, по напряжениям линейны — крайние значения в углах.
+var sp0=[],W=null;
+if(tr===null)sp0.push('допуск резисторов');if(dv===null)sp0.push('разброс уровней выхода');if(tv===null)sp0.push(oc?'допуск Vоп и подтяжки':'допуск Vоп');if(vs===null)sp0.push('смещение компаратора');
+if(sp0.length<4){var vv=[],f=(tr||0)/100,g=(tv||0)/100,dd=dv||0,ov=(vs||0)/1000,j,k;
+ function add(key,x,d){if(d>0)vv.push([key,x-d,x+d]);}
+ add('R1',R1,R1*f);if(R2!==null)add('R2',R2,R2*f);if(inv)add('R3',R3,R3*f);if(oc)add('Rp',rp,rp*f);if(rl!==null)add('RL',rl,rl*f);
+ add('Vr',vr,Math.abs(vr)*g);if(oc)add('Vpu',vpu,vpu*g);else add('VOH',voh,dd);add('VOL',vol,dd);add('v',0,ov);
+ W={thn:Infinity,thx:-Infinity,tln:Infinity,tlx:-Infinity,pn:Infinity,px:-Infinity};
+ for(k=0;k<(1<<vv.length);k++){var pc=cp(p0);for(j=0;j<vv.length;j++)pc[vv[j][0]]=(k>>j)&1?vv[j][2]:vv[j][1];var q=th(pc);
+  W.thn=Math.min(W.thn,q.vth);W.thx=Math.max(W.thx,q.vth);W.tln=Math.min(W.tln,q.vtl);W.tlx=Math.max(W.tlx,q.vtl);W.pn=Math.min(W.pn,q.pL,q.pH);W.px=Math.max(W.px,q.pL,q.pH);}
+ h+=row('VTH при заданных разбросах',fmt(W.thn,4)+' … '+fmt(W.thx,4)+' В')+row('VTL при заданных разбросах',fmt(W.tln,4)+' … '+fmt(W.tlx,4)+' В')+
+  row('Гистерезис при любом сочетании не меньше VTH,мин − VTL,макс',fmt(W.thn-W.tlx,4)+' В');}
+var bad=[],risk=[],miss=[];
+if(W&&!(W.thn>W.tlx))risk.push('при заданных разбросах наименьший верхний порог '+fx(W.thn,W.tlx)+' В не выше наибольшего нижнего '+fx(W.tlx,W.thn)+' В — гистерезис не гарантирован');
+if(vi0===null)miss.push('размах входного сигнала');
+else{var oH=gt(vi1,r.vth),oL=lt(vi0,r.vtl);
+ h+=row('Входной сигнал и пороги',fmt(vi0,4)+' … '+fmt(vi1,4)+' В: '+(oH?'выше VTH':'не выше VTH')+', '+(oL?'ниже VTL':'не ниже VTL'));
+ if(!oH)bad.push('наибольшее напряжение сигнала '+fx(vi1,r.vth)+' В не выше верхнего порога '+fx(r.vth,vi1)+' В — выход не переключится');
+ if(!oL)bad.push('наименьшее напряжение сигнала '+fx(vi0,r.vtl)+' В не ниже нижнего порога '+fx(r.vtl,vi0)+' В — выход не вернётся');
+ if(W){if(oH&&!gt(vi1,W.thx))risk.push('при заданных разбросах верхний порог доходит до '+fx(W.thx,vi1)+' В — наибольшее напряжение сигнала '+fx(vi1,W.thx)+' В может его не пересечь');
+  if(oL&&!lt(vi0,W.tln))risk.push('при заданных разбросах нижний порог опускается до '+fx(W.tln,vi0)+' В — наименьшее напряжение сигнала '+fx(vi0,W.tln)+' В может его не пересечь');}}
+if(c0===null)miss.push('синфазный диапазон компаратора');
+else{var u0=inv?r.pL:vr,u1=inv?r.pH:vr,w0=W?(inv?W.pn:Math.min(W.pn,W.px)):u0,w1=W?W.px:u1;
+ h+=row('Напряжение на входах в момент переключения и синфазный диапазон',(u0===u1?fx(u0,u0-c0<c1-u0?c0:c1):fx(u0,c0)+' … '+fx(u1,c1))+' В при '+fx(c0,u0)+' … '+fx(c1,u1)+' В');
+ if(lt(u0,c0))bad.push('напряжение на входах компаратора в момент переключения '+fx(u0,c0)+' В ниже нижней границы синфазного диапазона '+fx(c0,u0)+' В');
+ else if(gt(u1,c1))bad.push('напряжение на входах компаратора в момент переключения '+fx(u1,c1)+' В выше верхней границы синфазного диапазона '+fx(c1,u1)+' В');
+ else if(W&&(lt(w0,c0)||gt(w1,c1)))risk.push('при заданных разбросах напряжение на входах в момент переключения доходит до '+(lt(w0,c0)?fx(w0,c0)+' В при нижней границе '+fx(c0,w0):fx(w1,c1)+' В при верхней границе '+fx(c1,w1))+' В');
+ if(vi0!==null){var s0=inv?vi0:pin(p0,vi0,false),s1=inv?vi1:pin(p0,vi1,true);
+  if(lt(s0,c0)||gt(s1,c1))risk.push('на краях размаха сигнала вход компаратора '+(inv?'':'(после R1) ')+'выходит за синфазный диапазон: '+fmt(s0,4)+' … '+fmt(s1,4)+' В — допустимо ли это, смотрите в паспорте');}}
+if(sp0.length)miss.push(sp0.join(', '));
+var st;
+if(bad.length)st=cap(bad.join('; '));
+else if(risk.length)st='Риск: '+risk.join('; ');
+else if(miss.length)st='Недостаточно данных: не заданы '+miss.join(', ')+'; пороги по номиналам VTH = '+fmt(r.vth,4)+' В, VTL = '+fmt(r.vtl,4)+' В';
+else st='Оценка: при заданных разбросах сигнал '+fx(vi0,W.tln)+' … '+fx(vi1,W.thx)+' В пересекает оба порога (VTH до '+fx(W.thx,vi1)+' В, VTL от '+fx(W.tln,vi0)+' В), напряжение на входах в момент переключения — в синфазном диапазоне';
+var n='Пороги — по правилу узлов: в каждом состоянии двухтактный выход — источник VOH или VOL, а у открытого коллектора в высоком состоянии выход — узел, который Rп тянет к Vподт, а цепь обратной связи и нагрузка — вниз. Входные токи компаратора и его встроенный гистерезис не учтены, смещение нуля сдвигает оба порога. ';
+n+='Разброс — перебор всех сочетаний крайних значений заданных допусков и разбросов. TI (SBOA313): точность порогов определяют допуск резисторов, смещение нуля и встроенный гистерезис компаратора. ';
+n+=inv?'Источник сигнала нагружен только входом компаратора.':'Выходное сопротивление источника сигнала складывается с R1 и сдвигает пороги.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

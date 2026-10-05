@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Дифференциальный усилитель на ОУ — ВольтКальк</title>
+<meta name="description" content="Расчёт дифференциального (разностного) усилителя на операционном усилителе с четырьмя резисторами и опорным напряжением: выход по суперпозиции, дифференциальное и синфазное усиление, КОСС по номиналам и наихудший при допуске резисторов перебором 16 сочетаний, входные сопротивления обоих входов, проверка выхода и синфазного напряжения по паспорту ОУ.">
+<link rel="canonical" href="https://macos2024.github.io/differencialnyy-usilitel.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Дифференциальный усилитель на ОУ — ВольтКальк">
+<meta property="og:description" content="Расчёт дифференциального (разностного) усилителя на операционном усилителе с четырьмя резисторами и опорным напряжением: выход по суперпозиции, дифференциальное и синфазное усиление, КОСС по номиналам и наихудший при допуске резисторов перебором 16 сочетаний, входные сопротивления обоих входов, проверка выхода и синфазного напряжения по паспорту ОУ.">
+<meta property="og:url" content="https://macos2024.github.io/differencialnyy-usilitel.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Дифференциальный усилитель на ОУ","url":"https://macos2024.github.io/differencialnyy-usilitel.html","description":"Расчёт дифференциального (разностного) усилителя на операционном усилителе с четырьмя резисторами и опорным напряжением: выход по суперпозиции, дифференциальное и синфазное усиление, КОСС по номиналам и наихудший при допуске резисторов перебором 16 сочетаний, входные сопротивления обоих входов, проверка выхода и синфазного напряжения по паспорту ОУ.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Дифференциальный усилитель на ОУ","item":"https://macos2024.github.io/differencialnyy-usilitel.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Чем этот усилитель отличается от инвертирующего и неинвертирующего включения ОУ?","acceptedAnswer":{"@type":"Answer","text":"Он усиливает разность двух напряжений и подавляет их общую часть. Инвертирующее и неинвертирующее включение — частные случаи: если подключить к общему проводу один из входов, останется одна из этих схем. Каждую по отдельности считает калькулятор операционного усилителя."}},{"@type":"Question","name":"Почему КОСС так сильно зависит от резисторов?","acceptedAnswer":{"@type":"Answer","text":"Синфазное усиление пропорционально разности R1·R4 − R2·R3. При точном равенстве отношений она равна нулю, но резисторы с допуском ±1 % дают разность до 4 % — и при единичном усилении КОСС падает примерно до 50, то есть 34 дБ, даже с идеальным ОУ. Нужны резисторы 0,1 % и точнее, согласованные сборки или интегральный разностный усилитель."}},{"@type":"Question","name":"Почему у входов разные входные сопротивления и чем это плохо?","acceptedAnswer":{"@type":"Answer","text":"Вход V2 нагружен делителем R3 + R4, вход V1 — резистором R1, причём его ток зависит и от второго входа. Источники с заметным выходным сопротивлением нагружаются по-разному, их сопротивления складываются с R1 и R3 и нарушают равенство отношений — КОСС падает. Для высокоомных датчиков ставят буферы или инструментальный усилитель."}},{"@type":"Question","name":"Что такое Vref и как его подключать?","acceptedAnswer":{"@type":"Answer","text":"Это напряжение на нижнем выводе R4. При равных отношениях оно прибавляется к выходу, так сдвигают выход в середину диапазона однополярного ОУ. Источник Vref должен быть низкоомным: его выходное сопротивление складывается с R4 и тоже снижает КОСС."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Дифференциальный усилитель на ОУ</h1>
+<p class="intro">Разностный усилитель усиливает разность двух напряжений и подавляет их общую, синфазную часть — насколько хорошо, решают четыре резистора. Калькулятор считает выход идеального ОУ, КОСС по номиналам и в наихудшем сочетании допусков, входные сопротивления и проверяет выход и напряжение на входах ОУ по паспорту. Одновходовые схемы считает <a href="ou-usilenie.html">калькулятор операционного усилителя</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Дифференциальный усилитель на ОУ</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_v1"><label for="v1">Напряжение V1 — вход через R1 к инвертирующему входу ОУ</label><div class="fw"><input id="v1" type="text" inputmode="decimal" autocomplete="off" value="2,45" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_v2"><label for="v2">Напряжение V2 — вход через R3 к неинвертирующему входу ОУ</label><div class="fw"><input id="v2" type="text" inputmode="decimal" autocomplete="off" value="2,55" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_r1"><label for="r1">R1 — от входа V1 к инвертирующему входу</label><div class="fw"><input id="r1" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="r1_unit" class="u" aria-label="Единицы: R1 — от входа V1 к инвертирующему входу"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_r2"><label for="r2">R2 — обратная связь: от выхода к инвертирующему входу</label><div class="fw"><input id="r2" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="r2_unit" class="u" aria-label="Единицы: R2 — обратная связь: от выхода к инвертирующему входу"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_r3"><label for="r3">R3 — от входа V2 к неинвертирующему входу</label><div class="fw"><input id="r3" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="r3_unit" class="u" aria-label="Единицы: R3 — от входа V2 к неинвертирующему входу"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_r4"><label for="r4">R4 — от неинвертирующего входа к Vref</label><div class="fw"><input id="r4" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="r4_unit" class="u" aria-label="Единицы: R4 — от неинвертирующего входа к Vref"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_vref"><label for="vref">Опорное напряжение Vref на нижнем выводе R4</label><div class="fw"><input id="vref" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div><div class="hint">Необязательное. Пусто — R4 подключён к общему проводу, 0 В. Источник Vref должен иметь малое выходное сопротивление: оно складывается с R4</div></div><div class="f" id="f_tol"><label for="tol">Допуск резисторов ±t</label><div class="fw"><input id="tol" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">%</span></div><div class="hint">Необязательное: по маркировке ваших резисторов. По нему считается наихудший КОСС перебором 16 сочетаний. Пусто — только номиналы и «Недостаточно данных»</div></div><div class="f" id="f_rs1"><label for="rs1">Выходное сопротивление источника V1</label><div class="fw"><input id="rs1" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="rs1_unit" class="u" aria-label="Единицы: Выходное сопротивление источника V1"><option value="1" selected>Ом</option><option value="1000">кОм</option><option value="1000000">МОм</option></select></div><div class="hint">Необязательное: прибавляется к R1</div></div><div class="f" id="f_rs2"><label for="rs2">Выходное сопротивление источника V2</label><div class="fw"><input id="rs2" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="rs2_unit" class="u" aria-label="Единицы: Выходное сопротивление источника V2"><option value="1" selected>Ом</option><option value="1000">кОм</option><option value="1000000">МОм</option></select></div><div class="hint">Необязательное: прибавляется к R3</div></div><div class="f" id="f_vomin"><label for="vomin">Нижняя граница выхода ОУ</label><div class="fw"><input id="vomin" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div><div class="hint">По паспорту ОУ при вашем питании и нагрузке. Пусто — «Недостаточно данных»</div></div><div class="f" id="f_vomax"><label for="vomax">Верхняя граница выхода ОУ</label><div class="fw"><input id="vomax" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_vcmmin"><label for="vcmmin">Нижняя граница синфазного входного напряжения ОУ</label><div class="fw"><input id="vcmmin" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div><div class="hint">По паспорту ОУ при вашем питании. Пусто — «Недостаточно данных»</div></div><div class="f" id="f_vcmmax"><label for="vcmmax">Верхняя граница синфазного входного напряжения ОУ</label><div class="fw"><input id="vcmmax" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Дифференциальный усилитель: как считается</h2>
+<div class="formula">V+ = V2·R4/(R3 + R4) + Vref·R3/(R3 + R4)<br>Vвых = V+·(1 + R2/R1) − V1·R2/R1<br>Vвых = Aд·(V2 − V1) + Aсф·(V1 + V2)/2 + Vref·R3·(1 + R2/R1)/(R3 + R4)<br>Aд = [R4·(R1 + R2) + R2·(R3 + R4)] / [2·R1·(R3 + R4)],&nbsp;&nbsp;Aсф = (R1·R4 − R2·R3) / [R1·(R3 + R4)],&nbsp;&nbsp;КОСС = |Aд / Aсф|<br>при R2/R1 = R4/R3: Vвых = (R2/R1)·(V2 − V1) + Vref<br>наихудший КОСС при допуске ±t — перебор 16 сочетаний; для сравнения ≈ (1 + Aд)/(4t)</div>
+<p><b>Вывод из суперпозиции.</b> У идеального ОУ входы не потребляют ток, а отрицательная обратная связь через R2 удерживает напряжения обоих входов равными. Неинвертирующий вход подключён к делителю R3–R4 между V2 и Vref, поэтому по правилу узлов (закон токов Кирхгофа) на нём V+ = (V2·R4 + Vref·R3)/(R3 + R4). На инвертирующем входе то же напряжение, и ток через R1 равен току через R2: (V1 − V+)/R1 = (V+ − Vвых)/R2. Отсюда Vвых = V+·(1 + R2/R1) − V1·R2/R1. Это сумма двух известных схем: при V2 = Vref = 0 остаётся инвертирующий усилитель с усилением −R2/R1, при V1 = 0 — делитель и неинвертирующий усилитель 1 + R2/R1. Каждую из них по отдельности считает <a href="ou-usilenie.html">калькулятор операционного усилителя</a>.</p>
+<p><b>Дифференциальное и синфазное усиление.</b> Если записать V1 = Vсф − Vд/2 и V2 = Vсф + Vд/2, выход распадается на Aд·Vд и Aсф·Vсф. Синфазное усиление пропорционально разности R1·R4 − R2·R3 и обращается в ноль только при равенстве отношений R2/R1 = R4/R3 — тогда выход зависит лишь от разности входов. Коэффициент ослабления синфазного сигнала (КОСС, CMRR) — отношение |Aд/Aсф|, в децибелах 20·lg. Расчёт идёт для идеального ОУ: собственный КОСС ОУ, смещение нуля и входные токи не учтены, и КОСС схемы не бывает выше КОСС самого ОУ.</p>
+<p><b>Допуск резисторов и наихудший случай.</b> Резисторы с допуском ±t почти никогда не дают точного равенства отношений, и КОСС ограничивают именно они, а не ОУ (TI, SBOA274). Калькулятор перебирает все 16 сочетаний «плюс или минус t» для R1–R4 и берёт наихудшее. Перебора углов достаточно: КОСС = N/(2·|D|), где N = R4·(R1 + R2) + R2·(R3 + R4) и D = R1·R4 − R2·R3 линейны по каждому резистору, поэтому отношение монотонно по каждому из них и наихудшее значение лежит в одном из углов. Для сравнения показано приближение (1 + Aд)/(4t): в записи TI CMRR(дБ) ≈ 20·lg[(1 + G)/(α·ε)] коэффициент α = 4 соответствует наихудшему случаю, а α = 0,33 — вероятному значению. Пример ADI (H. Holt, Analog Dialogue): при единичном усилении и резисторах 1 % КОСС 50 — около 34 дБ, при 0,1 % — 500, около 54 дБ. Приближение совпадает с перебором с точностью до t²: при согласованных номиналах точное наихудшее значение (1 + G + t²·(1 − G))/(4t).</p>
+<p><b>Входные сопротивления разные.</b> Источник V2 видит R3 + R4 — ток уходит через делитель к Vref. Ток источника V1 равен (V1 − V+)/R1 и зависит от второго входа: при V+ = 0 входное сопротивление равно R1, а для плавающего источника, включённого между входами, — R1 + R3. Kitchin и Counts (ADI) приводят пример: при четырёх резисторах по 100 кОм один вход нагружен на 100 кОм, другой — на 200 кОм. Последствие для источника сигнала: его выходное сопротивление складывается с R1 или R3 и нарушает равенство отношений, а значит, снижает КОСС, — даже 1 кОм на входе с R3 = 10 кОм заметен. Введите выходные сопротивления источников, и калькулятор прибавит их к R1 и R3. Высокоомным источникам нужен буфер или инструментальный усилитель.</p>
+<p><b>Опорное напряжение и проверка по паспорту ОУ.</b> Vref сдвигает выход: при равных отношениях Vвых = (R2/R1)·(V2 − V1) + Vref. Источник Vref должен иметь малое выходное сопротивление — оно складывается с R4. Выход идеального ОУ сравнивается с границами, которые вы берёте из паспорта при своих питании и нагрузке, как на странице <a href="ou-usilenie.html">операционного усилителя</a>. Отдельно проверяется напряжение на входах ОУ V+: оно должно лежать в синфазном диапазоне входов ОУ. Делитель R3–R4 делит синфазное напряжение, поэтому схема работает и тогда, когда сами V1 и V2 выходят за этот диапазон. Без паспортных границ калькулятор пишет «Недостаточно данных».</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="ou-usilenie.html">Калькулятор ОУ</a> считает одновходовые инвертирующий и неинвертирующий усилители. Здесь входов два, и главный вопрос — насколько схема подавляет общее для них напряжение. Мостовые датчики, сигнал которых часто снимают таким усилителем, считает <a href="most-uitstona.html">калькулятор моста Уитстона</a>, а делитель на входе — <a href="delitel-napryazheniya.html">калькулятор делителя напряжения</a>.</p>
+<h2>Дифференциальный усилитель: пример расчёта</h2>
+<p>Датчик выдаёт 2,45 и 2,55 В: разность 0,1 В на синфазном уровне 2,5 В. Усилитель с R1 = R3 = 10 кОм и R2 = R4 = 100 кОм: V+ = 2,55·100/110 = 2,318 В, выход идеального ОУ (2,318·11 − 2,45·10) = <b>1 В</b>, Aд = 10 (20 дБ), по номиналам синфазное усиление равно нулю и КОСС бесконечен.</p>
+<p>С резисторами 1 % наихудшее из 16 сочетаний даёт КОСС 275 — <b>48,79 дБ</b>, приближение (1 + 10)/(4·0,01) = 275. Синфазное усиление доходит до 0,03703: синфазные 2,5 В дают на выходе ошибку до ±92,58 мВ, и выход лежит между 0,9258 и 1,071 В. С резисторами 0,1 % КОСС — 68,79 дБ, ошибка — до ±9,107 мВ.</p>
+<p>Если у источника V2 выходное сопротивление 1 кОм, оно складывается с R3: R3 + Rи2 = 11 кОм, отношения уже не равны, выход 0,7703 В вместо 1 В, а КОСС по номиналам падает до 110,5 — 40,87 дБ. Значения условные; границы выхода и синфазного диапазона введите из паспорта своего ОУ.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Чем этот усилитель отличается от инвертирующего и неинвертирующего включения ОУ?</h3><p>Он усиливает разность двух напряжений и подавляет их общую часть. Инвертирующее и неинвертирующее включение — частные случаи: если подключить к общему проводу один из входов, останется одна из этих схем. Каждую по отдельности считает калькулятор операционного усилителя.</p><h3>Почему КОСС так сильно зависит от резисторов?</h3><p>Синфазное усиление пропорционально разности R1·R4 − R2·R3. При точном равенстве отношений она равна нулю, но резисторы с допуском ±1 % дают разность до 4 % — и при единичном усилении КОСС падает примерно до 50, то есть 34 дБ, даже с идеальным ОУ. Нужны резисторы 0,1 % и точнее, согласованные сборки или интегральный разностный усилитель.</p><h3>Почему у входов разные входные сопротивления и чем это плохо?</h3><p>Вход V2 нагружен делителем R3 + R4, вход V1 — резистором R1, причём его ток зависит и от второго входа. Источники с заметным выходным сопротивлением нагружаются по-разному, их сопротивления складываются с R1 и R3 и нарушают равенство отношений — КОСС падает. Для высокоомных датчиков ставят буферы или инструментальный усилитель.</p><h3>Что такое Vref и как его подключать?</h3><p>Это напряжение на нижнем выводе R4. При равных отношениях оно прибавляется к выходу, так сдвигают выход в середину диапазона однополярного ОУ. Источник Vref должен быть низкоомным: его выходное сопротивление складывается с R4 и тоже снижает КОСС.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-3-kirchhoffs-rules" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.3 Kirchhoff&#x27;s Rules — правило узлов: из него на странице выведены V+ и Vвых — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/sboa274" rel="nofollow noopener" target="_blank">Difference Amplifier (Subtractor) Circuit. Analog Engineer&#x27;s Circuit (SBOA274)</a> — Texas Instruments — Редакция редакция на дату обращения; положения видны в выдаче поиска, сам PDF в окружении не открывается — раздел КОСС разностного усилителя определяется допуском резисторов, CMRR(дБ) ≈ 20·lg[(1 + G)/(α·ε)]: α = 4 — наихудший случай, α = 0,33 — вероятное значение; на странице — для сравнения — обращение 04.10.2026</li><li><a href="https://www.analog.com/en/resources/analog-dialogue/articles/deeper-look-into-difference-amplifiers.html" rel="nofollow noopener" target="_blank">A Deeper Look into Difference Amplifiers</a> — Analog Devices, Analog Dialogue, Harry Holt — Редакция том 48, февраль 2014 — по выдаче; пример виден в выдаче — раздел при единичном усилении и резисторах 1 % КОСС 50 (около 34 дБ), при 0,1 % — 500 (около 54 дБ) даже с идеальным ОУ — обращение 04.10.2026</li><li><a href="https://www.analog.com/media/en/training-seminars/design-handbooks/designers-guide-instrument-amps-complete.pdf" rel="nofollow noopener" target="_blank">A Designer&#x27;s Guide to Instrumentation Amplifiers, 3rd Edition</a> — Analog Devices, Charles Kitchin, Lew Counts — Редакция 3-е издание; положение видно в выдаче — раздел гл. II: входные сопротивления инвертирующего и неинвертирующего входов невелики и не равны — 100 и 200 кОм при резисторах по 100 кОм, разбаланс сопротивлений источников снижает КОСС — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Идеальный ОУ: входы не потребляют ток, напряжения входов равны, усиление бесконечно.</li><li>Сопротивления источников V1 и V2 прибавляются к R1 и R3; источник Vref идеальный.</li><li>Наихудший случай — все 16 сочетаний ±t для R1–R4; сопротивления источников допуска не имеют.</li></ul><p><b>Границы применимости:</b></p><ul><li>Собственный КОСС ОУ, смещение нуля, входные токи, конечное усиление и полоса не учитываются.</li><li>Частотная зависимость КОСС — ёмкости монтажа и входов — не рассматривается.</li><li>Границы выхода и синфазного диапазона берутся из паспорта ОУ для ваших питания и нагрузки.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="ou-usilenie.html">Операционный усилитель: коэффициент усиления</a></li><li><a href="most-uitstona.html">Мост Уитстона</a></li><li><a href="delitel-napryazheniya.html">Делитель напряжения на резисторах</a></li><li><a href="trigger-shmitta.html">Триггер Шмитта на компараторе или ОУ</a></li><li><a href="filtr-sallena-ki.html">Активный фильтр Саллена–Ки второго порядка</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function db(x){return 20*Math.log(Math.abs(x))/Math.LN10;}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function sp(x,u){return si(Number(x.toPrecision(12)),u);}
+function rng(x,l,u){var lo_=x-l<u-x;return fx(x,lo_?l:u)+' В в пределах '+(lo_?fx(l,x):fmt(l,4))+' … '+(lo_?fmt(u,4):fx(u,x))+' В';}
+
+function calc(){
+var v1=P('v1'),v2=P('v2'),r1=P('r1'),r2=P('r2'),r3=P('r3'),r4=P('r4');
+if([v1,v2,r1,r2,r3,r4].some(isNaN))return err('Заполните числами V1, V2 и сопротивления R1–R4.');
+if(r1<=0||r2<=0||r3<=0||r4<=0)return err('Сопротивления R1–R4 должны быть больше нуля.');
+var vr=OPT('vref'),t=OPT('tol'),s1=OPT('rs1'),s2=OPT('rs2'),lo=OPT('vomin'),hi=OPT('vomax'),cl=OPT('vcmmin'),ch=OPT('vcmmax');
+if(vr!==null&&isNaN(vr))return err('Vref — число в вольтах. Если R4 подключён к общему проводу, оставьте поле пустым.');
+if(t!==null){if(isNaN(t))return err('Допуск резисторов — число в процентах. Если он неизвестен, оставьте поле пустым.');if(!(t>0&&t<20))return err('Допуск резисторов — больше 0 и меньше 20 %.');}
+if(s1!==null){if(isNaN(s1))return err('Выходное сопротивление источника V1 — число. Если оно пренебрежимо мало, оставьте поле пустым.');if(s1<0)return err('Выходное сопротивление источника V1 не может быть отрицательным.');}
+if(s2!==null){if(isNaN(s2))return err('Выходное сопротивление источника V2 — число. Если оно пренебрежимо мало, оставьте поле пустым.');if(s2<0)return err('Выходное сопротивление источника V2 не может быть отрицательным.');}
+if((lo===null)!==(hi===null))return err('Задайте обе границы выхода ОУ или оставьте обе пустыми.');
+if(lo!==null){if(isNaN(lo)||isNaN(hi))return err('Границы выхода ОУ — числа в вольтах.');if(!(lo<hi))return err('Нижняя граница выхода ОУ должна быть меньше верхней.');}
+if((cl===null)!==(ch===null))return err('Задайте обе границы синфазного напряжения ОУ или оставьте обе пустыми.');
+if(cl!==null){if(isNaN(cl)||isNaN(ch))return err('Границы синфазного напряжения ОУ — числа в вольтах.');if(!(cl<ch))return err('Нижняя граница синфазного напряжения должна быть меньше верхней.');}
+var V=vr===null?0:vr,a=s1===null?0:s1,b=s2===null?0:s2;
+// Идеальный ОУ: V+ — делитель R3–R4 между V2 и Vref; ток R1 равен току R2 (правило узлов).
+// Сопротивления источников прибавляются к R1 и R3. D = 0 — точное равенство R2/R1 = R4/R3.
+function ev(x1,x2,x3,x4){var R1=x1+a,R3=x3+b,vp=(v2*x4+V*R3)/(R3+x4),g=x2/R1,D=R1*x4-x2*R3,den=R1*(R3+x4);
+ return {vp:vp,vo:vp*(1+g)-v1*g,ad:(x4*(R1+x2)+x2*(R3+x4))/(2*den),acm:D/den,z:Math.abs(D)<=1e-12*R1*x4,R1:R1,R3:R3};}
+var e=ev(r1,r2,r3,r4),vd=v2-v1,vc=(v1+v2)/2,k2=r4/(e.R3+r4)*(1+r2/e.R1),kr=e.R3/(e.R3+r4)*(1+r2/e.R1),cm=e.z?Infinity:Math.abs(e.ad/e.acm);
+if(![e.vp,e.vo,e.ad].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var h=row('Напряжение на входах ОУ V+ = '+(vr===null?'V2·R4/(R3 + R4)':'(V2·R4 + Vref·R3)/(R3 + R4)'),fmt(e.vp,4)+' В')+
+ row('Выход идеального ОУ Vвых = V+·(1 + R2/R1) − V1·R2/R1',fmt(e.vo,4)+' В')+
+ row('Коэффициенты передачи: V2 / V1'+(vr===null?'':' / Vref'),fmt(k2,6)+' / '+fmt(-r2/e.R1,6)+(vr===null?'':' / '+fmt(kr,6)))+
+ row('Разностный сигнал V2 − V1 / синфазный (V1 + V2)/2',fmt(vd,4)+' / '+fmt(vc,4)+' В')+
+ row('Дифференциальное усиление Aд',fmt(e.ad,6)+' — '+fmt(db(e.ad),4)+' дБ')+
+ row('Синфазное усиление Aсф по номиналам',e.z?'0: R2/R1 = R4/R3':fmt(e.acm,4))+
+ row('КОСС резисторов по номиналам',e.z?'бесконечен: R2/R1 = R4/R3':fmt(cm,4)+' — '+fmt(db(cm),4)+' дБ');
+if(s1!==null||s2!==null)h+=row('С сопротивлениями источников: R1 + Rи1 / R3 + Rи2',si(e.R1,'Ом')+' / '+si(e.R3,'Ом'));
+// Наихудший случай: все 16 сочетаний ±t. КОСС = N/(2|D|): N и D линейны по каждому резистору,
+// поэтому отношение монотонно по каждому из них и наихудшее значение лежит в углу.
+var wn=Infinity,am=0,vo0=Infinity,vo1=-Infinity,vp0=Infinity,vp1=-Infinity;
+if(t!==null){var f=t/100;
+ for(var k=0;k<16;k++){var q=ev(r1*(1+((k&1)?f:-f)),r2*(1+((k&2)?f:-f)),r3*(1+((k&4)?f:-f)),r4*(1+((k&8)?f:-f)));
+  var c=q.z?Infinity:Math.abs(q.ad/q.acm);if(c<wn)wn=c;if(Math.abs(q.acm)>am)am=Math.abs(q.acm);
+  vo0=Math.min(vo0,q.vo);vo1=Math.max(vo1,q.vo);vp0=Math.min(vp0,q.vp);vp1=Math.max(vp1,q.vp);}
+ var ap=(1+Math.abs(e.ad))/(4*f);
+ h+=row('КОСС в наихудшем из 16 сочетаний ±'+fmt(t)+' %',fmt(wn,4)+' — '+fmt(db(wn),4)+' дБ')+
+  row('Для сравнения: приближение TI и ADI (1 + Aд)/(4t) — для согласованных номиналов',fmt(ap,4)+' — '+fmt(db(ap),4)+' дБ')+
+  row('Наибольшее |Aсф| при допуске',fmt(am,4)+' — ошибка выхода от синфазных '+fmt(vc,4)+' В до ±'+si(am*Math.abs(vc),'В'))+
+  row('Выход при допусках резисторов',fmt(vo0,4)+' … '+fmt(vo1,4)+' В')+
+  row('Напряжение на входах ОУ при допусках',fmt(vp0,4)+' … '+fmt(vp1,4)+' В');}
+h+=row('Входное сопротивление со стороны V2: R3 + R4',si(r3+r4,'Ом'))+
+ row('Со стороны V1: R1 — при V+ = 0',si(r1,'Ом'))+
+ row('Для плавающего источника между входами: R1 + R3',si(r1+r3,'Ом'))+
+ row('Токи входов при этих напряжениях: I1 / I2',si((v1-e.vp)/e.R1,'А')+' / '+si((v2-V)/(e.R3+r4),'А'));
+var bad=[],risk=[],miss=[];
+function chk(x,x0,x1,l,u,what,tail){
+ if(lt(x,l)){bad.push(what+' '+fx(x,l)+' В ниже нижней границы '+fx(l,x)+' В'+tail);return fx(x,l)+' В ниже нижней границы '+fx(l,x)+' В';}
+ if(gt(x,u)){bad.push(what+' '+fx(x,u)+' В выше верхней границы '+fx(u,x)+' В'+tail);return fx(x,u)+' В выше верхней границы '+fx(u,x)+' В';}
+ if(t!==null){if(lt(x0,l))risk.push('при допусках резисторов '+what+' доходит до '+fx(x0,l)+' В — ниже нижней границы '+fx(l,x0)+' В');
+  if(gt(x1,u))risk.push('при допусках резисторов '+what+' доходит до '+fx(x1,u)+' В — выше верхней границы '+fx(u,x1)+' В');}
+ return rng(x,l,u);}
+if(lo===null)miss.push('границы выхода ОУ');
+else h+=row('Выход и границы по паспорту ОУ',chk(e.vo,vo0,vo1,lo,hi,'выход',' — сигнал ограничится'));
+if(cl===null)miss.push('синфазный диапазон входов ОУ');
+else h+=row('Напряжение на входах ОУ и синфазный диапазон',chk(e.vp,vp0,vp1,cl,ch,'напряжение на входах ОУ',' — ОУ вне своего синфазного диапазона, расчёт для идеального ОУ неприменим'));
+if(t===null)miss.push('допуск резисторов');
+var st;
+if(bad.length)st=cap(bad.join('; '));
+else if(risk.length)st='Риск: '+risk.join('; ');
+else if(miss.length)st='Недостаточно данных: не заданы '+miss.join(', ')+'; по идеальному ОУ Vвых = '+fmt(e.vo,4)+' В';
+else st='Оценка: выход '+rng(e.vo,lo,hi)+', напряжение на входах ОУ '+rng(e.vp,cl,ch)+' — по номиналам и при допусках резисторов; наихудший КОСС резисторов '+fmt(db(wn),4)+' дБ';
+var n='Расчёт для идеального ОУ: входы не потребляют ток, напряжения входов равны. Собственный КОСС ОУ, смещение нуля, входные токи и конечное усиление не учтены: КОСС схемы не бывает выше КОСС самого ОУ, а на высоких частотах его снижают ещё и ёмкости. ';
+n+='Наихудший КОСС — перебор всех 16 сочетаний ±t; приближение (1 + Aд)/(4t) дано для сравнения: TI в SBOA274 берёт α = 4 для наихудшего случая и α = 0,33 для вероятного. ';
+n+='Источник V2 нагружен на R3 + R4, источник V1 — на R1 с поправкой на V+: сопротивления источников складываются с R1 и R3 и нарушают равенство отношений.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

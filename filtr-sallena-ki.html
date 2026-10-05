@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Активный фильтр Саллена–Ки второго порядка — ВольтКальк</title>
+<meta name="description" content="Расчёт активного фильтра Саллена–Ки второго порядка, ФНЧ и ФВЧ: собственная частота f0 и добротность Q при любом усилении K = 1 + Rb/Ra, усиление на f0, частота среза −3 дБ, подъём АЧХ, порог самовозбуждения, разброс f0 и Q при допусках, синтез Баттерворта при единичном усилении и при равных элементах, проверка ОУ по GBW и скорости нарастания.">
+<link rel="canonical" href="https://macos2024.github.io/filtr-sallena-ki.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Активный фильтр Саллена–Ки второго порядка — ВольтКальк">
+<meta property="og:description" content="Расчёт активного фильтра Саллена–Ки второго порядка, ФНЧ и ФВЧ: собственная частота f0 и добротность Q при любом усилении K = 1 + Rb/Ra, усиление на f0, частота среза −3 дБ, подъём АЧХ, порог самовозбуждения, разброс f0 и Q при допусках, синтез Баттерворта при единичном усилении и при равных элементах, проверка ОУ по GBW и скорости нарастания.">
+<meta property="og:url" content="https://macos2024.github.io/filtr-sallena-ki.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Активный фильтр Саллена–Ки второго порядка","url":"https://macos2024.github.io/filtr-sallena-ki.html","description":"Расчёт активного фильтра Саллена–Ки второго порядка, ФНЧ и ФВЧ: собственная частота f0 и добротность Q при любом усилении K = 1 + Rb/Ra, усиление на f0, частота среза −3 дБ, подъём АЧХ, порог самовозбуждения, разброс f0 и Q при допусках, синтез Баттерворта при единичном усилении и при равных элементах, проверка ОУ по GBW и скорости нарастания.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Активный фильтр Саллена–Ки второго порядка","item":"https://macos2024.github.io/filtr-sallena-ki.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему при K = 3 фильтр генерирует?","acceptedAnswer":{"@type":"Answer","text":"При равных элементах коэффициент при s в знаменателе равен R·C·(3 − K). При K = 3 он обращается в ноль: добротность бесконечна, полюса на мнимой оси, и схема становится генератором; при K больше 3 полюса уходят в правую полуплоскость. До порога нужен запас: разброс элементов и конечная полоса ОУ повышают добротность."}},{"@type":"Question","name":"Чем фильтр Саллена–Ки лучше RC-цепочки?","acceptedAnswer":{"@type":"Answer","text":"Он второго порядка: за частотой среза ослабление растёт на 12 дБ на октаву вместо 6, а форму АЧХ задаёт добротность. Две пассивные RC-цепочки подряд дают добротность меньше 0,5 и пологий изгиб; положительная обратная связь через ОУ поднимает её до нужной."}},{"@type":"Question","name":"Что выбрать — единичное усиление или равные элементы?","acceptedAnswer":{"@type":"Answer","text":"При единичном усилении ОУ работает повторителем и добротность меньше зависит от разброса, но нужны разные номиналы конденсаторов у ФНЧ или резисторов у ФВЧ. При равных элементах номиналы одинаковые, а добротность задаёт K = 3 − 1/Q — она чувствительнее к точности Rb и Ra."}},{"@type":"Question","name":"Какой ОУ подойдёт?","acceptedAnswer":{"@type":"Answer","text":"TI в примерах берёт GBW не меньше 100·K·f и скорость нарастания не меньше 2π·f·Vпик. Для ФВЧ f — наибольшая частота сигнала: фильтр пропускает всё выше среза, и полоса ОУ ограничивает его сверху. Введите GBW и скорость нарастания из паспорта — калькулятор их сравнит."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Активный фильтр Саллена–Ки второго порядка</h1>
+<p class="intro">Фильтр Саллена–Ки — второй порядок на одном ОУ без катушек: 12 дБ на октаву за частотой среза и добротность, которую задают элементы и усиление. Калькулятор считает f0, Q, срез −3 дБ и подъём АЧХ, показывает порог самовозбуждения, синтезирует фильтр Баттерворта и проверяет ОУ. Фильтр первого порядка считает <a href="rc-filtr.html">калькулятор RC-фильтра</a>, пассивный второго порядка — <a href="lc-filtr-raschet.html">калькулятор LC-фильтра</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Активный фильтр Саллена–Ки второго порядка</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_typ"><label for="typ">Тип фильтра</label><div class="fw"><select id="typ"><option value="lp" selected>ФНЧ — пропускает нижние частоты</option><option value="hp">ФВЧ — пропускает верхние частоты</option></select></div></div><div class="f" id="f_mode"><label for="mode">Задача</label><div class="fw"><select id="mode"><option value="an" selected>Анализ: заданы R1, R2, C1, C2 и усиление</option><option value="su">Синтез Баттерворта: единичное усиление</option><option value="se">Синтез Баттерворта: равные элементы</option></select></div></div><div class="f" id="f_r1"><label for="r1">R1 — ФНЧ: входной резистор; ФВЧ: резистор от средней точки на выход ОУ</label><div class="fw"><input id="r1" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="r1_unit" class="u" aria-label="Единицы: R1 — ФНЧ: входной резистор; ФВЧ: резистор от средней точки на выход ОУ"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_r2"><label for="r2">R2 — ФНЧ: резистор к входу ОУ; ФВЧ: резистор от входа ОУ на общий провод</label><div class="fw"><input id="r2" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="r2_unit" class="u" aria-label="Единицы: R2 — ФНЧ: резистор к входу ОУ; ФВЧ: резистор от входа ОУ на общий провод"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div></div><div class="f" id="f_c1"><label for="c1">C1 — ФНЧ: конденсатор от средней точки на выход ОУ; ФВЧ: входной конденсатор</label><div class="fw"><input id="c1" type="text" inputmode="decimal" autocomplete="off" value="22" placeholder=""><select id="c1_unit" class="u" aria-label="Единицы: C1 — ФНЧ: конденсатор от средней точки на выход ОУ; ФВЧ: входной конденсатор"><option value="1e-12">пФ</option><option value="1e-09" selected>нФ</option><option value="1e-06">мкФ</option></select></div></div><div class="f" id="f_c2"><label for="c2">C2 — ФНЧ: конденсатор от входа ОУ на общий провод; ФВЧ: конденсатор к входу ОУ</label><div class="fw"><input id="c2" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="c2_unit" class="u" aria-label="Единицы: C2 — ФНЧ: конденсатор от входа ОУ на общий провод; ФВЧ: конденсатор к входу ОУ"><option value="1e-12">пФ</option><option value="1e-09" selected>нФ</option><option value="1e-06">мкФ</option></select></div></div><div class="f" id="f_rb"><label for="rb">Rb — от выхода ОУ к инвертирующему входу</label><div class="fw"><input id="rb" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><select id="rb_unit" class="u" aria-label="Единицы: Rb — от выхода ОУ к инвертирующему входу"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div><div class="hint">0 — повторитель, K = 1</div></div><div class="f" id="f_ra"><label for="ra">Ra — от инвертирующего входа на общий провод</label><div class="fw"><input id="ra" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="ra_unit" class="u" aria-label="Единицы: Ra — от инвертирующего входа на общий провод"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div><div class="hint">При Rb = 0 не нужен — оставьте пустым. K = 1 + Rb/Ra</div></div><div class="f" id="f_f0"><label for="f0">Частота f0 для синтеза</label><div class="fw"><input id="f0" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><select id="f0_unit" class="u" aria-label="Единицы: Частота f0 для синтеза"><option value="1">Гц</option><option value="1000" selected>кГц</option><option value="1000000">МГц</option></select></div></div><div class="f" id="f_c"><label for="c">Ёмкость C для синтеза</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="c_unit" class="u" aria-label="Единицы: Ёмкость C для синтеза"><option value="1e-12">пФ</option><option value="1e-09" selected>нФ</option><option value="1e-06">мкФ</option></select></div><div class="hint">Единичное усиление: ФНЧ — C2 = C, C1 = 2·C; ФВЧ — C1 = C2 = C. Равные элементы: C1 = C2 = C</div></div><div class="f" id="f_ras"><label for="ras">Ra для синтеза с равными элементами</label><div class="fw"><input id="ras" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="ras_unit" class="u" aria-label="Единицы: Ra для синтеза с равными элементами"><option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option></select></div><div class="hint">Rb = (2 − √2)·Ra даёт K = 3 − √2</div></div><div class="f" id="f_tr"><label for="tr">Допуск резисторов ±</label><div class="fw"><input id="tr" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">%</span></div><div class="hint">Необязательное: по маркировке резисторов. Вместе с допуском конденсаторов даёт разброс f0 и Q и проверку самовозбуждения</div></div><div class="f" id="f_tc"><label for="tc">Допуск конденсаторов ±</label><div class="fw"><input id="tc" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">%</span></div><div class="hint">Необязательное: по маркировке конденсаторов</div></div><div class="f" id="f_gbw"><label for="gbw">Произведение усиления на полосу GBW ОУ</label><div class="fw"><input id="gbw" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="gbw_unit" class="u" aria-label="Единицы: Произведение усиления на полосу GBW ОУ"><option value="1">Гц</option><option value="1000">кГц</option><option value="1000000" selected>МГц</option></select></div><div class="hint">Необязательное: по паспорту ОУ</div></div><div class="f" id="f_sr"><label for="sr">Скорость нарастания SR ОУ</label><div class="fw"><input id="sr" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В/мкс</span></div><div class="hint">Необязательное: по паспорту ОУ</div></div><div class="f" id="f_vin"><label for="vin">Амплитуда входного синусоидального сигнала</label><div class="fw"><input id="vin" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div><div class="hint">Необязательное: нужна для проверки скорости нарастания</div></div><div class="f" id="f_fmax"><label for="fmax">Наибольшая частота сигнала</label><div class="fw"><input id="fmax" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="fmax_unit" class="u" aria-label="Единицы: Наибольшая частота сигнала"><option value="1">Гц</option><option value="1000" selected>кГц</option><option value="1000000">МГц</option></select></div><div class="hint">Для ФВЧ: он пропускает всё выше f0, и требования к ОУ задаёт наибольшая частота сигнала</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Фильтр Саллена–Ки: как считается</h2>
+<div class="formula">ФНЧ: H(s) = K / [s²·R1R2C1C2 + s·(R1C2 + R2C2 + R1C1·(1 − K)) + 1]<br>ФВЧ: H(s) = K·s²·R1R2C1C2 / [s²·R1R2C1C2 + s·(R1C1 + R1C2 + R2C2·(1 − K)) + 1]<br>ω0 = 2π·f0 = 1/√(R1R2C1C2),&nbsp;&nbsp;Q = √(R1R2C1C2) / (коэффициент при s),&nbsp;&nbsp;K = 1 + Rb/Ra<br>самовозбуждение, если коэффициент при s ≤ 0: ФНЧ — K ≥ 1 + C2·(R1 + R2)/(R1·C1), ФВЧ — K ≥ 1 + R1·(C1 + C2)/(R2·C2)<br>равные элементы: Q = 1/(3 − K), порог K = 3;&nbsp;&nbsp;на f0 усиление K·Q<br>−3 дБ от K: x² = [2 − 1/Q² + √((2 − 1/Q²)² + 4)]/2, ФНЧ f = f0·x, ФВЧ f = f0/x<br>Баттерворт, K = 1: ФНЧ R1 = R2 = 1/(2π·f0·C·√2), C1 = 2·C, C2 = C; ФВЧ C1 = C2 = C, R1 = 1/(2π·f0·C·√2), R2 = 2·R1<br>Баттерворт, равные элементы: R = 1/(2π·f0·C), K = 3 − √2 ≈ 1,586, Rb = (2 − √2)·Ra</div>
+<p><b>Схема и обозначения.</b> ФНЧ: вход → R1 → средняя точка → R2 → неинвертирующий вход ОУ; C1 — от средней точки на выход ОУ, это положительная обратная связь, C2 — от неинвертирующего входа на общий провод. ФВЧ: те же места, но резисторы и конденсаторы поменялись: вход → C1 → средняя точка → C2 → вход ОУ, R1 — от средней точки на выход, R2 — от входа ОУ на общий провод. ОУ включён неинвертирующим усилителем с K = 1 + Rb/Ra; при Rb = 0 это повторитель. Обозначения в документах изготовителей бывают другими — сверяйте по месту элемента в схеме.</p>
+<p><b>Вывод из узловых уравнений.</b> Для ФНЧ по правилу узлов в средней точке A и на входе ОУ B — сопротивление конденсатора 1/(s·C): (Vвх − VA)/R1 + (VB − VA)/R2 + (Vвых − VA)·s·C1 = 0 и (VA − VB)/R2 = VB·s·C2, а Vвых = K·VB. Из второго уравнения VA = VB·(1 + s·R2·C2); подстановка в первое и умножение на R1 дают Vвх = VB·[s²·R1R2C1C2 + s·(R1C2 + R2C2 + R1C1·(1 − K)) + 1] — это знаменатель в рамке. Для ФВЧ так же, только проводимости s·C1 и s·C2 стоят в продольных ветвях, а 1/R1 и 1/R2 — в поперечных. Сравнение знаменателя со стандартной записью s²/ω0² + s/(ω0·Q) + 1 даёт ω0 и Q. TI в SLOA024B (J. Karki) разбирает ту же схему для ФНЧ и ФВЧ и для равных элементов получает Q = 1/(3 − K); формулы страницы выведены здесь и от пересказа этого документа не зависят.</p>
+<p><b>Устойчивость.</b> Конденсатор C1 у ФНЧ или резистор R1 у ФВЧ подаёт с выхода положительную обратную связь, и с ростом K коэффициент при s уменьшается. Пока он положителен, полюса в левой полуплоскости. При нуле добротность бесконечна, полюса на мнимой оси — схема генерирует; при большем K полюса уходят в правую полуплоскость. Для равных элементов порог — K = 3, Q = 1/(3 − K). Калькулятор сравнивает K с порогом без округления через него. Чем ближе K к порогу, тем сильнее Q зависит от разброса элементов — ADI (MT-222) отмечает чувствительность схемы Саллена–Ки к значениям элементов, особенно при высокой добротности. Поэтому при заданных допусках калькулятор перебирает все 32 сочетания крайних значений R1, R2, C1, C2 и усиления и ищет внутренний максимум добротности вдоль каждого элемента: Q ∝ √x/(β + γ·x) имеет максимум при x = β/γ. Коэффициент при s линеен по каждому элементу, поэтому его наименьшее значение и наименьшая добротность лежат в углах; f0 монотонна по каждому элементу, и её крайние значения тоже в углах.</p>
+<p><b>Частота среза, подъём и синтез.</b> На f0 усиление равно K·Q. Частота −3 дБ от K совпадает с f0 только у фильтра Баттерворта, Q = 1/√2 ≈ 0,7071; при большей добротности у АЧХ появляется подъём — до K·Q/√(1 − 1/(4·Q²)). Режим синтеза рассчитывает фильтр Баттерворта двумя распространёнными способами: при единичном усилении (ФНЧ — равные резисторы и C1 = 2·C2, ФВЧ — равные конденсаторы и R2 = 2·R1) и при равных элементах с K = 3 − √2. Полученные номиналы анализируются так же, как введённые вручную.</p>
+<p><b>Требования к ОУ.</b> Формулы выше — для идеального ОУ. Конечная полоса ОУ сдвигает частоту и повышает добротность. TI в примерах SBOA226 (ФНЧ) и SBOA225 (ФВЧ) берёт GBW не меньше 100·K·f и скорость нарастания не меньше 2π·f·Vпик: для ФНЧ f — частота среза, для ФВЧ — наибольшая частота сигнала, ведь ФВЧ пропускает всё выше f0. Калькулятор берёт для ФНЧ большую из f0 и частоты −3 дБ, а в скорости нарастания учитывает амплитуду на выходе с подъёмом АЧХ. Это правило оценки, поэтому его невыполнение — «Риск», а без GBW и скорости нарастания — «Недостаточно данных», хотя сам фильтр рассчитан.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="rc-filtr.html">RC-фильтр</a> — первого порядка: спад 6 дБ на октаву и нет добротности. <a href="lc-filtr-raschet.html">Пассивный LC-фильтр</a> второго порядка работает на нагрузку без ОУ, а его добротность задают L, C и сопротивление нагрузки. Фильтр Саллена–Ки даёт второй порядок, 12 дБ на октаву, без катушек: добротность задают соотношения элементов и усиление ОУ, включённого <a href="ou-usilenie.html">неинвертирующим усилителем</a>. Уровни в децибелах переводит <a href="decibel.html">калькулятор децибел</a>.</p>
+<h2>Фильтр Саллена–Ки: пример расчёта</h2>
+<p>ФНЧ с повторителем, R1 = R2 = 10 кОм, C1 = 22 нФ, C2 = 10 нФ: f0 = 1/(2π·√(10⁴·10⁴·22·10⁻⁹·10⁻⁸)) = <b>1073 Гц</b>, Q = √(2,2)/2 = <b>0,7416</b> — чуть выше Баттерворта, поэтому срез −3 дБ на 1123 Гц, а у АЧХ подъём 0,036 дБ около 323,5 Гц. Порог самовозбуждения Kпред = 1 + 10·20/(10·22) = 1,909, при K = 1 запас большой.</p>
+<p>Синтез Баттерворта на 1 кГц с C = 10 нФ: при единичном усилении R1 = R2 = 11,25 кОм, C1 = 20 нФ; при равных элементах R = 15,92 кОм и K = 1,586, то есть Rb = 5,858 кОм при Ra = 10 кОм. Если в схеме с равными элементами поднять K до 2,9, добротность станет 10, а при K = 3 фильтр самовозбуждается.</p>
+<p>Для ФНЧ из первого примера правило TI требует GBW не меньше 100·1·1123 Гц = 112,3 кГц. Значения условные; GBW и скорость нарастания введите из паспорта своего ОУ.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему при K = 3 фильтр генерирует?</h3><p>При равных элементах коэффициент при s в знаменателе равен R·C·(3 − K). При K = 3 он обращается в ноль: добротность бесконечна, полюса на мнимой оси, и схема становится генератором; при K больше 3 полюса уходят в правую полуплоскость. До порога нужен запас: разброс элементов и конечная полоса ОУ повышают добротность.</p><h3>Чем фильтр Саллена–Ки лучше RC-цепочки?</h3><p>Он второго порядка: за частотой среза ослабление растёт на 12 дБ на октаву вместо 6, а форму АЧХ задаёт добротность. Две пассивные RC-цепочки подряд дают добротность меньше 0,5 и пологий изгиб; положительная обратная связь через ОУ поднимает её до нужной.</p><h3>Что выбрать — единичное усиление или равные элементы?</h3><p>При единичном усилении ОУ работает повторителем и добротность меньше зависит от разброса, но нужны разные номиналы конденсаторов у ФНЧ или резисторов у ФВЧ. При равных элементах номиналы одинаковые, а добротность задаёт K = 3 − 1/Q — она чувствительнее к точности Rb и Ra.</p><h3>Какой ОУ подойдёт?</h3><p>TI в примерах берёт GBW не меньше 100·K·f и скорость нарастания не меньше 2π·f·Vпик. Для ФВЧ f — наибольшая частота сигнала: фильтр пропускает всё выше среза, и полоса ОУ ограничивает его сверху. Введите GBW и скорость нарастания из паспорта — калькулятор их сравнит.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-3-kirchhoffs-rules" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.3 Kirchhoff&#x27;s Rules — правило узлов: из него на странице выведен знаменатель передаточной функции — обращение 04.10.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/15-2-simple-ac-circuits" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 15.2 Simple AC Circuits — ёмкостное сопротивление 1/(ωC) — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/an/sloa024b/sloa024b.pdf" rel="nofollow noopener" target="_blank">Analysis of the Sallen-Key Architecture (SLOA024B)</a> — Texas Instruments, James Karki — Редакция июль 1999, редакция B — 2002; положения видны в выдаче, сам PDF в окружении не открывается — раздел ФНЧ и ФВЧ Саллена–Ки: передаточная функция, f0 и Q, равные элементы: fc = 1/(2πRC), Q = 1/(3 − K); при K = 3 добротность бесконечна, при большем K полюса в правой полуплоскости — для сравнения — обращение 04.10.2026</li><li><a href="https://www.analog.com/media/en/training-seminars/tutorials/MT-222.pdf" rel="nofollow noopener" target="_blank">Sallen-Key Filters (MT-222)</a> — Analog Devices, Mini Tutorial — Редакция редакция на дату обращения; положения видны в выдаче — раздел Саллен–Ки меньше других топологий зависит от ОУ, добротность чувствительна к значениям элементов, особенно при высокой Q; конечная GBW повышает добротность — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/pdf/sboa226" rel="nofollow noopener" target="_blank">Single-supply, 2nd-order, Sallen-Key low-pass filter circuit (SBOA226)</a> — Texas Instruments, Analog Engineer&#x27;s Circuit — Редакция редакция на дату обращения; формулы и пример видны в выдаче — раздел GBW = 100 × Gain × fc; SR = 2π·fc·Vi,peak — пример ФНЧ 10 кГц — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/pdf/sboa225" rel="nofollow noopener" target="_blank">Single-supply, 2nd-order, Sallen-Key high-pass filter circuit (SBOA225)</a> — Texas Instruments, Analog Engineer&#x27;s Circuit — Редакция июнь 2021 — по выдаче; формулы и пример видны в выдаче — раздел GBW = 100 × Gain × fmax; SR = 2π·fmax·Vi,peak — для ФВЧ берётся наибольшая частота сигнала — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Идеальный ОУ в неинвертирующем включении с усилением K = 1 + Rb/Ra; источник сигнала с нулевым выходным сопротивлением, нагрузка не влияет на выход ОУ.</li><li>Требования к ОУ — правило TI: GBW не меньше 100·K·f, скорость нарастания не меньше 2π·f·Gмакс·Vвх.</li><li>Разброс — крайние значения допусков каждого элемента независимо; f0 и наименьшая Q — в углах, наибольшая Q — в углах или во внутреннем максимуме вдоль одного элемента.</li></ul><p><b>Границы применимости:</b></p><ul><li>Влияние конечной GBW, выходного сопротивления ОУ и проникания сигнала на высоких частотах не рассчитывается.</li><li>Синтез — только Баттерворт второго порядка; каскады высших порядков и другие аппроксимации не рассматриваются.</li><li>Шум, искажения и диапазон выхода ОУ не проверяются.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="rc-filtr.html">RC-фильтр: частота среза</a></li><li><a href="lc-filtr-raschet.html">Пассивный LC-фильтр Баттерворта</a></li><li><a href="ou-usilenie.html">Операционный усилитель: коэффициент усиления</a></li><li><a href="decibel.html">Децибелы: усиление и ослабление</a></li><li><a href="differencialnyy-usilitel.html">Дифференциальный усилитель на ОУ</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function db(x){return 20*Math.log(Math.abs(x))/Math.LN10;}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function sp(x,u){return si(Number(x.toPrecision(12)),u);}
+function rng(x,l,u){var lo_=x-l<u-x;return fx(x,lo_?l:u)+' В в пределах '+(lo_?fx(l,x):fmt(l,4))+' … '+(lo_?fmt(u,4):fx(u,x))+' В';}
+
+function sync(){var m=S('mode'),an=m==='an',hp=S('typ')==='hp';
+hideF('r1',!an);hideF('r2',!an);hideF('c1',!an);hideF('c2',!an);hideF('rb',!an);hideF('ra',!an);
+hideF('f0',an);hideF('c',an);hideF('ras',m!=='se');hideF('fmax',!hp);}
+function init(){$('typ').addEventListener('change',sync);$('mode').addEventListener('change',sync);sync();}
+// Узловые уравнения: знаменатель s²·R1R2C1C2 + s·d + 1. d — коэффициент при s; Q = √(R1R2C1C2)/d;
+// d ≤ 0 — полюса не в левой полуплоскости. x = [R1, R2, C1, C2].
+function qv(hp,x,K){var d=hp?x[0]*x[2]+x[0]*x[3]+x[1]*x[3]*(1-K):x[0]*x[3]+x[1]*x[3]+x[0]*x[2]*(1-K);return {d:d,q:Math.sqrt(x[0]*x[1]*x[2]*x[3])/d};}
+function calc(){
+var hp=S('typ')==='hp',m=S('mode'),R1,R2,C1,C2,K,rb=0,ra=null,syn='';
+if(m==='an'){R1=P('r1');R2=P('r2');C1=P('c1');C2=P('c2');rb=P('rb');ra=OPT('ra');
+ if([R1,R2,C1,C2,rb].some(isNaN))return err('Заполните числами R1, R2, C1, C2 и Rb (0 — повторитель).');
+ if(R1<=0||R2<=0||C1<=0||C2<=0)return err('Сопротивления и ёмкости должны быть больше нуля.');
+ if(rb<0)return err('Rb не может быть отрицательным; 0 — повторитель.');
+ if(ra!==null&&isNaN(ra))return err('Ra — число. При Rb = 0 оставьте поле пустым.');
+ if(rb>0){if(ra===null)return err('При Rb больше нуля задайте Ra: K = 1 + Rb/Ra.');if(ra<=0)return err('Ra должно быть больше нуля.');K=1+rb/ra;}else K=1;}
+else{var fs=P('f0'),c=P('c');
+ if(isNaN(fs)||isNaN(c))return err('Введите частоту f0 и ёмкость C для синтеза.');
+ if(fs<=0||c<=0)return err('Частота и ёмкость должны быть больше нуля.');
+ var w=2*Math.PI*fs;
+ if(m==='su'){K=1;R1=1/(w*c*Math.SQRT2);C1=hp?c:2*c;C2=c;R2=hp?2*R1:R1;
+  syn=row('Рассчитанные элементы: R1 / R2 / C1 / C2',sp(R1,'Ом')+' / '+sp(R2,'Ом')+' / '+sp(C1,'Ф')+' / '+sp(C2,'Ф'));}
+ else{ra=P('ras');if(isNaN(ra))return err('Введите Ra для синтеза с равными элементами.');if(ra<=0)return err('Ra должно быть больше нуля.');
+  R1=1/(w*c);R2=R1;C1=c;C2=c;rb=(2-Math.SQRT2)*ra;K=1+rb/ra;
+  syn=row('Рассчитанные элементы: R1 = R2 / C1 = C2',sp(R1,'Ом')+' / '+sp(c,'Ф'))+row('Резисторы усиления: Rb = (2 − √2)·Ra / Ra',sp(rb,'Ом')+' / '+sp(ra,'Ом'));}}
+var tr=OPT('tr'),tc=OPT('tc'),gb=OPT('gbw'),sr=OPT('sr'),vin=OPT('vin'),fm=hp?OPT('fmax'):null;
+if(tr!==null){if(isNaN(tr))return err('Допуск резисторов — число в процентах. Если он неизвестен, оставьте поле пустым.');if(!(tr>=0&&tr<20))return err('Допуск резисторов — от 0 до 20 %, не включая 20.');}
+if(tc!==null){if(isNaN(tc))return err('Допуск конденсаторов — число в процентах. Если он неизвестен, оставьте поле пустым.');if(!(tc>=0&&tc<50))return err('Допуск конденсаторов — от 0 до 50 %, не включая 50.');}
+if(gb!==null){if(isNaN(gb))return err('GBW — число. Если его нет, оставьте поле пустым.');if(gb<=0)return err('GBW должно быть больше нуля.');}
+if(sr!==null){if(isNaN(sr))return err('Скорость нарастания — число в В/мкс. Если её нет, оставьте поле пустым.');if(sr<=0)return err('Скорость нарастания должна быть больше нуля.');}
+if(vin!==null){if(isNaN(vin))return err('Амплитуда сигнала — число в вольтах. Если она неизвестна, оставьте поле пустым.');if(vin<=0)return err('Амплитуда сигнала должна быть больше нуля.');}
+if(fm!==null){if(isNaN(fm))return err('Наибольшая частота сигнала — число. Если она неизвестна, оставьте поле пустым.');if(fm<=0)return err('Наибольшая частота сигнала должна быть больше нуля.');}
+var x=[R1,R2,C1,C2],f0=1/(2*Math.PI*Math.sqrt(R1*R2*C1*C2)),e=qv(hp,x,K);
+var kl=hp?1+(R1*C1+R1*C2)/(R2*C2):1+(R1*C2+R2*C2)/(R1*C1),eq=R1===R2&&C1===C2;
+if(![f0,kl,e.d].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+var h=syn+row('Усиление в полосе пропускания K = 1 + Rb/Ra',fmt(K,4)+' — '+fmt(db(K),4)+' дБ'+(K===1?', повторитель':''))+
+ row('Собственная частота f0 = 1/(2π·√(R1·R2·C1·C2))',sp(f0,'Гц'))+
+ row('Порог самовозбуждения по усилению Kпред'+(eq?' — при равных элементах 3':''),fx(kl,K)+' при K = '+fx(K,kl));
+var n='Формулы f0 и Q выведены из узловых уравнений для идеального ОУ — вывод в статье ниже; TI в SLOA024B разбирает ту же схему и для равных элементов даёт Q = 1/(3 − K). ';
+if(ge(K,kl)){
+ h+=row('Добротность Q',gt(K,kl)?'отрицательная: полюса в правой полуплоскости':'бесконечная: полюса на мнимой оси');
+ var s0=gt(K,kl)?'Фильтр самовозбуждается: K = '+fx(K,kl)+' больше порога '+fx(kl,K)+' — полюса в правой полуплоскости, схема генерирует':'Фильтр на границе самовозбуждения: K = '+fx(K,kl)+' равно порогу — добротность бесконечна, малейший разброс элементов даёт генерацию';
+ return out(h+row('Статус',s0+'; уменьшите усиление или измените соотношение элементов')+note(n+'Положительная обратная связь через '+(hp?'R1':'C1')+' с ростом K уменьшает коэффициент при s в знаменателе; при нуле и ниже фильтр превращается в генератор.'));}
+var q=e.q,a2=2-1/(q*q),y=(a2+Math.sqrt(a2*a2+4))/2,f3=hp?f0/Math.sqrt(y):f0*Math.sqrt(y),gp=K,pk=gt(q,Math.SQRT1_2);
+h+=row('Добротность Q = √(R1·R2·C1·C2)/'+(hp?'(R1·C1 + R1·C2 + R2·C2·(1 − K))':'(R1·C2 + R2·C2 + R1·C1·(1 − K))'),fmt(q,4)+(eq?' — при равных элементах 1/(3 − K)':''))+
+ row('Усиление на частоте f0: K·Q',fmt(K*q,4)+' — '+fmt(db(K*q),4)+' дБ')+
+ row('Частота среза по уровню −3 дБ от K',sp(f3,'Гц'));
+if(pk){var z=1-1/(2*q*q),fp;gp=K*q/Math.sqrt(1-1/(4*q*q));fp=hp?f0/Math.sqrt(z):f0*Math.sqrt(z);
+ h+=row('Подъём АЧХ над K',fmt(db(gp/K),4)+' дБ: наибольшее усиление '+fmt(gp,4)+' на частоте '+sp(fp,'Гц'));}
+else h+=row('Подъём АЧХ над K','нет: Q не больше 1/√2 ≈ 0,7071');
+var risk=[],miss=[];
+if(tr===null||tc===null)miss.push('допуски резисторов и конденсаторов');
+else{var ft=tr/100,fc=tc/100,lo=[R1*(1-ft),R2*(1-ft),C1*(1-fc),C2*(1-fc)],hi=[R1*(1+ft),R2*(1+ft),C1*(1+fc),C2*(1+fc)];
+ var Kl=rb>0?1+rb*(1-ft)/(ra*(1+ft)):1,Kh=rb>0?1+rb*(1+ft)/(ra*(1-ft)):1,qn=Infinity,qx=0,fn=Infinity,fh=0,un=false,j;
+ // 32 угла: R1, R2, C1, C2 и K на краях допусков. Q вдоль одного элемента ∝ √x/(β + γ·x) —
+ // внутренний максимум при x = β/γ, если β, γ > 0; минимум Q и d — в углах (d линеен по каждому элементу).
+ for(var k=0;k<32;k++){var y0=[];for(j=0;j<4;j++)y0.push((k>>j)&1?hi[j]:lo[j]);var KK=(k&16)?Kh:Kl,r0=qv(hp,y0,KK);
+  var ff=1/(2*Math.PI*Math.sqrt(y0[0]*y0[1]*y0[2]*y0[3]));fn=Math.min(fn,ff);fh=Math.max(fh,ff);
+  if(!(r0.d>0)){un=true;continue;}qn=Math.min(qn,r0.q);qx=Math.max(qx,r0.q);
+  for(j=0;j<4;j++){var ya=y0.slice(),yb=y0.slice();ya[j]=lo[j];yb[j]=hi[j];var da=qv(hp,ya,KK).d,dd=qv(hp,yb,KK).d,gm=(dd-da)/(hi[j]-lo[j]),bt=da-gm*lo[j];
+   if(bt>0&&gm>0){var xs=bt/gm;if(xs>lo[j]&&xs<hi[j]){ya[j]=xs;var rs=qv(hp,ya,KK);if(rs.d>0)qx=Math.max(qx,rs.q);}}}}
+ h+=row('f0 при допусках ±'+fmt(tr)+' % и ±'+fmt(tc)+' %',sp(fn,'Гц')+' … '+sp(fh,'Гц'));
+ if(un){h+=row('Q при допусках','не ограничена: в части сочетаний K достигает порога');risk.push('при допусках ±'+fmt(tr)+' % и ±'+fmt(tc)+' % в части сочетаний K достигает порога самовозбуждения');}
+ else h+=row('Q при допусках',fmt(qn,4)+' … '+fmt(qx,4));}
+// Правило TI (SBOA226, SBOA225): GBW ≥ 100·K·f, SR ≥ 2π·f·Vпик; f — для ФНЧ большая из f0 и частоты −3 дБ,
+// для ФВЧ — наибольшая частота сигнала; амплитуда на выходе — с подъёмом АЧХ (Gмакс = наибольшее из K и пика).
+var fr=hp?fm:Math.max(f0,f3);
+if(gb===null)miss.push('GBW ОУ');
+if(sr===null||vin===null)miss.push('скорость нарастания ОУ и амплитуда сигнала');
+if(fr===null){if(gb!==null||sr!==null)miss.push('наибольшая частота сигнала');}
+else{if(gb!==null){var gr=100*K*fr;h+=row('GBW по правилу TI: не меньше 100·K·f',sx(gr,gb,'Гц')+' при f = '+sp(fr,'Гц')+'; GBW ОУ '+sx(gb,gr,'Гц'));
+  if(lt(gb,gr))risk.push('GBW ОУ '+sx(gb,gr,'Гц')+' меньше 100·K·f = '+sx(gr,gb,'Гц')+' по правилу TI — частота и добротность отклонятся от расчёта');}
+ if(sr!==null&&vin!==null){var sq=2*Math.PI*fr*Math.max(K,gp)*vin/1e6;h+=row('Скорость нарастания по правилу TI: не меньше 2π·f·Gмакс·Vвх',fx(sq,sr)+' В/мкс; SR ОУ '+fx(sr,sq)+' В/мкс');
+  if(lt(sr,sq))risk.push('скорость нарастания ОУ '+fx(sr,sq)+' В/мкс меньше '+fx(sq,sr)+' В/мкс — выходной синус исказится');}}
+var st;
+if(risk.length)st='Риск: '+risk.join('; ');
+else if(miss.length)st='Недостаточно данных: не заданы '+miss.join(', ')+'; по номиналам f0 = '+sp(f0,'Гц')+', Q = '+fmt(q,4);
+else st='Оценка: f0 = '+sp(f0,'Гц')+', Q = '+fmt(q,4)+'; в наихудшем сочетании допусков K ниже порога, GBW и скорость нарастания ОУ не меньше требуемых по правилу TI';
+n+='Требования к ОУ — правило из примеров TI (SBOA226, SBOA225): GBW не меньше 100·K·f и скорость нарастания не меньше 2π·f·Vпик; f — большая из f0 и частоты −3 дБ для ФНЧ и наибольшая частота сигнала для ФВЧ, амплитуда на выходе — с подъёмом АЧХ. Это оценка: конечная полоса ОУ сдвигает частоту и повышает добротность (ADI MT-222). ';
+n+='Разброс f0 и Q — перебор 32 сочетаний крайних значений элементов и усиления с поиском внутреннего максимума Q вдоль каждого элемента.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
