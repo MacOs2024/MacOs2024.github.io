@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Делитель частоты и таймер микроконтроллера — ВольтКальк</title>
+<meta name="description" content="Расчёт делителя частоты: двоичный счётчик 2ⁿ с выходами 74HC4060, целочисленный делитель M с выбором ближайшего по частоте, таймер STM32 f = fтакт/((PSC + 1)·(ARR + 1)) с перебором всех пар и наибольшим ARR для разрешения ШИМ, погрешность в ppm и % с учётом точности кварца.">
+<link rel="canonical" href="https://macos2024.github.io/delitel-chastoty.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Делитель частоты и таймер микроконтроллера — ВольтКальк">
+<meta property="og:description" content="Расчёт делителя частоты: двоичный счётчик 2ⁿ с выходами 74HC4060, целочисленный делитель M с выбором ближайшего по частоте, таймер STM32 f = fтакт/((PSC + 1)·(ARR + 1)) с перебором всех пар и наибольшим ARR для разрешения ШИМ, погрешность в ppm и % с учётом точности кварца.">
+<meta property="og:url" content="https://macos2024.github.io/delitel-chastoty.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Делитель частоты и таймер микроконтроллера","url":"https://macos2024.github.io/delitel-chastoty.html","description":"Расчёт делителя частоты: двоичный счётчик 2ⁿ с выходами 74HC4060, целочисленный делитель M с выбором ближайшего по частоте, таймер STM32 f = fтакт/((PSC + 1)·(ARR + 1)) с перебором всех пар и наибольшим ARR для разрешения ШИМ, погрешность в ppm и % с учётом точности кварца.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Делитель частоты и таймер микроконтроллера","item":"https://macos2024.github.io/delitel-chastoty.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему ARR на единицу меньше коэффициента?","acceptedAnswer":{"@type":"Answer","text":"Счётчик таймера считает от 0 до ARR включительно — это ARR + 1 тиков, и только потом переполняется. Так же PSC делит частоту на PSC + 1. Поэтому для деления на 36 000 в ARR записывают 35 999."}},{"@type":"Question","name":"Почему калькулятор выбирает наибольший ARR?","acceptedAnswer":{"@type":"Answer","text":"Одну и ту же частоту часто дают много пар PSC и ARR. Для ШИМ лучше та, где ARR больше: скважность меняется шагом 1/(ARR + 1), и шаг получается мельче. Для простого прерывания по времени выбор пары не важен."}},{"@type":"Question","name":"Что делать, если нужная частота не делится нацело?","acceptedAnswer":{"@type":"Answer","text":"Тогда калькулятор ищет пару с наименьшей погрешностью перебором всех вариантов и показывает её в ppm и процентах. Если и она больше допустимой, остаётся сменить тактовую частоту или кварц."}},{"@type":"Question","name":"Зачем учитывать точность кварца?","acceptedAnswer":{"@type":"Answer","text":"Выходная частота делителя пропорциональна тактовой: если кварц ушёл на 50 ppm, на те же 50 ppm уйдёт и выход. Погрешность деления и погрешность кварца складываются, и при узком допуске, например у интерфейсов связи, важна их сумма."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Делитель частоты и таймер микроконтроллера</h1>
+<p class="intro">Калькулятор подбирает делитель под нужную частоту: число разрядов двоичного счётчика, целый коэффициент или пару <b>PSC и ARR</b> таймера микроконтроллера — перебором всех вариантов, с наименьшей погрешностью и наибольшим ARR. Погрешность самого кварца в ppm добавляется к погрешности деления. Нагрузочные конденсаторы кварца подбирает <a href="kvarc-kondensatory.html">калькулятор конденсаторов кварца</a>, скважность и среднее напряжение ШИМ — <a href="shim-srednee-napryazhenie.html">калькулятор ШИМ</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Делитель частоты и таймер микроконтроллера</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Делитель</label><div class="fw"><select id="mode"><option value="tim" selected>Таймер МК: PSC и ARR</option><option value="int">Целочисленный делитель: деление на M</option><option value="bin">Двоичный счётчик: деление на 2ⁿ</option></select></div></div><div class="f" id="f_fin"><label for="fin">Входная частота fвх — тактовая частота таймера или счётчика</label><div class="fw"><input id="fin" type="text" inputmode="decimal" autocomplete="off" value="72" placeholder=""><select id="fin_unit" class="u" aria-label="Единицы: Входная частота fвх — тактовая частота таймера или счётчика"><option value="1000000.0" selected>МГц</option><option value="1000.0">кГц</option><option value="1">Гц</option></select></div><div class="hint">Для таймера — частота на его входе по дереву тактирования из reference manual вашего МК</div></div><div class="f" id="f_fout"><label for="fout">Нужная выходная частота fвых</label><div class="fw"><input id="fout" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><select id="fout_unit" class="u" aria-label="Единицы: Нужная выходная частота fвых"><option value="1">Гц</option><option value="1000.0" selected>кГц</option><option value="1000000.0">МГц</option></select></div></div><div class="f" id="f_bits"><label for="bits">Разрядность ARR таймера</label><div class="fw"><select id="bits"><option value="16" selected>16 бит: ARR до 65 535</option><option value="32">32 бита: ARR до 4 294 967 295</option></select></div><div class="hint">Предделитель PSC у таймеров STM32 16-битный; 32-битный ARR есть не у всех таймеров (например, TIM2 и TIM5 у ряда STM32) — по reference manual</div></div><div class="f" id="f_chip"><label for="chip">Микросхема счётчика</label><div class="fw"><select id="chip"><option value="any" selected>Счётчик с любым числом разрядов</option><option value="4060">74HC4060 / CD4060: выходы ÷2⁴…2¹⁰ и ÷2¹²…2¹⁴</option></select></div></div><div class="f" id="f_ppm"><label for="ppm">Точность источника тактирования ±</label><div class="fw"><input id="ppm" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">ppm</span></div><div class="hint">Сумма допуска, температурной стабильности и старения кварца по его паспорту. Пусто — не учитывается</div></div><div class="f" id="f_tolp"><label for="tolp">Допустимое отклонение выходной частоты ±</label><div class="fw"><input id="tolp" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="tolp_unit" class="u" aria-label="Единицы: Допустимое отклонение выходной частоты ±"><option value="1" selected>ppm</option><option value="10000.0">%</option></select></div><div class="hint">Например, по требованиям интерфейса или протокола. Пусто — вывода о допуске нет</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Делитель частоты: как считается</h2>
+<div class="formula">Двоичный счётчик: fвых = fвх / 2ⁿ,&nbsp;&nbsp;разрядов не меньше ⌈log₂(fвх/fвых)⌉<br>Целочисленный делитель: fвых = fвх / M, M — ближайший по частоте из ⌊fвх/fвых⌋ и ⌊fвх/fвых⌋ + 1<br>Таймер STM32: fвых = fтакт / ((PSC + 1)·(ARR + 1)),&nbsp;&nbsp;PSC ≤ 65 535,&nbsp;&nbsp;1 ≤ ARR ≤ 2¹⁶ − 1 или 2³² − 1<br>Погрешность: δ = (fвх/fвых)/N − 1;&nbsp;&nbsp;с кварцем ±δк: от (1 + δ)(1 − δк) − 1 до (1 + δ)(1 + δк) − 1</div>
+<p><b>Двоичный счётчик.</b> Каждый триггер счётчика делит частоту пополам, поэтому выход n-го разряда даёт fвх/2ⁿ, и чтобы опуститься до нужной частоты, нужно не меньше ⌈log₂(fвх/fвых)⌉ разрядов. Обычно нужная частота лежит между двумя степенями двойки — калькулятор показывает обе и выбирает ближайшую. У популярной микросхемы 74HC4060 (Nexperia; у CD4060B — та же цоколёвка с нумерацией выходов с Q4) 14 разрядов, но выведены не все: в паспорте Nexperia выходы Q3–Q9 и Q11–Q13 при нумерации с Q0, то есть деление на 2⁴…2¹⁰ и 2¹²…2¹⁴; деления на 2¹…2³ и 2¹¹ нет. Классический пример — часовой кварц 32 768 Гц: 2¹⁴ даёт 2 Гц, а 1 Гц нужен ещё один разряд.</p>
+<p><b>Целочисленный делитель.</b> Программируемый делитель на M даёт fвх/M. Ближайший по частоте коэффициент — не обязательно округление fвх/fвых: частота обратно пропорциональна M, и при малых M ошибки соседних коэффициентов несимметричны. Например, при fвх/fвых = 2,45 округление даёт M = 2 и ошибку +22,5 %, а M = 3 — только −18,3 %. Поэтому калькулятор сравнивает оба соседних целых. Если в регистр записывают M − 1, как у таймеров STM32, разрядность считается по нему.</p>
+<p><b>Таймер микроконтроллера.</b> В reference manual STM32 предделитель описан так: частота счётчика CK_CNT = fCK_PSC/(PSC + 1), делитель от 1 до 65 536 (RM0008). В режиме счёта вверх счётчик идёт от 0 до ARR, затем снова с 0 и формирует событие переполнения — период составляет ARR + 1 тиков; при ARR = 0 счётчик стоит. Отсюда частота обновления fтакт/((PSC + 1)·(ARR + 1)) — та же формула, что в ST AN4013, где у таймеров с повторителем добавлен множитель (RCR + 1); пример AN4013: 72 МГц, PSC = 1, ARR = 65 535 → 549,3 Гц. Одна формула не даёт однозначного ответа: одну и ту же частоту дают много пар, а при нецелом fтакт/fвых наилучшая пара не обязательно получается округлением. Калькулятор перебирает все PSC и для каждого — два соседних ARR, оставляет пары с наименьшей погрешностью и из них выбирает пару с наибольшим ARR. Для ШИМ это важно: скважность задаётся регистром сравнения с шагом 1/(ARR + 1), и чем больше ARR, тем мельче шаг. Тактовую частоту таймера берите из дерева тактирования в reference manual своего МК.</p>
+<p><b>Погрешность и кварц.</b> Погрешность деления систематическая: она известна точно и не меняется. Источник тактирования добавляет свою: выходная частота пропорциональна тактовой, поэтому её относительное отклонение — (1 + δ)(1 ± δк) − 1, где δк — суммарная точность кварца в ppm по паспорту (допуск при 25 °C, температурная стабильность, старение). Калькулятор показывает обе границы и сравнивает наихудшую с допустимым отклонением. Если допуск уже нарушен одной погрешностью деления — это однозначный вывод; если только вместе с кварцем — риск.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="ne555-astabilnyy.html">Таймер NE555</a> задаёт частоту RC-цепью — её точность определяется допусками резисторов и конденсатора, а не кварцем. <a href="shim-srednee-napryazhenie.html">Калькулятор ШИМ</a> считает среднее напряжение и мощность по скважности. Нагрузочные конденсаторы, от которых зависит точность самого кварца, подбирает <a href="kvarc-kondensatory.html">калькулятор конденсаторов кварца</a>.</p>
+<h2>Делитель частоты: пример расчёта</h2>
+<p>Таймер с тактовой частотой 72 МГц, нужна частота 1 кГц. Общий коэффициент 72 000 больше 65 536, поэтому без предделителя 16-битный таймер не обойдётся. Точных пар много — PSC = 1 и ARR = 35 999, PSC = 2 и ARR = 23 999 и так далее; калькулятор выбирает <b>PSC = 1, ARR = 35 999</b>: погрешность 0, а шаг скважности ШИМ 1/36 000 — самый мелкий. С 32-битным ARR получится PSC = 0 и ARR = 71 999. Если кварц имеет точность ±50 ppm, частота 1 кГц будет в пределах от −50 до +50 ppm.</p>
+<p>Частота 38 кГц от того же таймера: 72 000 000/38 000 = 1 894,74 — нецелое число. Лучшее целое — 1 895: <b>PSC = 0, ARR = 1 894</b>, частота 37,99 кГц, погрешность −138,9 ppm (−0,01389 %). Часовой кварц 32 768 Гц на 74HC4060 даёт 2 Гц с выхода Q13 (вывод 3) — деление на 2¹⁴.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему ARR на единицу меньше коэффициента?</h3><p>Счётчик таймера считает от 0 до ARR включительно — это ARR + 1 тиков, и только потом переполняется. Так же PSC делит частоту на PSC + 1. Поэтому для деления на 36 000 в ARR записывают 35 999.</p><h3>Почему калькулятор выбирает наибольший ARR?</h3><p>Одну и ту же частоту часто дают много пар PSC и ARR. Для ШИМ лучше та, где ARR больше: скважность меняется шагом 1/(ARR + 1), и шаг получается мельче. Для простого прерывания по времени выбор пары не важен.</p><h3>Что делать, если нужная частота не делится нацело?</h3><p>Тогда калькулятор ищет пару с наименьшей погрешностью перебором всех вариантов и показывает её в ppm и процентах. Если и она больше допустимой, остаётся сменить тактовую частоту или кварц.</p><h3>Зачем учитывать точность кварца?</h3><p>Выходная частота делителя пропорциональна тактовой: если кварц ушёл на 50 ppm, на те же 50 ppm уйдёт и выход. Погрешность деления и погрешность кварца складываются, и при узком допуске, например у интерфейсов связи, важна их сумма.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.st.com/resource/en/reference_manual/rm0008-stm32f101xx-stm32f102xx-stm32f103xx-stm32f105xx-and-stm32f107xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf" rel="nofollow noopener" target="_blank">RM0008. Reference manual: STM32F101xx, STM32F102xx, STM32F103xx, STM32F105xx and STM32F107xx advanced Arm-based 32-bit MCUs</a> — STMicroelectronics — Редакция Rev 21, февраль 2021; положения видны в выдаче, номера разделов — нет — раздел регистр TIMx_PSC: частота счётчика CK_CNT = fCK_PSC/(PSC[15:0] + 1), делитель от 1 до 65 536, в режиме счёта вверх счётчик идёт от 0 до значения TIMx_ARR, затем с 0 и событие переполнения (та же фраза в выдаче — RM0368 и RM0390), пока значение перезагрузки равно нулю, счётчик стоит (в выдаче — RM0033, RM0401, RM0038) — обращение 04.10.2026</li><li><a href="https://www.st.com/resource/en/application_note/an4013-introduction-to-timers-for-stm32-mcus-stmicroelectronics.pdf" rel="nofollow noopener" target="_blank">AN4013. STM32 cross-series timer overview (прежнее название — Introduction to timers for STM32 MCUs)</a> — STMicroelectronics — Редакция Rev 14, февраль 2026 (по выдаче); формула видна в выдаче двумя поисками — раздел Update_event = TIM_CLK/((PSC + 1)·(ARR + 1)·(RCR + 1)), пример: TIM_CLK = 72 МГц, PSC = 1, ARR = 65 535, RCR = 0 → 549,3 Гц — обращение 04.10.2026</li><li><a href="https://assets.nexperia.com/documents/data-sheet/74HC_HCT4060.pdf" rel="nofollow noopener" target="_blank">74HC4060; 74HCT4060. 14-stage binary ripple counter with oscillator</a> — Nexperia — Редакция паспорт 74HC_HCT4060 на дату обращения; положения видны в выдаче двумя поисками — раздел 14-разрядный счётчик с генератором; десять буферизованных выходов Q3–Q9 и Q11–Q13, выводы: Q11 — 1, Q12 — 2, Q13 — 3, Q3 — 7, Q4 — 5, Q5 — 4, Q6 — 6, Q7 — 14, Q8 — 13, Q9 — 15, генератор можно заменить внешним сигналом на входе RS — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/ds/symlink/cd4060b.pdf" rel="nofollow noopener" target="_blank">CD4060B. CMOS 14-Stage Ripple-Carry Binary Counter/Divider and Oscillator</a> — Texas Instruments — Редакция SCHS049C, редакция октябрь 2003; выходы Q4–Q10, Q12–Q14 видны только на сторонних страницах — для сравнения — раздел 14 разрядов, генератор RC или кварцевый; выхода Q11 и Q1–Q3 нет (по сторонним описаниям) — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Таймер считает вверх, без повторителя RCR; частота на входе таймера задана пользователем.</li><li>Двоичный счётчик делит на 2 на каждом разряде; у 74HC4060 доступны только выведенные разряды.</li><li>Лучший делитель — с наименьшим модулем относительной ошибки частоты; при равной ошибке — с наибольшим ARR или наибольшим делителем.</li><li>Точность кварца — симметричный допуск ±ppm; наихудшая граница складывается с погрешностью деления.</li></ul><p><b>Границы применимости:</b></p><ul><li>Счёт вверх-вниз (center-aligned), повторитель RCR, дробные делители и ФАПЧ не рассчитываются.</li><li>Задержки ripple-счётчика, джиттер и фазовый шум не учитываются.</li><li>Тактовую частоту таймера по дереву тактирования калькулятор не выводит — её берут из reference manual.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="kvarc-kondensatory.html">Конденсаторы кварцевого резонатора</a></li><li><a href="ne555-astabilnyy.html">Таймер NE555 — астабильный режим</a></li><li><a href="shim-srednee-napryazhenie.html">ШИМ: скважность, среднее напряжение и мощность</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function sg(x){return x>0?'+':'';}
+
+var PIN={4:7,5:5,6:4,7:6,8:14,9:13,10:15,12:1,13:2,14:3};
+function sup(n){return String(n).replace(/\d/g,function(d){return '⁰¹²³⁴⁵⁶⁷⁸⁹'.charAt(+d);});}
+function bits(x){var b=1;while(Math.pow(2,b)<=x)b++;return b;}
+// Форма слова «бит» по показанной строке числа; у дробного — «бита».
+function bt(s){s=String(s);if(/,/.test(s))return s+' бита';var n=parseInt(s,10)%100,n1=n%10;return s+' '+(n>10&&n<20?'бит':(n1>=2&&n1<=4?'бита':'бит'));}
+// Отношение частот: до 10⁷ — восемь значащих цифр, больше — целиком, без экспоненты.
+function rv(x){return x<1e7?fmt(x,8):x.toFixed(3).replace(/\.?0+$/,'').replace('.',',');}
+// Отклонение: меньше 100 ppm — в ppm, до 1 % — в ppm и %, больше — в %.
+function pe(e){var a=Math.abs(e);if(a<1e-12)return '0 ppm';if(a<1e-4)return sg(e)+fmt(e*1e6)+' ppm';if(a<1e-2)return sg(e)+fmt(e*1e6)+' ppm ('+sg(e)+fmt(e*100)+' %)';return sg(e)+fmt(e*100)+' %';}
+function pz(x){return x>=1e4?fmt(x/1e4)+' %':fmt(x)+' ppm';}
+function pq(x,lim){return lim>=1e4?fx(x/1e4,lim/1e4)+' %':fx(x,lim)+' ppm';}
+function sync(){var m=S('mode');hideF('chip',m!=='bin');hideF('bits',m!=='tim');}
+function init(){$('mode').addEventListener('change',sync);sync();}
+function calc(){
+var m=S('mode'),fi=P('fin'),fo=P('fout');
+if(isNaN(fi)||isNaN(fo))return err('Заполните числами входную и нужную выходную частоту.');
+if(!(fi>0)||!(fo>0))return err('Частоты должны быть больше нуля.');
+if(fi>1e10)return err('Входная частота — не больше 10 ГГц.');
+var r=fi/fo;
+if(lt(r,1))return err('Делитель не повышает частоту: нужная '+si(fo,'Гц')+' больше входной '+si(fi,'Гц')+'.');
+if(r>1e15)return err('Коэффициент деления больше 10¹⁵ — вне диапазона расчёта.');
+var pp=OPT('ppm'),tl=OPT('tolp');
+if(pp!==null){if(isNaN(pp))return err('Точность источника тактирования — число в ppm. Если её нет, оставьте поле пустым.');if(pp<0||pp>=1e5)return err('Точность источника тактирования — от 0 до 100 000 ppm.');}
+if(tl!==null){if(isNaN(tl))return err('Допустимое отклонение — число. Если его нет, оставьте поле пустым.');if(tl<=0||tl>=1e6)return err('Допустимое отклонение — больше 0 и меньше 100 %.');}
+var e,fa,lab,h=row('Отношение fвх / fвых',rv(r));
+// Выбор — по наименьшему модулю относительной ошибки частоты r/N − 1; при равной ошибке — больший делитель.
+function better(ae,bae,v,bv){return ae<bae-1e-12||(Math.abs(ae-bae)<=1e-12&&v>bv);}
+if(m==='bin'){
+ var any=S('chip')==='any',kc=0;while(Math.pow(2,kc)<r*(1-1e-12))kc++;
+ var kf=Math.pow(2,kc)>r*(1+1e-12)?kc-1:kc,K=any?(kf===kc?[kc]:[kf,kc]):[4,5,6,7,8,9,10,12,13,14],bk=-1,be=0,bae=Infinity;
+ for(var i=0;i<K.length;i++){var ee=r/Math.pow(2,K[i])-1;if(better(Math.abs(ee),bae,K[i],bk)){bk=K[i];be=ee;bae=Math.abs(ee);}}
+ // Наилучший разряд без ограничения выводами — чтобы сказать, что у 4060 его нет.
+ var uk=kf,ue=r/Math.pow(2,kf)-1;if(kc!==kf){var e2=r/Math.pow(2,kc)-1;if(better(Math.abs(e2),Math.abs(ue),kc,kf)){uk=kc;ue=e2;}}
+ e=Math.abs(be)<1e-12?0:be;fa=fi/Math.pow(2,bk);lab='деление на 2'+sup(bk);
+ h+=row('log₂(fвх / fвых)',fmt(Math.log(r)/Math.LN2))+row('Разрядов, чтобы опуститься до fвых: ⌈log₂(fвх/fвых)⌉',String(kc));
+ if(kf!==kc)h+=row('Ближайшие степени двойки','÷2'+sup(kf)+' → '+si(fi/Math.pow(2,kf),'Гц')+' ('+pe(r/Math.pow(2,kf)-1)+'); ÷2'+sup(kc)+' → '+si(fi/Math.pow(2,kc),'Гц')+' ('+pe(r/Math.pow(2,kc)-1)+')');
+ h+=row('Выбран выход','÷2'+sup(bk)+' (на '+rv(Math.pow(2,bk))+') → '+si(fa,'Гц'));
+ if(!any){h+=row('Выход 74HC4060 по паспорту Nexperia','Q'+(bk-1)+' (нумерация с Q0), вывод '+PIN[bk]);
+  if(uk!==bk)h+=row('Нужного разряда нет',uk<4||uk>14?'деление на 2'+sup(uk)+' у 74HC4060 недоступно: выведены ÷2⁴…2¹⁰ и ÷2¹²…2¹⁴':'выход ÷2'+sup(uk)+' у 74HC4060 не выведен — выведены ÷2⁴…2¹⁰ и ÷2¹²…2¹⁴');}}
+else if(m==='int'){
+ var Ml=Math.max(1,Math.floor(r*(1+1e-12))),C=[Ml,Ml+1],bm=0,bme=0,bmae=Infinity;
+ for(var j=0;j<2;j++){var em=r/C[j]-1;if(better(Math.abs(em),bmae,C[j],bm)){bm=C[j];bme=em;bmae=Math.abs(em);}}
+ e=Math.abs(bme)<1e-12?0:bme;fa=fi/bm;lab='M = '+bm;
+ h+=row('Соседние целые коэффициенты','M = '+Ml+' → '+si(fi/Ml,'Гц')+' ('+pe(r/Ml-1)+'); M = '+(Ml+1)+' → '+si(fi/(Ml+1),'Гц')+' ('+pe(r/(Ml+1)-1)+')')+
+  row('Коэффициент деления M — ближайший по частоте',String(bm))+row('Фактическая частота fвх / M',si(fa,'Гц'))+
+  row('Разрядность','M − 1 = '+(bm-1)+' — '+bt(bits(bm-1))+'; M = '+bm+' — '+bt(bits(bm)));}
+else{
+ var A=S('bits')==='32'?4294967296:65536;
+ if(lt(r,2))return err('Таймер делит не меньше чем на 2: при ARR = 0 счётчик стоит, поэтому наибольшая частота обновления — fвх/2 = '+si(fi/2,'Гц')+'.');
+ var Nm=65536*A;
+ if(gt(r,Nm))return err('Такую низкую частоту таймер не даст: наименьшая — fвх/(65 536·'+(A===65536?'65 536':'2³²')+') = '+si(fi/Nm,'Гц')+'. Нужен более медленный тактовый сигнал таймера, таймер с 32-битным ARR или счёт переполнений программой.');
+ // Перебор всех PSC: для каждого — два соседних целых ARR + 1 около r/(PSC + 1) в пределах разрядности.
+ var bp=0,ba=0,bte=0,btae=Infinity,cnt=0;
+ for(var p=1;p<=65536;p++){var a0=r/p,L=[Math.floor(a0),Math.ceil(a0)];
+  for(var q=0;q<2;q++){var a=Math.min(A,Math.max(2,L[q])),et=r/(p*a)-1,at=Math.abs(et);if(better(at,btae,a,ba)){bp=p;ba=a;bte=et;btae=at;}}}
+ for(var p2=1;p2<=65536;p2++){var a1=r/p2,L2=[Math.floor(a1),Math.ceil(a1)],seen=-1;
+  for(var q2=0;q2<2;q2++){var a2=Math.min(A,Math.max(2,L2[q2]));if(a2===seen)continue;seen=a2;if(Math.abs(Math.abs(r/(p2*a2)-1)-btae)<=1e-12)cnt++;}}
+ e=Math.abs(bte)<1e-12?0:bte;fa=fi/(bp*ba);lab='PSC = '+(bp-1)+', ARR = '+(ba-1);
+ h+=row('Предделитель PSC',String(bp-1))+row('Перезагрузка ARR',String(ba-1))+row('Коэффициент (PSC + 1)·(ARR + 1)',String(bp*ba))+
+  row('Частота обновления fвх / ((PSC + 1)·(ARR + 1))',si(fa,'Гц'))+row('Тик счётчика (PSC + 1) / fвх',si(bp/fi,'с'))+
+  row('Разрешение ШИМ: ARR + 1 шагов скважности',String(ba)+' — около '+bt(fmt(Math.log(ba)/Math.LN2,3)));
+ if(cnt>1)h+=row('Та же погрешность у других пар',(cnt-1)+' — все с меньшим ARR');}
+var d=pp===null?0:pp*1e-6,lo=(1+e)*(1-d)-1,hi=(1+e)*(1+d)-1,ae=Math.abs(e)*1e6,wp=Math.max(Math.abs(lo),Math.abs(hi))*1e6;
+h+=row('Погрешность частоты из-за деления',pe(e));
+if(pp!==null)h+=row('С учётом точности тактирования ±'+fmt(pp)+' ppm',Math.max(Math.abs(lo),Math.abs(hi))>=1e-2?'от '+sg(lo)+fmt(lo*100)+' до '+sg(hi)+fmt(hi*100)+' %':'от '+sg(lo)+fmt(lo*1e6)+' до '+sg(hi)+fmt(hi*1e6)+' ppm');
+if(tl!==null)h+=row('Допустимое отклонение','±'+fmt(tl)+' ppm'+(tl>=100?' (±'+fmt(tl/1e4)+' %)':''));
+var st;
+if(tl!==null&&gt(ae,tl))st='Отклонение частоты '+pq(ae,tl)+' больше допустимого '+pq(tl,ae)+' — уже из-за деления, без учёта точности тактирования';
+else if(tl!==null&&pp!==null&&gt(wp,tl))st='Риск: с учётом точности тактирования ±'+fmt(pp)+' ppm отклонение может достигать '+pq(wp,tl)+' — больше допустимого '+pq(tl,wp);
+else if(tl===null)st='Недостаточно данных: допустимое отклонение частоты не задано; '+lab+', погрешность деления '+(ae===0?'0 ppm':pz(ae))+(pp!==null?', с учётом тактирования до '+pz(wp):', точность тактирования не задана');
+else if(pp===null)st='Недостаточно данных: точность источника тактирования не задана — погрешность деления '+pq(ae,tl)+' не больше допустимой '+pq(tl,ae)+', но вклад кварца не учтён';
+else st='Оценка: '+lab+', отклонение частоты не больше '+pq(wp,tl)+' при допустимом '+pq(tl,wp);
+var n=m==='tim'?'Частота обновления таймера в режиме счёта вверх: PSC делит тактовую частоту на PSC + 1, счётчик проходит от 0 до ARR — ARR + 1 тиков (reference manual STM32, AN4013). Перебраны все PSC от 0 до 65 535 и для каждого — два соседних целых ARR; из пар с наименьшей погрешностью выбрана пара с наибольшим ARR: шаг скважности ШИМ 1/(ARR + 1) самый мелкий. Повторитель RCR и счёт вверх-вниз (center-aligned) меняют период — для них смотрите reference manual. ':
+ (m==='int'?'Делитель на M: fвых = fвх/M. Частота обратно пропорциональна M, поэтому ближайший по частоте коэффициент — не всегда округление fвх/fвых: сравниваются оба соседних целых. ':'Каждый разряд двоичного счётчика делит частоту пополам: выход n-го разряда — fвх/2ⁿ. Из соседних степеней двойки выбрана ближайшая по частоте'+(S('chip')==='4060'?' среди выведенных у 74HC4060':'')+'. ');
+n+='Погрешность деления — систематическая и точная; точность кварца в ppm добавляется к ней и меняется с температурой и временем — границы показаны для наихудшего сочетания.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
