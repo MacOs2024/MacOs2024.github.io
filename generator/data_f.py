@@ -407,7 +407,7 @@ faqs=[
  ("Почему угол отрицательный?",
   "Отрицательный φ означает преобладание ёмкости: ток опережает напряжение. Положительный угол соответствует индуктивной цепи, где ток отстаёт."),
 ],
-related=["reaktivnoe-soprotivlenie","rezonans-lc","power-factor-compensation"],
+related=["reaktivnoe-soprotivlenie","rezonans-lc","power-factor-compensation","blokirovochnyy-kondensator"],
 ),
 
 dict(

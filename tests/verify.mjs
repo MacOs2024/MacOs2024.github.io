@@ -95,7 +95,7 @@ const infoPages = ["privacy.html", "about.html"];
 const htmlFiles = fs.readdirSync(sourceDir)
   .filter(file => file.endsWith(".html") && !serviceFiles.includes(file) && !infoPages.includes(file))
   .sort();
-check(htmlFiles.length === 150, `Ожидалось 150 HTML-файлов, найдено ${htmlFiles.length}`);
+check(htmlFiles.length === 151, `Ожидалось 151 HTML-файл, найдено ${htmlFiles.length}`);
 
 // Совет закоротить заряженный конденсатор перемычкой, отвёрткой или
 // закороткой опасен: при запасённой энергии это даёт дугу и разбрызгивание
@@ -1136,7 +1136,7 @@ kind = "structural";
 const sitemap = fs.readFileSync(path.join(sourceDir, "sitemap.xml"), "utf8");
 const robots = fs.readFileSync(path.join(sourceDir, "robots.txt"), "utf8");
 const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-check(sitemapPages.length === 150, `В sitemap должно быть 150 URL (корень + about + 148 калькуляторов), найдено ${sitemapPages.length}`);
+check(sitemapPages.length === 151, `В sitemap должно быть 151 URL (корень + about + 149 калькуляторов), найдено ${sitemapPages.length}`);
 check(!sitemap.includes("REPLACE-WITH-YOUR-ADDRESS"), "В sitemap остался адрес-заглушка");
 check(robots.includes("Sitemap: https://macos2024.github.io/sitemap.xml"), "В robots.txt не активирован sitemap");
 
@@ -4077,13 +4077,80 @@ await invalid("delitel-chastoty.html", { ppm: "-1" }, "Точность исто
 await invalid("delitel-chastoty.html", { tolp: "x" }, "Допустимое отклонение — число");
 await invalid("delitel-chastoty.html", { tolp: "0" }, "Допустимое отклонение — больше 0 и меньше 100 %");
 
+// --- 3. blokirovochnyy-kondensator: баланс заряда, ADI MT-101, TI SPRAC76, DC bias Murata/KYOCERA AVX ---
+// Эталоны — моделирование во времени (scratchpad t/ref3.py): ток нарастает линейно за tфр до ΔI, до Δt его отдаёт конденсатор
+// (C, ESR, ESL), v = ESR·i + ESL·di/dt + q/C, q — интеграл тока трапециями, 200 000 шагов; |Z| — комплексное сопротивление на
+// логарифмической сетке 20 001 частоты и 41 ёмкости в пределах допуска. Формула страницы берёт провал на ёмкости с запасом ΔI·Δt/C:
+// моделирование даёт ровно на ΔI·tфр/(2C) меньше (0,125 мВ при 4 мкФ), а если преобладает ESL — совпадает с формулой полностью.
+// Эталон 1 (по умолчанию): Cmin = 0,1·2 мкс/0,1 В = 2 мкФ; 4×1 мкФ, допуск ±10 % — 3,6…4,4 мкФ; провал 50 и 55,56 мВ; Zцел 1 Ом.
+// ESR и ESL не заданы — «Недостаточно данных», а не вывод «не больше допустимого».
+await calculateWithout("blokirovochnyy-kondensator.html", {}, ["Нужная ёмкость по балансу заряда Cmin = ΔI·Δt/ΔV2 мкФ",
+  "Ёмкость n·C при рабочем напряжении4 мкФ; с допуском ±10 % — от 3,6 мкФ до 4,4 мкФ", "Целевой импеданс Zцел = ΔV/ΔI1 Ом",
+  "Провал на ёмкости ΔI·Δt/C50 мВ; при ёмкости на нижней границе допуска — 55,56 мВ", "Падение на ESR ΔI·ESR/nне оценено — ESR не задано",
+  "Выброс на ESL (ESL/n)·ΔI/tфрне оценён — ESL не задана", "Частоты броска — примерно до 0,35/tфр35 МГц", "Импеданс в диапазоне частотне оценён — нужны ESR и ESL",
+  "СтатусНедостаточно данных: не заданы ESR и ESL — падение на ESR, выброс на ESL и импеданс не проверены; провал на ёмкости 55,56 мВ не больше допустимого 100 мВ"],
+  ["Оценка", "Риск"]);
+// Эталон 2 (пример на странице): ESR 10 мОм, ESL 1 нГн на конденсатор → ESR/4 = 2,5 мОм, ESL/4 = 0,25 нГн; падение 0,25 мВ, выброс
+// 0,25 нГн·0,1 А/10 нс = 2,5 мВ; формула 50,25 и 55,81 мВ (моделирование 50,13 и 55,67 мВ — меньше на ΔI·tфр/(2C)); резонанс
+// 1/(2π√(0,25 нГн·4 мкФ)) = 5,033 МГц (минимум |Z| на сетке — там же, 2,5 мОм); |Z| 397,7 мОм на 100 кГц и 53,9 мОм на 35 МГц;
+// наибольший по сетке частот и ёмкостей — 441,9 мОм на 100 кГц при 3,6 мкФ — ниже 1 Ом.
+await calculateWithout("blokirovochnyy-kondensator.html", { esr: "10", esl: "1" }, ["Падение на ESR ΔI·ESR/n250 мкВ", "Выброс на ESL (ESL/n)·ΔI/tфр2,5 мВ",
+  "Наибольший провал: ESR·ΔI + большее из (ESL·ΔI/tфр + ΔI·tфр/(2C)) и ΔI·Δt/C50,25 мВ ≤ 100 мВ; при ёмкости на нижней границе допуска — 55,81 мВ",
+  "Собственный резонанс fрез = 1/(2π√(ESL·C))5,033 МГц — у одного конденсатора тот же: ESL/n и n·C",
+  "|Z| = √(ESR² + (2πf·ESL − 1/(2πfC))²) на границах 100 кГц и 35 МГц397,7 мОм и 53,9 мОм",
+  "Наибольший |Z| в диапазоне с учётом допуска ёмкости441,9 мОм на 100 кГц ≤ Zцел 1 Ом", "Наименьший |Z| — на резонансе внутри диапазонаESR/n = 2,5 мОм",
+  "СтатусОценка: наибольший провал 55,81 мВ не больше допустимого 100 мВ, импеданс в диапазоне 100 кГц…35 МГц не выше целевого 1 Ом"], ["Риск", "Недостаточно"]);
+// Эталон 3 — преобладает ESL: 0,5 А за 2 нс, Δt 10 нс, 2×100 нФ, ESR 20 мОм, ESL 0,5 нГн, ΔV 50 мВ. Выброс 0,25 нГн·0,5 А/2 нс = 62,5 мВ
+// плюс ESR 5 мВ и заряд за фронт 2,5 мВ — 70 мВ; моделирование во времени даёт те же 70 мВ (разница 10⁻¹⁷). Однозначно больше 50 мВ,
+// хотя ёмкости по балансу заряда хватает вдвое. Резонанс 22,51 МГц; |Z| до 882,7 мОм на 1 МГц при 180 нФ.
+await calculate("blokirovochnyy-kondensator.html", { di: "0,5", di_unit: "1", tr: "2", dt: "10", dt_unit: "1e-09", dv: "50", c: "100", c_unit: "1e-09", n: "2", esr: "20", esl: "0,5", f1: "1", f1_unit: "1000000.0", f2: "175" },
+  ["Нужная ёмкость по балансу заряда Cmin = ΔI·Δt/ΔV100 нФ", "Выброс на ESL (ESL/n)·ΔI/tфр62,5 мВ", "70 мВ > 50 мВ; при ёмкости на нижней границе допуска — 70,28 мВ",
+  "Собственный резонанс fрез = 1/(2π√(ESL·C))22,51 МГц", "Наибольший |Z| в диапазоне с учётом допуска ёмкости882,7 мОм на 1 МГц > Zцел 100 мОм",
+  "СтатусПровал напряжения 70 мВ больше допустимого 50 мВ. Нужно больше ёмкости, меньше ESR и ESL или стабилизатор быстрее"]);
+// Один конденсатор 100 нФ: провал на ёмкости 0,1·2 мкс/100 нФ = 2 В — однозначно больше и без ESR и ESL.
+await calculateWithout("blokirovochnyy-kondensator.html", { n: "1", c: "100", c_unit: "1e-09" }, ["2 В > 100 мВ; при ёмкости на нижней границе допуска — 2,222 В",
+  "СтатусПровал напряжения 2 В больше допустимого 100 мВ — без ESR и ESL: с ними провал только больше"], ["Оценка", "Недостаточно"]);
+// Импеданс выше целевого: с 10 кГц |Z| = 1/(2π·10 кГц·3,6 мкФ) = 4,421 Ом > 1 Ом — «Риск» при допустимом провале.
+await calculate("blokirovochnyy-kondensator.html", { esr: "10", esl: "1", f1: "10" }, ["|Z| = √(ESR² + (2πf·ESL − 1/(2πfC))²) на границах 10 кГц и 35 МГц3,979 Ом и 53,9 мОм",
+  "Наибольший |Z| в диапазоне с учётом допуска ёмкости4,421 Ом на 10 кГц > Zцел 1 Ом", "СтатусРиск: импеданс 4,421 Ом на 10 кГц больше целевого 1 Ом"]);
+// Одна частота (верхняя граница пуста): |Z| на 100 кГц и наибольший с допуском — 441,9 мОм.
+await calculateWithout("blokirovochnyy-kondensator.html", { esr: "10", esl: "1", f2: "" }, ["|Z| = √(ESR² + (2πf·ESL − 1/(2πfC))²) на 100 кГц397,7 мОм",
+  "Наибольший |Z| с учётом допуска ёмкости441,9 мОм на 100 кГц ≤ Zцел 1 Ом", "СтатусОценка: наибольший провал 55,81 мВ не больше допустимого 100 мВ, импеданс на 100 кГц не выше целевого 1 Ом"],
+  ["на границах", "Наименьший |Z|"]);
+// Снижение ёмкости под напряжением (DC bias вводит пользователь): 60 % — 2,4 мкФ, на нижней границе 2,16 мкФ, провал 83,33 и 92,59 мВ.
+await calculate("blokirovochnyy-kondensator.html", { kb: "60" }, ["Ёмкость n·C при рабочем напряжении2,4 мкФ (60 % номинала 4 мкФ); с допуском ±10 % — от 2,16 мкФ до 2,64 мкФ",
+  "Провал на ёмкости ΔI·Δt/C83,33 мВ; при ёмкости на нижней границе допуска — 92,59 мВ"]);
+// Только ESR — выброс на ESL и импеданс не проверены.
+await calculateWithout("blokirovochnyy-kondensator.html", { esr: "10" }, ["— без ESL50,25 мВ ≤ 100 мВ",
+  "СтатусНедостаточно данных: не задана ESL — выброс на ESL и импеданс не проверены; провал на ёмкости 55,56 мВ не больше допустимого 100 мВ"], ["Оценка"]);
+await calculateWithout("blokirovochnyy-kondensator.html", { esl: "1" }, ["СтатусНедостаточно данных: не задано ESR — падение на ESR и импеданс не проверены"], ["Оценка"]);
+// Граница провала: без допуска 4 мкФ дают ровно 50 мВ при ΔV = 50 мВ — «не больше»; при 49,99 мВ — однозначно больше.
+await calculateWithout("blokirovochnyy-kondensator.html", { tol: "0", dv: "50" }, ["50 мВ ≤ 50 мВ", "провал на ёмкости 50 мВ не больше допустимого 50 мВ"], ["СтатусПровал напряжения", "Риск"], "boundary");
+await calculate("blokirovochnyy-kondensator.html", { tol: "0", dv: "49,99" }, ["50 мВ > 49,99 мВ", "СтатусПровал напряжения 50 мВ больше допустимого 49,99 мВ"], "boundary");
+// Риск только из-за допуска: ΔV = 52 мВ — при номинале 50 мВ, на нижней границе допуска 55,56 мВ.
+await calculate("blokirovochnyy-kondensator.html", { dv: "52" }, ["50 мВ ≤ 52 мВ; при ёмкости на нижней границе допуска — 55,56 мВ",
+  "СтатусРиск: при ёмкости на нижней границе допуска провал 55,56 мВ больше допустимого 52 мВ — без ESR и ESL"], "boundary");
+// Граница импеданса: на 44,206774849 кГц |Z| при 3,6 мкФ ровно 1 Ом (деление отрезка) — «Оценка»; чуть ниже по частоте — 1,000001 Ом, «Риск».
+await calculate("blokirovochnyy-kondensator.html", { esr: "10", esl: "1", f1: "44.20677484944992" }, ["1 Ом на 44,21 кГц ≤ Zцел 1 Ом", "СтатусОценка"], "boundary");
+await calculate("blokirovochnyy-kondensator.html", { esr: "10", esl: "1", f1: "44.206730642675076" }, ["1,000001 Ом на 44,21 кГц > Zцел 1 Ом", "СтатусРиск: импеданс 1,000001 Ом на 44,21 кГц больше целевого 1 Ом"], "boundary");
+await invalid("blokirovochnyy-kondensator.html", { dt: "5", dt_unit: "1e-09" }, "Время отклика Δt меньше времени нарастания тока tфр");
+await invalid("blokirovochnyy-kondensator.html", { n: "2,5" }, "Число конденсаторов — целое от 1 до 1000");
+await invalid("blokirovochnyy-kondensator.html", { kb: "0" }, "Ёмкость при рабочем напряжении — больше 0 и не больше 100 % номинала");
+await invalid("blokirovochnyy-kondensator.html", { kb: "101" }, "Ёмкость при рабочем напряжении — больше 0 и не больше 100 % номинала");
+await invalid("blokirovochnyy-kondensator.html", { tol: "81" }, "Допуск ёмкости — от 0 до 80 %");
+await invalid("blokirovochnyy-kondensator.html", { esr: "x" }, "ESR — число. Если его нет в паспорте, оставьте поле пустым.");
+await invalid("blokirovochnyy-kondensator.html", { esl: "0" }, "ESL должна быть больше нуля");
+await invalid("blokirovochnyy-kondensator.html", { f2: "0,05" }, "Верхняя граница диапазона должна быть больше нижней");
+await invalid("blokirovochnyy-kondensator.html", { di: "abc" }, "Заполните числами бросок тока");
+await invalid("blokirovochnyy-kondensator.html", { dv: "0" }, "Допустимый провал должен быть больше нуля");
+
 // Структурные проверки партии №6: запрещённые формы вердикта, карточка
 // источника, реестр, каталог, видимость полей по режиму (правило 7), ссылки на
 // соседние страницы вместо дублирования, входящие ссылки, атрибуция источников,
 // пустые необязательные поля без прочерков вместо чисел.
 {
   kind = "structural";
-  const batch6 = ["kvarc-kondensatory", "delitel-chastoty"];
+  const batch6 = ["kvarc-kondensatory", "delitel-chastoty", "blokirovochnyy-kondensator"];
   const read = file => fs.readFileSync(path.join(sourceDir, file), "utf8");
   const visible = file => read(file).replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
   const registry = read("ENGINEERING_AUDIT.md");
@@ -4120,14 +4187,16 @@ await invalid("delitel-chastoty.html", { tolp: "0" }, "Допустимое от
   check(hs.has("chip") && hs.has("bits"), "delitel-chastoty: в режиме целочисленного делителя оба выбора скрыты");
   // Не дублировать соседние страницы, а ссылаться на них.
   const links = { "kvarc-kondensatory": ["soedinenie-kondensatorov", "delitel-chastoty", "rezonans-lc"],
-    "delitel-chastoty": ["kvarc-kondensatory", "shim-srednee-napryazhenie", "ne555-astabilnyy"] };
+    "delitel-chastoty": ["kvarc-kondensatory", "shim-srednee-napryazhenie", "ne555-astabilnyy"],
+    "blokirovochnyy-kondensator": ["rc-filtr", "impedans-rlc", "linear-regulator-loss"] };
   for (const [from, list] of Object.entries(links)) {
     const article = read(`${from}.html`).match(/<p class="intro">[\s\S]*?<section class="related">/)?.[0] ?? "";
     for (const to of list) check(article.includes(`href="${to}.html"`), `${from}: в тексте нет ссылки на ${to}`);
   }
   // Входящие ссылки на новые страницы из «Смотрите также» существующих.
   const inbound = [["soedinenie-kondensatorov", "kvarc-kondensatory"], ["reaktivnoe-soprotivlenie", "kvarc-kondensatory"],
-    ["ne555-astabilnyy", "delitel-chastoty"], ["shim-srednee-napryazhenie", "delitel-chastoty"]];
+    ["ne555-astabilnyy", "delitel-chastoty"], ["shim-srednee-napryazhenie", "delitel-chastoty"],
+    ["impedans-rlc", "blokirovochnyy-kondensator"], ["linear-regulator-loss", "blokirovochnyy-kondensator"]];
   for (const [from, to] of inbound) {
     const block = read(`${from}.html`).match(/<section class="related">([\s\S]*?)<\/section>/)?.[1] ?? "";
     check(block.includes(`href="${to}.html"`), `${from}: в «Смотрите также» нет ссылки на ${to}`);
@@ -4140,9 +4209,14 @@ await invalid("delitel-chastoty.html", { tolp: "0" }, "Допустимое от
   const dv = visible("delitel-chastoty.html");
   check(/RM0008/.test(dv) && /AN4013/.test(dv) && /Nexperia/.test(dv) && /перебира/.test(dv) && /наибольшим ARR/.test(dv) && /ARR = 0 счётчик стоит/.test(dv),
     "delitel-chastoty: нет атрибуции RM0008, AN4013, Nexperia или объяснения перебора и выбора наибольшего ARR");
+  const bk = visible("blokirovochnyy-kondensator.html");
+  check(/MT-101/.test(bk) && /SPRAC76/.test(bk) && /Murata/.test(bk) && /KYOCERA AVX/.test(bk) && /TDK/.test(bk) && /Q = C·U/.test(bk)
+    && /0,35\/tфр/.test(bk) && /без индуктивности монтажа/.test(bk) && /не подставляет вместо них ноль молча/.test(bk),
+    "blokirovochnyy-kondensator: нет атрибуции MT-101, SPRAC76, DC bias изготовителей, вывода баланса заряда, полосы 0,35/tфр или оговорки о монтаже");
   // Необязательные поля пустые — результат остаётся полезным: есть статус, нет прочерков вместо чисел.
   for (const [file, values] of [["kvarc-kondensatory.html", {}], ["kvarc-kondensatory.html", { gm: "", tol: "", esr: "", c0: "", cm: "" }],
-    ["delitel-chastoty.html", {}], ["delitel-chastoty.html", { ppm: "", tolp: "", mode: "bin" }], ["delitel-chastoty.html", { mode: "int" }]]) {
+    ["delitel-chastoty.html", {}], ["delitel-chastoty.html", { ppm: "", tolp: "", mode: "bin" }], ["delitel-chastoty.html", { mode: "int" }],
+    ["blokirovochnyy-kondensator.html", {}], ["blokirovochnyy-kondensator.html", { esr: "", esl: "", f2: "" }]]) {
     const dom = await load(file); const d = dom.window.document;
     for (const [id, v] of Object.entries(values)) { const el = d.getElementById(id); el.value = v; el.dispatchEvent(new dom.window.Event("change", { bubbles: true })); }
     d.getElementById("go").click();

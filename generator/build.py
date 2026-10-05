@@ -28,8 +28,8 @@ apply_audit_metadata(CALCS)
 
 # notice-страницы остаются по своему URL, но ничего не вычисляют: калькулятор
 # снят с публикации. В каталог и sitemap они не попадают.
-PAGES = 149          # всего генерируемых страниц-разделов
-CALCULATORS = 148    # из них с работающим расчётом
+PAGES = 150          # всего генерируемых страниц-разделов
+CALCULATORS = 149    # из них с работающим расчётом
 assert len(CALCS) == PAGES, "Ожидалось %d страниц, получено %d" % (PAGES, len(CALCS))
 real = [c for c in CALCS if not c.get("notice")]
 assert len(real) == CALCULATORS, "Ожидалось %d калькуляторов, получено %d" % (CALCULATORS, len(real))

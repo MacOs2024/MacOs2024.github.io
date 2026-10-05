@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Блокировочный конденсатор питания микросхемы — ВольтКальк</title>
+<meta name="description" content="Расчёт блокировочного конденсатора питания микросхемы: ёмкость по балансу заряда C ≥ ΔI·Δt/ΔV, провал на ёмкости, падение на ESR и выброс на ESL, собственный резонанс 1/(2π√(ESL·C)), импеданс в диапазоне частот против целевого ΔV/ΔI, несколько конденсаторов параллельно, снижение ёмкости керамики под напряжением и допуск.">
+<link rel="canonical" href="https://macos2024.github.io/blokirovochnyy-kondensator.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Блокировочный конденсатор питания микросхемы — ВольтКальк">
+<meta property="og:description" content="Расчёт блокировочного конденсатора питания микросхемы: ёмкость по балансу заряда C ≥ ΔI·Δt/ΔV, провал на ёмкости, падение на ESR и выброс на ESL, собственный резонанс 1/(2π√(ESL·C)), импеданс в диапазоне частот против целевого ΔV/ΔI, несколько конденсаторов параллельно, снижение ёмкости керамики под напряжением и допуск.">
+<meta property="og:url" content="https://macos2024.github.io/blokirovochnyy-kondensator.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Блокировочный конденсатор питания микросхемы","url":"https://macos2024.github.io/blokirovochnyy-kondensator.html","description":"Расчёт блокировочного конденсатора питания микросхемы: ёмкость по балансу заряда C ≥ ΔI·Δt/ΔV, провал на ёмкости, падение на ESR и выброс на ESL, собственный резонанс 1/(2π√(ESL·C)), импеданс в диапазоне частот против целевого ΔV/ΔI, несколько конденсаторов параллельно, снижение ёмкости керамики под напряжением и допуск.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Блокировочный конденсатор питания микросхемы","item":"https://macos2024.github.io/blokirovochnyy-kondensator.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Как выбрать время отклика Δt?","acceptedAnswer":{"@type":"Answer","text":"Это время, пока блокировочный конденсатор один отдаёт ток: для конденсатора у самой микросхемы — время, за которое ток успевает прийти от конденсатора побольше по индуктивности дорожек, для всей группы — время отклика стабилизатора по переходной характеристике в его паспорте. Чем быстрее следующий источник, тем меньше нужна ёмкость."}},{"@type":"Question","name":"Почему несколько маленьких конденсаторов лучше одного большого?","acceptedAnswer":{"@type":"Answer","text":"Параллельно у них делятся ESR и ESL, поэтому выброс на фронте меньше, а импеданс на высоких частотах ниже. Но выигрыш по ESL получается, только если у каждого конденсатора свой короткий путь к выводам: общий участок дорожки на число конденсаторов не делится."}},{"@type":"Question","name":"Почему ёмкость X7R нужно уменьшать?","acceptedAnswer":{"@type":"Answer","text":"У керамики класса 2 ёмкость падает под постоянным напряжением — иногда в разы, особенно у малых типоразмеров. Фактическую долю для вашего напряжения дают кривые и онлайн-инструменты изготовителя; калькулятор их не подставляет."}},{"@type":"Question","name":"Что такое целевой импеданс?","acceptedAnswer":{"@type":"Answer","text":"Это импеданс цепи питания, при котором переходный ток ΔI даёт провал не больше ΔV: Zцел = ΔV/ΔI. Если импеданс конденсаторов в нужном диапазоне частот выше, составляющая тока этой частоты может опустить напряжение ниже допустимого."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Блокировочный конденсатор питания микросхемы</h1>
+<p class="intro">Пока стабилизатор не успел отреагировать на бросок тока, микросхему питает её блокировочный конденсатор. Калькулятор проверяет, хватит ли его ёмкости, сколько добавят ESR и ESL и не поднимется ли импеданс выше целевого в нужном диапазоне частот. Частоту среза сигнального RC-фильтра считает другой калькулятор — <a href="rc-filtr.html">RC-фильтр</a>, импеданс одной последовательной RLC-цепи на одной частоте — <a href="impedans-rlc.html">калькулятор импеданса</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Блокировочный конденсатор питания микросхемы</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_di"><label for="di">Бросок тока потребления ΔI</label><div class="fw"><input id="di" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="di_unit" class="u" aria-label="Единицы: Бросок тока потребления ΔI"><option value="0.001" selected>мА</option><option value="1">А</option></select></div></div><div class="f" id="f_tr"><label for="tr">Время нарастания тока tфр</label><div class="fw"><input id="tr" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="tr_unit" class="u" aria-label="Единицы: Время нарастания тока tфр"><option value="1e-09" selected>нс</option><option value="1e-06">мкс</option></select></div></div><div class="f" id="f_dt"><label for="dt">Время до отклика стабилизатора Δt</label><div class="fw"><input id="dt" type="text" inputmode="decimal" autocomplete="off" value="2" placeholder=""><select id="dt_unit" class="u" aria-label="Единицы: Время до отклика стабилизатора Δt"><option value="1e-06" selected>мкс</option><option value="1e-09">нс</option><option value="0.001">мс</option></select></div><div class="hint">Сколько конденсатор один отдаёт ток, пока не отреагирует стабилизатор или конденсатор побольше: по переходной характеристике из паспорта стабилизатора или по измерению</div></div><div class="f" id="f_dv"><label for="dv">Допустимый провал напряжения ΔV</label><div class="fw"><input id="dv" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="dv_unit" class="u" aria-label="Единицы: Допустимый провал напряжения ΔV"><option value="0.001" selected>мВ</option><option value="1">В</option></select></div><div class="hint">По паспорту микросхемы: допуск напряжения питания минус отклонение самого стабилизатора</div></div><div class="f" id="f_c"><label for="c">Ёмкость одного конденсатора по номиналу C</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><select id="c_unit" class="u" aria-label="Единицы: Ёмкость одного конденсатора по номиналу C"><option value="1e-06" selected>мкФ</option><option value="1e-09">нФ</option><option value="1e-12">пФ</option></select></div></div><div class="f" id="f_n"><label for="n">Число одинаковых конденсаторов параллельно n</label><div class="fw"><input id="n" type="text" inputmode="decimal" autocomplete="off" value="4" placeholder=""><span class="u">шт.</span></div></div><div class="f" id="f_kb"><label for="kb">Ёмкость при рабочем постоянном напряжении, % от номинала</label><div class="fw"><input id="kb" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><span class="u">%</span></div><div class="hint">У керамики класса 2 (X5R, X7R) ёмкость под постоянным напряжением заметно меньше номинала — долю берите по кривой DC bias или онлайн-инструменту изготовителя для вашего типоразмера и напряжения (Murata, TDK, KYOCERA AVX). У C0G и плёночных — 100 %</div></div><div class="f" id="f_tol"><label for="tol">Допуск ёмкости ±</label><div class="fw"><input id="tol" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><span class="u">%</span></div><div class="hint">По паспорту конденсатора; значение по умолчанию условное</div></div><div class="f" id="f_esr"><label for="esr">ESR одного конденсатора</label><div class="fw"><input id="esr" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="esr_unit" class="u" aria-label="Единицы: ESR одного конденсатора"><option value="0.001" selected>мОм</option><option value="1">Ом</option></select></div><div class="hint">По паспорту или графику импеданса изготовителя на частотах броска. Пусто — падение на ESR и импеданс не проверяются</div></div><div class="f" id="f_esl"><label for="esl">ESL одного конденсатора</label><div class="fw"><input id="esl" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="esl_unit" class="u" aria-label="Единицы: ESL одного конденсатора"><option value="1e-09" selected>нГн</option><option value="1e-12">пГн</option></select></div><div class="hint">По паспорту изготовителя. Индуктивность монтажа — дорожки и переходные отверстия у каждого конденсатора — можно прибавить сюда; общий участок питания так не учитывается</div></div><div class="f" id="f_f1"><label for="f1">Частота проверки импеданса f — нижняя граница диапазона</label><div class="fw"><input id="f1" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="f1_unit" class="u" aria-label="Единицы: Частота проверки импеданса f — нижняя граница диапазона"><option value="1000.0" selected>кГц</option><option value="1000000.0">МГц</option></select></div><div class="hint">Например, частота, выше которой стабилизатор уже не успевает за нагрузкой (полоса его регулирования по паспорту)</div></div><div class="f" id="f_f2"><label for="f2">Верхняя граница диапазона частот</label><div class="fw"><input id="f2" type="text" inputmode="decimal" autocomplete="off" value="35" placeholder=""><select id="f2_unit" class="u" aria-label="Единицы: Верхняя граница диапазона частот"><option value="1000000.0" selected>МГц</option><option value="1000.0">кГц</option></select></div><div class="hint">Пусто — проверка на одной частоте f. Частоты броска — примерно до 0,35/tфр (вывод ниже)</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Блокировочный конденсатор: как считается</h2>
+<div class="formula">Баланс заряда: Q = ΔI·Δt = C·ΔV&nbsp;&nbsp;⇒&nbsp;&nbsp;C ≥ ΔI·Δt/ΔV<br>Падение на ESR: ΔI·ESR;&nbsp;&nbsp;выброс на ESL: ESL·ΔI/tфр;&nbsp;&nbsp;наибольший провал: ESR·ΔI + max(ESL·ΔI/tфр + ΔI·tфр/(2C);&nbsp;ΔI·Δt/C)<br>fрез = 1/(2π√(ESL·C));&nbsp;&nbsp;|Z| = √(ESR² + (2πf·ESL − 1/(2πf·C))²);&nbsp;&nbsp;Zцел = ΔV/ΔI<br>n одинаковых параллельно: n·C, ESR/n, ESL/n;&nbsp;&nbsp;C = Cном·(доля под напряжением)·(1 ± допуск)</div>
+<p><b>Ёмкость по броску тока.</b> Когда микросхема резко увеличивает потребление на ΔI, стабилизатор отвечает не сразу — через время Δt, которое определяется его быстродействием или индуктивностью пути к конденсатору побольше. Всё это время ток отдаёт блокировочный конденсатор и теряет заряд Q = ΔI·Δt. Заряд конденсатора Q = C·U (OpenStax, 8.1), поэтому напряжение на нём падает на ΔV = ΔI·Δt/C, и чтобы провал не превысил допустимый, нужно C ≥ ΔI·Δt/ΔV. Это баланс заряда: формула не зависит от типа конденсатора, но ёмкость в неё подставляют фактическую — с допуском и снижением под напряжением.</p>
+<p><b>ESR и ESL.</b> У реального конденсатора есть последовательное сопротивление ESR и индуктивность ESL выводов и обкладок (ADI MT-101). Ток ΔI создаёт на ESR падение ΔI·ESR сразу и надолго, а на ESL — выброс L·dI/dt (OpenStax, 14.2), то есть ESL·ΔI/tфр при линейном нарастании тока за время tфр, только пока ток растёт. Поэтому наибольший провал — либо в конце фронта: ESR·ΔI + ESL·ΔI/tфр плюс небольшой провал ΔI·tфр/(2C) от заряда, отданного за фронт, — либо в конце интервала Δt: ESR·ΔI + ΔI·Δt/C. Второе слагаемое посчитано с запасом, как будто весь ток шёл с самого начала: точно, с нарастанием, было бы ΔI·(Δt − tфр/2)/C. Если ESR или ESL не заданы, калькулятор не подставляет вместо них ноль молча: превышение без них остаётся превышением (с ними только хуже), а вывод «не больше допустимого» он не делает — статус «Недостаточно данных».</p>
+<p><b>Резонанс и импеданс.</b> Конденсатор с ESL — последовательная RLC-цепь: её импеданс √(ESR² + (2πf·ESL − 1/(2πf·C))²) (OpenStax, 15.3) убывает с частотой, пока преобладает ёмкость, на собственном резонансе 1/(2π√(ESL·C)) падает до ESR и выше растёт за счёт ESL — так описывает график импеданса ADI MT-101 и советует выбирать конденсатор с резонансом выше наибольшей частоты, на которой он должен работать. Реактивная часть 2πf·ESL − 1/(2πf·C) монотонно растёт и с частотой, и с ёмкостью, поэтому наибольший импеданс в диапазоне частот и в пределах допуска ёмкости всегда на одной из границ — калькулятор проверяет все четыре сочетания. Целевой импеданс Zцел = ΔV/ΔI — закон Ома для частотной составляющей тока: пульсации равны импедансу цепи питания, умноженному на переходный ток (так задаёт требования TI SPRAC76). Если в диапазоне импеданс выше целевого, составляющая тока этой частоты может дать провал больше допустимого — это «Риск», а не точный расчёт.</p>
+<p><b>Какой диапазон частот.</b> Ток, нарастающий за время tфр, несёт составляющие примерно до 0,35/tфр. Это следует из закона заряда RC-цепи (OpenStax, 10.5): от 10 до 90 % экспонента нарастает за τ·ln 9 ≈ 2,2τ, а полоса такой цепи по уровню −3 дБ — 1/(2πτ), отсюда 2,2/(2π·tфр) ≈ 0,35/tфр. Нижняя граница — частота, выше которой стабилизатор уже не успевает за нагрузкой: её берут по полосе регулирования из паспорта стабилизатора.</p>
+<p><b>Несколько конденсаторов.</b> Одинаковые конденсаторы параллельно дают ёмкость n·C, ESR/n и ESL/n; собственный резонанс у них тот же, что у одного. Индуктивность монтажа — дорожек и переходных отверстий — в этот счёт не входит, а на высоких частотах она часто больше ESL самого конденсатора; общий участок питания и вовсе не делится на n. Поэтому конденсаторы ставят у самых выводов питания, как советует ADI MT-101: электролитические — для низких частот, керамические 0,01–0,1 мкФ — для высоких.</p>
+<p><b>Ёмкость под напряжением.</b> У многослойной керамики класса 2 (X5R, X7R) ёмкость под постоянным напряжением заметно ниже номинальной — это эффект DC bias, который описывают Murata и KYOCERA AVX; фактическое значение для конкретного типоразмера и напряжения дают кривые и онлайн-инструменты изготовителя (у Murata — SimSurfing). У керамики C0G ёмкость от напряжения почти не зависит (TDK). Калькулятор кривых не хранит и ничего не подставляет: долю от номинала вводят по данным изготовителя.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="rc-filtr.html">RC-фильтр</a> считает частоту среза фильтра в тракте сигнала, а здесь конденсатор шунтирует цепь питания, и важны его ёмкость под нагрузкой током, ESR, ESL и импеданс в полосе частот. <a href="impedans-rlc.html">Калькулятор импеданса RLC</a> считает ту же последовательную цепь на одной частоте. Нагрев самого стабилизатора считает <a href="linear-regulator-loss.html">калькулятор линейного стабилизатора</a>.</p>
+<h2>Блокировочный конденсатор: пример расчёта</h2>
+<p>Бросок тока микроконтроллера 100 мА с фронтом 10 нс, стабилизатор отвечает через 2 мкс, допустимый провал 100 мВ. По балансу заряда нужно 0,1·2 мкс/0,1 В = <b>2 мкФ</b>. Четыре конденсатора по 1 мкФ с допуском ±10 % (условно) дают 4 мкФ, а на нижней границе допуска — 3,6 мкФ; провал на ёмкости 50 и 55,56 мВ. Целевой импеданс 0,1 В/0,1 А = 1 Ом. Без ESR и ESL калькулятор пишет «Недостаточно данных».</p>
+<p>Если по паспорту ESR = 10 мОм и ESL = 1 нГн на конденсатор (значения условные), на четырёх параллельно падение на ESR 0,25 мВ, выброс на ESL 0,25 нГн·0,1 А/10 нс = 2,5 мВ, наибольший провал 55,81 мВ при ёмкости на нижней границе допуска — не больше 100 мВ. Собственный резонанс 5,033 МГц, а наибольший импеданс в диапазоне 100 кГц…35 МГц — 0,4419 Ом на 100 кГц при ёмкости на нижней границе допуска — ниже целевого. Если же поставить один конденсатор 100 нФ, провал на ёмкости составит 0,1·2 мкс/100 нФ = 2 В — в двадцать раз больше допустимого: такой бросок без конденсатора большей ёмкости не выдержать.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Как выбрать время отклика Δt?</h3><p>Это время, пока блокировочный конденсатор один отдаёт ток: для конденсатора у самой микросхемы — время, за которое ток успевает прийти от конденсатора побольше по индуктивности дорожек, для всей группы — время отклика стабилизатора по переходной характеристике в его паспорте. Чем быстрее следующий источник, тем меньше нужна ёмкость.</p><h3>Почему несколько маленьких конденсаторов лучше одного большого?</h3><p>Параллельно у них делятся ESR и ESL, поэтому выброс на фронте меньше, а импеданс на высоких частотах ниже. Но выигрыш по ESL получается, только если у каждого конденсатора свой короткий путь к выводам: общий участок дорожки на число конденсаторов не делится.</p><h3>Почему ёмкость X7R нужно уменьшать?</h3><p>У керамики класса 2 ёмкость падает под постоянным напряжением — иногда в разы, особенно у малых типоразмеров. Фактическую долю для вашего напряжения дают кривые и онлайн-инструменты изготовителя; калькулятор их не подставляет.</p><h3>Что такое целевой импеданс?</h3><p>Это импеданс цепи питания, при котором переходный ток ΔI даёт провал не больше ΔV: Zцел = ΔV/ΔI. Если импеданс конденсаторов в нужном диапазоне частот выше, составляющая тока этой частоты может опустить напряжение ниже допустимого.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.analog.com/media/en/training-seminars/tutorials/MT-101.pdf" rel="nofollow noopener" target="_blank">MT-101 Tutorial. Decoupling Techniques</a> — Analog Devices (W. Kester) — Редакция Rev.0, 03/09; положения видны в выдаче двумя поисками — раздел собственный резонанс: 1/(ωC) = ω·ESL, fрез = 1/(2π√(ESL·C)), ESR делает дно графика импеданса плоским, выше резонанса импеданс растёт за счёт ESL, выбирать конденсатор с резонансом выше наибольшей рабочей частоты, электролитические — для низких частот, керамические 0,01–0,1 мкФ — как можно ближе к выводам питания — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/pdf/sprac76" rel="nofollow noopener" target="_blank">Sitara Processor Power Distribution Networks: Implementation and Analysis (SPRAC76)</a> — Texas Instruments — Редакция редакция на дату обращения (по выдаче — октябрь 2025); положения видны в выдаче — раздел пульсации на шине питания = Z_PDN · I_переходный; требования к импедансу цепи питания — целевой импеданс — обращение 04.10.2026</li><li><a href="https://article.murata.com/en-global/article/voltage-characteristics-of-electrostatic-capacitance" rel="nofollow noopener" target="_blank">The voltage characteristics of electrostatic capacitance</a> — Murata Manufacturing — Редакция онлайн-статья на дату обращения; видно в выдаче — раздел ёмкость многослойной керамики с высокой диэлектрической проницаемостью уменьшается под постоянным напряжением (DC bias), фактическую ёмкость при напряжении даёт онлайн-инструмент SimSurfing — обращение 04.10.2026</li><li><a href="https://www.kyocera-avx.com/docs/techinfo/CeramicCapacitors/mlcc-dc-bias-characteristics.pdf" rel="nofollow noopener" target="_blank">DC Bias Characteristics of Ceramic Capacitors (technical paper)</a> — KYOCERA AVX, S. Cen — Редакция на дату обращения; видно в выдаче двумя поисками — раздел ёмкость керамики класса 2 зависит от приложенного постоянного напряжения — обращение 04.10.2026</li><li><a href="https://product.tdk.com/en/techlibrary/solutionguide/mlcc04.html" rel="nofollow noopener" target="_blank">Features of High voltage MLCCs with C0G Characteristics</a> — TDK, техническая библиотека — Редакция онлайн-статья на дату обращения; видно в выдаче — раздел у C0G (класс 1) ёмкость почти не зависит от температуры и постоянного напряжения — обращение 04.10.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/8-1-capacitors-and-capacitance" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 8.1 Capacitors and Capacitance — Q = C·U, 14.2 Self-Inductance and Inductors — ε = −L·dI/dt, 15.3 RLC Series Circuits with AC — импеданс последовательной цепи, 10.5 RC Circuits — заряд по экспоненте, для оценки полосы 0,35/tфр — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Ток нагрузки нарастает линейно за tфр до ΔI; до момента Δt его целиком отдают блокировочные конденсаторы, после — стабилизатор.</li><li>Конденсатор — последовательные C, ESR и ESL; ESR и ESL постоянны в рассматриваемом диапазоне частот.</li><li>n одинаковых конденсаторов параллельно — n·C, ESR/n, ESL/n, без индуктивности монтажа и общего участка питания.</li><li>Ёмкость — номинал, умноженный на введённую долю под напряжением и на допуск; провал проверяется и на нижней границе допуска.</li></ul><p><b>Границы применимости:</b></p><ul><li>Отклик стабилизатора, его выходной конденсатор и индуктивность цепи питания не моделируются — точный провал даёт моделирование цепи питания.</li><li>Сравнение с целевым импедансом — частотный критерий, а не расчёт провала во времени.</li><li>Кривые DC bias, температурная и частотная зависимость ESR и ёмкости не хранятся — их берут у изготовителя.</li><li>Антирезонанс между конденсаторами разных номиналов не рассчитывается: страница рассматривает одинаковые конденсаторы.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="impedans-rlc.html">Импеданс последовательной RLC-цепи</a></li><li><a href="rc-filtr.html">RC-фильтр: частота среза</a></li><li><a href="linear-regulator-loss.html">Нагрев линейного стабилизатора</a></li><li><a href="energiya-kondensatora.html">Энергия и заряд конденсатора</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function sg(x){return x>0?'+':'';}
+
+function calc(){
+var di=P('di'),tr=P('tr'),dt=P('dt'),dv=P('dv'),c=P('c'),n=P('n'),kb=P('kb'),tl=P('tol'),f1=P('f1');
+if([di,tr,dt,dv,c,n,kb,tl,f1].some(isNaN))return err('Заполните числами бросок тока, время нарастания, время отклика, допустимый провал, ёмкость, число конденсаторов, долю ёмкости под напряжением, допуск и частоту.');
+if(di<=0||di>1000)return err('Бросок тока — больше 0 и не больше 1000 А.');
+if(tr<=0||dt<=0)return err('Время нарастания тока и время отклика должны быть больше нуля.');
+if(lt(dt,tr))return err('Время отклика Δt меньше времени нарастания тока tфр: стабилизатор успевает раньше, чем закончится фронт, и модель «ток отдаёт один конденсатор» неприменима.');
+if(dv<=0)return err('Допустимый провал должен быть больше нуля.');
+if(c<=0)return err('Ёмкость должна быть больше нуля.');
+if(n<1||n>1000||Math.floor(n)!==n)return err('Число конденсаторов — целое от 1 до 1000.');
+if(kb<=0||kb>100)return err('Ёмкость при рабочем напряжении — больше 0 и не больше 100 % номинала.');
+if(tl<0||tl>80)return err('Допуск ёмкости — от 0 до 80 %.');
+if(f1<=0)return err('Частота проверки импеданса должна быть больше нуля.');
+var esr=OPT('esr'),esl=OPT('esl'),f2=OPT('f2');
+if(esr!==null){if(isNaN(esr))return err('ESR — число. Если его нет в паспорте, оставьте поле пустым.');if(esr<=0)return err('ESR должно быть больше нуля.');}
+if(esl!==null){if(isNaN(esl))return err('ESL — число. Если её нет в паспорте, оставьте поле пустым.');if(esl<=0)return err('ESL должна быть больше нуля.');}
+if(f2!==null){if(isNaN(f2))return err('Верхняя граница диапазона — число. Для проверки на одной частоте оставьте поле пустым.');if(!gt(f2,f1))return err('Верхняя граница диапазона должна быть больше нижней.');}
+// n одинаковых конденсаторов параллельно: ёмкость n·C, ESR/n, ESL/n — без индуктивности монтажа и общего участка питания.
+var t=tl/100,Cn=n*c*kb/100,Cw=Cn*(1-t),Cx=Cn*(1+t),R=esr===null?NaN:esr/n,L=esl===null?NaN:esl/n,hr=esr!==null,hl=esl!==null;
+var cmin=di*dt/dv,zt=dv/di,vr=hr?R*di:0,vl=hl?L*di/tr:0;
+// Наибольший провал в модели: на фронте — ESL·ΔI/tфр, ESR·ΔI и заряд ΔI·tфр/(2C); после фронта ESL не действует, а провал на ёмкости
+// растёт до конца Δt и с запасом считается так, будто весь ток ΔI шёл с самого начала: ΔI·Δt/C. Незаданные ESR и ESL — нули.
+function dip(C){return vr+Math.max(vl+di*tr/(2*C),di*dt/C);}
+var dN=dip(Cn),dW=dip(Cw),sN=di*dt/Cn,sW=di*dt/Cw;
+function Z(f,C){var w=2*Math.PI*f;return Math.sqrt(R*R+Math.pow(w*L-1/(w*C),2));}
+var zok=hr&&hl,fr=hl?1/(2*Math.PI*Math.sqrt(L*Cn)):NaN,fh=f2===null?f1:f2,zmx=NaN,fz=NaN;
+// Реактивное сопротивление ωL − 1/(ωC) растёт и с частотой, и с ёмкостью, поэтому наибольший |Z| в диапазоне частот и допуска — в углах.
+if(zok){var F=[f1,fh],K=[Cw,Cx];for(var i=0;i<2;i++)for(var j=0;j<2;j++){var z=Z(F[i],K[j]);if(!(z<=zmx)){zmx=z;fz=F[i];}}}
+if(![cmin,Cn,dN,dW].every(isFinite)||(zok&&!isFinite(zmx)))return err('Значения вне диапазона надёжного расчёта.');
+var mt=(!hr||!hl)?' — без '+(!hr&&!hl?'ESR и ESL':(!hr?'ESR':'ESL')):'';
+var h=row('Нужная ёмкость по балансу заряда Cmin = ΔI·Δt/ΔV',si(cmin,'Ф'))+
+ row('Ёмкость n·C при рабочем напряжении',si(Cn,'Ф')+(kb<100?' ('+fmt(kb)+' % номинала '+si(n*c,'Ф')+')':'')+(t>0?'; с допуском ±'+fmt(tl)+' % — от '+si(Cw,'Ф')+' до '+si(Cx,'Ф'):''))+
+ row('Целевой импеданс Zцел = ΔV/ΔI',si(zt,'Ом'))+
+ row('Провал на ёмкости ΔI·Δt/C',sx(sN,dv,'В')+(t>0?'; при ёмкости на нижней границе допуска — '+sx(sW,dv,'В'):''))+
+ row('Падение на ESR ΔI·ESR/n',hr?si(vr,'В'):'не оценено — ESR не задано')+
+ row('Выброс на ESL (ESL/n)·ΔI/tфр',hl?si(vl,'В'):'не оценён — ESL не задана')+
+ row('Наибольший провал: ESR·ΔI + большее из (ESL·ΔI/tфр + ΔI·tфр/(2C)) и ΔI·Δt/C'+mt,sx(dN,dv,'В')+(gt(dN,dv)?' > ':' ≤ ')+sx(dv,dN,'В')+(t>0?'; при ёмкости на нижней границе допуска — '+sx(dW,dv,'В'):''));
+h+=row('Собственный резонанс fрез = 1/(2π√(ESL·C))',hl?si(fr,'Гц')+(n>1?' — у одного конденсатора тот же: ESL/n и n·C':''):'не оценён — ESL не задана');
+h+=row('Частоты броска — примерно до 0,35/tфр',si(0.35/tr,'Гц'));
+if(zok){var a=Z(f1,Cn);h+=row(f2===null?'|Z| = √(ESR² + (2πf·ESL − 1/(2πfC))²) на '+si(f1,'Гц'):'|Z| = √(ESR² + (2πf·ESL − 1/(2πfC))²) на границах '+si(f1,'Гц')+' и '+si(fh,'Гц'),si(a,'Ом')+(f2===null?'':' и '+si(Z(fh,Cn),'Ом')));
+ h+=row('Наибольший |Z|'+(f2===null?'':' в диапазоне')+(t>0?' с учётом допуска ёмкости':''),sx(zmx,zt,'Ом')+' на '+si(fz,'Гц')+(gt(zmx,zt)?' > ':' ≤ ')+'Zцел '+sx(zt,zmx,'Ом'));
+ if(f2!==null&&!lt(fr,f1)&&!gt(fr,fh))h+=row('Наименьший |Z| — на резонансе внутри диапазона','ESR/n = '+si(R,'Ом'));}
+else h+=row('Импеданс в диапазоне частот','не оценён — нужны ESR и ESL');
+var st;
+if(gt(dN,dv))st='Провал напряжения '+sx(dN,dv,'В')+' больше допустимого '+sx(dv,dN,'В')+mt+((!hr||!hl)?': с ними провал только больше':'')+'. Нужно больше ёмкости, меньше ESR и ESL или стабилизатор быстрее';
+else if(t>0&&gt(dW,dv))st='Риск: при ёмкости на нижней границе допуска провал '+sx(dW,dv,'В')+' больше допустимого '+sx(dv,dW,'В')+mt;
+else if(zok&&gt(zmx,zt))st='Риск: импеданс '+sx(zmx,zt,'Ом')+' на '+si(fz,'Гц')+' больше целевого '+sx(zt,zmx,'Ом')+' — составляющая тока этой частоты может дать провал больше допустимого';
+else if(!hr||!hl)st='Недостаточно данных: '+(!hr&&!hl?'не заданы ESR и ESL':(!hr?'не задано ESR':'не задана ESL'))+' — '+(!hr&&!hl?'падение на ESR, выброс на ESL':(!hr?'падение на ESR':'выброс на ESL'))+' и импеданс не проверены; провал на ёмкости '+sx(sW,dv,'В')+' не больше допустимого '+sx(dv,sW,'В');
+else st='Оценка: наибольший провал '+sx(t>0?dW:dN,dv,'В')+' не больше допустимого '+sx(dv,t>0?dW:dN,'В')+', импеданс '+(f2===null?'на '+si(f1,'Гц'):'в диапазоне '+si(f1,'Гц')+'…'+si(fh,'Гц'))+' не выше целевого '+sx(zt,zmx,'Ом');
+var nt='Модель: пока стабилизатор не отреагировал (время Δt), весь бросок тока отдают блокировочные конденсаторы, потом — стабилизатор целиком. Провал на ёмкости посчитан с запасом, как будто ток ΔI шёл с самого начала, а не нарастал за tфр. ';
+nt+='Конденсаторы параллельно: ёмкость n·C, ESR/n и ESL/n — без индуктивности монтажа и общего участка питания, которые на высоких частотах часто больше собственной ESL конденсатора. ';
+nt+=(kb<100?'':'Ёмкость под напряжением взята равной номиналу — у керамики X5R и X7R её нужно взять по кривой DC bias изготовителя. ')+'Сравнение с целевым импедансом — критерий для частотной составляющей тока, а не точный расчёт провала: точно провал даёт моделирование цепи питания вместе со стабилизатором.';
+out(h+row('Статус',st)+note(nt));
+}
+
+</script>
+</body>
+</html>

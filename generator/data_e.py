@@ -71,7 +71,7 @@ faqs=[
  ("Почему температура только оценочная?","RθJA сильно зависит от площади меди, корпуса, воздушного потока и монтажа. Берите значение из условий даташита, близких к вашей плате."),
  ("Когда лучше импульсный стабилизатор?","Когда разность Vin−Vout или ток велики и линейный вариант рассеивает слишком много тепла."),
 ],
-related=["raschet-radiatora","lm317-resistor","stabilitron-rezistor","nagrev-mosfet"],
+related=["raschet-radiatora","lm317-resistor","stabilitron-rezistor","nagrev-mosfet","blokirovochnyy-kondensator"],
 ),
 
 dict(
