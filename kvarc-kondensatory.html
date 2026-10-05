@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Конденсаторы кварцевого резонатора — ВольтКальк</title>
+<meta name="description" content="Расчёт нагрузочных конденсаторов кварцевого резонатора в генераторе Пирса микроконтроллера по ST AN2867: C1 = C2 = 2·(CL − Cs) с номиналом ряда E12/E24, нагрузочная ёмкость заданной пары, уход частоты по C0 и C1m, критическая крутизна и запас gm/gmcrit, уровень возбуждения по измеренному размаху.">
+<link rel="canonical" href="https://macos2024.github.io/kvarc-kondensatory.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Конденсаторы кварцевого резонатора — ВольтКальк">
+<meta property="og:description" content="Расчёт нагрузочных конденсаторов кварцевого резонатора в генераторе Пирса микроконтроллера по ST AN2867: C1 = C2 = 2·(CL − Cs) с номиналом ряда E12/E24, нагрузочная ёмкость заданной пары, уход частоты по C0 и C1m, критическая крутизна и запас gm/gmcrit, уровень возбуждения по измеренному размаху.">
+<meta property="og:url" content="https://macos2024.github.io/kvarc-kondensatory.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Конденсаторы кварцевого резонатора","url":"https://macos2024.github.io/kvarc-kondensatory.html","description":"Расчёт нагрузочных конденсаторов кварцевого резонатора в генераторе Пирса микроконтроллера по ST AN2867: C1 = C2 = 2·(CL − Cs) с номиналом ряда E12/E24, нагрузочная ёмкость заданной пары, уход частоты по C0 и C1m, критическая крутизна и запас gm/gmcrit, уровень возбуждения по измеренному размаху.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Конденсаторы кварцевого резонатора","item":"https://macos2024.github.io/kvarc-kondensatory.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему не поставить просто два конденсатора по CL?","acceptedAnswer":{"@type":"Answer","text":"Кварц видит конденсаторы последовательно — вдвое меньшую ёмкость, — плюс паразитную ёмкость выводов и дорожек. Поэтому каждый берут около 2·(CL − Cs): для CL = 18 пФ и Cs = 5 пФ это 26 пФ, а не 18."}},{"@type":"Question","name":"Что будет, если ёмкость не совпадёт с паспортной?","acceptedAnswer":{"@type":"Answer","text":"Кварц всё равно будет генерировать, но на другой частоте: больше CL — ниже частота. Уход зависит от динамической ёмкости C1m и C0 кварца и обычно составляет единицы–десятки ppm на пикофарад. Для часов и интерфейсов это может быть заметно, поэтому частоту проверяют измерением."}},{"@type":"Question","name":"Что означает запас по усилению 5?","acceptedAnswer":{"@type":"Answer","text":"Это рекомендация ST в AN2867: крутизна генератора gm должна быть не меньше чем в пять раз больше критической gmcrit кварца. При меньшем запасе генератор может запуститься на столе, но не запуститься при другой температуре, напряжении или с другим экземпляром кварца."}},{"@type":"Question","name":"Можно ли ставить разные C1 и C2?","acceptedAnswer":{"@type":"Answer","text":"Можно: нагрузочная ёмкость считается по той же формуле последовательного соединения. Но критическая крутизна при разных конденсаторах больше, чем при равных, — в (C1 + C2)²/(4·C1·C2) раза; калькулятор это учитывает."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Конденсаторы кварцевого резонатора</h1>
+<p class="intro">Кварц генерирует паспортную частоту, только если видит паспортную нагрузочную ёмкость CL. Калькулятор подбирает конденсаторы под неё, оценивает уход частоты при несовпадении и проверяет запас генератора по усилению по методике <b>ST AN2867</b>. Последовательное соединение конденсаторов само по себе считает <a href="soedinenie-kondensatorov.html">калькулятор соединения конденсаторов</a>, а что делать с частотой дальше — <a href="delitel-chastoty.html">делитель частоты и таймер</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Конденсаторы кварцевого резонатора</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Что считать</label><div class="fw"><select id="mode"><option value="pick" selected>Подобрать C1 = C2 под CL кварца</option><option value="check">Проверить заданные C1 и C2</option></select></div></div><div class="f" id="f_f"><label for="f">Частота кварца F</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="8" placeholder=""><select id="f_unit" class="u" aria-label="Единицы: Частота кварца F"><option value="1000000.0" selected>МГц</option><option value="1000.0">кГц</option></select></div></div><div class="f" id="f_cl"><label for="cl">Нагрузочная ёмкость кварца CL по паспорту</label><div class="fw"><input id="cl" type="text" inputmode="decimal" autocomplete="off" value="18" placeholder=""><span class="u">пФ</span></div></div><div class="f" id="f_cs"><label for="cs">Паразитная ёмкость Cs: выводы МК и дорожки</label><div class="fw"><input id="cs" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">пФ</span></div><div class="hint">По ST AN2867 — ёмкость выводов OSC_IN, OSC_OUT и платы, которую видит кварц. ECS Inc. при отсутствии данных предлагает принимать около 5 пФ; точнее её находят по измеренной частоте</div></div><div class="f" id="f_ser"><label for="ser">Номинал конденсаторов</label><div class="fw"><select id="ser"><option value="e12" selected>Ближайший из ряда E12</option><option value="e24">Ближайший из ряда E24</option><option value="exact">Без округления</option></select></div></div><div class="f" id="f_c1"><label for="c1">Конденсатор C1 — на входе генератора, OSC_IN</label><div class="fw"><input id="c1" type="text" inputmode="decimal" autocomplete="off" value="22" placeholder=""><span class="u">пФ</span></div></div><div class="f" id="f_c2"><label for="c2">Конденсатор C2 — на выходе генератора, OSC_OUT</label><div class="fw"><input id="c2" type="text" inputmode="decimal" autocomplete="off" value="22" placeholder=""><span class="u">пФ</span></div></div><div class="f" id="f_tol"><label for="tol">Допуск конденсаторов ±</label><div class="fw"><input id="tol" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">%</span></div><div class="hint">По паспорту конденсаторов. Пусто — разброс не учитывается</div></div><div class="f" id="f_esr"><label for="esr">ESR кварца — наибольшее по паспорту</label><div class="fw"><input id="esr" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="esr_unit" class="u" aria-label="Единицы: ESR кварца — наибольшее по паспорту"><option value="1" selected>Ом</option><option value="1000.0">кОм</option></select></div><div class="hint">Пусто — запас по усилению не проверяется</div></div><div class="f" id="f_c0"><label for="c0">Шунтирующая ёмкость C0 по паспорту кварца</label><div class="fw"><input id="c0" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">пФ</span></div><div class="hint">Нужна для запаса по усилению и ухода частоты</div></div><div class="f" id="f_cm"><label for="cm">Динамическая ёмкость C1m (Cm) по паспорту кварца</label><div class="fw"><input id="cm" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="cm_unit" class="u" aria-label="Единицы: Динамическая ёмкость C1m (Cm) по паспорту кварца"><option value="0.001" selected>фФ</option><option value="1">пФ</option></select></div><div class="hint">Обычно в фемтофарадах; нужна для ухода частоты. Пусто — уход не оценивается</div></div><div class="f" id="f_gmt"><label for="gmt">Что указано в паспорте МК</label><div class="fw"><select id="gmt"><option value="gm" selected>Крутизна генератора gm</option><option value="gmc">Наибольшая критическая крутизна кварца Gm_crit_max</option></select></div></div><div class="f" id="f_gm"><label for="gm">Крутизна генератора gm — наименьшая по паспорту МК</label><div class="fw"><input id="gm" type="text" inputmode="decimal" autocomplete="off" value="25" placeholder=""><select id="gm_unit" class="u" aria-label="Единицы: Крутизна генератора gm — наименьшая по паспорту МК"><option value="0.001" selected>мА/В</option><option value="1e-06">мкА/В</option></select></div><div class="hint">Пример — STM32F103x8/xB: gm = 25 мА/В у генератора HSE 4–16 МГц (паспорт DS5319). Пусто — запас не проверяется</div></div><div class="f" id="f_gmc"><label for="gmc">Gm_crit_max по паспорту МК</label><div class="fw"><input id="gmc" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="gmc_unit" class="u" aria-label="Единицы: Gm_crit_max по паспорту МК"><option value="0.001" selected>мА/В</option><option value="1e-06">мкА/В</option></select></div><div class="hint">В новых паспортах STM32 вместо gm дают Gm_crit_max; по AN2867 Gm_crit_max = gm/5</div></div><div class="f" id="f_vpp"><label for="vpp">Измеренный размах на входе генератора (на C1) Vpp</label><div class="fw"><input id="vpp" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">В</span></div><div class="hint">Щупом с малой ёмкостью на собранной плате. Пусто — уровень возбуждения не оценивается</div></div><div class="f" id="f_cpr"><label for="cpr">Ёмкость щупа</label><div class="fw"><input id="cpr" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">пФ</span></div><div class="hint">По паспорту щупа; нужна вместе с размахом</div></div><div class="f" id="f_dl"><label for="dl">Наибольший уровень возбуждения по паспорту кварца</label><div class="fw"><input id="dl" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="dl_unit" class="u" aria-label="Единицы: Наибольший уровень возбуждения по паспорту кварца"><option value="1e-06" selected>мкВт</option><option value="0.001">мВт</option></select></div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>Конденсаторы кварца: как считается</h2>
+<div class="formula">CL = C1·C2/(C1 + C2) + Cs;&nbsp;&nbsp;подбор: C1 = C2 = 2·(CL − Cs)<br>Нагрузочный резонанс: f = fs·√(1 + C1m/(C0 + CL)),&nbsp;&nbsp;fs = 1/(2π√(Lm·C1m))<br>Уход частоты: Δf/f = √((1 + C1m/(C0 + CLсх)) / (1 + C1m/(C0 + CL))) − 1 ≈ C1m·(CL − CLсх) / (2·(C0 + CLсх)·(C0 + CL))<br>gmcrit = ω²·C1·C2·Rn,&nbsp;&nbsp;Rn = 2·ESR·S² / (X0² + √(X0⁴ − 4·ESR²·S²)),&nbsp;&nbsp;S = X + X0,&nbsp;&nbsp;X = (C1 + C2)/(ω·C1·C2),&nbsp;&nbsp;X0 = 1/(ω·(C0 + Cs))<br>При малом ESR: gmcrit ≈ ESR·ω²·(C0 + CL)²·(C1 + C2)²/(C1·C2), при C1 = C2 — 4·ESR·(2πF)²·(C0 + CL)² (ST AN2867);&nbsp;&nbsp;gm/gmcrit ≥ 5<br>DL = ESR·IQ²,&nbsp;&nbsp;IQ = 2πF·Ctot·Vpp/(2√2),&nbsp;&nbsp;Ctot = C1 + Cs/2 + Cщупа</div>
+<p><b>Нагрузочная ёмкость.</b> В генераторе Пирса микроконтроллера кварц стоит между выводами OSC_IN и OSC_OUT, а от каждого вывода на землю — конденсатор. Кварц видит их последовательно, плюс паразитную ёмкость выводов и дорожек: CL = C1·C2/(C1 + C2) + Cs — так её записывает ST в AN2867. Изготовитель кварца настраивает частоту при паспортной CL, поэтому конденсаторы подбирают под неё: при C1 = C2 = C последовательное соединение равно C/2, откуда C = 2·(CL − Cs), как в AN2867. Cs — сумма ёмкостей выводов и платы, которую видит кварц; ECS Inc. при отсутствии данных предлагает принимать около 5 пФ. Ёмкость вывода на землю добавляется к конденсатору у этого вывода, поэтому в Cs она входит не целиком: при двух выводах по a пФ и C1 = C2 = C получается (C + a)/2 = C/2 + a/2. Точнее всего Cs находят по измеренной частоте.</p>
+<p><b>Почему частота зависит от CL.</b> AN2867 описывает кварц эквивалентной схемой: последовательные Rm, Lm и динамическая ёмкость C1m (Cm) и параллельная им C0 — ёмкость электродов и корпуса. В генераторе кварц вместе с CL образует резонансный контур: реактивное сопротивление кварца равно 1/(ωCL). Если пренебречь Rm, сопротивление кварца — X<sub>m</sub>/(1 − ωC0·X<sub>m</sub>), где X<sub>m</sub> = ωLm − 1/(ωC1m). Приравниваем его к 1/(ωCL): ω·X<sub>m</sub>·(C0 + CL) = 1, откуда ω²·Lm = 1/C1m + 1/(C0 + CL) и f = fs·√(1 + C1m/(C0 + CL)). Эта формула воспроизводит пример AN2867: кварц 8 МГц с Rm = 8 Ом, Lm = 14,7 мГн, Cm = 0,027 пФ и C0 = 5,57 пФ даёт fs ≈ 7 988 764 Гц, антирезонанс 8 008 102 Гц и ровно 8 МГц при CL = 4,02 пФ. Отношение частот при фактической и паспортной CL и есть уход частоты; при малом C1m он близок к C1m·(CL − CLсх)/(2·(C0 + CLсх)·(C0 + CL)) — так его записывает Abracon, там же чувствительность 10⁶·C1m/(2·(C0 + CL)²) ppm на пикофарад. Больше CL — ниже частота.</p>
+<p><b>Запас по усилению.</b> Генератор запускается, если крутизна gm его усилителя больше критической — той, при которой отрицательное сопротивление усилителя с конденсаторами только компенсирует потери кварца. AN2867 считает её как gmcrit = 4·ESR·(2πF)²·(C0 + CL)² и рекомендует запас gm/gmcrit не меньше 5: при меньшем генерация может запуститься, но надёжный запуск не гарантирован. В новых паспортах STM32 вместо gm дают Gm_crit_max = gm/5 — тогда gmcrit кварца должна быть меньше неё. Откуда эта формула и где её границы, видно из уравнения генератора с тремя реактивными элементами (правила Кирхгофа для узлов OSC_IN и OSC_OUT): gm·Z1·Z2 + Z1 + Z2 + Z3 = 0, где Z1 = 1/(jωC1), Z2 = 1/(jωC2), Z3 — кварц. Отсюда Z3 = Rn + jX: усилитель с конденсаторами для кварца — отрицательное сопротивление −Rn, Rn = gm/(ω²·C1·C2), последовательно с ёмкостью C1·C2/(C1 + C2), X = 1/(ω·C1·C2/(C1 + C2)). Параллельно динамической ветви кварца стоит C0 вместе с паразитной Cs, X0 = 1/(ω·(C0 + Cs)); пересчёт через неё даёт для ветви активное сопротивление Rn·X0²/(Rn² + (X + X0)²). Генерация начинается, когда оно равно ESR, — это квадратное уравнение относительно Rn, его меньший корень — в рамке. У уравнения есть и больший корень: при крутизне выше него отрицательное сопротивление, пересчитанное через C0, снова меньше ESR — у обычных микроконтроллеров крутизна намного ниже, но калькулятор проверяет и это. Решения нет вовсе, если ESR больше X0²/(2·(X + X0)): тогда в этой модели генератор не запустится при любой крутизне. Ограниченность отрицательного сопротивления генератора Пирса и связь критической крутизны с C0 разбирают Vittoz и соавторы (IEEE JSSC, 1988). Если ESR мал и Rn² в знаменателе можно отбросить, получается gmcrit ≈ ESR·ω²·(C0 + CL)²·(C1 + C2)²/(C1·C2) — при C1 = C2 это в точности формула AN2867, а при разных конденсаторах значение больше. Точное значение всегда не меньше приближённого; при обычных кварцах разница — около процента, при большом ESR, большой C0 и высокой частоте — заметно больше, поэтому калькулятор показывает оба и считает запас по точному. Наибольший ESR и наименьшая gm из паспортов дают наихудший случай; при заданном допуске конденсаторов gmcrit ищется наибольшая по сетке всей области допуска.</p>
+<p><b>Уровень возбуждения.</b> Мощность, рассеиваемая в кварце, DL = ESR·IQ², не должна превышать паспортную, иначе кварц может разрушиться (AN2867). Ток IQ измеряют токовым пробником или вычисляют по размаху на входе генератора: ток кварца втекает в ёмкость узла OSC_IN, а это C1, половина паразитной ёмкости и ёмкость щупа — Ctot = C1 + Cs/2 + Cщупа по AN2867. Для синуса действующее напряжение Vpp/(2√2), поэтому IQ = 2πF·Ctot·Vpp/(2√2). С наибольшим ESR это оценка сверху. Если DL больше допустимого, AN2867 ставит резистор RExt на выходе генератора.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="rezonans-lc.html">Резонансная частота LC-контура</a> — та же формула 1/(2π√(LC)), что у последовательной ветви кварца, но у кварца добротность в тысячи раз выше. Последовательное соединение C1 и C2 в общем виде считает <a href="soedinenie-kondensatorov.html">калькулятор соединения конденсаторов</a>. Как погрешность кварца в ppm переходит в частоту таймера, UART или ШИМ, показывает <a href="delitel-chastoty.html">калькулятор делителя частоты</a>.</p>
+<h2>Конденсаторы кварца: пример расчёта</h2>
+<p>Кварц 8 МГц с паспортной CL = 18 пФ, паразитная ёмкость 5 пФ. Нужно C1 = C2 = 2·(18 − 5) = <b>26 пФ</b>; ближайший номинал E12 — 27 пФ, и CL в схеме 27/2 + 5 = 18,5 пФ — на 0,5 пФ больше паспортной. Если в паспорте кварца C0 = 7 пФ и C1m = 20 фФ (значения условные — берите из паспорта своего кварца), частота уйдёт на −7,837 ppm, то есть на 62,7 Гц вниз; чувствительность — около −15,4 ppm на пикофарад, поэтому ошибка в оценке Cs на 2 пФ даёт уже около 31 ppm.</p>
+<p>При ESR кварца не больше 80 Ом (условно) критическая крутизна по формуле AN2867 — 4·80·(2π·8 МГц)²·(25,5 пФ)² = 525,7 мкА/В, без приближения малого ESR — <b>530,2 мкА/В</b>, на 0,84 % больше. У STM32F103 gm = 25 мА/В — запас 47,15, больше 5 по AN2867. Если поставить C1 = 22 и C2 = 33 пФ, CL в схеме 18,2 пФ, множитель (C1 + C2)²/(C1·C2) = 4,167 вместо 4 у равных конденсаторов, и критическая крутизна — 539,5 мкА/В.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему не поставить просто два конденсатора по CL?</h3><p>Кварц видит конденсаторы последовательно — вдвое меньшую ёмкость, — плюс паразитную ёмкость выводов и дорожек. Поэтому каждый берут около 2·(CL − Cs): для CL = 18 пФ и Cs = 5 пФ это 26 пФ, а не 18.</p><h3>Что будет, если ёмкость не совпадёт с паспортной?</h3><p>Кварц всё равно будет генерировать, но на другой частоте: больше CL — ниже частота. Уход зависит от динамической ёмкости C1m и C0 кварца и обычно составляет единицы–десятки ppm на пикофарад. Для часов и интерфейсов это может быть заметно, поэтому частоту проверяют измерением.</p><h3>Что означает запас по усилению 5?</h3><p>Это рекомендация ST в AN2867: крутизна генератора gm должна быть не меньше чем в пять раз больше критической gmcrit кварца. При меньшем запасе генератор может запуститься на столе, но не запуститься при другой температуре, напряжении или с другим экземпляром кварца.</p><h3>Можно ли ставить разные C1 и C2?</h3><p>Можно: нагрузочная ёмкость считается по той же формуле последовательного соединения. Но критическая крутизна при разных конденсаторах больше, чем при равных, — в (C1 + C2)²/(4·C1·C2) раза; калькулятор это учитывает.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.st.com/resource/en/application_note/an2867-guidelines-for-oscillator-design-on-stm8afals-and-stm32-mcusmpus-stmicroelectronics.pdf" rel="nofollow noopener" target="_blank">AN2867. Guidelines for oscillator design on STM8AF/AL/S and STM32 MCUs/MPUs</a> — STMicroelectronics — Редакция Rev 24, февраль 2026 (по выдаче; положения сверены по выдаче для редакций Rev 10–24, сам PDF в окружении не открывается — сайт закрыт сетевой политикой) — раздел CL = CL1·CL2/(CL1 + CL2) + Cs; Cs — ёмкость выводов OSC_IN, OSC_OUT и платы, CL1 = CL2 = 2·(CL − Cs), эквивалентная схема Rm, Lm, Cm, C0; пример 8 МГц: Rm = 8 Ом, Lm = 14,7 мГн, Cm = 0,027 пФ, C0 = 5,57 пФ, Fs = 7 988 768 Гц, Fa = 8 008 102 Гц, ровно 8 МГц при CL = 4,02 пФ, gmcrit = 4·ESR·(2πF)²·(C0 + CL)²; запас gm/gmcrit не меньше 5; Gm_crit_max = gm/5, gmcrit должна быть меньше Gm_crit_max, DL = ESR·IQ²; Ctot = CL1 + Cs/2 + Cprobe; при превышении DL — резистор RExt, номера разделов в выдаче не видны — обращение 04.10.2026</li><li><a href="https://www.st.com/resource/en/datasheet/stm32f103c8.pdf" rel="nofollow noopener" target="_blank">STM32F103x8, STM32F103xB. Datasheet</a> — STMicroelectronics — Редакция DS5319 Rev 20, июль 2025 (по выдаче); значения видны в выдаче двумя поисками — раздел генератор HSE 4–16 МГц: крутизна gm = 25 мА/В при запуске, RF = 200 кОм — обращение 04.10.2026</li><li><a href="https://ecsxtal.com/store/pdf/quar_des.pdf" rel="nofollow noopener" target="_blank">Quartz Crystal Design Parameters</a> — ECS Inc. International — Редакция технический документ на дату обращения; положение видно в выдаче двумя поисками — раздел CL = (CL1·CL2)/(CL1 + CL2) + Cstray; как правило большого пальца Cstray можно принять равной 5,0 пФ — обращение 04.10.2026</li><li><a href="https://abracon.com/Support/appendix-a.pdf" rel="nofollow noopener" target="_blank">Appendix A — All Application Notes (quartz crystal glossary)</a> — Abracon — Редакция на дату обращения; формулы видны в выдаче двумя поисками, только для сравнения — раздел ΔF/Fs = C1/(2·(C0 + CL)) — сдвиг от последовательного резонанса, чувствительность TS = 10⁶·C1/(2·(C0 + CL)²) ppm/пФ, уход между двумя CL: C1·10⁶·(CL2 − CL1)/(2·(C0 + CL2)·(C0 + CL1)) — обращение 04.10.2026</li><li><a href="https://www.scienceopen.com/document?vid=872569e9-9dee-4eb5-bf24-f68122a0b275" rel="nofollow noopener" target="_blank">High-performance crystal oscillator circuits: theory and application</a> — E. A. Vittoz, M. G. R. Degrauwe, S. Bitz; IEEE Journal of Solid-State Circuits — Редакция т. 23, № 3, с. 774–783, 1988; библиография и аннотация видны в выдаче, формулы — нет — раздел общая теория генераторов с тремя точками: уход частоты, критическая крутизна, время запуска в аналитическом виде; на странице критическая крутизна выведена заново — обращение 04.10.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/15-3-rlc-series-circuits-with-ac" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 15.3 RLC Series Circuits with AC — реактивные сопротивления XL = ωL, XC = 1/(ωC) — обращение 04.10.2026</li><li><a href="https://standards.iteh.ai/catalog/standards/iec/035f4de6-fd23-4060-a1a6-593d18977956/iec-60063-2015" rel="nofollow noopener" target="_blank">IEC 60063:2015. Preferred number series for resistors and capacitors</a> — IEC — Редакция Edition 3.0, 2015-03; ряды видны в выдаче — раздел ряды E12 и E24 номиналов конденсаторов — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Генератор Пирса с кварцем между выводами МК и конденсаторами C1, C2 на землю; паразитная ёмкость Cs — параллельно кварцу, как в формуле AN2867.</li><li>Кварц — эквивалентная схема Rm, Lm, C1m, C0; уход частоты — по нагрузочному резонансу без учёта Rm.</li><li>Критическая крутизна — точное решение линейной модели генератора с тремя реактивными элементами на частоте F, без нелинейности усилителя; наихудший случай — наибольший ESR и наименьшая gm из паспортов, наибольшая gmcrit по области допуска конденсаторов.</li><li>Уровень возбуждения — по синусоидальному размаху на входе генератора и наибольшему ESR.</li></ul><p><b>Границы применимости:</b></p><ul><li>Паразитная ёмкость Cs задаётся оценкой — фактическую частоту проверяют измерением.</li><li>Температурный уход, старение и допуск самого кварца не рассчитываются — их учитывает калькулятор делителя частоты по ppm из паспорта.</li><li>Обертонные кварцы, генераторы с внешним усилителем и кварцевые генераторы в корпусе не рассматриваются.</li><li>Уровень возбуждения требует измерения на собранной плате; по одному расчёту он не проверяется.</li><li>Критическая крутизна считается на частоте F. У самой границы, где решения нет, собственная частота контура заметно отличается от F, и результат приближённый — в проверенном случае на 2 % меньше расчёта на собственной частоте.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="delitel-chastoty.html">Делитель частоты и таймер микроконтроллера</a></li><li><a href="soedinenie-kondensatorov.html">Параллельное и последовательное соединение конденсаторов</a></li><li><a href="rezonans-lc.html">Резонансная частота LC-контура</a></li><li><a href="reaktivnoe-soprotivlenie.html">Реактивное сопротивление конденсатора и катушки</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function sg(x){return x>0?'+':'';}
+
+var E12=[10,12,15,18,22,27,33,39,47,56,68,82],E24=[10,11,12,13,15,16,18,20,22,24,27,30,33,36,39,43,47,51,56,62,68,75,82,91];
+// Ближайший номинал ряда — перебором всех значений от 1 пФ до 9,1 нФ; при равном удалении — больший.
+function near(x,R){var b=NaN,bd=Infinity;for(var k=0;k<4;k++)for(var i=0;i<R.length;i++){var v=R[i]*Math.pow(10,k)/10,d=Math.abs(v-x);
+ if(d<bd-x*1e-9||(Math.abs(d-bd)<=x*1e-9&&v>b)){b=v;bd=d;}}return b;}
+function sync(){var p=S('mode')==='pick',g=S('gmt')==='gm';hideF('ser',!p);hideF('c1',p);hideF('c2',p);hideF('gm',!g);hideF('gmc',g);}
+function init(){$('mode').addEventListener('change',sync);$('gmt').addEventListener('change',sync);sync();}
+function calc(){
+var pick=S('mode')==='pick',gmm=S('gmt')==='gm',sv=S('ser'),gn=gmm?'gm':'Gm_crit_max';
+var f=P('f'),cl=P('cl'),cs=P('cs');
+if([f,cl,cs].some(isNaN))return err('Заполните числами частоту кварца, нагрузочную ёмкость CL и паразитную ёмкость Cs.');
+if(f<1e3||f>2e8)return err('Частота кварца — от 1 кГц до 200 МГц.');
+if(cl<=0||cl>100)return err('Нагрузочная ёмкость CL — больше 0 и не больше 100 пФ.');
+if(cs<0||cs>=100)return err('Паразитная ёмкость Cs — от 0 до 100 пФ (не включая 100).');
+var c1,c2,cx=NaN;
+if(pick){
+ if(!lt(cs,cl))return err('Паразитная ёмкость Cs = '+fmt(cs)+' пФ не меньше нагрузочной CL = '+fmt(cl)+' пФ: внешними конденсаторами такую CL не набрать. Нужен кварц с большей CL или меньшая паразитная ёмкость.');
+ cx=2*(cl-cs);
+ if(cx<1)return err('Нужная ёмкость 2·(CL − Cs) = '+fmt(cx)+' пФ меньше 1 пФ — она сравнима с разбросом самой паразитной ёмкости. Нужен кварц с большей CL.');
+ c1=c2=sv==='exact'?cx:near(cx,sv==='e24'?E24:E12);}
+else{c1=P('c1');c2=P('c2');
+ if(isNaN(c1)||isNaN(c2))return err('Введите ёмкости C1 и C2 числами в пикофарадах.');
+ if(c1<=0||c2<=0||c1>1000||c2>1000)return err('C1 и C2 — больше 0 и не больше 1000 пФ.');}
+var tol=OPT('tol'),esr=OPT('esr'),c0=OPT('c0'),cm=OPT('cm'),g=OPT(gmm?'gm':'gmc'),vpp=OPT('vpp'),cpr=OPT('cpr'),dlm=OPT('dl');
+if(tol!==null){if(isNaN(tol))return err('Допуск — число в процентах. Если его нет, оставьте поле пустым.');if(tol<0||tol>=50)return err('Допуск конденсаторов — от 0 до 50 % (не включая 50).');}
+if(esr!==null){if(isNaN(esr))return err('ESR — число. Если его нет в паспорте, оставьте поле пустым.');if(esr<=0)return err('ESR должно быть больше нуля.');}
+if(c0!==null){if(isNaN(c0))return err('C0 — число в пикофарадах. Если её нет в паспорте, оставьте поле пустым.');if(c0<=0||c0>100)return err('C0 — больше 0 и не больше 100 пФ.');}
+if(cm!==null){if(isNaN(cm))return err('C1m — число. Если её нет в паспорте, оставьте поле пустым.');if(cm<=0)return err('C1m должна быть больше нуля.');
+ if(c0!==null&&!(cm<c0))return err('Динамическая ёмкость C1m не меньше C0 — проверьте единицы: C1m дают в фемтофарадах, 1 фФ = 0,001 пФ.');}
+if(g!==null){if(isNaN(g))return err(gn+' — число. Если его нет в паспорте, оставьте поле пустым.');if(g<=0)return err(gn+' должна быть больше нуля.');}
+if(cpr!==null){if(isNaN(cpr))return err('Ёмкость щупа — число в пикофарадах.');if(cpr<0||cpr>100)return err('Ёмкость щупа — от 0 до 100 пФ.');}
+if(vpp!==null){if(isNaN(vpp))return err('Размах Vpp — число в вольтах. Если измерения нет, оставьте поле пустым.');if(vpp<=0||vpp>10)return err('Размах Vpp — больше 0 и не больше 10 В.');
+ if(cpr===null)return err('Для оценки уровня возбуждения по размаху введите ёмкость щупа: при измерении она нагружает вход генератора, и AN2867 включает её в Ctot.');}
+if(dlm!==null){if(isNaN(dlm))return err('Наибольший уровень возбуждения — число. Если его нет в паспорте, оставьте поле пустым.');if(dlm<=0)return err('Наибольший уровень возбуждения должен быть больше нуля.');}
+var t=tol===null?0:tol/100,w=2*Math.PI*f;
+function clf(a,b){return a*b/(a+b)+cs;}
+var ca=clf(c1,c2),dcl=ca-cl,clo=clf(c1*(1-t),c2*(1-t)),chi=clf(c1*(1+t),c2*(1+t)),hp=c0!==null&&cm!==null,ok=esr!==null&&c0!==null;
+// Уход частоты — точная формула нагрузочного резонанса эквивалентной схемы: f = fs·√(1 + C1m/(C0 + CL)).
+function pul(x){return (Math.sqrt((1+cm/(c0+x))/(1+cm/(c0+cl)))-1)*1e6;}
+// Критическая крутизна. Уравнение генератора gm·Z1·Z2 + Z1 + Z2 + Z3 = 0 даёт для кварца Z3 = Rn + jX, Rn = gm/(ω²·C1·C2),
+// X = 1/(ω·C'), C' = C1·C2/(C1 + C2). Динамическая ветвь параллельно C0 + Cs (X0) видит активное Rn·X0²/(Rn² + (X + X0)²);
+// генерация начинается, когда оно равно ESR. Корень без вычитания близких чисел: Rn = 2·ESR·S²/(X0² + √(X0⁴ − 4·ESR²·S²)),
+// S = X + X0; решения нет при ESR > X0²/(2·S). Без Rn² в знаменателе — ESR·ω²·(C0 + CL)²·(C1 + C2)²/(C1·C2), при C1 = C2 —
+// формула AN2867; точное значение всегда не меньше. С допуском — наибольшая по сетке 11×11 всей области допуска.
+// Второй корень — крутизна, выше которой отрицательное сопротивление снова меньше ESR.
+function gex(a,b){var A=a*1e-12,B=b*1e-12,X=(A+B)/(w*A*B),X0=1/(w*(c0+cs)*1e-12),S=X+X0,D=X0*X0*X0*X0-4*esr*esr*S*S;
+ return {g:D<0?Infinity:2*esr*S*S/(X0*X0+Math.sqrt(D))*w*w*A*B,gx:D<0?0:(X0*X0+Math.sqrt(D))/(2*esr)*w*w*A*B,rmax:X0*X0/(2*S)};}
+function gap(a,b){var L=clf(a,b);return esr*w*w*Math.pow((c0+L)*1e-12,2)*(a+b)*(a+b)/(a*b);}
+var ga=NaN,g0=NaN,gw=NaN,gxw=NaN,rmx=NaN,p0=NaN;
+if(ok){ga=gap(c1,c2);var e0=gex(c1,c2);g0=e0.g;gw=g0;gxw=e0.gx;rmx=e0.rmax;
+ if(t>0)for(var i=0;i<=10;i++)for(var j=0;j<=10;j++){var q=gex(c1*(1-t+0.2*t*i),c2*(1-t+0.2*t*j));if(q.g>gw)gw=q.g;if(q.gx<gxw)gxw=q.gx;if(q.rmax<rmx)rmx=q.rmax;}}
+var nos=ok&&!isFinite(gw);
+if(hp)p0=pul(ca);
+// Ток кварца втекает в ёмкость узла OSC_IN: IQ = ω·Ctot·Vrms, у синуса Vrms = Vpp/(2√2). C1 — на верхней границе допуска.
+var dl=NaN,iq=NaN,ct=NaN;
+if(vpp!==null&&esr!==null){ct=c1*(1+t)+cs/2+cpr;iq=w*ct*1e-12*vpp/(2*Math.SQRT2);dl=esr*iq*iq;}
+if(![ca,clo,chi].every(isFinite)||(ok&&!isFinite(ga))||(hp&&!isFinite(p0)))return err('Значения вне диапазона надёжного расчёта.');
+var h='';
+if(pick)h+=row('Нужная ёмкость C1 = C2 = 2·(CL − Cs)',fmt(cx)+' пФ')+row(sv==='exact'?'Принять без округления':'Ближайший номинал ряда '+(sv==='e24'?'E24':'E12'),fmt(c1)+' пФ');
+else h+=row('Последовательное соединение C1·C2 / (C1 + C2)',fmt(c1*c2/(c1+c2))+' пФ');
+h+=row('Нагрузочная ёмкость в схеме CL = C1·C2/(C1 + C2) + Cs',fmt(ca)+' пФ — '+(!gt(ca,cl)&&!lt(ca,cl)?'равна паспортной':(dcl>0?'на '+fmt(dcl)+' пФ больше':'на '+fmt(-dcl)+' пФ меньше')+' паспортной '+fmt(cl)+' пФ'));
+if(t>0)h+=row('CL с учётом допуска ±'+fmt(tol)+' %','от '+fmt(clo)+' до '+fmt(chi)+' пФ');
+if(hp){h+=row('Уход частоты из-за разницы CL: √((1 + C1m/(C0 + CLсх)) / (1 + C1m/(C0 + CL))) − 1',(p0===0?'0 ppm':sg(p0)+fmt(p0)+' ppm ('+sg(p0)+si(f*p0*1e-6,'Гц')+')'));
+ if(t>0){var pa=pul(chi),pb=pul(clo);h+=row('Уход частоты с учётом допуска','от '+sg(pa)+fmt(pa)+' до '+sg(pb)+fmt(pb)+' ppm');}
+ h+=row('Чувствительность к CL ≈ −C1m / (2·(C0 + CL)²)',fmt(-cm/(2*(c0+ca)*(c0+ca))*1e6)+' ppm на 1 пФ');}
+else h+=row('Уход частоты из-за разницы CL','не оценён — нужны C0 и C1m из паспорта кварца');
+if(ok){h+=row(c1===c2?'Критическая крутизна по AN2867: 4·ESR·(2πF)²·(C0 + CL)²':'Критическая крутизна по AN2867 для C1 ≠ C2: ESR·(2πF)²·(C0 + CL)²·(C1 + C2)²/(C1·C2)',si(ga,'А/В'));
+ h+=row('gmcrit той же модели без приближения малого ESR',isFinite(g0)?si(g0,'А/В')+(g0>ga*1.0005?' — на '+fmt(100*(g0/ga-1),2)+' % больше':''):'решения нет: ESR больше X0²/(2·(X + X0)) = '+si(rmx,'Ом'));
+ if(t>0)h+=row('Наибольшая gmcrit в области допуска ±'+fmt(tol)+' %',isFinite(gw)?si(gw,'А/В'):'решения нет в части области: ESR больше '+si(rmx,'Ом'));
+ if(nos)h+=row('Генерация в линейной модели','невозможна при любой крутизне — ESR кварца больше '+si(rmx,'Ом'));
+ else{h+=row('Наибольшая крутизна в той же модели — второй корень'+(t>0?', наименьший в области допуска':''),gmm&&g!==null?sx(gxw,g,'А/В'):si(gxw,'А/В'));
+  if(g===null)h+=row(gmm?'Запас по усилению gm / gmcrit':'Сравнение с Gm_crit_max','не проверен — '+gn+' не задана');
+  else if(gmm)h+=row('Запас по усилению gm / gmcrit'+(t>0?' при наибольшей gmcrit':''),fx(g/gw,5)+(lt(g/gw,5)?' — меньше 5':' — не меньше 5'));
+  else h+=row('gmcrit'+(t>0?' (наибольшая)':'')+' и Gm_crit_max из паспорта МК',sx(gw,g,'А/В')+(gt(gw,g)?' > ':' ≤ ')+sx(g,gw,'А/В')+' — запас 5·Gm_crit_max/gmcrit = '+fmt(5*g/gw));}}
+else h+=row('Критическая крутизна gmcrit','не оценена — нужны ESR и C0 кварца');
+if(vpp!==null){if(esr===null)h+=row('Уровень возбуждения DL = ESR·IQ²','не оценён — нужен ESR кварца');
+ else h+=row('Ток кварца IQ = 2πF·Ctot·Vpp/(2√2), Ctot = C1 + Cs/2 + Cщупа',si(iq,'А')+' при Ctot = '+fmt(ct)+' пФ'+(t>0?' (C1 на верхней границе допуска)':''))+
+  row('Уровень возбуждения DL = ESR·IQ²',dlm===null?si(dl,'Вт')+' — наибольший по паспорту кварца не задан':sx(dl,dlm,'Вт')+(gt(dl,dlm)?' > ':' ≤ ')+sx(dlm,dl,'Вт')+' по паспорту');}
+else h+=row('Уровень возбуждения','не оценён — нужен размах, измеренный на входе генератора');
+var risk=[],why=[],nm=[];
+if(nos)risk.push((isFinite(g0)?'при ёмкостях на краю допуска ESR кварца может оказаться больше '+si(rmx,'Ом'):'ESR кварца больше '+si(rmx,'Ом'))+' — в линейной модели генератора Пирса генерация тогда невозможна при любой крутизне: нужен кварц с меньшим ESR или меньшие C0 и паразитная ёмкость');
+else if(ok&&g!==null){if(gmm&&gt(g,gxw))risk.push('крутизна gm = '+sx(g,gxw,'А/В')+' больше наибольшей '+sx(gxw,g,'А/В')+' для этой схемы: в линейной модели отрицательное сопротивление при такой крутизне снова меньше ESR — уточните по руководству изготовителя МК или уменьшите C0 и паразитную ёмкость');
+ if(gmm&&lt(g/gw,5))risk.push('запас по усилению gm/gmcrit = '+fx(g/gw,5)+' меньше 5 — ST AN2867 рекомендует не меньше 5: генерация может запуститься, но надёжный запуск не гарантирован');
+ if(!gmm&&gt(gw,g))risk.push('критическая крутизна кварца '+sx(gw,g,'А/В')+' больше Gm_crit_max '+sx(g,gw,'А/В')+' из паспорта МК — по AN2867 она должна быть меньше');}
+if(isFinite(dl)&&dlm!==null&&gt(dl,dlm))risk.push('уровень возбуждения '+sx(dl,dlm,'Вт')+' больше допустимого '+sx(dlm,dl,'Вт')+' по паспорту кварца — оценка по наибольшему ESR; AN2867 в таком случае ставит резистор RExt на выходе генератора');
+if(esr===null)nm.push('ESR');if(c0===null)nm.push('C0');if(g===null)nm.push(gn);
+if(nm.length)why.push('запас по усилению не проверен — не заданы '+nm.join(', '));
+if(isFinite(dl)&&dlm===null)why.push('уровень возбуждения не с чем сравнить — нужен наибольший по паспорту кварца');
+var st;
+if(risk.length)st='Риск: '+risk.join('; ');
+else if(why.length)st='Недостаточно данных: '+why.join('; ');
+else st='Оценка: CL в схеме '+fmt(ca)+' пФ'+(hp?', уход частоты '+(p0===0?'0':sg(p0)+fmt(p0))+' ppm':'')+', '+(gmm?'запас по усилению gm/gmcrit = '+fx(g/gw,5)+' — не меньше 5, рекомендованных ST AN2867':'gmcrit не больше Gm_crit_max из паспорта МК, запас 5·Gm_crit_max/gmcrit = '+fmt(5*g/gw))+(isFinite(dl)?', уровень возбуждения не больше паспортного':'; уровень возбуждения не проверен — его оценивают по размаху, измеренному на плате');
+var n='Модель — эквивалентная схема кварца из AN2867: последовательные Rm, Lm, C1m и параллельная им C0. Паразитная ёмкость Cs известна приближённо и сама сдвигает частоту'+(hp?' — каждый пикофарад ошибки даёт около '+fmt(Math.abs(cm/(2*(c0+ca)*(c0+ca))*1e6))+' ppm':'')+'; фактическую частоту проверяют измерением. Щуп на выводах кварца сам добавляет ёмкость и сдвигает частоту. ';
+n+='Запас по усилению считается по критической крутизне без приближения малого ESR — она не меньше формулы AN2867 — и по наибольшему ESR кварца и наименьшей крутизне МК из паспортов: это наихудший случай; температура и напряжение питания меняют обе величины. ';
+if(c1!==c2)n+='При C1 ≠ C2 критическая крутизна больше, чем по формуле AN2867 для равных конденсаторов, в (C1 + C2)²/(4·C1·C2) = '+fmt((c1+c2)*(c1+c2)/(4*c1*c2))+' раза. ';
+n+='Уровень возбуждения оценивают по размаху, измеренному на собранной плате, с наибольшим ESR — это оценка сверху.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

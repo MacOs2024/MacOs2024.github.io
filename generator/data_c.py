@@ -45,7 +45,7 @@ faqs=[
  ("Можно ли по Xc считать ток как по закону Ома?",
   "Да: I = U/Xc для чистой ёмкости. Если в цепи есть и активное сопротивление, они складываются геометрически: Z = √(R² + X²) — и уже Z подставляется в закон Ома."),
 ],
-related=["rezonans-lc", "rc-filtr", "energiya-kondensatora"],
+related=["rezonans-lc", "rc-filtr", "energiya-kondensatora", "kvarc-kondensatory"],
 ),
 
 # ─── 19. Резонанс LC ─────────────────────────────────────────────────────────
@@ -121,7 +121,7 @@ faqs=[
  ("Почему на границе фильтр «режет» так плавно?",
   "Один RC-каскад даёт спад лишь 6 дБ/октаву — это физика первого порядка. Круче: несколько каскадов, LC-фильтры или активные фильтры на операционных усилителях."),
 ],
-related=["rezonans-lc", "zaryad-kondensatora", "reaktivnoe-soprotivlenie", "snabber-rc"],
+related=["rezonans-lc", "zaryad-kondensatora", "reaktivnoe-soprotivlenie", "snabber-rc", "rc-cep-impuls"],
 ),
 
 # ─── 21. Заряд конденсатора ──────────────────────────────────────────────────

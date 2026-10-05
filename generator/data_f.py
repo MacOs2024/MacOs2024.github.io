@@ -55,7 +55,7 @@ faqs=[
  ("Складывается ли ток утечки?",
   "При параллельном соединении токи утечки складываются, при последовательном определяются худшим конденсатором — именно он и задаёт распределение напряжения."),
 ],
-related=["soedinenie-rezistorov","energiya-kondensatora","zaryad-kondensatora","raschet-superkondensatora"],
+related=["soedinenie-rezistorov","energiya-kondensatora","zaryad-kondensatora","raschet-superkondensatora","kvarc-kondensatory"],
 ),
 
 dict(
@@ -407,7 +407,7 @@ faqs=[
  ("Почему угол отрицательный?",
   "Отрицательный φ означает преобладание ёмкости: ток опережает напряжение. Положительный угол соответствует индуктивной цепи, где ток отстаёт."),
 ],
-related=["reaktivnoe-soprotivlenie","rezonans-lc","power-factor-compensation"],
+related=["reaktivnoe-soprotivlenie","rezonans-lc","power-factor-compensation","blokirovochnyy-kondensator"],
 ),
 
 dict(
@@ -1364,7 +1364,7 @@ faqs=[
  ("Какую частоту выбрать для двигателя?",
   "8–20 кГц: ниже слышен писк на частоте коммутации, выше растут потери на переключение. Индуктивность обмотки при таких частотах сама сглаживает ток, и двигатель реагирует на среднее напряжение."),
 ],
-related=["ne555-astabilnyy","bazovyy-rezistor-tranzistora","rms-amplituda"],
+related=["ne555-astabilnyy","bazovyy-rezistor-tranzistora","rms-amplituda","delitel-chastoty"],
 ),
 
 dict(

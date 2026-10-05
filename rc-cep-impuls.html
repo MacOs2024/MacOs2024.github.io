@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Дифференцирующая и интегрирующая RC-цепь — ВольтКальк</title>
+<meta name="description" content="Реакция RC-цепи на прямоугольный импульс и меандр: дифференцирующая — выброс, спад e^(−t/τ), время спада до порога и длительность выходного импульса, выброс на спаде; интегрирующая — напряжение к концу импульса, отклонение от линейного нарастания, установившийся размах U·tanh(T/(4τ)) и среднее меандра; с учётом сопротивления источника и нагрузки.">
+<link rel="canonical" href="https://macos2024.github.io/rc-cep-impuls.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Дифференцирующая и интегрирующая RC-цепь — ВольтКальк">
+<meta property="og:description" content="Реакция RC-цепи на прямоугольный импульс и меандр: дифференцирующая — выброс, спад e^(−t/τ), время спада до порога и длительность выходного импульса, выброс на спаде; интегрирующая — напряжение к концу импульса, отклонение от линейного нарастания, установившийся размах U·tanh(T/(4τ)) и среднее меандра; с учётом сопротивления источника и нагрузки.">
+<meta property="og:url" content="https://macos2024.github.io/rc-cep-impuls.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Дифференцирующая и интегрирующая RC-цепь","url":"https://macos2024.github.io/rc-cep-impuls.html","description":"Реакция RC-цепи на прямоугольный импульс и меандр: дифференцирующая — выброс, спад e^(−t/τ), время спада до порога и длительность выходного импульса, выброс на спаде; интегрирующая — напряжение к концу импульса, отклонение от линейного нарастания, установившийся размах U·tanh(T/(4τ)) и среднее меандра; с учётом сопротивления источника и нагрузки.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Дифференцирующая и интегрирующая RC-цепь","item":"https://macos2024.github.io/rc-cep-impuls.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Чем дифференцирующая цепь отличается от RC-фильтра верхних частот?","acceptedAnswer":{"@type":"Answer","text":"Это одна и та же цепь: конденсатор последовательно, резистор на землю. RC-фильтр описывает её частотной характеристикой для синусоиды, а «дифференцирующая цепь» — реакцией на импульсы во времени: короткие выбросы на фронтах, если τ много меньше длительности импульса."}},{"@type":"Question","name":"Почему на спаде выход дифференцирующей цепи уходит в минус?","acceptedAnswer":{"@type":"Answer","text":"Напряжение на конденсаторе не может измениться скачком. К концу импульса конденсатор заряжен почти до U, и когда вход падает до нуля, выход падает на те же U — ниже нуля. Этот выброс нужно сверить с допустимым напряжением входа следующего каскада."}},{"@type":"Question","name":"Какую τ выбрать для интегрирующей цепи?","acceptedAnswer":{"@type":"Answer","text":"Чем больше τ по сравнению с длительностью импульса или периодом, тем ближе выход к идеальному интегралу, но тем он меньше. Калькулятор показывает отклонение от линейного нарастания: 1 % требует τ около 50·tи. Для фильтра помех τ выбирают так, чтобы полезный импульс успевал пройти порог, а помеха — нет."}},{"@type":"Question","name":"Зачем учитывать сопротивление источника и нагрузку?","acceptedAnswer":{"@type":"Answer","text":"Они входят в цепь заряда: сопротивление источника увеличивает τ дифференцирующей цепи и ослабляет выброс, а низкоомная нагрузка шунтирует резистор или конденсатор и уменьшает τ и амплитуду. Если вход следующего каскада сравним с R, результат заметно меняется."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Дифференцирующая и интегрирующая RC-цепь</h1>
+<p class="intro">RC-цепь, включённая конденсатором последовательно, укорачивает импульс до коротких выбросов на фронтах, а включённая резистором последовательно — сглаживает его. Калькулятор считает форму выходного сигнала по закону заряда конденсатора: выбросы, спад, время до порога, размах на меандре. Частоту среза той же цепи в частотной области даёт <a href="rc-filtr.html">калькулятор RC-фильтра</a>, время заряда до заданного процента — <a href="zaryad-kondensatora.html">калькулятор заряда конденсатора</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Дифференцирующая и интегрирующая RC-цепь</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_sch"><label for="sch">Схема</label><div class="fw"><select id="sch"><option value="diff" selected>Дифференцирующая: C последовательно, R на землю</option><option value="int">Интегрирующая: R последовательно, C на землю</option></select></div></div><div class="f" id="f_sig"><label for="sig">Входной сигнал</label><div class="fw"><select id="sig"><option value="imp" selected>Одиночный прямоугольный импульс</option><option value="sq">Меандр: импульс и пауза поровну</option></select></div></div><div class="f" id="f_u"><label for="u">Амплитуда импульса U — скачок от 0 до U</label><div class="fw"><input id="u" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><span class="u">В</span></div></div><div class="f" id="f_ti"><label for="ti">Длительность импульса tи</label><div class="fw"><input id="ti" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="ti_unit" class="u" aria-label="Единицы: Длительность импульса tи"><option value="1e-06" selected>мкс</option><option value="1e-09">нс</option><option value="0.001">мс</option><option value="1">с</option></select></div></div><div class="f" id="f_T"><label for="T">Период меандра T</label><div class="fw"><input id="T" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="T_unit" class="u" aria-label="Единицы: Период меандра T"><option value="1e-06" selected>мкс</option><option value="1e-09">нс</option><option value="0.001">мс</option><option value="1">с</option></select></div></div><div class="f" id="f_r"><label for="r">Сопротивление R</label><div class="fw"><input id="r" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="r_unit" class="u" aria-label="Единицы: Сопротивление R"><option value="1">Ом</option><option value="1000.0" selected>кОм</option><option value="1000000.0">МОм</option></select></div></div><div class="f" id="f_c"><label for="c">Ёмкость C</label><div class="fw"><input id="c" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="c_unit" class="u" aria-label="Единицы: Ёмкость C"><option value="1e-12" selected>пФ</option><option value="1e-09">нФ</option><option value="1e-06">мкФ</option></select></div></div><div class="f" id="f_up"><label for="up">Порог следующего каскада Uпор</label><div class="fw"><input id="up" type="text" inputmode="decimal" autocomplete="off" value="2,5" placeholder=""><span class="u">В</span></div><div class="hint">Порог переключения входа следующего каскада — по его паспорту; значение по умолчанию условное. Пусто — время спада до 10 % и 1 %</div></div><div class="f" id="f_rs"><label for="rs">Сопротивление источника Rи</label><div class="fw"><input id="rs" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="rs_unit" class="u" aria-label="Единицы: Сопротивление источника Rи"><option value="1" selected>Ом</option><option value="1000.0">кОм</option></select></div><div class="hint">Выходное сопротивление источника импульсов. Пусто — источник идеальный</div></div><div class="f" id="f_rl"><label for="rl">Сопротивление нагрузки Rн — вход следующего каскада</label><div class="fw"><input id="rl" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="rl_unit" class="u" aria-label="Единицы: Сопротивление нагрузки Rн — вход следующего каскада"><option value="1000.0" selected>кОм</option><option value="1000000.0">МОм</option><option value="1">Ом</option></select></div><div class="hint">Пусто — нагрузка не учитывается</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="article">
+<h2>RC-цепь при импульсах: как считается</h2>
+<div class="formula">Заряд через R: Uc(t) = U·(1 − e<sup>−t/τ</sup>),&nbsp;&nbsp;Ur(t) = U·e<sup>−t/τ</sup>,&nbsp;&nbsp;τ = R·C<br>Дифференцирующая, импульс: выброс U, к концу U·e<sup>−tи/τ</sup>, на спаде −U·(1 − e<sup>−tи/τ</sup>);&nbsp;&nbsp;до порога t = τ·ln(U/Uпор)<br>Интегрирующая, импульс: U·(1 − e<sup>−tи/τ</sup>);&nbsp;&nbsp;отклонение от линейного 1 − (1 − e<sup>−x</sup>)/x, x = tи/τ;&nbsp;&nbsp;до порога τ·ln(U/(U − Uпор))<br>Меандр, a = e<sup>−T/(2τ)</sup>: Umax = U/(1 + a),&nbsp;&nbsp;Umin = U·a/(1 + a),&nbsp;&nbsp;ΔU = U·tanh(T/(4τ)),&nbsp;&nbsp;среднее U/2<br>С источником и нагрузкой: дифференцирующая τ = (Rи + R∥Rн)·C, k = R∥Rн/(Rи + R∥Rн); интегрирующая τ = ((Rи + R)∥Rн)·C, k = Rн/(Rи + R + Rн)</div>
+<p><b>Закон заряда.</b> Если на последовательную RC-цепь подать скачок напряжения U, конденсатор заряжается по экспоненте: Uc = U·(1 − e<sup>−t/τ</sup>) с постоянной времени τ = R·C, а ток и напряжение на резисторе спадают как U·e<sup>−t/τ</sup> (OpenStax, 10.5). Из этих двух выражений получается всё остальное: в интегрирующей цепи выход снимают с конденсатора, в дифференцирующей — с резистора. Так их называют и в учебниках импульсной техники — RC-цепь верхних частот работает как дифференцирующая, нижних — как интегрирующая (Millman и Taub, глава «Linear wave shaping»).</p>
+<p><b>Дифференцирующая цепь.</b> На фронте импульса конденсатор не успевает зарядиться, и на резисторе — весь скачок U. Дальше выход спадает как U·e<sup>−t/τ</sup> и до порога Uпор опускается за t = τ·ln(U/Uпор). Если это меньше длительности импульса, импульс укорочен: на выходе остаётся короткий импульс длительностью τ·ln(U/Uпор). Если нет — к концу импульса выход ещё выше порога, и укорочения нет; для него нужно τ меньше tи/ln(U/Uпор). На спаде входа напряжение на конденсаторе снова не успевает измениться, и выход скачком уходит вниз на U, то есть до −U·(1 − e<sup>−tи/τ</sup>): отрицательный выброс тем ближе к −U, чем сильнее укорочен импульс. Его сравнивают с допустимым напряжением входа следующего каскада. Вместо условного «τ ≪ tи» калькулятор показывает остаток к концу импульса — e<sup>−tи/τ</sup>: при tи = 5τ это 0,67 % выброса.</p>
+<p><b>Интегрирующая цепь.</b> Выход нарастает как U·(1 − e<sup>−t/τ</sup>) и к концу импульса достигает U·(1 − e<sup>−tи/τ</sup>). Идеальный интегратор дал бы линейное нарастание U·t/τ; отклонение от него к концу импульса 1 − (1 − e<sup>−x</sup>)/x при x = tи/τ, при малом x это около x/2. Значит, отклонение 1 % требует τ около 50·tи — и вместо условного «τ ≫ tи» калькулятор показывает само отклонение. Порога выход такой цепи достигает с задержкой τ·ln(U/(U − Uпор)), а если импульс короче — не достигает вовсе: так RC-цепь отсекает короткие помехи. После импульса конденсатор разряжается по той же экспоненте, и выход над порогом держится ещё τ·ln(U1/Uпор).</p>
+<p><b>Меандр.</b> На периодическом сигнале с импульсом и паузой по T/2 напряжение на конденсаторе за импульс растёт от Umin к U, за паузу спадает от Umax к нулю. В установившемся режиме конец паузы совпадает с началом следующего импульса: Umax = U − (U − Umin)·a и Umin = Umax·a, где a = e<sup>−T/(2τ)</sup>. Отсюда Umax = U/(1 + a), Umin = U·a/(1 + a), а размах ΔU = U·(1 − a)/(1 + a) = U·tanh(T/(4τ)). Среднее — U/2, как у входа: средний ток конденсатора за период равен нулю. Для сравнения с треугольником идеального интегратора с размахом U·T/(4τ) калькулятор показывает отношение 1 − tanh(y)/y, y = T/(4τ). Выход дифференцирующей цепи — вход минус напряжение конденсатора: выбросы ±U/(1 + a) на фронтах, к концу полупериода U·a/(1 + a), спад вершины U·tanh(T/(4τ)). При τ ≪ T это короткие выбросы почти до ±U, при τ ≫ T — меандр с размахом U, сдвинутый к нулю, со спадом вершины около U·T/(4τ).</p>
+<p><b>Источник и нагрузка.</b> Сопротивление источника и вход следующего каскада меняют и постоянную времени, и амплитуду. По правилам Кирхгофа (OpenStax, 10.3) в дифференцирующей цепи ток контура идёт через Rи, C и R∥Rн, поэтому τ = (Rи + R∥Rн)·C, а выход — доля R∥Rн/(Rи + R∥Rн) от напряжения Uвх − Uc. В интегрирующей цепи со стороны конденсатора источник — U·Rн/(Rи + R + Rн) через сопротивление (Rи + R)∥Rн. Если поля пустые, источник идеальный, а нагрузки нет — калькулятор так и пишет.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="rc-filtr.html">RC-фильтр</a> описывает ту же цепь в частотной области — частоту среза 1/(2πRC) для синусоиды, а здесь — форму сигнала во времени для импульсов. Время заряда до заданного процента считает <a href="zaryad-kondensatora.html">калькулятор заряда конденсатора</a>, длительность импульса одновибратора на RC-цепи — <a href="ne555-monostabilnyy.html">калькулятор NE555 в моностабильном режиме</a>.</p>
+<h2>RC-цепь при импульсах: пример расчёта</h2>
+<p>Дифференцирующая цепь из R = 10 кОм и C = 100 пФ: τ = 1 мкс. Импульс 5 В длительностью 10 мкс (tи/τ = 10): на фронте выброс 5 В, к концу импульса он спадает до 227 мкВ — 0,00454 %. До порога следующего каскада 2,5 В (условно) выход опускается через τ·ln 2 = <b>693,1 нс</b>: импульс укорочен с 10 мкс до 0,69 мкс. На спаде выход уходит до −5 В — это проверяют по паспорту входа. Если нагрузить выход входом 10 кОм, R∥Rн = 5 кОм, τ = 0,5 мкс и укороченный импульс — 346,6 нс.</p>
+<p>Интегрирующая цепь 10 кОм, 10 нФ (τ = 100 мкс) и тот же импульс 10 мкс: к концу импульса 0,4758 В — 9,516 % от 5 В, отклонение от линейного нарастания 4,837 %. До порога 2,5 В нужно 69,31 мкс — импульс короче, и выход порога не достигнет: так отсекают короткие помехи. На меандре с периодом 100 мкс выход колеблется между 1,888 и 3,112 В — размах 5·tanh(0,25) = <b>1,225 В</b> вокруг среднего 2,5 В.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Чем дифференцирующая цепь отличается от RC-фильтра верхних частот?</h3><p>Это одна и та же цепь: конденсатор последовательно, резистор на землю. RC-фильтр описывает её частотной характеристикой для синусоиды, а «дифференцирующая цепь» — реакцией на импульсы во времени: короткие выбросы на фронтах, если τ много меньше длительности импульса.</p><h3>Почему на спаде выход дифференцирующей цепи уходит в минус?</h3><p>Напряжение на конденсаторе не может измениться скачком. К концу импульса конденсатор заряжен почти до U, и когда вход падает до нуля, выход падает на те же U — ниже нуля. Этот выброс нужно сверить с допустимым напряжением входа следующего каскада.</p><h3>Какую τ выбрать для интегрирующей цепи?</h3><p>Чем больше τ по сравнению с длительностью импульса или периодом, тем ближе выход к идеальному интегралу, но тем он меньше. Калькулятор показывает отклонение от линейного нарастания: 1 % требует τ около 50·tи. Для фильтра помех τ выбирают так, чтобы полезный импульс успевал пройти порог, а помеха — нет.</p><h3>Зачем учитывать сопротивление источника и нагрузку?</h3><p>Они входят в цепь заряда: сопротивление источника увеличивает τ дифференцирующей цепи и ослабляет выброс, а низкоомная нагрузка шунтирует резистор или конденсатор и уменьшает τ и амплитуду. Если вход следующего каскада сравним с R, результат заметно меняется.</p>
+</div>
+</section>
+<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-5-rc-circuits" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.5 RC Circuits — заряд U·(1 − e^(−t/τ)), τ = RC, ток и напряжение на резисторе U·e^(−t/τ), разряд по экспоненте, 10.3 Kirchhoff&#x27;s Rules — эквивалент с сопротивлением источника и нагрузкой — обращение 04.10.2026</li><li><a href="https://archive.org/details/pulse-and-digital-switching-waveforms-1965" rel="nofollow noopener" target="_blank">Pulse, Digital and Switching Waveforms</a> — J. Millman, H. Taub; McGraw-Hill — Редакция 1965; оглавление видно в выдаче двумя поисками, формулы — нет — раздел глава 2 «Linear Wave Shaping: RC, RL, and RLC Circuits» — RC-цепь верхних частот как дифференцирующая, нижних — как интегрирующая; формулы на странице выведены заново из закона заряда — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Вход — идеальный прямоугольный импульс от 0 до U или меандр с импульсом и паузой по T/2; фронт много короче τ.</li><li>R и C линейные; утечка конденсатора и ёмкость монтажа не учитываются.</li><li>Перед одиночным импульсом конденсатор разряжен; для меандра — установившийся режим.</li><li>Сопротивление источника и нагрузка — активные, учтены через эквивалентную схему; пустое поле — идеальный источник или отсутствие нагрузки.</li></ul><p><b>Границы применимости:</b></p><ul><li>Импульсы с другой скважностью, конечный фронт входа и пачки импульсов до установления не рассчитываются.</li><li>Входные защитные диоды следующего каскада, ограничивающие отрицательный выброс, не моделируются.</li><li>Порог — одно значение; гистерезис входа и разброс порога не учитываются.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="rc-filtr.html">RC-фильтр: частота среза</a></li><li><a href="zaryad-kondensatora.html">Время заряда конденсатора через резистор</a></li><li><a href="ne555-monostabilnyy.html">Таймер NE555 — моностабильный режим</a></li><li><a href="delitel-chastoty.html">Делитель частоты и таймер микроконтроллера</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function sg(x){return x>0?'+':'';}
+
+// Доля меньше 10⁻⁶ показывается словами: иначе вышли бы числа вроде 9,64·10⁻¹⁰ пВ.
+function pc(x){return x<1e-6?'меньше 0,0001 %':fmt(100*x)+' %';}
+function sync(){var q=S('sig')==='sq';hideF('ti',q);hideF('T',!q);}
+function init(){$('sig').addEventListener('change',sync);sync();}
+function calc(){
+var df=S('sch')==='diff',sq=S('sig')==='sq',u=P('u'),r=P('r'),c=P('c');
+if([u,r,c].some(isNaN))return err('Заполните числами амплитуду импульса, сопротивление и ёмкость.');
+if(u<=0||u>1000)return err('Амплитуда импульса — больше 0 и не больше 1000 В.');
+if(r<=0||c<=0)return err('Сопротивление и ёмкость должны быть больше нуля.');
+var ti=NaN,T=NaN;
+if(sq){T=P('T');if(isNaN(T))return err('Введите период меандра числом.');if(T<=0)return err('Период меандра должен быть больше нуля.');}
+else{ti=P('ti');if(isNaN(ti))return err('Введите длительность импульса числом.');if(ti<=0)return err('Длительность импульса должна быть больше нуля.');}
+var up=OPT('up'),rs=OPT('rs'),rl=OPT('rl');
+if(up!==null){if(isNaN(up))return err('Порог — число в вольтах. Если его нет, оставьте поле пустым.');if(up<=0)return err('Порог должен быть больше нуля.');}
+if(rs!==null){if(isNaN(rs))return err('Сопротивление источника — число. Если его нет, оставьте поле пустым.');if(rs<0)return err('Сопротивление источника не может быть отрицательным.');}
+if(rl!==null){if(isNaN(rl))return err('Сопротивление нагрузки — число. Если его нет, оставьте поле пустым.');if(rl<=0)return err('Сопротивление нагрузки должно быть больше нуля.');}
+// Эквивалент по правилам Кирхгофа. Дифференцирующая: ток контура через Rи, C и R∥Rн — τ = (Rи + R∥Rн)·C, выход = (Uвх − Uc)·R∥Rн/(Rи + R∥Rн).
+// Интегрирующая: со стороны C источник U·Rн/(Rи + R + Rн) через (Rи + R)∥Rн — τ = (Rи + R)∥Rн·C.
+var Rs=rs===null?0:rs,k,tau,lab;
+if(df){var Rp=rl===null?r:r*rl/(r+rl);k=Rp/(Rs+Rp);tau=(Rs+Rp)*c;lab=rs===null&&rl===null?'τ = R·C':'τ = (Rи + R∥Rн)·C';}
+else{var Ra=Rs+r;k=rl===null?1:rl/(Ra+rl);tau=(rl===null?Ra:Ra*rl/(Ra+rl))*c;lab=rs===null&&rl===null?'τ = R·C':'τ = ((Rи + R)∥Rн)·C';}
+var U=k*u,ku=k<1?'k·U':'U',h=row('Постоянная времени '+lab,si(tau,'с'));
+if(k<1)h+=row(df?'Амплитуда на выходе: k = R∥Rн/(Rи + R∥Rн)':'Установившееся напряжение: k = Rн/(Rи + R + Rн)',si(U,'В')+' — k = '+fmt(k));
+if(!isFinite(tau)||!(tau>0))return err('Значения вне диапазона надёжного расчёта.');
+var st,nt='',L1=Math.LN10,thr=up!==null;
+if(!sq){
+ var x=ti/tau,e1=Math.exp(-x);h+=row('Отношение tи/τ',fmt(x));
+ if(df){var rem=U*e1,neg=U*(1-e1);
+  h+=row('Выброс на фронте',si(U,'В'))+row('К концу импульса U·e^(−tи/τ)',e1<1e-6?pc(e1)+' выброса':si(rem,'В')+' — '+pc(e1)+' выброса')+row('Выброс на спаде −U·(1 − e^(−tи/τ))','−'+si(neg,'В'));
+  if(thr){if(!lt(up,U)){h+=row('Порог '+fmt(up)+' В','выход его не достигает: амплитуда '+si(U,'В'));st='Выход не достигает порога: амплитуда '+sx(U,up,'В')+' не выше порога '+sx(up,U,'В')+(k<1?' — делитель сопротивления источника и нагрузки ослабил импульс':'');}
+   else{var td=tau*Math.log(U/up);h+=row('Время спада до порога t = τ·ln(U/Uпор)',sx(td,ti,'с'));
+    if(lt(td,ti)){h+=row('Длительность выходного импульса выше порога',sx(td,ti,'с')+' вместо '+sx(ti,td,'с'));st='Оценка: импульс укорочен до '+sx(td,ti,'с')+' на уровне '+fmt(up)+' В (вход '+sx(ti,td,'с')+'); на спаде выброс −'+si(neg,'В');}
+    else{h+=row('Длительность выходного импульса выше порога',si(ti,'с')+' — весь входной импульс');st='Выходной импульс не укорочен: к концу входного импульса выход '+sx(rem,up,'В')+' ещё не ниже порога '+sx(up,rem,'В')+' — нужно τ меньше tи/ln(U/Uпор) = '+si(ti/Math.log(U/up),'с');}}}
+  else{h+=row('Спад до 10 % и 1 % выброса: τ·ln 10 и τ·ln 100',si(tau*L1,'с')+' и '+si(2*tau*L1,'с'));st='Оценка: к концу импульса выход спадает до '+pc(e1)+' выброса; на спаде выброс −'+si(neg,'В');}
+  nt='На спаде входа напряжение на конденсаторе не успевает измениться, и выход уходит ниже нуля на U·(1 − e^(−tи/τ)) — сверьте это с допустимым напряжением входа следующего каскада по его паспорту. ';}
+ else{var U1=U*(1-e1),dev=1-(1-e1)/x;
+  h+=row('Напряжение к концу импульса U·(1 − e^(−tи/τ))',si(U1,'В')+' — '+fmt(100*(1-e1))+' % от '+ku)+row('Отклонение от линейного нарастания 1 − (1 − e^(−x))/x, x = tи/τ',fmt(100*dev)+' %')+
+   row('После импульса спадает U1·e^(−t/τ): до 1 % — за τ·ln 100',si(2*tau*L1,'с'));
+  if(thr){if(!lt(up,U)){h+=row('Порог '+fmt(up)+' В','не достигается: установившееся напряжение '+si(U,'В')+' не выше порога');st='Порог не достигается: установившееся напряжение '+sx(U,up,'В')+' не выше порога '+sx(up,U,'В');}
+   else{var tq=tau*Math.log(U/(U-up));h+=row('Задержка до порога t = τ·ln(U/(U − Uпор))',sx(tq,ti,'с'));
+    if(!gt(tq,ti)){var tq2=ti+tau*Math.log(U1/up);h+=row('Выход выше порога','с '+sx(tq,tq2,'с')+' до '+sx(tq2,tq,'с')+' после фронта — '+si(tq2-tq,'с'));st='Оценка: к концу импульса '+sx(U1,up,'В')+' ('+fmt(100*(1-e1))+' % от '+ku+'), порог '+sx(up,U1,'В')+' достигнут через '+sx(tq,ti,'с')+'; отклонение от линейного нарастания '+fmt(100*dev)+' %';}
+    else{h+=row('Порог за время импульса','не достигается: нужно '+sx(tq,ti,'с')+', импульс '+sx(ti,tq,'с'));st='Оценка: за время импульса выход не достигнет порога '+sx(up,U1,'В')+' — к концу импульса только '+sx(U1,up,'В')+', а до порога нужно '+sx(tq,ti,'с')+' при импульсе '+sx(ti,tq,'с');}}}
+  else st='Оценка: к концу импульса '+si(U1,'В')+' ('+fmt(100*(1-e1))+' % от '+ku+'); отклонение от линейного нарастания '+fmt(100*dev)+' %';}}
+else{
+ var a=Math.exp(-T/(2*tau)),y=T/(4*tau),th=(1-a)/(1+a),vp=U/(1+a),vm=U*a/(1+a);
+ h+=row('Отношение T/τ',fmt(T/tau));
+ if(df){h+=row('Выброс на фронте U/(1 + e^(−T/(2τ)))',si(vp,'В'))+row('К концу полупериода U·e^(−T/(2τ))/(1 + e^(−T/(2τ)))',a<1e-6?pc(a/(1+a))+' от '+ku:si(vm,'В'))+
+   row('Спад вершины U·tanh(T/(4τ))',si(U*th,'В')+' — '+fmt(100*th)+' % от '+ku)+row('Выброс на спаде','−'+si(vp,'В'));
+  if(thr){if(!lt(up,vp)){h+=row('Порог '+fmt(up)+' В','выход его не достигает: выброс '+si(vp,'В'));st='Выход не достигает порога: выброс '+sx(vp,up,'В')+' не выше порога '+sx(up,vp,'В');}
+   else if(!gt(up,vm)){h+=row('Длительность выходного импульса выше порога',si(T/2,'с')+' — весь полупериод');st='Выходной импульс не укорочен: к концу полупериода выход '+sx(vm,up,'В')+' ещё не ниже порога '+sx(up,vm,'В')+' — цепь почти без искажений передаёт меандр, сдвинув его к нулю';}
+   else{var tm=tau*Math.log(vp/up);h+=row('Длительность выходного импульса выше порога τ·ln(Uвыбр/Uпор)',sx(tm,T/2,'с'));st='Оценка: выбросы ±'+si(vp,'В')+', выход выше порога '+sx(tm,T/2,'с')+' из '+sx(T/2,tm,'с')+'; спад вершины '+fmt(100*th)+' %';}}
+  else st='Оценка: выбросы ±'+si(vp,'В')+', к концу полупериода '+(a<1e-6?pc(a/(1+a))+' от '+ku:si(vm,'В'))+'; спад вершины '+fmt(100*th)+' % от '+ku;
+  nt='Выход меандра симметричен относительно нуля: постоянную составляющую конденсатор не пропускает. ';}
+ else{var dvt=1-th/y;
+  h+=row('Установившийся размах ΔU = U·tanh(T/(4τ))',si(U*th,'В'))+row('Наибольшее и наименьшее напряжение',si(vp,'В')+' и '+si(vm,'В'))+row('Среднее — половина '+ku,si(U/2,'В'))+
+   row('Отличие от треугольника 1 − tanh(y)/y, y = T/(4τ)',fmt(100*dvt)+' %')+row('Установление от включения — около 5τ',si(5*tau,'с'));
+  if(thr){if(!gt(up,vm)){h+=row('Порог '+fmt(up)+' В','выход всё время не ниже порога');st='Оценка: размах '+si(U*th,'В')+' вокруг '+si(U/2,'В')+' — выход всё время не ниже порога '+fmt(up)+' В, переключений нет';}
+   else if(!lt(up,vp)){h+=row('Порог '+fmt(up)+' В','выход всё время не выше порога');st='Оценка: размах '+si(U*th,'В')+' вокруг '+si(U/2,'В')+' — выход всё время не выше порога '+fmt(up)+' В, переключений нет';}
+   else{var t1=tau*Math.log((U-vm)/(U-up)),t2=tau*Math.log(vp/up);h+=row('Пересечение порога','через '+si(t1,'с')+' после фронта и через '+si(t2,'с')+' после спада');st='Оценка: размах '+si(U*th,'В')+' вокруг '+si(U/2,'В')+', порог '+fmt(up)+' В пересекается через '+si(t1,'с')+' после фронта и '+si(t2,'с')+' после спада';}}
+  else st='Оценка: размах '+si(U*th,'В')+' вокруг среднего '+si(U/2,'В')+'; отличие от треугольника '+fmt(100*dvt)+' %';
+  nt='Размах и среднее — установившиеся, после нескольких τ от включения. ';}}
+nt+=(rs===null&&rl===null?'Источник считается идеальным, нагрузка не учтена — их можно задать, и τ и амплитуда пересчитаются. ':'Сопротивление источника и нагрузка учтены через эквивалентную схему: они меняют и τ, и амплитуду. ')+'Импульс идеально прямоугольный: фронт входа короче τ; R и C линейные, утечка и ёмкость монтажа не учитываются.';
+out(h+row('Статус',st)+note(nt));
+}
+
+</script>
+</body>
+</html>
