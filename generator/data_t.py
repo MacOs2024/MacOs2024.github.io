@@ -423,7 +423,7 @@ faqs=[
  ("Зачем учитывать точность кварца?",
   "Выходная частота делителя пропорциональна тактовой: если кварц ушёл на 50 ppm, на те же 50 ppm уйдёт и выход. Погрешность деления и погрешность кварца складываются, и при узком допуске, например у интерфейсов связи, важна их сумма."),
 ],
-related=["kvarc-kondensatory", "ne555-astabilnyy", "shim-srednee-napryazhenie"],
+related=["kvarc-kondensatory", "ne555-astabilnyy", "shim-srednee-napryazhenie", "trigger-shmitta"],
 review_status="estimate",
 sources=[
  dict(title="RM0008. Reference manual: STM32F101xx, STM32F102xx, STM32F103xx, STM32F105xx and STM32F107xx advanced Arm-based 32-bit MCUs",
@@ -751,7 +751,7 @@ faqs=[
  ("Зачем учитывать сопротивление источника и нагрузку?",
   "Они входят в цепь заряда: сопротивление источника увеличивает τ дифференцирующей цепи и ослабляет выброс, а низкоомная нагрузка шунтирует резистор или конденсатор и уменьшает τ и амплитуду. Если вход следующего каскада сравним с R, результат заметно меняется."),
 ],
-related=["rc-filtr", "zaryad-kondensatora", "ne555-monostabilnyy", "delitel-chastoty"],
+related=["rc-filtr", "zaryad-kondensatora", "ne555-monostabilnyy", "delitel-chastoty", "trigger-shmitta"],
 review_status="estimate",
 sources=[
  dict(title="University Physics Volume 2",

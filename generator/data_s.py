@@ -717,7 +717,7 @@ faqs=[
  ("Можно ли собрать триггер Шмитта на ОУ?",
   "Можно, формулы те же, VOH и VOL — уровни выхода ОУ в насыщении из паспорта. Но ОУ не рассчитан на насыщение: из него он выходит медленно, и фронты получаются затянутыми. Для быстрых сигналов берут компаратор."),
 ],
-related=["ou-usilenie", "delitel-napryazheniya", "ne555-astabilnyy", "differencialnyy-usilitel", "tokovoe-zerkalo"],
+related=["ou-usilenie", "delitel-napryazheniya", "ne555-astabilnyy", "differencialnyy-usilitel", "rc-cep-impuls"],
 review_status="estimate",
 sources=[
  dict(OPENSTAX_KIRCHHOFF, sections=["10.3 Kirchhoff's Rules — правило узлов: из него на странице выведены пороги и высокий уровень открытого коллектора"]),
