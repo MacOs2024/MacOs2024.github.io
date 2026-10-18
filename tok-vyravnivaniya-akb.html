@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Ток выравнивания при параллельном подключении АКБ: как считается</h2>
 <div class="formula">I<sub>0</sub> = |U<sub>1</sub> − U<sub>2</sub>| / (R<sub>1</sub> + R<sub>2</sub> + R<sub>пер</sub>)<br>ΔU<sub>доп</sub> = min(I<sub>заряда</sub>, I<sub>разряда</sub>) · (R<sub>1</sub> + R<sub>2</sub> + R<sub>пер</sub>)</div>
@@ -163,7 +175,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему ток такой большой при разнице в доли вольта?</h3><p>Его ограничивают только внутренние сопротивления батарей и перемычки — миллиомы. 0,5 В на 52 мОм — уже почти 10 А, а у батарей с сопротивлением в единицы миллиом — десятки и сотни ампер.</p><h3>Как выровнять заряд до соединения?</h3><p>Довести обе батареи до одинакового напряжения покоя — например, зарядить каждую отдельно подходящим зарядным устройством — и только потом соединять, чтобы разница была не больше ΔUдоп, которую показывает калькулятор. На плюсовом выводе каждой батареи — свой предохранитель (Victron).</p><h3>Можно ли соединять параллельно разные батареи?</h3><p>Это решает изготовитель. Victron для батарей Lithium NG допускает в параллели разную ёмкость и возраст (одинаковые желательны), а одинаковые ёмкость и артикул требует внутри последовательной цепочки. Разные химия, ёмкость и возраст делят ток неравно и после выравнивания, поэтому для разных батарей калькулятор выдаёт «Недостаточно данных»: допустимость — по паспорту. Батареи разного номинального напряжения параллельно не соединяют.</p><h3>Почему результат — только оценка?</h3><p>Внутреннее сопротивление батареи зависит от заряда, температуры и длительности тока, а паспорт часто даёт его максимум. Ток после соединения спадает, и как быстро — калькулятор не считает. Надёжный вывод он делает только тогда, когда ток больше допустимого.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.1 Electromotive Force — ЭДС и внутреннее сопротивление, 10.3 Kirchhoff&#x27;s Rules — правило контуров — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/media/pg/Lithium_Battery_Smart/en/installation.html" rel="nofollow noopener" target="_blank">Lithium Smart Battery Manual — 4. Installation</a> — Victron Energy — Редакция rev 21 — 01/2026; положения видны в выдаче — раздел перед последовательным соединением каждую батарею заряжают отдельно; одну батарею или банк параллельных можно заряжать как одну, предохранитель на плюсовом выводе каждой батареи; кабели — по диагонали — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Lithium_NG_battery_51,2_V/173204-Lithium_NG_battery_manual-pdf-en.pdf" rel="nofollow noopener" target="_blank">Lithium NG 51,2V battery manual</a> — Victron Energy — Редакция Rev 11 — 03/2026; видно в выдаче — раздел в параллели допускаются разные ёмкость и возраст, одинаковые желательны, внутри последовательной цепочки — одинаковые ёмкость и артикул — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/media/pg/The_Wiring_Unlimited_book/en/battery-bank-wiring.html" rel="nofollow noopener" target="_blank">Wiring Unlimited — 3. Battery bank wiring</a> — Victron Energy — Редакция онлайн-редакция книги на дату обращения; видно в выдаче — раздел одинаковый путь тока через каждую батарею, предохранители в каждой параллельной ветви — обращение 30.09.2026</li><li><a href="https://www.ti.com/lit/pdf/sluaar1" rel="nofollow noopener" target="_blank">LiFePO4 Design Considerations (SLUAAR1)</a> — Texas Instruments, Jacob Rook — Редакция редакция на дату обращения; фраза о форме кривой видна в пересказе выдачи — раздел пологая кривая напряжения покоя LiFePO₄ примерно на 10–85 % SoC — обращение 30.09.2026</li><li><a href="https://cdn.shopify.com/s/files/1/0585/7148/9429/files/1100700112_12V_100AH.pdf?v=1737623752" rel="nofollow noopener" target="_blank">100AH 12.8V Lithium Battery Specification (1100700112)</a> — ECO-WORTHY — Редакция редакция на дату обращения; значения видны в выдаче, в другой версии паспорта — 12 мОм — раздел внутреннее сопротивление 25 мОм, ток заряда: рекомендуемый 50 А, наибольший 100 А; ток разряда 100 А — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Батарея — источник ЭДС, равной напряжению покоя, с постоянным внутренним сопротивлением.</li><li>Ток в первый момент после соединения наибольший; дальше он спадает.</li><li>Сопротивление перемычек, предохранителей и контактов задаётся одним числом.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не рассчитывает, как быстро спадает ток и сколько длится выравнивание.</li><li>Не моделирует ограничение тока и срабатывание BMS — только сравнивает ток с введёнными пределами.</li><li>Если сопротивления в паспорте заданы как «не более», фактический ток может быть больше расчётного.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="vnutrennee-soprotivlenie.html">Внутреннее сопротивление источника</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li><li><a href="tok-razryada-liion-sborki.html">Ток разряда Li-ion сборки: BMS и предохранитель</a></li><li><a href="balansirovka-yacheek-bms.html">Пассивная балансировка ячеек Li-ion</a></li></ul></section>
 </main>

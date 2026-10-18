@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Сечение PEN-проводника до разделения (TN-C, TN-C-S): как считается</h2>
 <div class="formula">S(PEN) ≥ max( S(PE по табл. 1.7.5);&nbsp;S(N);&nbsp;10 мм² Cu / 16 мм² Al )</div>
@@ -167,7 +179,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Можно ли сделать PEN тоньше фазы?</h3><p>Только при трёхфазной симметричной нагрузке и фазных сечениях больше 16 мм² по меди или 25 мм² по алюминию — и не меньше 50 % фазного. Это требование ПУЭ 7.1.45 к N, которому PEN тоже обязан соответствовать. Вдобавок ток в уменьшенном проводнике с учётом гармоник не должен превышать его допустимого тока (ГОСТ Р 50571.5.52-2011, п. 524.3): третья гармоника от светодиодного освещения, компьютеров и импульсных блоков питания складывается в нейтрали. При однофазных потребителях, нелинейной нагрузке или неизвестном составе нагрузки PEN не меньше фазного проводника.</p><h3>Почему в однофазной линии нельзя PEN?</h3><p>ПУЭ 1.7.132 не допускает совмещения функций PE и N в цепях однофазного и постоянного тока: нужен отдельный третий проводник. Исключение — ответвления от ВЛ напряжением до 1 кВ к однофазным потребителям.</p><h3>Что делать в точке разделения?</h3><p>По ПУЭ 1.7.135 предусматривают отдельные шины или зажимы PE и N, соединённые между собой, а PEN питающей линии подключают к шине PE. После точки разделения PE и N по ходу энергии объединять нельзя.</p><h3>Можно ли поставить выключатель в PEN?</h3><p>ПУЭ 1.7.145 не допускает коммутационных аппаратов в цепи PE и PEN, кроме питания через штепсельные соединители. Исключение — ввод в индивидуальные жилые, дачные и садовые дома и аналогичные объекты, питающиеся по однофазным ответвлениям от ВЛ: там допускается одновременно отключать все проводники, если PEN разделён на PE и N до вводного защитно-коммутационного аппарата.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://zandz.com/ru/pravila_zazemleniya/pue_razdel_17_3/" rel="nofollow noopener" target="_blank">ПУЭ, глава 1.7. Заземление и защитные меры электробезопасности, пп. 1.7.120–1.7.177</a> — Правила устройства электроустановок; текст по публикации ZandZ.com — Редакция 7-е издание — раздел 1.7.131, 1.7.132, 1.7.134, 1.7.135, 1.7.145 — обращение 27.09.2026</li><li><a href="https://www.consultant.ru/document/cons_doc_LAW_91542/ba3094f1e7e3fe127005268839f5ddec49d537c8/" rel="nofollow noopener" target="_blank">ПУЭ, глава 1.7 — наименьшие сечения защитных проводников</a> — Правила устройства электроустановок, 7-е издание — Редакция 7-е изд. — раздел 1.7.126, таблица 1.7.5 — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200001642" rel="nofollow noopener" target="_blank">ПУЭ. Глава 7.1. Электроустановки жилых, общественных, административных и бытовых зданий</a> — Минэнерго России / нормативная база Техэксперт — Редакция 7-е издание — раздел 7.1.45 — сечения N и PEN — обращение 27.09.2026</li><li><a href="https://webstore.iec.ch/en/publication/68865" rel="nofollow noopener" target="_blank">IEC 60364-5-54. Low-voltage electrical installations — Part 5-54: Earthing arrangements and protective conductors</a> — International Electrotechnical Commission (IEC) — Редакция Ed. 3.0 (2011) с изменением 1 (2021), консолидированная редакция — раздел 543.4.1 — PEN не менее 10 мм² Cu / 16 мм² Al по механическим причинам — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200092622" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.5.52-2011/МЭК 60364-5-52:2009. Электроустановки низковольтные. Часть 5-52. Выбор и монтаж электрооборудования. Электропроводки</a> — Росстандарт — Редакция утверждён приказом № 925-ст от 13.12.2011; на основе МЭК 60364-5-52:2009 — раздел 524.2 — сечение N равно фазному при доле третьей гармоники от 15 до 33 %, 524.3 — уменьшенный N только если ток в нём с учётом гармоник не превышает допустимого — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Фазные жилы и PEN из одного металла — меди или алюминия.</li><li>Сечение N определяется по ПУЭ 7.1.45; уменьшенный N выбирает пользователь, и он допустим только при трёхфазной симметричной нагрузке.</li><li>Результат округляется вверх до стандартного ряда сечений до 240 мм².</li></ul><p><b>Границы применимости:</b></p><ul><li>Не проверяет термическую стойкость PEN к току КЗ и сопротивление петли.</li><li>Токи высших гармоник в N и PEN не рассчитываются: уменьшенный N допустим только для симметричной нагрузки без заметных гармоник, и это подтверждает пользователь выбором варианта нагрузки.</li><li>Пункт 7.1.45 относится к жилым, общественным, административным и бытовым зданиям; для других установок сечение N определяют по применимым главам.</li><li>Ответвления от ВЛ до 1 кВ к однофазным потребителям не рассчитываются.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="sechenie-pe-provodnika.html">Сечение защитного проводника PE</a></li><li><a href="tok-kz-petlya-faza-pe.html">Ток КЗ фаза–PE по длине и сечению линии</a></li><li><a href="kolcevoy-zazemlitel.html">Кольцевой заземлитель вокруг здания</a></li><li><a href="summarnyy-tok-utechki-uzo.html">Суммарный ток утечки нескольких потребителей на одном УЗО</a></li><li><a href="obryv-pen.html">Обрыв нуля (PEN): перекос фаз и напряжение на корпусах</a></li></ul></section>
 </main>

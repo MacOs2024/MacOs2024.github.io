@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Пассивная балансировка ячеек Li-ion: как считается</h2>
 <div class="formula">ΔQ = ΔSoC · C&nbsp;&nbsp;&nbsp;I = U / (R<sub>рез</sub> + R<sub>ключа</sub>)&nbsp;&nbsp;&nbsp;t = ΔQ / (I · D)<br>P = U · I&nbsp;&nbsp;&nbsp;E = U · ΔQ<br>По напряжению (NMC, NCA): ΔSoC = ΔU / k, k — наклон кривой OCV–SoC из паспорта, мВ на 1 %</div>
@@ -162,7 +174,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему балансировка идёт так долго?</h3><p>Ток пассивной балансировки — десятки миллиампер: 150 мА·ч при 65 мА выравниваются за 2–3 часа непрерывной работы, а если BMS балансирует только в конце заряда, это несколько циклов. Разбаланс в ампер-часы выравнивается сотни часов — такой разброс говорит о подборе или износе ячеек, а не о нехватке балансировки.</p><h3>Можно ли узнать разбаланс по разнице напряжений?</h3><p>Только если напряжение покоя заметно меняется с зарядом и известен график OCV–SoC этой ячейки из паспорта: тогда ΔSoC ≈ ΔU / k, где k — наклон графика. Напряжения меряют после отдыха без тока. У LiFePO₄ кривая почти плоская на большей части диапазона, и милливольты не переводятся в ампер-часы — калькулятор выдаёт «Недостаточно данных».</p><h3>Почему не поставить резистор поменьше, чтобы ускорить?</h3><p>Мощность растёт как U²/R: при 4,2 В резистор 10 Ом рассеивает уже 1,76 Вт на ячейку. Тепло всех балансирующих ячеек выделяется на плате BMS, поэтому TI советует балансировать ячейки через одну. Предельный ток ключа и мощность резисторов берут из их паспортов.</p><h3>Куда девается энергия балансировки?</h3><p>В тепло: E = U·ΔQ. Пассивная балансировка не переносит заряд в слабые ячейки, поэтому время работы батареи не растёт. Перенос заряда делает активная балансировка — её калькулятор не считает.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.ti.com/lit/pdf/sluaa81" rel="nofollow noopener" target="_blank">Cell Balancing With BQ769x2 Battery Monitors (SLUAA81A)</a> — Texas Instruments, Matt Sunna — Редакция октябрь 2020, редакция A — февраль 2022; формула и пояснения видны в пересказе выдачи — раздел внутренняя балансировка: I = VCELL / (2 × Rn + RCB), RCB типовое 25 Ом, Rn не меньше 20 Ом — около 65 мА при 4,2 В, балансировка прерывается на время измерения ячейки и соседних; балансировать через одну, чтобы ограничить нагрев — обращение 30.09.2026</li><li><a href="https://www.ti.com/lit/pdf/slyt322" rel="nofollow noopener" target="_blank">Cell balancing buys extra run time and battery life (SLYT322)</a> — Texas Instruments, Sihua Wen, Analog Applications Journal — Редакция 1Q 2009; видно в выдаче — раздел пассивная балансировка — разряд ячейки через рассеивающую цепь («resistor bleeding») — обращение 30.09.2026</li><li><a href="https://www.analog.com/en/resources/technical-articles/passive-battery-cell-balancing.html" rel="nofollow noopener" target="_blank">Passive Battery Cell Balancing</a> — Analog Devices, технический материал — Редакция онлайн-статья на дату обращения; видна в выдаче — раздел SoC — отношение оставшегося заряда к ёмкости ячейки, ключ и резистор параллельно ячейке; энергия уходит в тепло, время работы не растёт — обращение 30.09.2026</li><li><a href="https://www.ti.com/lit/pdf/sluaar1" rel="nofollow noopener" target="_blank">LiFePO4 Design Considerations (SLUAAR1)</a> — Texas Instruments, Jacob Rook — Редакция редакция на дату обращения; фраза о форме кривой видна в пересказе выдачи — раздел Li-ion — почти линейная зависимость OCV от SoC; LiFePO₄ — пологий участок примерно 10–85 % SoC — обращение 30.09.2026</li><li><a href="https://www.ti.com/lit/slyt528" rel="nofollow noopener" target="_blank">Improved LiFePO4 cell balancing in battery-backup systems with an Impedance Track fuel gauge (SLYT528)</a> — Texas Instruments, Analog Applications Journal — Редакция 3Q 2013; видно в выдаче — раздел пологий профиль напряжения LiFePO₄ мешает точной оценке SoC для балансировки — обращение 30.09.2026</li><li><a href="https://www.batterydesign.net/cell-balance-and-end-of-life/" rel="nofollow noopener" target="_blank">Cell Balance and End of Life</a> — Battery Design (batterydesign.net), вторичный источник — Редакция онлайн-статья на дату обращения; пример виден в выдаче — раздел 3 мА/А·ч, ячейки 10 А·ч, разница 8 А·ч — ток 30 мА и около 267 ч — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Напряжение ячейки за время балансировки постоянно; ток — по закону Ома через резисторы и открытый ключ (так же в TI SLUAA81A).</li><li>Разбаланс — разность заряда самой заряженной и самой разряженной ячеек; разряжается через резистор самая заряженная.</li><li>Доля времени учитывает паузы BMS; пока ключ открыт, ток постоянен.</li><li>Разница напряжений переводится в SoC линейно, по наклону кривой OCV–SoC из паспорта, и только для NMC, NCA, LCO.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не моделирует алгоритм конкретной BMS: пороги начала балансировки, гистерезис, число одновременно балансируемых ячеек.</li><li>Не проверяет нагрев платы BMS и допустимую мощность резисторов и ключей — по их паспортам.</li><li>Разницу напряжений LiFePO₄ в разбаланс заряда не пересчитывает — «Недостаточно данных».</li><li>Активную балансировку (перенос заряда между ячейками) не считает.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="liion-charge-current.html">Ток зарядки Li-ion по C-rate</a></li><li><a href="tok-razryada-liion-sborki.html">Ток разряда Li-ion сборки: BMS и предохранитель</a></li><li><a href="tok-vyravnivaniya-akb.html">Ток выравнивания при параллельном подключении АКБ</a></li><li><a href="battery-charge-time.html">Время зарядки аккумулятора</a></li></ul></section>
 </main>

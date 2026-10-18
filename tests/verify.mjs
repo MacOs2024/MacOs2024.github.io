@@ -246,12 +246,12 @@ for (const file of htmlFiles) {
   check(Boolean(document.querySelector("h1")), `${file}: нет h1`);
   check(document.querySelector('link[rel=icon]')?.getAttribute("href") === "favicon.svg", `${file}: не подключён favicon.svg`);
   check(document.querySelector("footer")?.textContent.includes("справочный характер"), `${file}: нет обязательного дисклеймера`);
-  // Единственная разрешённая внешняя зависимость — счётчик Метрики.
+  // Разрешены Метрика и точный URL загрузчика РСЯ; расчёт не зависит от сети.
   // Всё остальное (CDN, шрифты, чужие трекеры) по-прежнему запрещено:
   // страница обязана считать и печатать без сети.
   const external = [...document.querySelectorAll("script[src],link[rel=stylesheet],img[src]")]
     .map(el => el.getAttribute("src") || el.getAttribute("href") || "");
-  const foreign = external.filter(src => !/^https:\/\/mc\.yandex\.ru\//.test(src));
+  const foreign = external.filter(src => !/^https:\/\/mc\.yandex\.ru\//.test(src) && src !== "https://yandex.ru/ads/system/context.js");
   check(foreign.length === 0, `${file}: найдена посторонняя внешняя зависимость: ${foreign.join(", ")}`);
   check(typeof dom.window.ym === "function", `${file}: счётчик Метрики не инициализирован`);
 

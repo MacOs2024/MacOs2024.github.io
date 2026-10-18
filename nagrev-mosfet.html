@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Нагрев MOSFET: как считается</h2>
 <div class="formula">Rds(on)(Tj) = R25 · (1 + α/100)<sup>Tj − 25</sup>,&nbsp;&nbsp;(1 + α/100)<sup>T2 − 25</sup> = k2<br>Tj = Ta + Rθ · [Pпер + Iд² · Rds(on)(Tj)],&nbsp;&nbsp;Rθ = Rθjc + Rθcs + Rθsa или Rθja<br>Tj = Ta + Rθ·Pпер + u,&nbsp;&nbsp;u = A · e<sup>B·u</sup>,&nbsp;&nbsp;A = Rθ·Iд²·R25·e<sup>B·(Ta + Rθ·Pпер − 25)</sup>,&nbsp;&nbsp;B = ln(1 + α/100)<br>Устойчивое решение есть при A·B &lt; 1/e;&nbsp;&nbsp;G = Rθ·dP/dTj = B·u &lt; 1<br>Граница разгона: Iкр = √(1 / (e·B·Rθ·R25·e<sup>B·(Ta + Rθ·Pпер − 25)</sup>))</div>
@@ -163,7 +175,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему температура выше, чем при простом расчёте?</h3><p>Простой расчёт берёт Rds(on) при 25 °C. На деле при нагреве сопротивление растёт, растут потери проводимости и снова температура. Калькулятор находит точку, где эта цепочка устанавливается, — и она выше.</p><h3>Что значит «риск теплового разгона»?</h3><p>При заданном токе и тепловом сопротивлении потери с нагревом растут быстрее, чем радиатор отводит тепло, и устойчивой температуры по модели нет. Нужен больший радиатор, меньший ток или ключ с меньшим Rds(on). Калькулятор показывает и ток, при котором решение исчезает.</p><h3>Чем эта страница отличается от расчёта радиатора?</h3><p>На странице радиатора мощность задана, и подбирается тепловое сопротивление радиатора. Здесь радиатор задан, а мощность зависит от температуры через Rds(on), и рассчитывается сама температура кристалла.</p><h3>Где взять нормированный множитель Rds(on)?</h3><p>В паспорте ключа есть график Rds(on) или нормированного Rds(on) от температуры кристалла. Возьмите отношение значения при высокой температуре, например при 150 °C, к значению при 25 °C. Если в паспорте дан коэффициент α, множитель равен (1 + α/100) в степени (T2 − 25).</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.infineon.com/gated/infineon-70-41484-applicationnotes-en_f72138ac-8173-4b5c-8c8e-63dd1e039074" rel="nofollow noopener" target="_blank">MOSFET Power Losses Calculation Using the Data-Sheet Parameters</a> — Infineon Technologies, D. Graovac, M. Pürschel, A. Kiep — Редакция Application Note V1.1, июль 2006; формулы видны в выдаче — раздел RDSon(Tj) = RDSon,max(25 °C)·(1 + α/100)^(Tj − 25 °C); α — по двум точкам паспорта, PCM = RDSon·IDrms² — обращение 01.10.2026</li><li><a href="https://community.infineon.com/t5/Knowledge-Base-Articles/Introduction-to-the-MOSFET-temperature-coefficient-%CE%B1/ta-p/939093" rel="nofollow noopener" target="_blank">Introduction to the MOSFET temperature coefficient α</a> — Infineon Developer Community, Knowledge Base Article — Редакция онлайн-статья на дату обращения; формула видна в выдаче — раздел RDS(on) = RDS(on)@25 °C·[(1 + α/100)^(Tj − 25 °C)], без α в паспорте — по графику RDS(on) = f(Tj) или по двум температурам — обращение 01.10.2026</li><li><a href="https://www.onsemi.com/download/application-notes/pdf/and9016-d.pdf" rel="nofollow noopener" target="_blank">Heat Sink Selection Guide for Thermally Enhanced SO8-FL</a> — onsemi — Редакция AND9016/D, Rev. 1, February 2015 — раздел Heat Sink Basics: Tj − Ta = P·(Rθjc + Rθcs + Rθsa) — обращение 01.10.2026</li><li><a href="https://ww1.microchip.com/downloads/aemDocuments/documents/PSDS/ApplicationNotes/ApplicationNotes/APT0403.pdf" rel="nofollow noopener" target="_blank">Power MOSFET Tutorial (APT-0403)</a> — Microsemi (ныне Microchip) — Редакция Rev B, 2 марта 2006; положения видны в выдаче — раздел положительный температурный коэффициент Rds(on) усиливает потери I²R с ростом температуры — обращение 01.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Rds(on) растёт по экспоненте Infineon (1 + α/100)^(Tj − 25), α — по двум точкам графика паспорта.</li><li>Действующий ток через ключ задан и от температуры не зависит.</li><li>Потери переключения и прочие постоянны.</li><li>Установившийся режим, последовательная тепловая цепь Rθjc + Rθcs + Rθsa или Rθja.</li></ul><p><b>Границы применимости:</b></p><ul><li>Выше второй точки графика и ниже 25 °C модель Rds(on) продолжается за пределы паспортных данных.</li><li>Импульсный режим, переходное тепловое сопротивление Zθ и тепловая ёмкость не учитываются.</li><li>Разгон в линейном режиме из-за снижения порога с нагревом не рассматривается.</li><li>Изоляцию корпуса от радиатора, пути утечки и зазоры калькулятор не считает.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-radiatora.html">Расчёт радиатора для транзистора и микросхемы</a></li><li><a href="poteri-buck-preobrazovatelya.html">Потери и КПД понижающего преобразователя (buck)</a></li><li><a href="rezistor-zatvora-mosfet.html">Резистор затвора и драйвер MOSFET и IGBT</a></li><li><a href="linear-regulator-loss.html">Нагрев линейного стабилизатора</a></li></ul></section>
 </main>

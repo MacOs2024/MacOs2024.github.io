@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Падение и нагрев диодного моста: как считается</h2>
 <p>В мосте четыре диода, но одновременно проводят всегда два: один пропускает ток из «горячего» конца обмотки в плюс нагрузки, второй возвращает его из минуса во второй конец обмотки. В следующем полупериоде полярность меняется, и работу подхватывает другая пара — так обе полуволны становятся однополярными. Расплата — два прямых падения последовательно в цепи тока, а не одно.</p>
@@ -159,7 +171,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему мультиметр показывает другое напряжение?</h3><p>Показание зависит от нагрузки, ёмкости фильтра, просадки трансформатора и формы сигнала.</p><h3>Можно использовать типичное Vf?</h3><p>Для тепловой проверки лучше брать максимальное Vf из даташита при вашем токе и температуре.</p><h3>Почему мост греется сильнее, чем получилось по формуле?</h3><p>Чаще всего из-за формы тока. С конденсатором на выходе диоды открыты лишь малую часть периода и пропускают ток короткими импульсами, действующее значение которых в несколько раз больше среднего. Формула 2Vf·I считает только ту часть потерь, что пропорциональна среднему току; составляющая на собственном сопротивлении перехода растёт быстрее и в оценку не входит.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/8-3-energy-stored-in-a-capacitor" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 8.2 Capacitors in Series and in Parallel, 8.3 Energy Stored in a Capacitor — обращение 11.08.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/15-summary" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 15.2 Simple AC Circuits, 15.3 RLC Series Circuits with AC, 15.4 Power in an AC Circuit, 15.5 Resonance — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Упрощённая оценка идеализированного выпрямителя; не моделируются сопротивление источника, угол проводимости, ESR, восстановление диодов и пусковой ток.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="pulsacii-vypryamitelya.html">Пульсации выпрямителя с конденсатором</a></li><li><a href="linear-regulator-loss.html">Нагрев линейного стабилизатора</a></li><li><a href="reaktivnoe-soprotivlenie.html">Реактивное сопротивление конденсатора и катушки</a></li><li><a href="diody-vypryamitelya.html">Диоды выпрямителя с конденсаторным фильтром</a></li></ul></section>
 </main>

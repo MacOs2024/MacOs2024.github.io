@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Индивидуальная компенсация асинхронного двигателя: как считается</h2>
 <div class="formula">Qc ≤ 0,9 · √3 · U · I₀<br>P₁ = P / η&nbsp;&nbsp;&nbsp;Q₁ = P₁ · tg φ₁&nbsp;&nbsp;&nbsp;cos φ₂ = P₁ / √(P₁² + (Q₁ − Qc)²)<br>Ir,новая = Ir · cos φ₁ / cos φ₂</div>
@@ -160,7 +172,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Где взять ток холостого хода?</h3><p>Из паспорта или каталога двигателя, либо измерить: двигатель без нагрузки на валу при номинальном напряжении. Калькулятор проверяет только, что он меньше номинального тока.</p><h3>Почему нельзя компенсировать двигатель до cos φ = 1 конденсаторами у зажимов?</h3><p>Для этого нужна мощность, близкая к реактивной мощности при номинальной нагрузке, а она больше мощности холостого хода. Такая батарея после отключения возбудит вращающийся по инерции двигатель. Поэтому у зажимов ставят не больше 0,9·√3·U·I₀, остальное — на шинах.</p><h3>Зачем уменьшать уставку теплового реле?</h3><p>Реле стоит до точки подключения конденсаторов, и после компенсации через него идёт меньший ток — в отношении cos φ₁/cos φ₂. Если уставку не уменьшить, реле перестанет замечать перегрузку двигателя в этой доле.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Power_factor_correction_of_induction_motors" rel="nofollow noopener" target="_blank">Power factor correction of induction motors</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел Qc ≤ 0,9 × Io × Un × √3 — во избежание самовозбуждения, подключение к зажимам двигателя, уменьшение уставки защиты в отношении cos φ до / cos φ после компенсации — обращение 30.09.2026</li><li><a href="https://ru.electrical-installation.org/ruwiki/%D0%9A%D0%BE%D0%BC%D0%BF%D0%B5%D0%BD%D1%81%D0%B0%D1%86%D0%B8%D1%8F_%D1%80%D0%B5%D0%B0%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B9_%D0%BC%D0%BE%D1%89%D0%BD%D0%BE%D1%81%D1%82%D0%B8_%D0%B0%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D0%BD%D1%8B%D1%85_%D0%B4%D0%B2%D0%B8%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D0%B5%D0%B9" rel="nofollow noopener" target="_blank">Компенсация реактивной мощности асинхронных двигателей</a> — Schneider Electric, Руководство по устройству электроустановок (русская версия) — Редакция онлайн-редакция на дату обращения — раздел ограничение мощности конденсатора 90 % реактивной мощности двигателя без нагрузки — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Конденсаторы подключены к зажимам двигателя и коммутируются вместе с ним.</li><li>Реактивная мощность холостого хода принята равной √3·U·I₀: на холостом ходу ток почти целиком намагничивающий.</li><li>cos φ после компенсации — при номинальной нагрузке по паспортным P, η и cos φ.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не учитывает гармоники и резонанс с индуктивностью сети.</li><li>Не рассчитывает ёмкость конденсаторов — её по кВАр считает калькулятор компенсации реактивной мощности.</li><li>Для двигателей до 1000 В; не применяется к двигателям с частотным преобразователем.</li><li>Таблица предельных кВАр руководства Schneider Electric не используется.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="power-factor-compensation.html">Компенсация реактивной мощности</a></li><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li><li><a href="ustavka-teplovogo-rele.html">Уставка теплового реле двигателя и класс расцепления</a></li><li><a href="reaktivnoe-soprotivlenie.html">Реактивное сопротивление конденсатора и катушки</a></li></ul></section>
 </main>

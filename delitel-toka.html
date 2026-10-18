@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Делитель тока: как считается</h2>
 <div class="formula">I₁ = I · R₂/(R₁+R₂)&nbsp;&nbsp;&nbsp;I₂ = I · R₁/(R₁+R₂)</div>
@@ -159,7 +171,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему в формуле I₁ стоит R₂?</h3><p>Ток делится обратно пропорционально сопротивлению: чем больше соседнее R₂ относительно R₁, тем большая доля общего тока идёт через R₁.</p><h3>Можно применять к конденсаторам и катушкам?</h3><p>Для переменного тока используют комплексные импедансы, а не только активные сопротивления. Эта страница предназначена для резисторов в цепи постоянного тока.</p><h3>Почему измеренные токи разошлись с расчётом?</h3><p>Проверьте три вещи. Сопротивление проводов и контактов входит в свою ветвь и смещает деление; у резисторов есть допуск, а при нагреве номинал уходит ещё дальше. И главное: если схема питается от источника напряжения, то при изменении любого из сопротивлений меняется и сам общий ток — здесь же он задан как известная величина.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-2-resistors-in-series-and-parallel" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.2 Resistors in Series and Parallel, 10.3 Kirchhoff&#x27;s Rules — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Идеальные резисторы; измерительный прибор и подключённая нагрузка не должны заметно нагружать расчётную цепь.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="soedinenie-rezistorov.html">Параллельное и последовательное соединение резисторов</a></li><li><a href="delitel-napryazheniya.html">Делитель напряжения на резисторах</a></li><li><a href="shunt-ampermetra.html">Шунт для амперметра</a></li></ul></section>
 </main>

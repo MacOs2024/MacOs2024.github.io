@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Оценка просадки напряжения при пуске двигателя: как считается</h2>
 <div class="formula">Iпуск = Iном · k<br>ΔU₁ф = 2 · Iпуск · (R·cosφ + X·sinφ) · L<br>ΔU₃ф = √3 · Iпуск · (R·cosφ + X·sinφ) · L<br>Мпуск / Мпуск,полн = (Uост / Uном)²</div>
@@ -163,7 +175,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему нельзя ориентироваться только на рабочий ток?</h3><p>Потому что кабель, проходящий по нагреву и по падению в рабочем режиме, при шестикратном токе даёт вшестеро больший провал. Линия, где рабочее падение составляет приемлемые 3%, при пуске просядет на 18% — двигатель может не запуститься.</p><h3>Как уменьшить провал, не меняя кабель?</h3><p>Устройством плавного пуска или частотным преобразователем: они ограничивают пусковой ток до 2–3 номиналов, и провал уменьшается соответственно. Для мощных двигателей применяют пуск переключением звезда-треугольник — он снижает пусковой ток втрое.</p><h3>Считается ли сопротивление источника?</h3><p>Введите отдельно известный провал вышестоящей сети. Нулевое значение означает только то, что эта составляющая не задана, а не то, что трансформатор, ввод и источник имеют нулевой импеданс.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enw/index.php?title=Maximum_voltage_drop_limit&amp;oldid=29547" rel="nofollow noopener" target="_blank">Maximum voltage drop limit</a> — Schneider Electric Electrical Installation Guide — Редакция редакция 05.08.2026, oldid=29547 — раздел Circuits supplying motors, steady-state limits do not apply during starting — обращение 15.08.2026</li><li><a href="https://www.electrical-installation.org/enw/index.php?title=Calculation_of_voltage_drop_in_steady_load_conditions&amp;oldid=29653" rel="nofollow noopener" target="_blank">Calculation of voltage drop in steady load conditions</a> — Schneider Electric Electrical Installation Guide — Редакция редакция 05.08.2026, oldid=29653 — раздел Figure G29, Figure G30, Voltage drop during motor start-up, Example 1 — обращение 15.08.2026</li><li><a href="https://productinfo.se.com/nadigest/5cc35b7ed6593c0001ba8661/Supplemental%20Digest/SD17716_MAIN%20%28bookmap%29_0000066217.xml/%24/_SD17717018_Heading2_7" rel="nofollow noopener" target="_blank">Reduced Voltage Starting of Squirrel Cage Motors</a> — Schneider Electric / Square D — Редакция Digest Plus, Supplemental 16, редакция на дату обращения — раздел Description of All Types, torque proportional to voltage squared — обращение 15.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>R вычисляется по приближённым коэффициентам Schneider для медного или алюминиевого кабеля с XLPE-изоляцией; фактические данные кабеля имеют приоритет.</li><li>X и пусковой cos φ задаются пользователем; значения 0,08 Ом/км и 0,35 являются типовыми допущениями источника.</li><li>Провал вышестоящей сети учитывается только в объёме введённого пользователем значения; 0 В не доказывает его отсутствие.</li><li>Сравнение с пользовательским пределом не доказывает достаточность пускового момента.</li><li>При ΔU ≥ U числовой прогноз напряжения и момента блокируется как выход линейной модели за область применимости.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="padenie-napryazheniya.html">Падение напряжения в кабеле</a></li><li><a href="vnutrennee-soprotivlenie.html">Внутреннее сопротивление источника</a></li><li><a href="podbor-chastotnogo-preobrazovatelya.html">Подбор частотного преобразователя по току двигателя</a></li><li><a href="privedennyy-moment-inercii.html">Приведённый момент инерции через редуктор</a></li><li><a href="avtotransformatornyy-pusk.html">Пуск двигателя через автотрансформатор</a></li></ul></section>
 </main>

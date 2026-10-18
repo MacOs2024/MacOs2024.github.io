@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>NTC-термистор: как считается</h2>
 <div class="formula">R(T) = R₂₅ · exp[ B · (1/T − 1/T₂₅) ]&nbsp;&nbsp;&nbsp;T₂₅ = 298,15 K<br>Обратно: T = 1 / [ 1/T₂₅ + ln(R/R₂₅) / B ]</div>
@@ -164,7 +176,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Чем бета-уравнение отличается от уравнения Стейнхарта–Харта?</h3><p>Бета-уравнение использует R25 и нормированный для конкретной пары температур B. Уравнение Стейнхарта–Харта или таблица R/T производителя обычно точнее на широком диапазоне; границы точности берут из даташита конкретного термистора.</p><h3>Как подключить термистор к микроконтроллеру?</h3><p>Через делитель с постоянным резистором номиналом около R₂₅, среднюю точку — на вход АЦП. По измеренному напряжению вычисляют сопротивление термистора, а затем температуру по обратной формуле.</p><h3>Почему термистор самонагревается?</h3><p>Через него течёт измерительный ток, и выделяемая мощность подогревает сам датчик, завышая показания. Ток измерения выбирают минимальным, а в делителе стараются не опускаться ниже нескольких килоом; в импульсном режиме питание подают только на момент замера.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.vishay.com/docs/29053/ntcintro.pdf" rel="nofollow noopener" target="_blank">NTC Thermistors — General Technical Information</a> — Vishay — Редакция document 29053, current revision on access date — раздел beta value, R/T characteristic, self-heating — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>B должен быть взят из даташита вместе с его температурным интервалом; для широкого диапазона точнее таблица R/T или коэффициенты Стейнхарта–Харта.</li><li>Самонагрев от измерительного тока не моделируется.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="temperaturnyy-koefficient.html">Сопротивление проводника при нагреве</a></li><li><a href="delitel-napryazheniya.html">Делитель напряжения на резисторах</a></li><li><a href="raschet-radiatora.html">Расчёт радиатора для транзистора и микросхемы</a></li></ul></section>
 </main>

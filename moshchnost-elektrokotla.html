@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Мощность электрокотла по теплопотерям: как считается</h2>
 <div class="formula">P (кВт) = V · ΔT · k / 860</div>
@@ -165,7 +177,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему считают по объёму, а не по площади?</h3><p>Правило «100 Вт на квадратный метр» работает только при стандартных потолках 2,5–2,7 м. В доме с потолком 3,5 м объём на треть больше, и расчёт по площади занизит мощность. Объём учитывает это автоматически.</p><h3>Электрокотёл — это дорого?</h3><p>Дороже газа в разы, но дешевле в монтаже и не требует согласований. Основной способ снизить счета — двухтарифный счётчик с теплоаккумулятором: котёл греет воду ночью по низкому тарифу, а днём дом отапливается запасённым теплом.</p><h3>Хватит ли однофазного ввода?</h3><p>Это определяют выделенная договорная мощность, параметры существующей линии и условия присоединения. Сравните расчётный ток с проектом и техническими условиями; калькулятор не назначает число фаз и номинал защиты.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Power_and_reactive_energy" rel="nofollow noopener" target="_blank">Electrical Installation Guide</a> — Schneider Electric — Редакция онлайн-редакция, актуальная на дату обращения — раздел Power and reactive energy, three-phase circuits, motor current — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Коэффициенты теплопотерь/спроса вводятся пользователем и не заменяют расчёт ограждений или ведомость нагрузок.</li><li>Автомат и кабель по одной мощности не выбираются: нужны допустимый ток линии, ток КЗ, способ прокладки и условия защиты.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="ten-moshchnost-tok.html">Мощность и ток ТЭНа</a></li><li><a href="stoimost-elektroenergii.html">Расход и стоимость электроэнергии</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li></ul></section>
 </main>

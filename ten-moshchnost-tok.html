@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Мощность и ток ТЭНа: как считается</h2>
 <div class="formula">P = U · I = U² / R&nbsp;&nbsp;&nbsp;I = P / U&nbsp;&nbsp;&nbsp;R = U² / P</div>
@@ -157,7 +169,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Можно ли так считать трёхфазный ТЭН?</h3><p>Для симметричной трёхфазной сборки удобнее считать общую мощность: линейный ток I = P/(√3·U). Эта страница рассчитана на один резистивный элемент или однофазную нагрузку.</p><h3>Почему сопротивление холодного ТЭНа не совпадает с расчётом?</h3><p>Сопротивление сплава зависит от температуры, а паспортная мощность допускает отклонение. Также проверьте погрешность мультиметра и сопротивление щупов.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/9-introduction" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 9.3 Resistivity and Resistance, 9.4 Ohm&#x27;s Law, 9.5 Electrical Energy and Power — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Однофазный активный элемент; режим измеренного R относится к введённому сопротивлению, которое может заметно меняться с температурой.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="zakon-oma.html">Закон Ома: ток, напряжение, сопротивление, мощность</a></li><li><a href="tok-po-moshchnosti.html">Расчёт тока по мощности (220 В и 380 В)</a></li><li><a href="vremya-nagreva-vody.html">Время нагрева воды ТЭНом</a></li><li><a href="teplyy-pol.html">Расчёт электрического тёплого пола</a></li><li><a href="moshchnost-elektrokotla.html">Мощность электрокотла по теплопотерям</a></li></ul></section>
 </main>
