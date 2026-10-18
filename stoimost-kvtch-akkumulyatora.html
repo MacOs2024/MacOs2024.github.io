@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Стоимость кВт·ч аккумулятора: как считается</h2>
 <div class="formula">E = N<sub>ц</sub> · C · U · DoD,&nbsp;&nbsp;E<sub>заряда</sub> = E / η,&nbsp;&nbsp;N<sub>ц</sub> = min(N<sub>паспорт</sub>, T<sub>кал</sub> · n<sub>год</sub>)<br>Стоимость 1 кВт·ч = Цена / E,&nbsp;&nbsp;стоимость цикла = Цена / N<sub>ц</sub></div>
@@ -162,7 +174,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему не сравнить просто цену за ампер-час?</h3><p>Цена за ампер-час не учитывает, сколько раз аккумулятор можно разрядить и насколько глубоко. Свинцово-кислотный при глубине 50 % выдерживает сотни циклов, LiFePO₄ при 80 % — тысячи. Поэтому сравнивают цену энергии, которую аккумулятор отдаст за весь срок службы.</p><h3>Где взять число циклов?</h3><p>В паспорте аккумулятора: таблица или график «число циклов — глубина разряда». Берите значение для той глубины, с которой будете работать, и смотрите, до какой остаточной ёмкости производитель считает ресурс. Калькулятор паспортные кривые не интерполирует и типовые значения не подставляет.</p><h3>Почему при редких разрядах кВт·ч получается дорогим?</h3><p>Аккумулятор стареет и без циклов: в резервном питании он раньше выработает календарный срок, чем ресурс циклов. Энергии за жизнь он отдаёт мало, и цена делится на небольшое число киловатт-часов.</p><h3>Учтена ли стоимость зарядки?</h3><p>Нет. На каждый отданный кВт·ч в аккумулятор нужно зарядить 1/η кВт·ч — их стоимость по тарифу добавляется отдельно. Не учтены также снижение ёмкости к концу ресурса, саморазряд, обслуживание и дисконтирование, поэтому результат — оценка, а не полная приведённая стоимость хранения.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.cell.com/joule/fulltext/S2542-4351(18)30583-X" rel="nofollow noopener" target="_blank">Projecting the Future Levelized Cost of Electricity Storage Technologies</a> — O. Schmidt, S. Melchior, A. Hawkes, I. Staffell; журнал Joule (Cell Press), Imperial College London — Редакция Joule, т. 3, вып. 1, январь 2019; формула отданной энергии из раздела Experimental Procedures и правило срока работы видны в пересказе выдачи — раздел LCOS — затраты за срок службы, делённые на отданную энергию, отданная энергия: Cyc_pa·DoD·Cap_nom·η_RT·(1 − η_self) с деградацией и дисконтированием; калькулятор берёт паспортную ёмкость разряда — уже отданную энергию — и η к ней не применяет, срок работы — меньшее из календарного срока и ресурса циклов — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Datasheet-GEL-and-AGM-Batteries-EN.pdf" rel="nofollow noopener" target="_blank">Gel and AGM Batteries. Datasheet</a> — Victron Energy — Редакция редакция паспорта на дату обращения; значения видны в выдаче — раздел AGM: около 400 циклов при 80 % DoD, 600 при 50 %, 1500 при 30 %, расчётный срок службы AGM в буферном режиме 7–10 лет при 20 °C — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Datasheet-12,8-&amp;-25,6-Volt-lithium-iron-phosphate-batteries-Smart-EN.pdf" rel="nofollow noopener" target="_blank">12,8 &amp; 25,6 Volt Lithium-Iron-Phosphate Batteries Smart. Datasheet</a> — Victron Energy — Редакция редакция паспорта на дату обращения; значения видны в выдаче, календарный срок в паспорте не указан — раздел ресурс 2500 / 3000 / 5000 циклов при 80 / 70 / 50 % DoD, ёмкость ≥ 80 % номинальной, КПД цикла: LiFePO₄ — 92 %, средний свинцово-кислотный — 80 % — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Все затраты — цена аккумулятора; обслуживание, стоимость зарядной энергии и дисконтирование не учитываются.</li><li>Каждый цикл снимает C·U·DoD; ёмкость до конца ресурса не снижается.</li><li>Паспортная ёмкость — ёмкость разряда: отданная энергия C·U·DoD считается без КПД цикла, а КПД задаёт энергию на заряд E / η.</li><li>Срок работы — меньшее из паспортного ресурса циклов и календарного срока, умноженного на число циклов в год; без срока — только ресурс циклов.</li></ul><p><b>Границы применимости:</b></p><ul><li>Ресурс и календарный срок относятся к условиям паспорта: температуре, току и критерию конца срока службы.</li><li>Кривая «циклы — глубина разряда» не интерполируется, типовые значения не подставляются.</li><li>Снижение ёмкости к концу ресурса и саморазряд не учитываются — реально отданная энергия меньше E.</li><li>Сравнение корректно при одинаковом режиме — одном числе циклов в год и сопоставимой полезной энергии за цикл.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-akb-avtonomnoy.html">Ёмкость аккумуляторов для автономной системы</a></li><li><a href="vremya-raboty-ibp-peukert.html">Время работы ИБП от АКБ с учётом закона Пейкерта</a></li><li><a href="samorazryad-akkumulyatora.html">Саморазряд аккумулятора при хранении и срок подзаряда</a></li><li><a href="vremya-raboty-akkumulyatora.html">Время работы от аккумулятора</a></li><li><a href="stoimost-elektroenergii.html">Расход и стоимость электроэнергии</a></li></ul></section>
 </main>

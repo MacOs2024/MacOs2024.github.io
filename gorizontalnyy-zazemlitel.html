@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Горизонтальный заземлитель: как считается</h2>
 <div class="formula">R = ρ / (2π·L) · ln(L² / (d·t))&nbsp;&nbsp;&nbsp;полоса: d = 0,5·b, то есть R = ρ / (2π·L) · ln(2·L² / (b·t))</div>
@@ -168,7 +180,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Подходит ли формула для контура вокруг дома?</h3><p>Нет. Она для прямого проводника. Для замкнутого контура по периметру здания используют отдельную оценку кольцевого заземлителя: у кольца стороны влияют друг на друга иначе, чем участки прямой полосы.</p><h3>Почему калькулятор не считает короткую полосу?</h3><p>У проводника, длина которого сравнима с глубиной, формула перестаёт давать запас: при длине в полторы глубины она занижает сопротивление до 8 %. Поэтому калькулятор принимает только длину не меньше пяти глубин укладки — там формула по численной проверке завышает сопротивление на 3–9 %.</p><h3>Что выгоднее — шире полоса или длиннее?</h3><p>Длиннее. Сечение входит в формулу под логарифмом: удвоение ширины полосы снижает сопротивление примерно на 8 %, а удвоение длины — примерно в 1,7 раза.</p><h3>Можно ли сложить сопротивления полосы и стержней как параллельные?</h3><p>Простое параллельное сложение даёт заниженное сопротивление: поля растекания близко расположенных электродов перекрываются. Для комбинированного заземлителя нужен проектный расчёт или измерение.</p><h3>Зачем указывать, откуда взято ρ?</h3><p>Удельное сопротивление грунта меняется по сезонам. Значение, измеренное во влажный период или взятое из таблицы, не отражает худших условий, поэтому по нему калькулятор не сравнивает оценку с целью окончательно, а показывает, во сколько раз ρ может вырасти до цели. Если оценка выше цели уже при таком ρ, вывод от сезона не зависит.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.volt-spb.ru/calc/method/" rel="nofollow noopener" target="_blank">Методика расчёта заземления</a> — ООО «ВОЛЬТ-СПБ»; методика ссылается на «Справочник по проектированию электрических сетей и электрооборудования» под ред. Ю. Г. Барыбина (1991), табл. 7.9 — текст справочника не сверен — Редакция онлайн-страница на дату обращения — раздел горизонтальный электрод из круглой стали: 0,366·ρ/L·lg(L²/(d·t0)), из полосовой стали: 0,366·ρ/L·lg(2·L²/(b·t0)), условие: длина значительно больше глубины заложения — обращение 27.09.2026</li><li><a href="https://www.info-sys.ru/downloads/comm0005.pdf" rel="nofollow noopener" target="_blank">2. Расчёт заземлителей. Удельное сопротивление грунта</a> — Методический материал на сайте info-sys.ru — Редакция PDF на дату обращения — раздел для полосы эквивалентный диаметр равен b/2 — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Installation_and_measurements_of_earth_electrodes" rel="nofollow noopener" target="_blank">Installation and measurements of earth electrodes</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел сезонное изменение сопротивления в 1–3 раза на глубине около 1 м, промёрзший грунт повышает удельное сопротивление на порядки — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200108284" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.5.54-2013/МЭК 60364-5-54:2011. Электроустановки низковольтные. Часть 5-54. Заземляющие устройства, защитные проводники и защитные проводники уравнивания потенциалов</a> — Росстандарт — Редакция 2013, на основе МЭК 60364-5-54:2011 (в выдаче упомянута и редакция 2024 года) — раздел 542 — тип и глубина заложения заземлителя: высыхание и промерзание грунта не должны увеличивать сопротивление выше требуемого — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Грунт однородный; прямой проводник эквипотенциален и лежит горизонтально на глубине t.</li><li>Полоса заменяется круглым проводником диаметром d = 0,5·b; для реальной полосы толщиной 3–5 мм это даёт запас.</li><li>Область, проверенная численно: 0,3 ≤ t ≤ 2 м, 5·t ≤ L ≤ 100 м, 5 ≤ d ≤ 30 мм; в ней формула завышает R на 3,3–8,5 %.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не учитывает слоистость грунта, промерзание, высыхание и сопротивление соединений.</li><li>Не рассчитывает замкнутый контур, лучевые заземлители и совместную работу со стержнями.</li><li>Не определяет нормативно требуемое сопротивление: оно зависит от системы заземления и защитных устройств.</li><li>Результат не заменяет измерение готового заземлителя.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="kolcevoy-zazemlitel.html">Кольцевой заземлитель вокруг здания</a></li><li><a href="vertikalnyy-zazemlitel.html">Вертикальный заземлитель: стержень, труба, уголок</a></li><li><a href="zazemlenie-tt-uzo.html">Заземление в системе TT: условие RA·IΔn ≤ 50 В</a></li><li><a href="raschet-zazemleniya.html">Расчёт заземления: контур из вертикальных электродов</a></li></ul></section>
 </main>

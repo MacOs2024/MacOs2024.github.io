@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Автомат для электродвигателя: как считается</h2>
 <div class="formula">Iп = Kп · Iн&nbsp;&nbsp;&nbsp;Iбр = kа · Iп, kа = 1 или 2<br>Отстройка от мгновенного расцепления: Iбр ≤ k<sub>ниж</sub> · In, то есть In ≥ Iбр / k<sub>ниж</sub><br>B: k<sub>ниж</sub> = 3; C: 5; D: 10; K: 8 (по данным ABB)</div>
@@ -166,7 +178,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему нельзя просто взять автомат C с запасом по номиналу?</h3><p>Можно, если завышенный номинал по-прежнему защищает кабель (In ≤ Iz). Но пусковой ток сравнивается с нижней границей зоны мгновенного расцепления: для C это 5·In, и с учётом броска первого полупериода номинал приходится поднимать сильно — в примере до 24 А при двигателе 10 А. Тогда кабель придётся увеличивать, а перегрузку двигателя такой автомат уже не отследит.</p><h3>Что делать, если кривой изготовителя нет?</h3><p>Калькулятор выдаёт «Недостаточно данных»: стандарт не нормирует время отключения теплового расцепителя между испытательными точками. Кривую берут из каталога конкретной серии. Практичнее выбрать автомат защиты двигателя с регулируемым тепловым расцепителем и классом расцепления: его время отключения при 7,2-кратном токе уставки задано классом.</p><h3>Почему бросок считают вдвое больше пускового тока?</h3><p>В момент включения к синусоидальному пусковому току добавляется затухающая апериодическая составляющая. В наихудший момент пик тока в первый полупериод вдвое больше амплитуды установившегося пускового тока. Мгновенный расцепитель реагирует именно на мгновенное значение, поэтому наихудший случай и учитывается по умолчанию.</p><h3>Можно ли ставить автомат с характеристикой K?</h3><p>Да, если это характеристика конкретного изготовителя с подтверждённым паспортом. В МЭК 60898 её нет; ABB указывает мгновенное расцепление от 8·In до 14·In, в материалах встречается и 12·In. Для отстройки важна нижняя граница, и она совпадает.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://protect.gost.ru/gost/details/8fcc0e72-206d-4876-a320-92f59b97a659" rel="nofollow noopener" target="_blank">ГОСТ IEC 60898-1-2020 (МЭК 60898-1:2019). Автоматические выключатели для защиты от сверхтоков бытового и аналогичного назначения. Часть 1</a> — Росстандарт — Редакция ГОСТ IEC 60898-1-2020 — действующая редакция, сменившая ГОСТ Р 50345-2010; диапазоны B/C/D между редакциями не менялись — раздел диапазоны тока мгновенного расцепления B, C, D, таблица 7 — испытательные точки 1,13·In, 1,45·In, 2,55·In — обращение 30.09.2026</li><li><a href="https://library.e.abb.com/public/114371fcc8e0456096db42d614bead67/2CDC400002D0201_view.pdf" rel="nofollow noopener" target="_blank">Comparison of tripping characteristics for miniature circuit-breakers</a> — ABB — Редакция 2CDC400002D0201; в выдаче видны «мгновенное расцепление от 8 до 12·In» и «не позднее 14·In за 0,1 с» — верхняя граница расходится — раздел характеристика K: мгновенное расцепление от 8·In, не позднее 14·In — обращение 30.09.2026</li><li><a href="https://electrical-engineering-portal.com/motor-starting-problem-and-high-motor-inrush-currents" rel="nofollow noopener" target="_blank">Problem of motor protection and high motor inrush currents</a> — Electrical Engineering Portal — Редакция онлайн-статья на дату обращения; вторичный источник — раздел бросок тока асинхронного двигателя — до двух токов заторможенного ротора — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Зоны B, C, D — по ГОСТ IEC 60898-1-2020; K — по данным ABB, МЭК 60898 её не задаёт.</li><li>Отстройка проверяется по нижней границе зоны мгновенного расцепления: порог экземпляра может быть в любом месте диапазона.</li><li>Наихудший бросок первого полупериода — 2·Iп (полностью несимметричное включение); можно не учитывать.</li><li>Тепловой расцепитель проверяется только по времени, введённому с кривой изготовителя для тока Iп из холодного состояния.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не рассчитывает время отключения теплового расцепителя: без кривой изготовителя вывод — «Недостаточно данных».</li><li>Не учитывает нагрев расцепителя предыдущими пусками и работой под нагрузкой.</li><li>Не проверяет защиту кабеля (In ≤ Iz) и срабатывание при КЗ — для этого отдельные калькуляторы.</li><li>Для модульных автоматов до 125 А; не для автоматов защиты двигателя с регулируемыми расцепителями.</li><li>Верхняя граница K в материалах ABB расходится (12 или 14·In); принята 14·In.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="zona-srabatyvaniya-avtomata.html">Зона срабатывания автомата B, C, D по току КЗ</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li><li><a href="ustavka-teplovogo-rele.html">Уставка теплового реле двигателя и класс расцепления</a></li><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li><li><a href="prosadka-pri-puske.html">Оценка просадки напряжения при пуске двигателя</a></li></ul></section>
 </main>

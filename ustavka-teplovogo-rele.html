@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Уставка теплового реле двигателя и класс расцепления: как считается</h2>
 <div class="formula">Реле в линии: Ir = Iн&nbsp;&nbsp;&nbsp;Реле в фазе обмотки Δ: Ir = Iн / √3 ≈ 0,58·Iн<br>Пуск выдерживается, если Iп / Ir ≤ 7,2 и tп ≤ T<sub>мин</sub> класса; отключит, если Iп / Ir ≥ 7,2 и tп &gt; T<sub>макс</sub></div>
@@ -165,7 +177,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему при звезде-треугольнике уставка 0,58·Iн?</h3><p>Если реле стоит после главного контактора, в фазе обмотки, оно видит фазный ток треугольника. Он в √3 раза меньше линейного тока, указанного на шильдике: 1/√3 ≈ 0,58. Если реле стоит в линии перед пускателем, уставка — полный Iн.</p><h3>Какой класс выбрать для тяжёлого пуска?</h3><p>Тот, у которого нижняя граница времени при 7,2·Ir не меньше времени пуска: 10A — 2 с, 10 — 4 с, 20 — 6 с, 30 — 9 с. Для пуска дольше 9 с ни один из этих классов пуск не гарантирует — нужна кривая реле или другой способ защиты.</p><h3>Можно ли выставить уставку с запасом, чтобы реле не срабатывало?</h3><p>Завышенная уставка перестаёт защищать двигатель от перегрузки. NEC допускает до 125 % тока с шильдика только для двигателей с коэффициентом сервиса не меньше 1,15 или превышением температуры до 40 °C; по практике IEC реле настраивают на номинальный ток.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.elec.ru/library/gosts_e71/gost-iec-60947-4-1-2021/" rel="nofollow noopener" target="_blank">ГОСТ IEC 60947-4-1-2021 (IEC 60947-4-1:2018). Аппаратура распределения и управления низковольтная. Часть 4-1. Контакторы и пускатели. Электромеханические контакторы и пускатели</a> — Росстандарт — Редакция 2021, идентичен IEC 60947-4-1:2018; таблица классов расцепления в выдаче дословно не видна — предельные времена сверены по документации изготовителей, пересказывающих стандарт — раздел классы расцепления реле перегрузки, время отключения при 7,2·Ir — обращение 30.09.2026</li><li><a href="https://www.productinfo.schneider-electric.com/tesysgigaframe56/doca0161-tesys-giga-frame5-6-user-guide/English/BM_TeSys%20GV5_6_354b1ab7_T000229243.xml/$/GTD_Tripclass_IEC60947_4_1_354b1ab7_T000229931" rel="nofollow noopener" target="_blank">Trip class (IEC 60947-4-1) — TeSys GV5/GV6 User Guide</a> — Schneider Electric — Редакция онлайн-редакция руководства на дату обращения — раздел классы 10A, 10, 20, 30 при 7,2·Ir, Ir — тепловая уставка по шильдику двигателя — обращение 30.09.2026</li><li><a href="https://library.e.abb.com/public/a9cd1c3f07dc1870852573a300738595/1SXU106043B0201.pdf" rel="nofollow noopener" target="_blank">Thermal Overload Relays Tripping Class 20</a> — ABB — Редакция каталог 1SXU106043B0201, редакция на дату обращения — раздел class 10A: 2 &lt; Tp ≤ 10 с; class 10: 4 &lt; Tp ≤ 10 с; class 20: 6 &lt; Tp ≤ 20 с — обращение 30.09.2026</li><li><a href="https://eepower.com/technical-articles/sizing-overload-protection-for-motors-above-1-hp/" rel="nofollow noopener" target="_blank">NFPA 70, National Electrical Code, 430.32(A)(1)</a> — NFPA; текст по пересказу EEPower — Редакция NEC 2023; дословно текст не виден, значения 125 % и 115 % совпадают в нескольких пересказах — раздел 430.32(A)(1): SF ≥ 1,15 или превышение ≤ 40 °C — 125 %, прочие — 115 % — обращение 30.09.2026</li><li><a href="https://electrical-engineering-portal.com/star-delta-motor-starter" rel="nofollow noopener" target="_blank">Star-delta motor starter explained in details</a> — Electrical Engineering Portal — Редакция онлайн-статья на дату обращения; вторичный источник — раздел реле в обмотке: уставка 0,58 × ток полной нагрузки — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Классы 10A, 10, 20, 30 — предельные времена при 7,2·Ir из холодного состояния по пересказу IEC 60947-4-1 у Schneider Electric и ABB.</li><li>Характеристика реле обратнозависимая: при меньшей кратности тока реле отключает не быстрее.</li><li>На ступени «звезда» ток в линии и в обмотках — треть прямого пускового тока.</li></ul><p><b>Границы применимости:</b></p><ul><li>Время отключения между точкой 7,2·Ir и током уставки не рассчитывается — только по кривой реле.</li><li>Не учитывает нагрев реле предыдущими пусками и бросок при переключении звезда → треугольник.</li><li>Классы 5, 40 и другие калькулятор не предлагает.</li><li>Предел NEC 430.32 — американская норма, в ПУЭ и ГОСТ её нет.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li><li><a href="avtomat-dlya-dvigatelya.html">Автомат для электродвигателя: отстройка от пускового тока</a></li><li><a href="zvezda-treugolnik.html">Звезда и треугольник: линейные и фазные величины</a></li><li><a href="avtotransformatornyy-pusk.html">Пуск двигателя через автотрансформатор</a></li><li><a href="kompensaciya-dvigatelya.html">Индивидуальная компенсация асинхронного двигателя</a></li></ul></section>
 </main>

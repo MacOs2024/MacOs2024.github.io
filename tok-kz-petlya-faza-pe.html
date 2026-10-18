@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Ток КЗ фаза–PE по длине и сечению линии: как считается</h2>
 <div class="formula">Zц = ρ · L · (1/Sф + 1/SPE)<br>Конвенциональный метод: Iкз = 0,8 · U₀ / Zц&nbsp;&nbsp;&nbsp;Lmax = 0,8 · U₀ · Sф / (ρ · (1 + m) · Ia),&nbsp;m = Sф / SPE<br>Метод композиции: Iкз = U₀ · I′ / (U₀ + Zц · I′)</div>
@@ -167,7 +179,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Чем это отличается от калькулятора минимального тока КЗ по готовому Z?</h3><p>Там сопротивление петли вводится готовым числом. Здесь оно вычисляется из длины, сечений и материала жил при рабочей температуре, а предельная длина линии считается по формуле Schneider Electric. Если известен ток КЗ на вводе, доступен метод композиции.</p><h3>Почему PE меньшего сечения сокращает предельную длину?</h3><p>Ток КЗ идёт по фазному проводнику к месту замыкания и по PE обратно, поэтому сопротивление петли — сумма обоих. При m = Sф / SPE больше единицы сопротивление петли растёт в (1 + m)/2 раза по сравнению с одинаковыми сечениями, и предельная длина сокращается во столько же.</p><h3>Какой ток КЗ на вводе вводить в методе композиции?</h3><p>Минимальный ожидаемый ток однофазного КЗ фаза–PE в месте установки автомата этой линии — из проекта или от сетевой организации. Трёхфазный ток КЗ сюда подставлять нельзя: он обычно больше однофазного и даст завышенный результат. Измеренный прибором ток отражает условия замера, поэтому по нему калькулятор показывает числа справочно, без вывода о срабатывании.</p><h3>Что делать при сечениях больше 120 мм²?</h3><p>Для них реактивное сопротивление уже нельзя отбрасывать, и источник вводит отдельную поправку. Калькулятор эту область не рассчитывает — нужен проектный расчёт.</p><h3>Нужна предельная длина для промышленного автомата или предохранителя?</h3><p>Её считает калькулятор «Максимальная длина линии по срабатыванию автомата»: тот же конвенциональный метод, но с уставкой Im промышленного автомата (+20 % допуска), током Ia предохранителя и произвольными сечениями до 120 мм². Метод композиции есть только на этой странице.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/TN_system_-_Earth-fault_current_calculation" rel="nofollow noopener" target="_blank">TN system - Earth-fault current calculation</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел Method of composition — сопротивления складываются арифметически, Conventional method — 80 % напряжения, учёт всех падений выше точки, реактивным сопротивлением пренебрегают до 120 мм² — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Calculation_of_minimum_levels_of_short-circuit_current" rel="nofollow noopener" target="_blank">Calculation of minimum levels of short-circuit current</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел Lmax = 0,8·U₀·Sph / (ρ·(1 + m)·Ia), ρ при рабочей температуре: 22,5·10⁻³ медь, 36·10⁻³ алюминий — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Fundamental_characteristics_of_a_circuit-breaker" rel="nofollow noopener" target="_blank">Fundamental characteristics of a circuit-breaker</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел Domestic breakers IEC 60898: верхние границы 5, 10, 20·In, 50·In для характеристики D — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Система TN, замыкание фазы на PE в конце линии; проводники цепи проложены рядом.</li><li>Удельное сопротивление при рабочей температуре: медь 0,0225, алюминий 0,036 Ом·мм²/м.</li><li>Реактивное сопротивление не учитывается — сечения до 120 мм².</li><li>Порог Ia — верхняя граница диапазона мгновенного расцепления B, C или D; для D без подтверждения паспортом — 50·In.</li><li>Конвенциональный метод: напряжение в месте установки автомата при КЗ не ниже 80 % номинального.</li><li>Метод композиции: I′ — минимальный ожидаемый ток однофазного КЗ фаза–PE в месте установки автомата; сопротивления складываются арифметически. По измеренному без поправки I′ вывод о срабатывании не делается.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не учитывает сопротивление контактов и соединений, если оно не вошло в измеренный I′.</li><li>Не проверяет время отключения, термическую стойкость проводников и отключающую способность автомата.</li><li>Сечения свыше 120 мм² и проводники из разных металлов не рассчитываются.</li><li>Проверяется одно условие метода; итоговый нормативный вердикт по электроустановке не выдаётся.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="zona-srabatyvaniya-avtomata.html">Зона срабатывания автомата B, C, D по току КЗ</a></li><li><a href="tok-korotkogo-zamykaniya.html">Минимальный ток КЗ по конвенциональному методу</a></li><li><a href="dlina-kabelya-po-toku-kz.html">Максимальная длина линии по срабатыванию автомата</a></li><li><a href="sechenie-pen-provodnika.html">Сечение PEN-проводника до разделения (TN-C, TN-C-S)</a></li><li><a href="soprotivlenie-provoda.html">Сопротивление провода по длине и сечению</a></li></ul></section>
 </main>

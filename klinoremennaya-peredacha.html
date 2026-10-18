@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Клиноремённая передача: как считается</h2>
 <div class="formula">u = d<sub>2</sub> / (d<sub>1</sub>·(1 − ε)),&nbsp;&nbsp;n<sub>2</sub> = n<sub>1</sub>·d<sub>1</sub>·(1 − ε) / d<sub>2</sub>,&nbsp;&nbsp;v = π·d<sub>1</sub>·n<sub>1</sub> / 60000<br>L<sub>p</sub> = 2a + π(d<sub>1</sub> + d<sub>2</sub>)/2 + (d<sub>2</sub> − d<sub>1</sub>)²/(4a)<br>a = [(L<sub>p</sub> − w) + √((L<sub>p</sub> − w)² − 8y)] / 4,&nbsp;&nbsp;w = π(d<sub>1</sub> + d<sub>2</sub>)/2,&nbsp;&nbsp;y = ((d<sub>2</sub> − d<sub>1</sub>)/2)²<br>α<sub>1</sub> = 180° − 2·arcsin((d<sub>2</sub> − d<sub>1</sub>) / 2a) ≈ 180° − 57°·(d<sub>2</sub> − d<sub>1</sub>)/a</div>
@@ -161,7 +173,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Какой диаметр шкива вводить?</h3><p>Расчётный — по нейтральному слою ремня. Он меньше наружного диаметра шкива; для стандартных шкивов его указывают в чертеже или каталоге.</p><h3>Почему ведомый шкив вращается медленнее, чем по отношению диаметров?</h3><p>Из-за упругого скольжения ремня. Для клиновых ремней оно обычно около 1–2 %, поэтому частота ведомого вала на столько же ниже.</p><h3>Что делать, если угол обхвата меньше 120°?</h3><p>Увеличить межосевое расстояние, уменьшить передаточное число одной ступени или поставить натяжной ролик. При малом угле ремень передаёт меньшую мощность и может буксовать.</p><h3>Как выбрать стандартный ремень?</h3><p>Округлите расчётную длину до ближайшей стандартной по ГОСТ 1284.1-89 и пересчитайте межосевое расстояние в режиме «Расчётная длина ремня». Число ремней считают по мощности на один ремень из ГОСТ 1284.3-96.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://docs.cntd.ru/document/1200017858" rel="nofollow noopener" target="_blank">ГОСТ 1284.3-96. Ремни приводные клиновые нормальных сечений. Передаваемые мощности</a> — Межгосударственный стандарт — Редакция введён 01.01.1998; формулы длины и угла обхвата видны в пересказе выдачи, актуальность по официальному реестру не проверена — раздел расчётная длина ремня Lp = 2a + π(d1 + d2)/2 + (d2 − d1)²/(4a), угол обхвата α ≈ 180 − 57(d2 − d1)/a и коэффициент Cα (табл. 18) — обращение 30.09.2026</li><li><a href="https://vsegost.com/Catalog/28/28539.shtml" rel="nofollow noopener" target="_blank">ГОСТ 1284.1-89. Ремни приводные клиновые нормальных сечений. Основные размеры и методы контроля</a> — Межгосударственный стандарт — Редакция введён 01.01.1991 (по выдаче поиска) — раздел стандартные расчётные длины ремней — обращение 30.09.2026</li><li><a href="https://elib.belstu.by/bitstream/123456789/9783/8/pm-lekciya-08.pdf" rel="nofollow noopener" target="_blank">Лекция № 8. Ременные передачи</a> — БГТУ, курс «Прикладная механика» (учебный материал, вторичный источник) — Редакция PDF на дату обращения; рекомендация α1 ≥ 120° видна в пересказе выдачи — раздел угол обхвата малого шкива клиноремённой передачи не менее 120°, упругое скольжение ремня — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Передача открытая, валы параллельны, натяжных роликов нет.</li><li>Диаметры — расчётные, по нейтральному слою ремня.</li><li>Скольжение постоянно и задаётся пользователем.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не считает мощность на один ремень, число ремней и натяжение по ГОСТ 1284.3-96.</li><li>Не округляет длину до стандартного ряда ГОСТ 1284.1-89 — это делается вручную.</li><li>Не проверяет минимальный диаметр шкива для сечения ремня и предельную скорость ремня.</li><li>Статус ГОСТ 1284.1-89 и 1284.3-96 в официальном реестре не проверен.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="privedennyy-moment-inercii.html">Приведённый момент инерции через редуктор</a></li><li><a href="kpd-dvigatelya-ie.html">КПД электродвигателя по классам IE2–IE4 и экономия</a></li><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li></ul></section>
 </main>

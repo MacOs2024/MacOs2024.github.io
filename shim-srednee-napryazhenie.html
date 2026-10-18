@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>ШИМ: как считается</h2>
 <div class="formula">Uср = U · D&nbsp;&nbsp;&nbsp;Uд = U · √D&nbsp;&nbsp;&nbsp;P = Uд² / R = D · U² / R</div>
@@ -163,7 +175,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему мультиметр показывает не то, что я жду?</h3><p>Обычный мультиметр в режиме постоянного напряжения покажет среднее значение, а в режиме переменного с функцией True RMS — действующее. На ШИМ-сигнале это разные числа, и ни одно из них не «неправильное» — важно понимать, какое из них вы измеряете.</p><h3>Можно ли так регулировать яркость светодиода?</h3><p>Да, и это основной способ: ШИМ сохраняет цветовую температуру, в отличие от снижения тока. Но формула мощности здесь не работает — светодиод не резистор. Яркость получается пропорциональной именно коэффициенту заполнения.</p><h3>Какую частоту выбрать для двигателя?</h3><p>8–20 кГц: ниже слышен писк на частоте коммутации, выше растут потери на переключение. Индуктивность обмотки при таких частотах сама сглаживает ток, и двигатель реагирует на среднее напряжение.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.ti.com/lit/snva559" rel="nofollow noopener" target="_blank">Switching regulator fundamentals</a> — Texas Instruments — Редакция SNVA559C, revised February 2019 — раздел 1 Switching Fundamentals, 2 Switching Converter Topologies — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Идеальный непрерывный режим; не проверяются насыщение, потери сердечника и ключей, ESR, переходные процессы и устойчивость петли.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="ne555-astabilnyy.html">Таймер NE555 — астабильный режим</a></li><li><a href="bazovyy-rezistor-tranzistora.html">Базовый резистор транзисторного ключа</a></li><li><a href="rms-amplituda.html">Действующее, амплитудное и среднее значение</a></li></ul></section>
 </main>

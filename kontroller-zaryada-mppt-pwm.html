@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Контроллер заряда MPPT и PWM: как считается</h2>
 <div class="formula">NEC 690.8: I<sub>контр</sub> ≥ 1,25 · I<sub>sc</sub>&nbsp;&nbsp;или по паспорту контроллера: I<sub>sc</sub> ≤ I<sub>sc,max</sub><br>PWM: I<sub>АКБ</sub> ≈ I<sub>mp</sub>…I<sub>sc</sub>,&nbsp;&nbsp;P<sub>АКБ</sub> ≈ U<sub>АКБ</sub> · I,&nbsp;&nbsp;I<sub>mp</sub> = P / V<sub>mp</sub><br>MPPT: I<sub>вых</sub> = P · η / U<sub>мин</sub> ≤ I<sub>ном</sub>, иначе перегруз — только по данным производителя</div>
@@ -161,7 +173,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Зачем запас 1,25 к току короткого замыкания?</h3><p>Ток КЗ панели в паспорте дан для облучённости 1000 Вт/м², а в ясный день с отражением от снега или облаков она бывает больше. NEC 690.8 поэтому принимает наибольший ток массива равным 125 % суммы Isc. Если производитель контроллера сам указывает допустимый ток КЗ массива, проверяют по нему.</p><h3>Можно ли ставить на MPPT массив мощнее номинала?</h3><p>Только если это разрешает производитель контроллера. Контроллер ограничит ток номиналом, и часть энергии в солнечные часы не используется, зато утром, вечером и в пасмурную погоду он работает ближе к номиналу. Пределы по напряжению Voc и току КЗ массива при этом нарушать нельзя.</p><h3>Когда достаточно PWM?</h3><p>В маленьких системах, где Vmp панели немного выше напряжения заряда — например, 36-элементная панель на 12-вольтовую АКБ, — особенно если панели работают нагретыми. Если Vmp массива заметно выше напряжения АКБ или климат холодный, MPPT даёт больше энергии.</p><h3>Где проверить напряжение массива на морозе?</h3><p>На странице массива солнечных панелей: там Voc цепочки пересчитывается на минимальную температуру и сравнивается с пределом контроллера. Превышение напряжения повреждает контроллер, поэтому это отдельная обязательная проверка.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.mayfield.energy/technical-articles/how-to-calculate-wire-size-amp-nec-690-8-b/" rel="nofollow noopener" target="_blank">NFPA 70, National Electrical Code, 690.8(A)(1). PV source circuit currents</a> — NFPA; текст по пересказу Mayfield Renewables и GreenLancer (вторичные источники) — Редакция NEC 2020/2023; дословно текст статьи не виден, множитель 125 % совпадает в нескольких пересказах — раздел 690.8(A)(1): наибольший ток цепи PV — 125 % суммы Isc параллельных модулей — обращение 30.09.2026</li><li><a href="https://www.morningstarcorp.com/wp-content/uploads/operation-manual-tristar-en.pdf" rel="nofollow noopener" target="_blank">TriStar Solar Charging System Controller. Installation, Operation and Maintenance Manual</a> — Morningstar Corporation — Редакция руководство PWM-контроллеров TriStar на дату обращения; фраза о 125 % Isc и пределы 36 и 48 А видны в выдаче — раздел номинальный ток контроллера не меньше 125 % Isc массива для соответствия NEC, TS-45 — массив до 36 А Isc, TS-60 — до 48 А — обращение 30.09.2026</li><li><a href="https://www.morningstarcorp.com/oversizing-your-pv-array-with-morningstar-mppt-controllers/" rel="nofollow noopener" target="_blank">Oversizing Your PV Array with Morningstar MPPT Controllers</a> — Morningstar Corporation — Редакция онлайн-статья на дату обращения; видна в выдаче — раздел MPPT ограничивает ток на выходе 100 % номинала, перегруз до 200 % номинальной выходной мощности, для GenStar рекомендовано 150 %, PWM-контроллер перегружать нельзя — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Technical-Information-Which-solar-charge-controller-PWM-or-MPPT.pdf" rel="nofollow noopener" target="_blank">Which solar charge controller: PWM or MPPT?</a> — Victron Energy, техническая информация — Редакция PDF на дату обращения; фразы о 36-элементной панели видны в выдаче — раздел 36-элементная панель: ток почти постоянен до ~17 В, максимум мощности около 18 В при 25 °C, PWM — для малых систем при температуре элементов 45–75 °C — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Manual_SmartSolar_MPPT_100-30__100-50/29694-MPPT_solar_charger_manual-pdf-en.pdf" rel="nofollow noopener" target="_blank">SmartSolar MPPT 100/30 &amp; 100/50. Manual and datasheet</a> — Victron Energy — Редакция руководство Rev 12 и паспорт на дату обращения; значения видны в выдаче — раздел 100/30: номинальный ток 30 А, наибольший Isc массива 35 А, 440 Вт при 12 В, запуск при Upv &gt; Uакб + 5 В, работа до Uакб + 1 В, ограничение входной мощности при более мощном массиве — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Datasheet-BlueSolar-Monocrystalline-Panels-EN.pdf" rel="nofollow noopener" target="_blank">BlueSolar Monocrystalline Panels. Datasheet</a> — Victron Energy — Редакция редакция паспорта на дату обращения; строка 115 Вт 12 В видна в выдаче — раздел BlueSolar 115 Вт 12 В: Vmp 19,0 В, Imp 6,04 А, Voc 23,32 В, Isc 6,61 А — значения примера — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/upload/documents/Datasheet-SmartSolar-charge-controller-MPPT-250-60-and-250-70-EN.pdf" rel="nofollow noopener" target="_blank">SmartSolar charge controller MPPT 250/60 &amp; 250/70. Datasheet</a> — Victron Energy — Редакция редакция паспорта на дату обращения; значения видны в выдаче — раздел 250/60: номинальный ток заряда 60 А, наибольший ток КЗ массива 35 А — вход ограничен отдельно от выхода — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Мощность, Vmp и Isc массива — при STC (1000 Вт/м², 25 °C) по паспорту панелей.</li><li>PWM: массив работает при напряжении АКБ, ток — между Imp и Isc.</li><li>MPPT: мощность на выходе — мощность массива, умноженная на КПД; наибольший ток — при наименьшем напряжении АКБ.</li><li>Запас 1,25 к Isc — по NEC 690.8(A)(1) в формулировке руководств Morningstar; либо предел Isc из паспорта контроллера. Для MPPT предел Isc на входе из паспорта проверяется всегда.</li><li>Для MPPT запас Vmp при STC над наибольшим напряжением заряда не больше 1 В считается риском недозаряда: MPPT Victron работает, пока напряжение массива выше напряжения АКБ хотя бы на 1 В.</li></ul><p><b>Границы применимости:</b></p><ul><li>Voc массива на холоде не проверяется — для этого отдельный калькулятор массива солнечных панелей.</li><li>Температура панелей, затенение и потери в проводах не учитываются.</li><li>Допустимость перегруза MPPT по мощности — только по данным производителя; без них вывода нет.</li><li>NEC — американская норма; в ПУЭ правила 1,25·Isc нет, пределы задаёт документация изготовителя контроллера.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="solnechnye-paneli-massiv.html">Массив солнечных панелей: оценка Voc на холоде</a></li><li><a href="solar-panel-energy.html">Выработка солнечной панели</a></li><li><a href="raschet-akb-avtonomnoy.html">Ёмкость аккумуляторов для автономной системы</a></li><li><a href="sechenie-po-dline-12v.html">Сечение провода для 12, 24 и 48 В</a></li><li><a href="stoimost-kvtch-akkumulyatora.html">Стоимость 1 кВт·ч, запасённого аккумулятором за срок службы</a></li></ul></section>
 </main>

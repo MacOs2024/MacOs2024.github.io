@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Суперконденсатор для импульсной нагрузки: как считается</h2>
 <div class="formula">Постоянный ток: ΔU = I·(R + t/C) → C ≥ I·t / (V1 − V2 − I·R)<br>Постоянная мощность без ESR: ½·C·(V1² − V2²)·η ≥ P·t → C ≥ 2·P·t / (η·(V1² − V2²))<br>С ESR: P<sub>вх</sub> = P/η,&nbsp;&nbsp;u = (v + √(v² − 4·P<sub>вх</sub>·R)) / 2,&nbsp;&nbsp;t = (C / P<sub>вх</sub>)·[(u<sub>1</sub>² − u<sub>2</sub>²)/2 − P<sub>вх</sub>·R·ln(u<sub>1</sub>/u<sub>2</sub>)]<br>Банк: n = ⌈V1 / U<sub>ном</sub>⌉,&nbsp;&nbsp;C<sub>банка</sub> = m·C / n,&nbsp;&nbsp;R<sub>банка</sub> = n·R / m</div>
@@ -163,7 +175,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему ёмкость нужна больше, чем по формуле энергии?</h3><p>Формула ½·C·(V1² − V2²) = P·t/η не учитывает ESR: к концу разряда ток растёт, и часть напряжения теряется внутри банка. Кроме того, ёмкость бывает ниже номинала по допуску и снижается к концу срока службы, а ESR растёт — у ячеек Maxwell 350 Ф на 20 % и 100 %.</p><h3>Зачем балансировка, если элементы одинаковые?</h3><p>Одинаковых не бывает: при заряде напряжение делится обратно пропорционально ёмкостям, в покое его разводит разброс утечки. Eaton приводит пример: 10 Ф ±20 % при 5 В дают 3,0 и 2,0 В. Maxwell требует балансировку в цепочках более чем из двух элементов.</p><h3>Почему банк нельзя разрядить до нуля?</h3><p>Преобразователю нужно наименьшее входное напряжение, а при постоянной мощности ток растёт по мере разряда. Ниже √(4·R·P/η) банк вообще не отдаёт нужную мощность — у Analog Devices это наименьшее напряжение стека.</p><h3>Чем этот расчёт отличается от калькулятора энергии конденсатора?</h3><p>Тот считает энергию одного конденсатора при заданном напряжении. Этот подбирает ёмкость и число элементов под нагрузку, окно напряжений, ESR, КПД преобразователя, допуск и старение.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.eaton.com/content/dam/eaton/products/electronic-components/resources/technical/eaton-supercapacitor-modules-application-guidelines.pdf" rel="nofollow noopener" target="_blank">Supercapacitor modules application guidelines</a> — Eaton — Редакция редакция на дату обращения; формула видна в выдаче — раздел Vdrop = I × (R + t/C) при постоянном токе, исходные данные: тип разряда, мощность или ток, время, наибольшее и наименьшее напряжение — обращение 30.09.2026</li><li><a href="https://www.analog.com/en/resources/analog-dialogue/raqs/raq-issue-179.html" rel="nofollow noopener" target="_blank">Energy Storage Using Supercapacitors: How Big Is Big Enough? (RAQ Issue 179)</a> — Analog Devices, Analog Dialogue; M. Holtkamp, G. Alonso — Редакция Vol. 54, No. 3, July 2020; формулы видны в пересказе выдачи — раздел требуемая энергия P·t / η, E = ½·C·V², наименьшее напряжение стека при постоянной мощности √(4·R·P/η), ESR к концу срока вдвое больше начального — обращение 30.09.2026</li><li><a href="https://www.eaton.com/content/dam/eaton/products/electronic-components/resources/technical/eaton-supercapacitor-application-guidelines.pdf" rel="nofollow noopener" target="_blank">Supercapacitor application guidelines</a> — Eaton — Редакция редакция на дату обращения; положения видны в выдаче — раздел дисбаланс: при заряде — разброс ёмкости, в покое — разброс утечки, пример: 10 Ф ±20 % последовательно при 5 В — 3,0 и 2,0 В, пассивная балансировка: ток резистора не меньше 50 токов утечки — обращение 30.09.2026</li><li><a href="https://maxwell.com/wp-content/uploads/2021/08/Notes_on_Using_Ultracapacitor_Cells.pdf" rel="nofollow noopener" target="_blank">Notes on Using Ultracapacitor Cells</a> — Maxwell Technologies — Редакция редакция на дату обращения; видно в выдаче — раздел балансировка обязательна в цепочках более чем из двух элементов, напряжение каждого элемента проверяют до и после заряда — обращение 30.09.2026</li><li><a href="https://maxwell.com/wp-content/uploads/2021/08/2.7V-350F_ds_3002974-EN.3_20200908.pdf" rel="nofollow noopener" target="_blank">2.7V 350F Ultracapacitor Cell datasheet</a> — Maxwell Technologies — Редакция 3002974-EN.3, 08.09.2020; значения видны в выдаче — раздел 350 Ф min / 420 Ф max, 2,7 В, ESR не более 3,2 мОм, утечка не более 0,75 мА, к концу срока: ёмкость −20 %, ESR +100 % — обращение 30.09.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/8-2-capacitors-in-series-and-in-parallel" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 8.2 Capacitors in Series and in Parallel, 8.3 Energy Stored in a Capacitor — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Преобразователь берёт постоянную мощность P/η на всём интервале; нагрузка постоянного тока питается прямо от банка.</li><li>ESR — постоянное активное сопротивление, ёмкость не зависит от напряжения.</li><li>Все элементы одинаковы: ёмкость — нижняя граница допуска, уменьшенная на старение; ESR — паспортный максимум, увеличенный на старение.</li><li>Наихудшее деление напряжения: один элемент на нижней границе допуска, остальные на верхней, заряд с нуля без балансировки.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не учитывает температуру: на холоде ESR растёт — берите данные паспорта для своей температуры.</li><li>Не учитывает саморазряд за время ожидания и ток цепей балансировки во время импульса.</li><li>Не проверяет допустимый ток и нагрев элементов, преобразователя и зарядного устройства.</li><li>Дрейф напряжений из-за разброса утечки не рассчитывается — дано только правило выбора резистора Eaton.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="energiya-kondensatora.html">Энергия и заряд конденсатора</a></li><li><a href="soedinenie-kondensatorov.html">Параллельное и последовательное соединение конденсаторов</a></li><li><a href="zaryad-kondensatora.html">Время заряда конденсатора через резистор</a></li><li><a href="discharge-resistor-capacitor.html">Резистор разряда конденсатора</a></li></ul></section>
 </main>

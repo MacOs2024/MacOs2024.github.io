@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Расчёт радиатора для транзистора и микросхемы: как считается</h2>
 <p>Тепло уходит от кристалла к воздуху через цепочку тепловых сопротивлений — полная аналогия закону Ома, где «током» служит мощность, а «напряжением» — разность температур:</p>
@@ -158,7 +170,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Нужна ли термопаста, если поверхность ровная?</h3><p>Да: микронеровности заполнены воздухом, а воздух — отличный теплоизолятор. Тонкий слой пасты снижает Rθcs в разы. Толстый слой, наоборот, вредит — паста хуже металла.</p><h3>Можно ли крепить транзистор к радиатору без изолирующей прокладки?</h3><p>Только если радиатор изолирован от схемы и корпуса устройства: у большинства приборов фланец электрически соединён с одним из выводов. Прокладка добавляет 0,5–1 °C/Вт — учитывайте её в расчёте.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.onsemi.com/download/application-notes/pdf/and9016-d.pdf" rel="nofollow noopener" target="_blank">Heat Sink Selection Guide for Thermally Enhanced SO8-FL</a> — onsemi (ON Semiconductor) — Редакция AND9016/D, Rev. 1, February 2015 — раздел Heat Sink Basics, equations 1–2 — обращение 11.08.2026</li><li><a href="https://www.onsemi.com/pub/collateral/and9859-d.pdf" rel="nofollow noopener" target="_blank">Power Packages Heat Sink Mounting Guide</a> — onsemi — Редакция AND9859/D, Rev. 3, May 2022 — раздел Thermal Resistance and Heat Sink Mounting — обращение 11.08.2026</li></ul><p><b>Допущения:</b></p><ul><li>Стационарный режим: рассеиваемая мощность постоянна, тепловые ёмкости и переходный процесс не учитываются.</li><li>Основной путь тепла представлен последовательной цепочкой Rθjc + Rθcs + Rθsa.</li></ul><p><b>Границы применимости:</b></p><ul><li>Параллельный отвод тепла через выводы и печатную плату, взаимный нагрев компонентов и распределённые источники не моделируются.</li><li>Rθjc, Rθcs и Rθsa должны соответствовать фактическому корпусу, монтажу, ориентации и потоку воздуха.</li><li>Расчёт не заменяет проверку температуры прототипа в худшем установившемся режиме.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-transformatora.html">Расчёт сетевого трансформатора 50 Гц</a></li><li><a href="zakon-oma.html">Закон Ома: ток, напряжение, сопротивление, мощность</a></li><li><a href="rezistor-svetodioda.html">Резистор для светодиода</a></li><li><a href="nagrev-mosfet.html">Нагрев MOSFET с учётом роста Rds(on)</a></li></ul></section>
 </main>
