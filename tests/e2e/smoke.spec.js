@@ -2,7 +2,9 @@ import { test, expect } from '@playwright/test';
 
 // Не создаём рекламные показы при автоматических проверках.
 test.beforeEach(async ({ page }) => {
-  await page.route('https://yandex.ru/ads/system/context.js', route => route.abort());
+  await page.route('https://yandex.ru/ads/system/context.js', route => route.fulfill({
+    contentType: 'application/javascript', body: '// Рекламная сеть отключена в smoke-тестах',
+  }));
 });
 
 // Web-first assertions (toBeVisible и т.п.) вместо мгновенных проверок:
