@@ -262,7 +262,10 @@ function bt(s){s=String(s);if(/,/.test(s))return s+' бита';var n=parseInt(s,
 // Отношение частот: до 10⁷ — восемь значащих цифр, больше — целиком, без экспоненты.
 function rv(x){return x<1e7?fmt(x,8):x.toFixed(3).replace(/\.?0+$/,'').replace('.',',');}
 // Отклонение: меньше 100 ppm — в ppm, до 1 % — в ppm и %, больше — в %.
-function pe(e){var a=Math.abs(e);if(a<1e-12)return '0 ppm';if(a<1e-4)return sg(e)+fmt(e*1e6)+' ppm';if(a<1e-2)return sg(e)+fmt(e*1e6)+' ppm ('+sg(e)+fmt(e*100)+' %)';return sg(e)+fmt(e*100)+' %';}
+// EPS — шум округления относительной ошибки частоты (несколько ULP). Допуск 1e-12 считал «равными» и «нулевыми» ошибки соседних делителей порядка 10¹²
+// (расстояние между ними 1/M = 1e-12) и пропускал точный делитель; EPS меньше расстояния между соседними делителями вплоть до M ≈ 2,5·10¹⁴.
+var EPS=4e-15;
+function pe(e){var a=Math.abs(e);if(a<EPS)return '0 ppm';if(a<1e-4)return sg(e)+fmt(e*1e6)+' ppm';if(a<1e-2)return sg(e)+fmt(e*1e6)+' ppm ('+sg(e)+fmt(e*100)+' %)';return sg(e)+fmt(e*100)+' %';}
 function pz(x){return x>=1e4?fmt(x/1e4)+' %':fmt(x)+' ppm';}
 function pq(x,lim){return lim>=1e4?fx(x/1e4,lim/1e4)+' %':fx(x,lim)+' ppm';}
 // Введённое допустимое отклонение печатается как введено.
@@ -282,23 +285,24 @@ if(pp!==null){if(isNaN(pp))return err('Точность источника та�
 if(tl!==null){if(isNaN(tl))return err('Допустимое отклонение — число. Если его нет, оставьте поле пустым.');if(tl<=0||tl>=1e6)return err('Допустимое отклонение — больше 0 и меньше 100 %.');}
 var e,fa,lab,h=row('Отношение fвх / fвых',rv(r));
 // Выбор — по наименьшему модулю относительной ошибки частоты r/N − 1; при равной ошибке — больший делитель.
-function better(ae,bae,v,bv){return ae<bae-1e-12||(Math.abs(ae-bae)<=1e-12&&v>bv);}
+function better(ae,bae,v,bv){return ae<bae-EPS||(Math.abs(ae-bae)<=EPS&&v>bv);}
 if(m==='bin'){
- var any=S('chip')==='any',kc=0;while(Math.pow(2,kc)<r*(1-1e-12))kc++;
- var kf=Math.pow(2,kc)>r*(1+1e-12)?kc-1:kc,K=any?(kf===kc?[kc]:[kf,kc]):[4,5,6,7,8,9,10,12,13,14],bk=-1,be=0,bae=Infinity;
+ var any=S('chip')==='any',kc=0;while(Math.pow(2,kc)<r*(1-EPS))kc++;
+ var kf=Math.pow(2,kc)>r*(1+EPS)?kc-1:kc,K=any?(kf===kc?[kc]:[kf,kc]):[4,5,6,7,8,9,10,12,13,14],bk=-1,be=0,bae=Infinity;
  for(var i=0;i<K.length;i++){var ee=r/Math.pow(2,K[i])-1;if(better(Math.abs(ee),bae,K[i],bk)){bk=K[i];be=ee;bae=Math.abs(ee);}}
  // Наилучший разряд без ограничения выводами — чтобы сказать, что у 4060 его нет.
  var uk=kf,ue=r/Math.pow(2,kf)-1;if(kc!==kf){var e2=r/Math.pow(2,kc)-1;if(better(Math.abs(e2),Math.abs(ue),kc,kf)){uk=kc;ue=e2;}}
- e=Math.abs(be)<1e-12?0:be;fa=fi/Math.pow(2,bk);lab='деление на 2'+sup(bk);
+ e=Math.abs(be)<EPS?0:be;fa=fi/Math.pow(2,bk);lab='деление на 2'+sup(bk);
  h+=row('log₂(fвх / fвых)',fmt(Math.log(r)/Math.LN2))+row('Разрядов, чтобы опуститься до fвых: ⌈log₂(fвх/fвых)⌉',String(kc));
  if(kf!==kc)h+=row('Ближайшие степени двойки','÷2'+sup(kf)+' → '+si(fi/Math.pow(2,kf),'Гц')+' ('+pe(r/Math.pow(2,kf)-1)+'); ÷2'+sup(kc)+' → '+si(fi/Math.pow(2,kc),'Гц')+' ('+pe(r/Math.pow(2,kc)-1)+')');
  h+=row('Выбран выход','÷2'+sup(bk)+' (на '+rv(Math.pow(2,bk))+') → '+si(fa,'Гц'));
  if(!any){h+=row('Выход 74HC4060 по паспорту Nexperia','Q'+(bk-1)+' (нумерация с Q0), вывод '+PIN[bk]);
   if(uk!==bk)h+=row('Нужного разряда нет',uk<4||uk>14?'деление на 2'+sup(uk)+' у 74HC4060 недоступно: выведены ÷2⁴…2¹⁰ и ÷2¹²…2¹⁴':'выход ÷2'+sup(uk)+' у 74HC4060 не выведен — выведены ÷2⁴…2¹⁰ и ÷2¹²…2¹⁴');}}
 else if(m==='int'){
- var Ml=Math.max(1,Math.floor(r*(1+1e-12))),C=[Ml,Ml+1],bm=0,bme=0,bmae=Infinity;
+ // floor(r) и floor(r) + 1 — ближайшие целые с обеих сторон, в том числе при r с ошибкой округления у целого; сдвиг r·(1 + 1e-12) пропускал точный делитель (r = 10¹²).
+var Ml=Math.max(1,Math.floor(r)),C=[Ml,Ml+1],bm=0,bme=0,bmae=Infinity;
  for(var j=0;j<2;j++){var em=r/C[j]-1;if(better(Math.abs(em),bmae,C[j],bm)){bm=C[j];bme=em;bmae=Math.abs(em);}}
- e=Math.abs(bme)<1e-12?0:bme;fa=fi/bm;lab='M = '+bm;
+ e=Math.abs(bme)<EPS?0:bme;fa=fi/bm;lab='M = '+bm;
  h+=row('Соседние целые коэффициенты','M = '+Ml+' → '+si(fi/Ml,'Гц')+' ('+pe(r/Ml-1)+'); M = '+(Ml+1)+' → '+si(fi/(Ml+1),'Гц')+' ('+pe(r/(Ml+1)-1)+')')+
   row('Коэффициент деления M — ближайший по частоте',String(bm))+row('Фактическая частота fвх / M',si(fa,'Гц'))+
   row('Разрядность','M − 1 = '+(bm-1)+' — '+bt(bits(bm-1))+'; M = '+bm+' — '+bt(bits(bm)));}
@@ -312,8 +316,8 @@ else{
  for(var p=1;p<=65536;p++){var a0=r/p,L=[Math.floor(a0),Math.ceil(a0)];
   for(var q=0;q<2;q++){var a=Math.min(A,Math.max(2,L[q])),et=r/(p*a)-1,at=Math.abs(et);if(better(at,btae,a,ba)){bp=p;ba=a;bte=et;btae=at;}}}
  for(var p2=1;p2<=65536;p2++){var a1=r/p2,L2=[Math.floor(a1),Math.ceil(a1)],seen=-1;
-  for(var q2=0;q2<2;q2++){var a2=Math.min(A,Math.max(2,L2[q2]));if(a2===seen)continue;seen=a2;if(Math.abs(Math.abs(r/(p2*a2)-1)-btae)<=1e-12)cnt++;}}
- e=Math.abs(bte)<1e-12?0:bte;fa=fi/(bp*ba);lab='PSC = '+(bp-1)+', ARR = '+(ba-1);
+  for(var q2=0;q2<2;q2++){var a2=Math.min(A,Math.max(2,L2[q2]));if(a2===seen)continue;seen=a2;if(Math.abs(Math.abs(r/(p2*a2)-1)-btae)<=EPS)cnt++;}}
+ e=Math.abs(bte)<EPS?0:bte;fa=fi/(bp*ba);lab='PSC = '+(bp-1)+', ARR = '+(ba-1);
  h+=row('Предделитель PSC',String(bp-1))+row('Перезагрузка ARR',String(ba-1))+row('Коэффициент (PSC + 1)·(ARR + 1)',String(bp*ba))+
   row('Частота обновления fвх / ((PSC + 1)·(ARR + 1))',si(fa,'Гц'))+row('Тик счётчика (PSC + 1) / fвх',si(bp/fi,'с'))+
   row('Разрешение ШИМ: ARR + 1 шагов скважности',String(ba)+' — около '+bt(fmt(Math.log(ba)/Math.LN2,3)));
