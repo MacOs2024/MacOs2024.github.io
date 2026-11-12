@@ -313,7 +313,9 @@ else{VTH=P('vth');VTL=P('vtl');
    if(!(VTL>vol))return err('Нижний порог должен быть выше VOL.');if(!(VTH<vpu))return err('Верхний порог должен быть ниже напряжения подтяжки.');
    // Правило узлов в двух состояниях даёт квадратное уравнение для G3 = 1/R3 с одним положительным корнем.
    var Gp=1/rp,aa=G1*vr*(VTH-VTL),G3=NaN,G2=NaN;A=VTH*(vol-VTL);B=aa+VTH*vol*(Gp+GL)-VTL*vpu*Gp;C=aa*(Gp+GL);D=B*B-4*A*C;
-   if(D>=0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if(rts[i]>0){G3=rts[i];G2=((vr-VTL)*G1+(vol-VTL)*G3)/VTL;break;}}}
+   if(D>=0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if(rts[i]>0){G3=rts[i];
+    // G2 — из уравнения низкого состояния (делит на VTL) или, если VTL близок к нулю, из уравнения высокого (делит на VTH, VTH > VTL): обе формулы точны.
+    var Gh=Gp+GL+G3;G2=Math.abs(VTL)>=1e-3*Math.abs(VTH)?((vr-VTL)*G1+(vol-VTL)*G3)/VTL:((vr*G1*Gh+G3*vpu*Gp)/VTH+G3*G3)/Gh-G1-G3;break;}}}
    if(!(G3>0)||G2<-1e-12*G1)return err('С этими Vоп, подтяжкой и R1 такие пороги не получить: увеличьте Vоп или напряжение подтяжки либо уменьшите Rп.');
    R3=1/G3;R2=G2>1e-12*G1?1/G2:null;}
   hs=row('Рассчитанные резисторы: R2 / R3',(R2===null?'не нужен':sp(R2,'Ом'))+' / '+sp(R3,'Ом'));}
