@@ -321,7 +321,7 @@ else{VTH=P('vth');VTL=P('vtl');
   hs=row('Рассчитанные резисторы: R2 / R3',(R2===null?'не нужен':sp(R2,'Ом'))+' / '+sp(R3,'Ом'));}
  else{R2=P('r2');if(isNaN(R2))return err('Введите R2 — резистор обратной связи.');if(R2<=0)return err('R2 должно быть больше нуля.');
   if(!oc){var m=(VTH-VTL)/(voh-vol);vr=(VTH+vol*m)/(1+m);R1=m*R2;}
-  else{if(!(VTL>vol))return err('Нижний порог должен быть выше VOL.');
+  else{// VTL может быть ниже VOL: VTL = Vоп − (Vвых,выс − Vоп)·R1/R2 — условия на знак VTL − VOL у неинвертирующей схемы нет; допустимость — по корню и прямому расчёту порогов.
    // Vоп — корень квадратного уравнения между VOL и VTH; R1/R2 = (VTH − Vоп)/(Vоп − VOL).
    var Gq=1/rp,Gt=Gq+1/R2+GL,al=vpu*Gq/Gt,bq=(1/R2)/Gt;A=bq;B=al-VTL-vol-(bq-1)*VTH;C=-al*VTH+VTL*vol;D=B*B-4*A*C;
    if(D>=0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if(rts[i]>vol&&rts[i]<VTH){vr=rts[i];break;}}}

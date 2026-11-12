@@ -637,7 +637,7 @@ else{VTH=P('vth');VTL=P('vtl');
   hs=row('Рассчитанные резисторы: R2 / R3',(R2===null?'не нужен':sp(R2,'Ом'))+' / '+sp(R3,'Ом'));}
  else{R2=P('r2');if(isNaN(R2))return err('Введите R2 — резистор обратной связи.');if(R2<=0)return err('R2 должно быть больше нуля.');
   if(!oc){var m=(VTH-VTL)/(voh-vol);vr=(VTH+vol*m)/(1+m);R1=m*R2;}
-  else{if(!(VTL>vol))return err('Нижний порог должен быть выше VOL.');
+  else{// VTL может быть ниже VOL: VTL = Vоп − (Vвых,выс − Vоп)·R1/R2 — условия на знак VTL − VOL у неинвертирующей схемы нет; допустимость — по корню и прямому расчёту порогов.
    // Vоп — корень квадратного уравнения между VOL и VTH; R1/R2 = (VTH − Vоп)/(Vоп − VOL).
    var Gq=1/rp,Gt=Gq+1/R2+GL,al=vpu*Gq/Gt,bq=(1/R2)/Gt;A=bq;B=al-VTL-vol-(bq-1)*VTH;C=-al*VTH+VTL*vol;D=B*B-4*A*C;
    if(D>=0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if(rts[i]>vol&&rts[i]<VTH){vr=rts[i];break;}}}
@@ -848,11 +848,16 @@ if(v1>v0)h+=row('Выходной ток при Uвых = '+fmt(v1,4)+' В',si(B
  row('Выходное сопротивление ΔUвых/ΔIвых',si((v1-v0)/(B.io-A.io),'Ом'));
 h+=row(t==='wilson'?'Только по β, без эффекта Эрли: 1/(1 + 2/(β·(β + 2)))':'Только по β, без эффекта Эрли: 1/(1 + 2/β)',fmt(t==='wilson'?1/(1+2/(b*(b+2))):1/(1+2/b),6));
 if(t==='wilson')h+=row('Для сравнения: hFE·ro/2 — оценка Sedra/Smith для идеального источника опорного тока, hFE = β·(1 + Uкэ3/VA), ro = (VA + Uкэ3)/Iвых',si(b*(1+A.vce/va)*(va+A.vce)/(2*A.io),'Ом'));
+var pmw=null;
 if(dv!==null){var mp=Math.exp(dv/1000/VT),ms=[mp,1/mp],ios=[],j;
  if(t==='re'){var rr=tr===null?[re]:[re*(1-tr/100),re*(1+tr/100)];for(j=0;j<2;j++)for(var a=0;a<rr.length;a++)for(var c=0;c<rr.length;c++)ios.push(rem(ms[j],v0,rr[a],rr[c]).io);}
  else for(j=0;j<2;j++)ios.push(N(ms[j],v0).io);
  var il=Math.min.apply(null,ios),ih=Math.max.apply(null,ios);
  h+=row('Разброс выходного тока при Uвых = '+fmt(v0,4)+' В от |ΔUбэ| = '+fmt(dv)+' мВ'+(t==='re'?(tr===null?' — допуск RE не задан':' и допуска RE ±'+fmt(tr)+' %'):''),si(il,'А')+' … '+si(ih,'А')+' — '+fmt(100*(il/A.io-1),3)+' … +'+fmt(100*(ih/A.io-1),3)+' %');
+ // Мощность при Uвых,макс и том же рассогласовании (оба знака; у схемы с RE — и крайние RE1, RE2): ток выходного транзистора растёт с e^(ΔUбэ/VT).
+ pmw=0;for(j=0;j<2;j++){var pcs=[];if(t==='re'){for(var a2=0;a2<rr.length;a2++)for(var c2=0;c2<rr.length;c2++)pcs.push(rem(ms[j],v1,rr[a2],rr[c2]).p);}else pcs.push(N(ms[j],v1).p);
+  for(var q2=0;q2<pcs.length;q2++)pmw=Math.max(pmw,Math.max.apply(null,pcs[q2]));}
+ h+=row('Наибольшая мощность транзистора при Uвых = '+fmt(v1,4)+' В с тем же рассогласованием'+(t==='re'&&tr!==null?' и допуском RE':''),pt===null?si(pmw,'Вт'):sx(pmw,pt/1000,'Вт'));
  if(t==='re'){var s1=simple(mp,v0).io,s0=simple(1/mp,v0).io,sn=simple(1,v0).io;h+=row('Без эмиттерных резисторов было бы',fmt(100*(s0/sn-1),3)+' … +'+fmt(100*(s1/sn-1),3)+' %');}}
 var lim=vs===null?null:t==='simple'?vs:t==='re'?vs+A.ie2*re:vbe+vs;
 h+=row('Наименьшее напряжение на выходе по Uкэ нас — граница соответствия',lim===null?'Uкэ нас не задано':fx(lim,v0)+' В'+(t==='re'?' = Uкэ нас + Iэ2·RE':t==='wilson'?' = Uбэ + Uкэ нас':''));
@@ -861,12 +866,14 @@ h+=row('Наибольшее напряжение на выходе по UКЭО
 var pp=A.p.concat(B.p),pm=Math.max.apply(null,pp),nm=t==='wilson'?['Q1','Q2','Q3']:['Q1','Q2'];
 h+=row('Мощность транзисторов при Uвых = '+fmt(v1,4)+' В: '+nm.join(' / '),B.p.map(function(x){return pt===null?si(x,'Вт'):sx(x,pt/1000,'Вт');}).join(' / '))+
  row(t==='re'?'Мощность резисторов: R / RE1 / RE2':'Мощность резистора R',B.pr.map(function(x){return si(x,'Вт');}).join(' / '));
-var bad=[],miss=[];
+var bad=[],risk=[],miss=[];
 if(lim===null)miss.push('Uкэ нас');else if(lt(v0,lim))bad.push('при Uвых = '+fx(v0,lim)+' В выходной транзистор уходит в насыщение: нужно не меньше '+fx(lim,v0)+' В — ток зеркала здесь не держится');
 if(top===null)miss.push('UКЭО');else if(gt(B.vce,vo))bad.push('при Uвых = '+fmt(v1,4)+' В Uкэ выходного транзистора '+fx(B.vce,vo)+' В больше UКЭО '+fx(vo,B.vce)+' В');
 if(pt===null)miss.push('Ptot');else if(gt(pm*1000,pt))bad.push('мощность транзистора '+fx(pm*1000,pt)+' мВт больше Ptot '+fx(pt,pm*1000)+' мВт');
+else if(pmw!==null&&gt(pmw*1000,pt))risk.push('при рассогласовании мощность транзистора доходит до '+fx(pmw*1000,pt)+' мВт — больше Ptot '+fx(pt,pmw*1000)+' мВт');
 var st,rng=si(A.io,'А')+(v1>v0?' … '+si(B.io,'А'):'')+' при Uвых '+fmt(v0,4)+(v1>v0?' … '+fmt(v1,4):'')+' В';
 if(bad.length)st=cap(bad.join('; '));
+else if(risk.length)st='Риск: '+risk.join('; ');
 else if(miss.length)st='Недостаточно данных: не заданы '+miss.join(', ')+'; Iвых ≈ '+rng;
 else st='Оценка: Iвых = '+rng+'; выходной транзистор в активном режиме, Uкэ и мощность в пределах паспорта';
 var n='Модель: Iк = Is·e^(Uбэ/VT)·(1 + Uкэ/VA), Iб = Is·e^(Uбэ/VT)/β — ток базы от Uкэ не зависит, как в модели Гуммеля–Пуна. Uбэ эталонного транзистора — введённое значение, разности Uбэ — по экспоненте. Без эффекта Эрли и при равных Uкэ получаются учебные формулы Sedra и Smith. ';
