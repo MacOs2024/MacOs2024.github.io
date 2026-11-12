@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Массив солнечных панелей: как считается</h2>
 <div class="formula">Voc(T) = Voc(STC) · [ 1 + βVoc / 100 · (T − 25) ]<br>Vмассива = n · Voc(T)&nbsp;&nbsp;&nbsp;Условие: Vмассива ≤ Vmax контроллера</div>
@@ -164,7 +176,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему напряжение растёт именно на холоде?</h3><p>Это свойство p-n перехода: с понижением температуры ширина запрещённой зоны увеличивается, и напряжение холостого хода растёт. Ток при этом почти не меняется, поэтому холодная панель отдаёт даже больше мощности — при условии, что оборудование выдержит напряжение.</p><h3>Можно ли ориентироваться на средние зимние температуры?</h3><p>Нет. Используйте расчётную минимальную температуру ячейки и методику производителя оборудования, включая допуски и требуемый запас. Средняя температура не описывает крайний режим входного напряжения.</p><h3>Что если панелей нужно больше, чем помещается в цепочку?</h3><p>Собирают несколько параллельных цепочек по допустимому числу панелей. Напряжение при этом не растёт, увеличивается ток — нужно лишь проверить, что суммарный ток не превышает предел контроллера.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.victronenergy.com/upload/documents/Manual_BlueSolar_150-35__150-45/29694-MPPT_solar_charger_manual-pdf-en.pdf" rel="nofollow noopener" target="_blank">BlueSolar MPPT 150/35 &amp; 150/45 manual</a> — Victron Energy — Редакция current manual on access date — раздел maximum PV open-circuit voltage, temperature coefficient requirement — обращение 11.08.2026</li><li><a href="https://www.canadiansolar.com/wp-content/uploads/sites/3/2026/05/CS-Datasheet-TOPBiHiKu6_CS6.2-66TB-H_v1.1_F68_L3B_TX-DC-Light.pdf" rel="nofollow noopener" target="_blank">TOPBiHiKu6 CS6.2-66TB-H module datasheet</a> — Canadian Solar — Редакция v1.1, 2026 — раздел Voc and Vmp at STC, temperature coefficient of Voc — обращение 11.08.2026</li><li><a href="https://www.nrel.gov/docs/fy18osti/67399.pdf" rel="nofollow noopener" target="_blank">SAM Photovoltaic Model Technical Reference Update</a> — National Renewable Energy Laboratory — Редакция NREL/TP-6A20-67399, 2018 — раздел irradiance, module and system losses, energy yield modelling — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Сравниваются только введённые номиналы; для проекта нужны допуск Voc, абсолютная минимальная температура ячейки, методика производителя и отдельные пределы MPPT по току/напряжению.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="solar-panel-energy.html">Выработка солнечной панели</a></li><li><a href="raschet-akb-avtonomnoy.html">Ёмкость аккумуляторов для автономной системы</a></li><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="kontroller-zaryada-mppt-pwm.html">Контроллер заряда MPPT и PWM по току солнечного массива</a></li></ul></section>
 </main>

@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Ток разряда Li-ion сборки: как считается</h2>
 <div class="formula">I<sub>дл</sub> = I<sub>ячейки</sub> · P&nbsp;&nbsp;или&nbsp;&nbsp;I<sub>дл</sub> = C-rate · C<sub>ячейки</sub> · P;&nbsp;&nbsp;I<sub>имп</sub> = I<sub>имп,ячейки</sub> · P не дольше паспортного времени<br>I<sub>нагр</sub> = P<sub>нагр</sub> / (η · S · U<sub>min</sub>)<br>Предохранитель: U<sub>ном,DC</sub> ≥ S · U<sub>max</sub>;&nbsp;&nbsp;I<sub>ном</sub> ≥ I<sub>нагр</sub> / 0,75;&nbsp;&nbsp;I<sub>откл</sub> ≥ I<sub>КЗ</sub> ≈ S·U<sub>max</sub> / (S·R<sub>ячейки</sub>/P) = P·U<sub>max</sub> / R<sub>ячейки</sub></div>
@@ -170,7 +182,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему ток нагрузки считается при наименьшем напряжении?</h3><p>Инвертор или контроллер двигателя держат мощность, а не ток: по мере разряда напряжение падает, и ток растёт как P / U. Наибольший он в конце разряда, при отсечке ячеек или пороге BMS, — это худший случай для ячеек, BMS и предохранителя.</p><h3>Можно ли просто умножить ток ячейки на число параллелей?</h3><p>Да, если ячейки одинаковы и соединены симметрично: тогда ток делится поровну. Ячейка с меньшим сопротивлением или с более короткими перемычками берёт больше, поэтому для сборки подбирают ячейки одной партии и делают соединения одинаковыми.</p><h3>Что делать, если в паспорте нет импульсного тока?</h3><p>Сравнивать пики с длительным током. Импульсный предел в BMS включают, только если его задаёт производитель ячейки, — так прямо пишет руководство Orion BMS.</p><h3>Зачем предохранитель, если в сборке есть BMS?</h3><p>Предохранитель защищает провода и оборудование от перегрузки и короткого замыкания. Он должен быть рассчитан на постоянный ток и на полное напряжение сборки и уметь отключить ток КЗ литиевой батареи — это сотни и тысячи ампер.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.ti.com/lit/an/snva533/snva533.pdf" rel="nofollow noopener" target="_blank">Characteristics of Rechargeable Batteries (SNVA533)</a> — Texas Instruments — Редакция SNVA533, July 2011 — раздел C-rate — ток, численно равный ёмкости в А·ч — обращение 30.09.2026</li><li><a href="https://files.batteryjunction.com/frontend/files/samsung/datasheet/SAMSUNG-INR18650-25R-Datasheet.pdf" rel="nofollow noopener" target="_blank">Specification of product INR18650-25R</a> — Samsung SDI — Редакция Version No. 1.0; значения видны в выдаче — раздел 2500 мА·ч; длительный разряд 20 А при 25 °C, заряд до 4,2 В, отсечка разряда 2,5 В, внутреннее сопротивление не более 18 мОм на 1 кГц — обращение 30.09.2026</li><li><a href="https://www.orionbms.com/manuals/pdf/operational_manual.pdf" rel="nofollow noopener" target="_blank">Orion BMS Operation Manual</a> — Ewert Energy Systems — Редакция Rev 2.1; положения видны в пересказе выдачи — раздел предел тока BMS не выше предела производителя ячеек, импульсные пределы — только если их задаёт производитель ячеек — обращение 30.09.2026</li><li><a href="https://www.littelfuse.com/assetdocs/fuseology-selection-guide?assetguid=d812dff2-1c47-4dc3-bce7-07a4001ddc32" rel="nofollow noopener" target="_blank">Fuseology Design Guide</a> — Littelfuse — Редакция редакция на дату обращения; положения видны в выдаче — раздел номинальное напряжение предохранителя не ниже напряжения цепи, отключающая способность не меньше наибольшего тока КЗ цепи, при 25 °C рабочий ток не больше 75 % номинала — обращение 30.09.2026</li><li><a href="https://www.victronenergy.com/media/pg/The_Wiring_Unlimited_book/en/dc-wiring.html" rel="nofollow noopener" target="_blank">Wiring Unlimited — 4. DC wiring</a> — Victron Energy — Редакция онлайн-редакция книги на дату обращения; положения видны в пересказе выдачи — раздел предохранитель выбирают по длительному току и по отключающей способности, литиевые батареи дают очень большие токи КЗ — обращение 30.09.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.1 Electromotive Force — внутреннее сопротивление, I = ε / (r + R), 10.2 Resistors in Series and Parallel — обращение 30.09.2026</li><li><a href="https://marinehowto.com/calculating-lifepo4-short-circuit-current/" rel="nofollow noopener" target="_blank">Calculating LiFePO4 Short Circuit Current</a> — Marine How To (Rod Collins), вторичный источник — Редакция онлайн-статья на дату обращения; видна в выдаче — раздел I = V / R, R — сумма сопротивлений ячеек и соединений, пример 13,313 В / 1,56 мОм ≈ 8533 А — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Ток между параллельными ячейками делится поровну.</li><li>Нагрузка задана мощностью — её ток наибольший при наименьшем напряжении сборки.</li><li>Пик нагрузки прямоугольный: постоянный ток в течение заданного времени.</li><li>Ток КЗ оценён по паспортному сопротивлению ячеек без проводов, контактов и ключей BMS.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не считает нагрев ячеек и сборки: паспортный ток задан для условий производителя.</li><li>Не выбирает конкретные BMS и предохранитель: их допустимые токи и время-токовые характеристики берут из паспортов.</li><li>Не проверяет сечение кабеля — номинал предохранителя не должен превышать его допустимый ток.</li><li>Правило 75 % — из руководства Littelfuse для 25 °C; у других типов и производителей предохранителей поправки свои.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="liion-charge-current.html">Ток зарядки Li-ion по C-rate</a></li><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="balansirovka-yacheek-bms.html">Пассивная балансировка ячеек Li-ion</a></li><li><a href="raschet-invertora.html">Подбор инвертора и кабеля от аккумулятора</a></li><li><a href="vremya-raboty-akkumulyatora.html">Время работы от аккумулятора</a></li></ul></section>
 </main>

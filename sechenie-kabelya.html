@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Предварительный выбор сечения провода по току: как считается</h2>
 <p>Сечение подбирают по длительно допустимому току. Расчёт использует таблицы 1.3.4 (медь) и 1.3.5 (алюминий) ПУЭ для проводов с резиновой или ПВХ-изоляцией: открытая прокладка, два одножильных провода в трубе для однофазной сети и три — для симметричной трёхфазной.</p>
@@ -170,7 +182,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Медь или алюминий?</h3><p>В новой жилой проводке — медь: при том же токе нужно меньшее сечение, жилы не ломаются на изгибах, контакты стабильнее. Алюминий встречается в старом фонде и на вводах большого сечения.</p><h3>Можно ли розетки на 1,5 мм²?</h3><p>Формально 19 А проходит, но розеточную линию защищают автоматом 16 А, а любой обогреватель загрузит её надолго. Стандарт де-факто — 2,5 мм² на розетки.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.consultant.ru/document/cons_doc_LAW_91911/c433e0a72788ab4efaff5c2f3fb84b0a11473557/" rel="nofollow noopener" target="_blank">ПУЭ. Глава 1.3. Таблица 1.3.4 — медные жилы</a> — Минэнерго СССР; публикация нормативного текста КонсультантПлюс — Редакция ПУЭ, 6-е издание; утверждено 05.10.1979; редакция 20.06.2003 — раздел 1.3.10, таблица 1.3.4 — обращение 15.08.2026</li><li><a href="https://www.consultant.ru/document/cons_doc_LAW_91911/c53b7e54b731bdb696fb7488b0e4e4ff75f84ec6/" rel="nofollow noopener" target="_blank">ПУЭ. Глава 1.3. Таблица 1.3.5 — алюминиевые жилы</a> — Минэнерго СССР; публикация нормативного текста КонсультантПлюс — Редакция ПУЭ, 6-е издание; утверждено 05.10.1979; редакция 20.06.2003 — раздел 1.3.10, таблица 1.3.5 — обращение 15.08.2026</li><li><a href="https://www.electrical-installation.org/enwiki/General_method_for_cable_sizing" rel="nofollow noopener" target="_blank">General method for cable sizing</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция, актуальная на 11.08.2026 — раздел Ambient temperature, Grouping of conductors or cables — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Таблица относится к изолированным проводам и трём точно указанным колонкам; это не универсальная таблица для любого кабеля.</li><li>Используется сокращённый ряд сечений; промежуточные строки ПУЭ не участвуют в подборе.</li><li>Для трёхфазного режима предполагаются симметричная нагрузка и три нагруженных фазных проводника; гармоники и нагруженная нейтраль требуют отдельной проверки.</li><li>Коэффициенты Kt и Kg пользователь берёт из применимого норматива или данных изготовителя.</li><li>Не проверяет минимальное сечение по механической прочности, падение напряжения и термическую стойкость при КЗ.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li><li><a href="padenie-napryazheniya.html">Падение напряжения в кабеле</a></li><li><a href="tok-po-moshchnosti.html">Расчёт тока по мощности (220 В и 380 В)</a></li><li><a href="awg-mm2.html">Перевод AWG ↔ мм²</a></li><li><a href="koefficienty-prokladki.html">Поправочные коэффициенты для тока кабеля</a></li></ul></section>
 </main>

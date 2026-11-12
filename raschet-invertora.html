@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Подбор инвертора и кабеля от аккумулятора: как считается</h2>
 <div class="formula">S = P / cos φ&nbsp;&nbsp;&nbsp;Sинв = S · запас<br>P = КПД · U · Iбат&nbsp;&nbsp;→&nbsp;&nbsp;Iбат = P / (КПД · Uмин)&nbsp;&nbsp;&nbsp;Sкабеля = 2 · ρ · L · Iбат / ΔU,&nbsp;&nbsp;&nbsp;ΔU = Uном · (допустимое падение, %) / 100</div>
@@ -161,7 +173,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему нельзя взять инвертор ровно по мощности нагрузки?</h3><p>Из-за реактивной составляющей и пусковых токов. Инвертор ограничен по полной мощности в вольт-амперах, а не по активной, и любой двигатель в момент пуска мгновенно превышает номинал в несколько раз.</p><h3>Чем чистый синус лучше модифицированного?</h3><p>Модифицированный синус — ступенчатая аппроксимация, и часть техники с ней работает плохо: двигатели греются и гудят, импульсные блоки питания и зарядные устройства могут отказать, аудиотехника фонит. Для холодильника, насоса и компьютера нужен чистый синус.</p><h3>Как выбрать предохранитель между батареей и инвертором?</h3><p>Его размещение, тип, номинал и отключающую способность выбирают по паспорту инвертора и батареи, допустимому току кабеля и расчётному току КЗ. Универсального множителя от рабочего тока для всех систем нет.</p><h3>Почему ток батареи считают при наименьшем напряжении?</h3><p>Инвертор держит выходную мощность, а от батареи берёт P/КПД = U·I, поэтому ток обратно пропорционален её напряжению: при разряде батареи и при падении напряжения в кабеле ток растёт. Наименьшее напряжение — порог отключения по разряду из паспорта инвертора или его настройки.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.victronenergy.com/upload/documents/The_Wiring_Unlimited_book/43562-Wiring_Unlimited-pdf-en.pdf" rel="nofollow noopener" target="_blank">Wiring Unlimited</a> — Victron Energy — Редакция rev. 08, 2024 — раздел DC wiring, voltage drop, battery banks, fusing — обращение 11.08.2026</li><li><a href="https://up.codes/s/stand-alone-inverter-input-circuit-current" rel="nofollow noopener" target="_blank">NFPA 70, National Electrical Code — входной ток автономного инвертора (только для сравнения)</a> — National Fire Protection Association; формулировка видна только в выдаче поиска (UpCodes, учебные материалы по NEC), текст NFPA 70 не открывался — Редакция не подтверждена: в выдаче поиска — статья 710.12; номер статьи и редакцию по самому NFPA 70 не проверяли — раздел только для сравнения, расчёт страницы на это не опирается: в выдаче — наибольший входной ток автономного инвертора при номинальной мощности инвертора и наименьшем входном напряжении — обращение 01.10.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Результат не проверяет паспортный ток батареи, BMS, предохранитель, допустимый нагрев кабеля, качество соединений и старение.</li><li>Ток считается по введённой мощности нагрузки из баланса мощности P = КПД·U·I; кабель и предохранитель на сам инвертор считают по его номинальной мощности — введите её вместо мощности нагрузки.</li><li>Без наименьшего входного напряжения инвертора ток и сечение считаются при номинальном напряжении и занижены.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="raschet-akb-avtonomnoy.html">Ёмкость аккумуляторов для автономной системы</a></li><li><a href="sechenie-po-dline-12v.html">Сечение провода для 12, 24 и 48 В</a></li><li><a href="batareya-posledovatelno-parallelno.html">Сборка аккумуляторной батареи (S/P)</a></li><li><a href="tok-razryada-liion-sborki.html">Ток разряда Li-ion сборки: BMS и предохранитель</a></li></ul></section>
 </main>

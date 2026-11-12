@@ -36,6 +36,30 @@ Contextweb.com, 562899, RESELLER, 89ff185a4c4e857c
 hyperad.tech, 150, RESELLER
 """
 
+# РСЯ: менять ID / выключать рекламу здесь, затем пересобирать сайт.
+# Один баннер после карточки расчёта; на служебных страницах рекламы нет.
+YAN_ADS_ENABLED = True
+YAN_AD_BLOCK_ID = "R-A-19823062-1"
+
+
+def yandex_ads():
+    if not YAN_ADS_ENABLED:
+        return "", ""
+    block_id = html.escape(YAN_AD_BLOCK_ID, quote=True)
+    render_id = "yandex_rtb_" + block_id
+    loader = """<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>"""
+    banner = ('<aside class="yan-ad" aria-label="Реклама">'
+              '<div class="yan-ad-label">Реклама</div>'
+              '<div id="%s" class="yan-ad-slot"></div></aside>\n'
+              '<script type="text/javascript">\n'
+              'window.yaContextCb.push(function(){\n'
+              'Ya.Context.AdvManager.render({blockId:%s,renderTo:%s});\n'
+              '});\n</script>'
+              % (render_id, json.dumps(YAN_AD_BLOCK_ID), json.dumps(render_id)))
+    return loader, banner
+
 # Фавикон: молния в фирменных цветах сайта (тёмно-зелёный фон, янтарная молния).
 FAVICON = "favicon.svg"
 FAVICON_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
@@ -95,6 +119,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -151,6 +178,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -245,6 +273,7 @@ PAGE = """<!DOCTYPE html>
 @OG@
 @SCHEMA@
 @METRIKA@
+@AD_LOADER@
 <style>@CSS@</style>
 </head>
 <body>
@@ -256,11 +285,11 @@ PAGE = """<!DOCTYPE html>
 <section class="card">
 @CALCBLOCK@
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+@AD_BANNER@
 <section class="article">
 @ARTICLE@
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 @SOURCES@
 <section class="related"><h2>Смотрите также</h2><ul>@RELATED@</ul></section>
 </main>
@@ -488,6 +517,7 @@ def page_html(c, all_by_slug):
                             "acceptedAnswer": {"@type": "Answer", "text": a}}
                            for q, a in c["faqs"]],
         })
+    ad_loader, ad_banner = ("", "") if notice else yandex_ads()
     title = seo_title(c)
     h = (PAGE.replace("@TITLE@", esc(title))
              .replace("@DESC@", esc(c["desc"]))
@@ -495,6 +525,8 @@ def page_html(c, all_by_slug):
              .replace("@OG@", og_tags(title, c["desc"], canonical))
              .replace("@SCHEMA@", ld_json({"@context": "https://schema.org", "@graph": graph}))
              .replace("@METRIKA@", METRIKA)
+             .replace("@AD_LOADER@", ad_loader)
+             .replace("@AD_BANNER@", ad_banner)
              .replace("@CSS@", CSS)
              .replace("@CAT@", cat_name)
              .replace("@NAME@", c["name"])
@@ -704,6 +736,9 @@ PRIVACY_HTML = """<!DOCTYPE html>
 <h2>Что происходит с данными калькуляторов</h2>
 <p>Все расчёты выполняются <b>в вашем браузере</b>. Код сайта не отправляет введённые значения и не сохраняет их в cookie или локальном хранилище. Закрытие или обновление вкладки очищает поля.</p>
 <p>Экспорт результата в PDF выполняется средствами браузера через окно печати. Файл создаётся на вашем устройстве, на сайт он не отправляется.</p>
+<h2>Реклама</h2>
+<p>На страницах калькуляторов размещаются рекламные блоки Рекламной сети Яндекса. При загрузке рекламы браузер обращается к серверам Яндекса и его рекламных партнёров. Они могут использовать cookie и идентификаторы, обрабатывать IP-адрес, сведения о браузере и устройстве, адрес страницы и взаимодействия с рекламой для подбора объявлений, измерения показов и предотвращения мошенничества. Код калькуляторов не передаёт введённые значения в параметры рекламных запросов.</p>
+<p>Условия обработки приведены в <a href="https://yandex.ru/legal/confidential/" rel="nofollow noopener" target="_blank">политике конфиденциальности Яндекса</a>. Настроить персонализацию можно на странице <a href="https://yandex.ru/tune/adv/" rel="nofollow noopener" target="_blank">настроек рекламы Яндекса</a>; ограничить загрузку рекламы и cookie — средствами браузера. Отключение персонализации не означает отключения рекламы. На этой странице политики рекламный код не загружается.</p>
 <h2>Аналитика и cookie</h2>
 <p>На сайте установлена <b>Яндекс.Метрика</b> (счётчик № 111301996). Она нужна оператору сайта, чтобы понимать посещаемость и то, какие калькуляторы востребованы. Метрика устанавливает собственные cookie и обрабатывает обезличенные сведения о посещении: адрес страницы, источник перехода, IP-адрес, тип устройства и браузера, язык, разрешение экрана, время и глубину просмотра.</p>
 <p><b>Что намеренно выключено:</b> Вебвизор (запись действий посетителя на странице), карта кликов и карта скроллинга. Записи ваших сессий не ведутся и не хранятся.</p>

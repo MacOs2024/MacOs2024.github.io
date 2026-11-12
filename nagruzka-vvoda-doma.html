@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Расчётная нагрузка ввода дома по группам: как считается</h2>
 <div class="formula">Pр = Ко · Σ (Кс,i · Pуст,i)<br>I = Pр / (U · cos φ) — однофазный ввод<br>I = Pр / (√3 · U · cos φ) — трёхфазный, на фазу</div>
@@ -160,7 +172,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему калькулятор не называет номинал вводного автомата?</h3><p>Номинал должен одновременно быть не меньше расчётного тока и не больше допустимого тока вводного кабеля (IB ≤ In ≤ Iz), выдерживать ожидаемый ток короткого замыкания, быть селективным с групповыми автоматами и соответствовать техническим условиям на присоединение. Одной расчётной мощности для этого недостаточно.</p><h3>Какой коэффициент спроса взять для розеток?</h3><p>Тот, что обоснован проектом для вашего состава приборов. Schneider Electric приводит для розеточных цепей 0,1–0,2, оговаривая, что бывает и больше. Мощные приборы кухни и санузла нередко работают одновременно, поэтому их лучше выделить в группу силовых приборов со своим коэффициентом, а не растворять в розетках с малым Кс.</p><h3>Расчётная мощность больше разрешённой по ТУ — что делать?</h3><p>Уменьшать одновременную нагрузку — разносить работу мощных приборов по времени, применять реле приоритета нагрузки — или увеличивать разрешённую мощность через сетевую организацию. Самовольно ставить вводной автомат больше предусмотренного техническими условиями нельзя.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.electrical-installation.org/enwiki/Estimation_of_actual_maximum_kVA_demand" rel="nofollow noopener" target="_blank">Estimation of actual maximum kVA demand</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция, актуальная на дату обращения — раздел Factor of maximum utilization (ku), Factor of simultaneity (ks), Factor of simultaneity according to circuit function, ks определяет проектировщик: точных значений для общего применения нет — обращение 27.09.2026</li><li><a href="https://www.minstroyrf.gov.ru/docs/12544/" rel="nofollow noopener" target="_blank">СП 256.1325800.2016 Электроустановки жилых и общественных зданий. Правила проектирования и монтажа</a> — Минстрой России — Редакция с изменениями, действующая на дату обращения; СП утверждён приказом Минстроя России от 29.08.2016 № 602/пр — раздел 7: расчётные нагрузки, удельные нагрузки и коэффициенты спроса — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Коэффициенты спроса групп и коэффициент одновременности взяты из проекта или обоснованного источника; значение 1 означает отсутствие снижения.</li><li>Для трёхфазного ввода нагрузка распределена по фазам равномерно.</li></ul><p><b>Границы применимости:</b></p><ul><li>Номинал вводного автомата не выбирается: нужны допустимый ток вводного кабеля, ток КЗ, селективность и технические условия на присоединение.</li><li>Пусковые токи двигателей, гармоники и перекос фаз не учитываются.</li><li>Результат не заменяет расчёт электрических нагрузок в составе проекта.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="nagruzka-kvartiry.html">Расчётная нагрузка с коэффициентом спроса</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li><li><a href="rozetochnaya-gruppa.html">Нагрузка на розеточную группу</a></li><li><a href="mnogotarifnyy-schetchik.html">Стоимость электроэнергии по зонам суток</a></li></ul></section>
 </main>

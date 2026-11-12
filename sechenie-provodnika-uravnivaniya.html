@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Сечение проводников уравнивания потенциалов: как считается</h2>
 <div class="formula">Основная система (ПУЭ 1.7.137): S ≥ max( min(S<sub>PE наиб</sub> / 2; 25 мм² Cu); 6 мм² Cu / 16 мм² Al / 50 мм² Fe )<br>Дополнительная (ПУЭ 1.7.138): две открытые части — S ≥ min(S<sub>PE1</sub>; S<sub>PE2</sub>); открытая и сторонняя — S ≥ S<sub>PE</sub> / 2<br>Вне кабеля (ПУЭ 1.7.127): не менее 2,5 мм² с механической защитой и 4 мм² без неё, алюминий — не менее 16 мм²</div>
@@ -166,7 +178,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему для основной системы не требуется больше 25 мм²?</h3><p>ПУЭ 1.7.137 требует половину наибольшего сечения защитного проводника, пока она не превышает 25 мм² по меди или равноценное сечение из другого металла, и оговаривает, что проводники большего сечения, как правило, не требуются. Слова «как правило» оставляют проекту право потребовать больше в обоснованных случаях.</p><h3>Можно ли выполнить уравнивание стальной полосой?</h3><p>Можно, но для основной системы не тоньше 50 мм² стали по ПУЭ 1.7.137. Кроме того, по проводимости сталь должна быть не хуже требуемого сечения PE: ПУЭ 1.7.126 требует для защитных проводников из других материалов эквивалентности по проводимости. Удельное сопротивление стали зависит от марки, поэтому такой пересчёт калькулятор не выполняет и выводит «Недостаточно данных».</p><h3>Какой защитный проводник считать наибольшим?</h3><p>Наибольший из защитных проводников электроустановки — как правило, PE питающей линии вводного щита, у остальных линий сечения меньше. Если он ещё не выбран, его подбирают по сечению фазной жилы по ПУЭ 1.7.126 и таблице 1.7.5.</p><h3>Совпадают ли требования ПУЭ и ГОСТ Р 50571.5.54?</h3><p>Минимумы 6 мм² меди, 16 мм² алюминия и 50 мм² стали и предел 25 мм² меди совпадают. Есть ли в ГОСТ Р 50571.5.54-2013 правило половины наибольшего защитного проводника, по доступным фрагментам текста однозначно установить не удалось; калькулятор считает по ПУЭ, и его минимум в любом случае не меньше.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://zandz.com/ru/pravila_zazemleniya/pue_razdel_17_3/" rel="nofollow noopener" target="_blank">ПУЭ, глава 1.7. Заземление и защитные меры электробезопасности, пп. 1.7.120–1.7.177</a> — Правила устройства электроустановок; текст по публикации ZandZ.com — Редакция 7-е издание — раздел 1.7.126 — эквивалентность по проводимости, 1.7.127 — минимумы для проводников вне кабеля, 1.7.137 — основная система, 1.7.138 — дополнительная система — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200108284" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.5.54-2013/МЭК 60364-5-54:2011. Электроустановки низковольтные. Часть 5-54. Заземляющие устройства, защитные проводники и защитные проводники уравнивания потенциалов</a> — Росстандарт — Редакция от 06.09.2013; текст п. 544.1.1 в выдаче дословно не виден — сверено по пересказу — раздел 544.1.1 — минимумы 6/16/50 мм² и предел 25 мм² меди; правило половины наибольшего PE не подтверждено, 544.2 — дополнительное уравнивание через проводимость — обращение 27.09.2026</li><li><a href="https://zandz.com/ru/pravila_zazemleniya/gost_r_50571_5_54_2013_2/" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.5.54-2024/МЭК 60364-5-54:2021. Электроустановки низковольтные. Часть 5-54. Заземляющие устройства и защитные проводники</a> — Росстандарт; текст по публикации ZandZ.com — Редакция 2024 г., на основе МЭК 60364-5-54:2021; сверено по пересказу выдачи — раздел 544.2 — проводимость проводника между открытой и сторонней частью не ниже проводимости PE половинного сечения — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Equipotential_conductor" rel="nofollow noopener" target="_blank">Equipotential conductor</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел основная система: половина наибольшего PE, не более 25 мм² Cu или 35 мм² Al, не менее 6 мм² Cu или 10 мм² Al, дополнительная система: половина PE, между двумя открытыми частями — меньший PE — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Расчёт ведётся по ПУЭ 7-го издания, пп. 1.7.137, 1.7.138 и 1.7.127.</li><li>Минимумы 1.7.127 для проводника вне кабеля: 2,5 и 4 мм² — медь, 16 мм² — алюминий.</li><li>Сечение пересчитывается только внутри одного металла; для разных металлов нужна эквивалентность по проводимости (ПУЭ 1.7.126), которую калькулятор не вычисляет.</li><li>Результат округляется вверх до стандартного ряда сечений до 240 мм².</li></ul><p><b>Границы применимости:</b></p><ul><li>Не проверяет термическую стойкость проводника уравнивания к току КЗ.</li><li>Не определяет, какие части нужно присоединять к основной и дополнительной системе.</li><li>Не пересчитывает сечения между медью, алюминием и сталью: для разных металлов выводит «Недостаточно данных» или значение с запасом.</li><li>Не определяет наибольшее сечение PE — его берут из проекта или подбирают по фазной жиле.</li><li>Наличие правила половины наибольшего PE в ГОСТ Р 50571.5.54 дословно не сверено.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="sechenie-pe-provodnika.html">Сечение защитного проводника PE</a></li><li><a href="sechenie-pen-provodnika.html">Сечение PEN-проводника до разделения (TN-C, TN-C-S)</a></li><li><a href="obryv-pen.html">Обрыв нуля (PEN): перекос фаз и напряжение на корпусах</a></li></ul></section>
 </main>

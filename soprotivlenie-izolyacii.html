@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Сопротивление изоляции: как считается</h2>
 <p>Мегаомметр подаёт постоянное испытательное напряжение между проводниками и измеряет ток через изоляцию, пересчитывая его в сопротивление. Нормативы задают минимум вместе с испытательным напряжением, и эти пары в разных документах различаются:</p>
@@ -165,7 +177,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Можно ли измерить на 1000 В, если по таблице нужно 500 В?</h3><p>Для сравнения с таблицей ГОСТ Р 50571.16-2019 — нет: минимум задан для 500 В. Кроме того, повышенное напряжение может повредить подключённые электронные устройства и УЗИП, которые стандарт требует отключать перед измерением.</p><h3>Прибор показал «больше предела». Что вписать?</h3><p>Верхний предел шкалы прибора, например 2000 МОм. Настоящее сопротивление не меньше этого значения, поэтому сравнение с минимумом останется корректным.</p><h3>Почему в сырую погоду показания хуже?</h3><p>Влага и конденсат снижают сопротивление по поверхности и в толще изоляции. Megger указывает, что пока оборудование теплее точки росы, влажность воздуха влияет на показание мало, а конденсат ниже точки росы снижает его заметно. Повторите измерение в сухих условиях, прежде чем делать выводы.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.consultant.ru/document/cons_doc_LAW_91515/26a8fbb40f75ea4bd44e7535cedbc469ff7cef84/" rel="nofollow noopener" target="_blank">ПУЭ. Глава 1.8. Нормы приёмо-сдаточных испытаний, таблица 1.8.34</a> — Минэнерго России; публикация нормативного текста КонсультантПлюс — Редакция ПУЭ, 7-е издание; утверждена приказом Минэнерго России от 09.04.2003 № 150, действует с 01.09.2003 — раздел 1.8.37, подпункт 1, таблица 1.8.34: электропроводки, в том числе осветительные сети — мегаомметр 1000 В, не менее 0,5 МОм — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200163804" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.16-2019/МЭК 60364-6:2016 Электроустановки низковольтные. Часть 6. Испытания</a> — Росстандарт — Редакция 2019 года: утверждён приказом Росстандарта от 09.04.2019 № 127-ст, дата введения 01.06.2019 — раздел 6.4.3.3, таблица 6.1: БСНН и ЗСНН — 250 В, не менее 0,5 МОм; до 500 В — 500 В, не менее 1,0 МОм; свыше 500 В — 1000 В, не менее 1,0 МОм, неотключаемый УЗИП: 250 В, не менее 1 МОм — обращение 27.09.2026</li><li><a href="https://www.instrumart.com/assets/Megger-Guide-to-Insulation-Testing.pdf" rel="nofollow noopener" target="_blank">A Stitch in Time — The Complete Guide to Electrical Insulation Testing</a> — Megger — Редакция © 2006; PDF на сайте дистрибьютора Instrumart — раздел влияние температуры: примерно вдвое на каждые 10 °C, у разных материалов по-разному, влияние влажности и точки росы — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Измерение выполнено постоянным напряжением мегаомметра, указанным в поле, при отсоединённых электроприёмниках и отключённых УЗИП, кроме случая, выбранного отдельно.</li><li>Показание относится к одной испытанной цепи и снято в известных температуре и влажности.</li></ul><p><b>Границы применимости:</b></p><ul><li>Вывод относится только к выбранному документу и к условиям конкретного измерения; температурная поправка не применяется.</li><li>Коэффициент абсорбции, индекс поляризации и тренд измерений не оцениваются; для электрических машин и кабелей выше 1 кВ действуют свои методики.</li><li>Нормы для машин, трансформаторов, вторичных цепей и других строк таблицы 1.8.34 не включены.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="emkostnyy-tok-utechki.html">Оценка тока утечки по ПУЭ 7.1.83</a></li><li><a href="udlinitel-na-katushke.html">Удлинитель на катушке: нагрузка смотанного кабеля</a></li><li><a href="zamykanie-na-zemlyu-it.html">Первое замыкание на землю в системе IT: RA·Id ≤ 50 В</a></li></ul></section>
 </main>

@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Выбор УЗИП на вводе: как считается</h2>
 <div class="formula">Класс на вводе: I — при внешней молниезащите, II — без неё<br>Iimp — по расчёту IEC 62305 (12,5 кА на вид защиты — только если ток установить нельзя)&nbsp;&nbsp;&nbsp;In ≥ 5 кА (8/20)<br>Uc — по табл. 534.2 для системы заземления&nbsp;&nbsp;&nbsp;Up + ΔU ≤ 2,5 кВ, ΔU ≈ 1 кВ на 1 м проводников</div>
@@ -168,7 +180,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Нужен ли УЗИП в частном доме?</h3><p>Это решают по оценке риска по IEC 60364-4-44, раздел 443, и IEC 62305-2. Калькулятор показывает только минимальные требования к УЗИП на вводе, если его ставят.</p><h3>Почему при молниеприёмнике на крыше нужен класс I?</h3><p>Молниезащита отводит ток молнии в заземлитель, и часть этого тока через главную заземляющую шину уходит в проводники питающей линии. УЗИП класса I испытан импульсом формы 10/350 мкс и рассчитан на такой ток, УЗИП класса II — нет.</p><h3>Что значит 12,5 кА на вид защиты?</h3><p>Это минимальный импульсный ток Iimp формы 10/350 на каждый вид защиты УЗИП класса I, который берут, только если ток нельзя установить расчётом по IEC 62305. В схеме «3+1» через разрядник N–PE проходит сумма токов всех проводников, поэтому в трёхфазной сети он должен выдерживать 4 · 12,5 = 50 кА.</p><h3>Почему важна длина проводов к УЗИП?</h3><p>При импульсе на индуктивности проводников подключения падает около 1 кВ на метр, и это напряжение добавляется к уровню защиты Up. Если суммарная длина больше 0,5 м, оборудование получает заметно больше, чем обещает паспорт УЗИП.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://webstore.iec.ch/en/publication/63543" rel="nofollow noopener" target="_blank">IEC 60364-5-53. Low-voltage electrical installations — Part 5-53: Selection and erection of electrical equipment — Devices for protection for safety, isolation, switching, control and monitoring</a> — International Electrotechnical Commission (IEC) — Редакция Ed. 4.0 (2019) с изменением 1 (2020); текст раздела 534 в выдаче поиска не виден — раздел 534 — выбор и монтаж УЗИП — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Selection_of_a_Type_1_SPD" rel="nofollow noopener" target="_blank">Selection of a Type 1 SPD</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел Iimp не менее 12,5 кА (10/350) на ветвь по IEC 60364-5-534, тип 1 — для зданий с молниезащитой — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Common_characteristics_of_SPDs_according_to_the_installation_characteristics" rel="nofollow noopener" target="_blank">Common characteristics of SPDs according to the installation characteristics</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел рис. J23 — минимальные Uc по табл. 534.2, Up 2,5 кВ — категория II для 230/400 В — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Connection_of_Surge_Protection_Device" rel="nofollow noopener" target="_blank">Connection of Surge Protection Device</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел длина проводников подключения не более 50 см, 8 кА 8/20 — около 1000 В на метр — обращение 27.09.2026</li><li><a href="https://docs.cntd.ru/document/1200105240" rel="nofollow noopener" target="_blank">ГОСТ Р 50571.5.53-2013/МЭК 60364-5-53:2002. Электроустановки низковольтные. Часть 5-53. Выбор и монтаж электрооборудования. Отделение, коммутация и управление</a> — Росстандарт — Редакция от 06.09.2013, на основе МЭК 60364-5-53:2002; сверено по пересказу выдачи — раздел 534: In не менее 5 кА 8/20 на каждый вид защиты, тип соединения 2: In N–PE не менее 20 кА (3ф) и 10 кА (1ф) — обращение 27.09.2026</li><li><a href="https://electrical-engineering-portal.com/surge-protective-devices-spds-rcd" rel="nofollow noopener" target="_blank">Best practice for using surge protective devices (SPDs) and RCDs together</a> — Electrical Engineering Portal — Редакция онлайн-статья на дату обращения; изложение BS 7671 — раздел Iimp N–PE для трёхфазной схемы CT2 — 50 кА = 4 · 12,5 кА — обращение 27.09.2026</li><li><a href="https://www.weidmueller.com/int/products/electronics/lightning_and_surge_protection/installation_guidance.jsp" rel="nofollow noopener" target="_blank">Installation information and requirements — lightning and surge protection</a> — Weidmüller — Редакция онлайн-руководство на дату обращения — раздел защитное расстояние больше 10 м — до 2·Up на оборудовании, нужен дополнительный УЗИП — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Сеть 230/400 В: U₀ от 200 до 250 В; стойкость оборудования категории II — 2,5 кВ.</li><li>УЗИП устанавливается на вводе или рядом с ним; для TT — схема «3+1» (тип соединения 2).</li><li>Uc для TN и TT — по рис. J23 Schneider Electric, составленному по табл. 534.2; для IT между фазой и PE и между N и PE источники расходятся — значение не выбирается.</li><li>Падение напряжения на проводниках подключения — около 1 кВ на метр (Schneider Electric, импульс 8 кА формы 8/20).</li></ul><p><b>Границы применимости:</b></p><ul><li>Не определяет, нужен ли УЗИП: это решает оценка риска по IEC 60364-4-44 (раздел 443) и IEC 62305-2.</li><li>Не рассчитывает Iimp по IEC 62305 — его вводит пользователь.</li><li>Не выбирает конкретный УЗИП и не проверяет согласование ступеней, резервную защиту и отключающую способность.</li><li>Текст раздела 534 дословно не сверен; значения — по пересказу вторичных источников.</li><li>Для чувствительного оборудования категории I нужна дополнительная ступень защиты у оборудования — она не рассчитывается.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="dvoynoy-molnieotvod.html">Зона защиты двойного стержневого молниеотвода</a></li><li><a href="sechenie-provodnika-uravnivaniya.html">Сечение проводников уравнивания потенциалов</a></li></ul></section>
 </main>

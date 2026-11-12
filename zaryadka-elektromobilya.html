@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Время и стоимость зарядки электромобиля: как считается</h2>
 <div class="formula">Eбат = C · (SoC₁ − SoC₀) / 100&nbsp;&nbsp;&nbsp;Eсети = Eбат / КПД<br>t = Eсети / P&nbsp;&nbsp;&nbsp;Стоимость = Eсети · тариф</div>
@@ -163,7 +175,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему нельзя просто разделить ёмкость на мощность?</h3><p>Потому что часть энергии теряется в зарядном устройстве и на нагрев ячеек. При КПД 90% из сети берётся на 11% больше, чем попадает в батарею, — и время, и счёт растут ровно на эту величину.</p><h3>Почему до 100% заряжается так долго?</h3><p>После 80% система управления батареей переходит с постоянного тока на постоянное напряжение, и ток падает. Последние 20% могут занять столько же времени, сколько предыдущие 60%, — поэтому в дороге обычно заряжаются именно до 80%.</p><h3>Выгодно ли заряжаться по ночному тарифу?</h3><p>Да, это главный способ экономии для домашней зарядки. При двухтарифном счётчике ночная ставка обычно в 2–3 раза ниже дневной, а полная зарядка как раз укладывается в ночной интервал.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://afdc.energy.gov/fuels/electricity-stations" rel="nofollow noopener" target="_blank">Electric Vehicle Charging Stations</a> — U.S. Department of Energy, Alternative Fuels Data Center — Редакция онлайн-редакция, актуальная на дату обращения — раздел charging power and time — обращение 11.08.2026</li><li><a href="https://www.energy.gov/cmei/vehicles/articles/fotw-1045-september-3-2018-77-82-energy-put-electric-car-used-move-car-down" rel="nofollow noopener" target="_blank">Energy Put into an Electric Car and Charging Losses</a> — U.S. Department of Energy — Редакция Fact of the Week #1045, 3 September 2018 — раздел wall-to-battery charging loss — обращение 11.08.2026</li></ul><p><b>Границы применимости:</b></p><ul><li>Мощность ограничивается меньшим из значений EVSE и бортового зарядного устройства; зарядный профиль и терморегулирование меняют время.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="stoimost-elektroenergii.html">Расход и стоимость электроэнергии</a></li><li><a href="battery-charge-time.html">Время зарядки аккумулятора</a></li><li><a href="vybor-avtomata.html">Предварительный выбор автоматического выключателя</a></li></ul></section>
 </main>

@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>КПД электродвигателя по классам IE2–IE4 и экономия: как считается</h2>
 <div class="formula">P<sub>потр</sub> = P / η,&nbsp;&nbsp;потери = P / η − P<br>ΔP = P / η<sub>стар</sub> − P / η<sub>нов</sub>,&nbsp;&nbsp;ΔW = ΔP · t,&nbsp;&nbsp;экономия = ΔW · тариф</div>
@@ -163,7 +175,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Где взять КПД своего двигателя?</h3><p>На шильдике и в паспорте двигателя с классом IE указан номинальный КПД, часто и класс. Минимум класса — нижняя граница, реальный КПД бывает выше.</p><h3>Почему экономия получается небольшой?</h3><p>Разница КПД соседних классов у двигателей средней мощности — 1–2 процентных пункта. Экономия заметна при долгой работе с полной нагрузкой: насосы, вентиляторы, компрессоры, работающие большую часть года.</p><h3>Что делать, если мощность двигателя не из таблицы?</h3><p>Таблица задаёт КПД для стандартных мощностей. Для промежуточной мощности калькулятор не интерполирует и выводит «Недостаточно данных»: возьмите КПД из паспорта двигателя.</p><h3>Работает ли таблица для 60 Гц и восьмиполюсных двигателей?</h3><p>Нет. Калькулятор содержит значения для 50 Гц и 2, 4, 6 полюсов. Для 60 Гц и 8 полюсов у стандарта отдельные значения.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.legislation.gov.uk/eur/2019/1781/annex/I/2020-01-31?view=plain" rel="nofollow noopener" target="_blank">Commission Regulation (EU) 2019/1781 laying down ecodesign requirements for electric motors and variable speed drives, Annex I</a> — Европейская комиссия; текст по публикации legislation.gov.uk — Редакция от 01.10.2019; таблицы 1–3 видны в выдаче поиска построчно — раздел таблица 1 — минимальный КПД IE2, 50 Гц, таблица 2 — IE3, таблица 3 — IE4 — обращение 30.09.2026</li><li><a href="https://library.e.abb.com/public/db64d153e3c346938e18916e66fb1d0d/9AKK107319%20EN%2005-2018_20848_ABB_Technical_note_IEC_60034_30_1.pdf" rel="nofollow noopener" target="_blank">IEC 60034-30-1. Rotating electrical machines — Part 30-1: Efficiency classes of line operated AC motors (IE code)</a> — International Electrotechnical Commission (IEC) — Редакция Ed. 1.0 (2014-03); в выдаче видна и Ed. 2.0 (2025-12), её таблицы не сверены — раздел классы IE1–IE4, мощности 0,12–1000 кВт, 2/4/6/8 полюсов; значения по технической записке ABB, IE1 полностью не сверен — обращение 30.09.2026</li><li><a href="https://docs.cntd.ru/document/1200145769" rel="nofollow noopener" target="_blank">ГОСТ IEC 60034-30-1-2016. Машины электрические вращающиеся. Часть 30-1. Классы КПД двигателей переменного тока, работающих от сети (код IE)</a> — Межгосударственный стандарт; Росстандарт — Редакция введён 01.03.2018 (по выдаче поиска); текст таблиц не сверен — раздел межгосударственная редакция IEC 60034-30-1 — обращение 30.09.2026</li><li><a href="https://www.nea.gov.sg/docs/default-source/cmd-documents/energy-efficiency/ie4-table.pdf" rel="nofollow noopener" target="_blank">The efficiencies in the table below are applicable to IE4 motors</a> — National Environment Agency (NEA), Сингапур — Редакция PDF на дату обращения; строки 75–250 кВт видны в пересказе выдачи — раздел IE4, 50 Гц, 75–200 кВт — сверка строк таблицы 3 Регламента — обращение 30.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>КПД старого и нового двигателя — минимальные значения классов по таблицам для 50 Гц либо заданное значение.</li><li>Двигатель работает на номинальной мощности указанное число часов в год.</li><li>Мощность должна совпадать со строкой таблицы; для 200–1000 кВт действует одна строка.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не интерполирует КПД для промежуточных мощностей.</li><li>Не содержит IE1, 8-полюсных двигателей и 60 Гц.</li><li>Не учитывает частичную нагрузку, работу от ПЧ и стоимость самой замены.</li><li>Таблицы сверены по Регламенту (ЕС) 2019/1781 в выдаче поиска; редакция IEC 60034-30-1:2025 не сверена.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="tok-elektrodvigatelya.html">Оценка номинального тока электродвигателя</a></li><li><a href="stoimost-elektroenergii.html">Расход и стоимость электроэнергии</a></li><li><a href="podbor-chastotnogo-preobrazovatelya.html">Подбор частотного преобразователя по току двигателя</a></li><li><a href="moshchnost-nasosa.html">Мощность насоса по расходу и напору</a></li></ul></section>
 </main>

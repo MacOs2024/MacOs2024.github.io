@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Суммарный ток утечки нескольких потребителей на одном УЗО: как считается</h2>
 <div class="formula">Iут = ΣIут,i + 0,4 мА/А · ΣIнагр,j + 0,01 мА/м · L&nbsp;&nbsp;&nbsp;ПУЭ 7.1.83: Iут ≤ IΔn / 3</div>
@@ -165,7 +177,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Где взять ток утечки прибора?</h3><p>В паспорте, протоколе измерений или у изготовителя. Если данных нет, ПУЭ 7.1.83 разрешает оценку 0,4 мА на 1 А тока нагрузки. У техники с ЭМС-фильтрами и импульсными источниками фактическая утечка может отличаться от этой оценки, поэтому при сомнениях её измеряют.</p><h3>Почему не поставить УЗО на 100 мА, если утечка большая?</h3><p>Если УЗО установлено для дополнительной защиты людей, его чувствительность не подбирают под утечку. При превышении предела линию делят на несколько групп со своими УЗО. Более грубая уставка допустима только там, где назначение защиты это позволяет, например у противопожарного УЗО.</p><h3>Нужно ли учитывать длину нулевого проводника?</h3><p>Нет. ПУЭ 7.1.83 задаёт утечку сети по длине фазного проводника — 10 мкА на 1 м. Для разветвлённой группы суммируют длины всех фазных проводников за этим УЗО.</p><h3>Почему пределов три, а не один?</h3><p>Это разные документы: ПУЭ 7.1.83 (треть IΔn), IEC 60364-5-53, пункт 531.3.2 (30 %), и практическая рекомендация Schneider Electric (0,25·IΔn). Для российской установки нормативным является ПУЭ; более строгие ориентиры полезны, когда утечки известны лишь приблизительно.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-agent">Сверено с источником и тестами</span></h2><p><b>Источники:</b></p><ul><li><a href="https://docs.cntd.ru/document/1200001642" rel="nofollow noopener" target="_blank">ПУЭ. Глава 7.1. Электроустановки жилых, общественных, административных и бытовых зданий</a> — Минэнерго России / нормативная база Техэксперт — Редакция 7-е издание — раздел 7.1.83 — обращение 27.09.2026</li><li>IEC 60364-5-53. Low-voltage electrical installations — Part 5-53 — International Electrotechnical Commission (IEC) — Редакция Ed. 4.0 (2019); формулировка сверена по вторичным цитатам пункта, включая BS 7671:2018, 531.3.2 — раздел 531.3.2 — накопленные токи утечки за УЗО не более 30 % IΔn — обращение 27.09.2026</li><li><a href="https://www.electrical-installation.org/enwiki/Sensitivity_of_RCDs_to_disturbances" rel="nofollow noopener" target="_blank">Sensitivity of RCDs to disturbances</a> — Schneider Electric Electrical Installation Guide — Редакция онлайн-редакция на дату обращения — раздел ограничение постоянной утечки 0,25·IΔn делением цепей, срабатывание УЗО в диапазоне 0,5·IΔn…IΔn — обращение 27.09.2026</li></ul><p><b>Допущения:</b></p><ul><li>Утечки складываются арифметически, как в ПУЭ 7.1.83; модуль векторной суммы не больше арифметической, поэтому результат не занижается.</li><li>Для приборов без данных применяется оценка ПУЭ 7.1.83: 0,4 мА на 1 А тока нагрузки.</li><li>L — суммарная длина всех фазных проводников за данным УЗО, а не длина трассы одной фазы.</li></ul><p><b>Границы применимости:</b></p><ul><li>Не учитывает форму остаточного тока и выбор типа УЗО AC/A/F/B.</li><li>Не гарантирует отсутствия ложных срабатываний: фактические утечки проверяют измерением.</li><li>Не выбирает уставку УЗО и не проверяет селективность каскада УЗО.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="emkostnyy-tok-utechki.html">Оценка тока утечки по ПУЭ 7.1.83</a></li><li><a href="vybor-uzo.html">Предварительный выбор УЗО: ток, чувствительность и тип</a></li><li><a href="kolcevoy-zazemlitel.html">Кольцевой заземлитель вокруг здания</a></li><li><a href="zazemlenie-tt-uzo.html">Заземление в системе TT: условие RA·IΔn ≤ 50 В</a></li></ul></section>
 </main>
