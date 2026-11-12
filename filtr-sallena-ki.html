@@ -248,13 +248,18 @@ function gt(a,b){return a>b+Math.abs(b)*1e-9;}
 function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
 function lt(a,b){return a<b-Math.abs(b)*1e-9;}
 function le(a,b){return a<=b+Math.abs(b)*1e-9;}
-function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+// fe — как fmt, но и в экспоненциальной записи (|x| < 1e-4 или ≥ 1e7) печатает p значащих цифр: иначе fx терял гарантию
+// «по ту же сторону порога» — fmt там всегда даёт три цифры.
+function fe(x,p){var s=Number(x.toPrecision(p)),a=Math.abs(s);if(a===0||(a<1e7&&a>=1e-4))return fmt(x,p);var t=s.toExponential(p-1).replace(/(\.\d*?)0+e/,'$1e').replace('.e','e');return t.replace('e+','·10^').replace('e','·10^').replace('.',',');}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fe(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fe(x,p);}return fe(x,12);}
 function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
 function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
 function db(x){return 20*Math.log(Math.abs(x))/Math.LN10;}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 function sp(x,u){return si(Number(x.toPrecision(12)),u);}
-function rng(x,l,u){var lo_=x-l<u-x;return fx(x,lo_?l:u)+' В в пределах '+(lo_?fx(l,x):fmt(l,4))+' … '+(lo_?fmt(u,4):fx(u,x))+' В';}
+// Введённые границы печатаются как введены (граница, равная значению, — как значение), значение — fx относительно ближней границы.
+function bd(b,x){return Math.abs(b-x)<=Math.abs(x)*1e-9?fmt(b,4):fmt(b,12);}
+function rng(x,l,u){var lo_=x-l<u-x;return fx(x,lo_?l:u)+' В в пределах '+bd(l,x)+' … '+bd(u,x)+' В';}
 
 function sync(){var m=S('mode'),an=m==='an',hp=S('typ')==='hp';
 hideF('r1',!an);hideF('r2',!an);hideF('c1',!an);hideF('c2',!an);hideF('rb',!an);hideF('ra',!an);

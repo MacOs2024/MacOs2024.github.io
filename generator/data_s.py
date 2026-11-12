@@ -44,13 +44,18 @@ function gt(a,b){return a>b+Math.abs(b)*1e-9;}
 function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
 function lt(a,b){return a<b-Math.abs(b)*1e-9;}
 function le(a,b){return a<=b+Math.abs(b)*1e-9;}
-function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+// fe — как fmt, но и в экспоненциальной записи (|x| < 1e-4 или ≥ 1e7) печатает p значащих цифр: иначе fx терял гарантию
+// «по ту же сторону порога» — fmt там всегда даёт три цифры.
+function fe(x,p){var s=Number(x.toPrecision(p)),a=Math.abs(s);if(a===0||(a<1e7&&a>=1e-4))return fmt(x,p);var t=s.toExponential(p-1).replace(/(\.\d*?)0+e/,'$1e').replace('.e','e');return t.replace('e+','·10^').replace('e','·10^').replace('.',',');}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fe(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fe(x,p);}return fe(x,12);}
 function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
 function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
 function db(x){return 20*Math.log(Math.abs(x))/Math.LN10;}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 function sp(x,u){return si(Number(x.toPrecision(12)),u);}
-function rng(x,l,u){var lo_=x-l<u-x;return fx(x,lo_?l:u)+' В в пределах '+(lo_?fx(l,x):fmt(l,4))+' … '+(lo_?fmt(u,4):fx(u,x))+' В';}
+// Введённые границы печатаются как введены (граница, равная значению, — как значение), значение — fx относительно ближней границы.
+function bd(b,x){return Math.abs(b-x)<=Math.abs(x)*1e-9?fmt(b,4):fmt(b,12);}
+function rng(x,l,u){var lo_=x-l<u-x;return fx(x,lo_?l:u)+' В в пределах '+bd(l,x)+' … '+bd(u,x)+' В';}
 '''
 
 # ─── Общие источники ─────────────────────────────────────────────────────────
@@ -275,8 +280,8 @@ if(t!==null){var f=t/100;
  h+=row('КОСС в наихудшем из 16 сочетаний ±'+fmt(t)+' %',fmt(wn,4)+' — '+fmt(db(wn),4)+' дБ')+
   row('Для сравнения: приближение TI и ADI (1 + Aд)/(4t) — для согласованных номиналов',fmt(ap,4)+' — '+fmt(db(ap),4)+' дБ')+
   row('Наибольшее |Aсф| при допуске',fmt(am,4)+' — ошибка выхода от синфазных '+fmt(vc,4)+' В до ±'+si(am*Math.abs(vc),'В'))+
-  row('Выход при допусках резисторов',fmt(vo0,4)+' … '+fmt(vo1,4)+' В')+
-  row('Напряжение на входах ОУ при допусках',fmt(vp0,4)+' … '+fmt(vp1,4)+' В');}
+  row('Выход при допусках резисторов',(lo===null?fmt(vo0,4):fx(vo0,lo))+' … '+(hi===null?fmt(vo1,4):fx(vo1,hi))+' В')+
+  row('Напряжение на входах ОУ при допусках',(cl===null?fmt(vp0,4):fx(vp0,cl))+' … '+(ch===null?fmt(vp1,4):fx(vp1,ch))+' В');}
 h+=row('Входное сопротивление со стороны V2: R3 + R4',si(r3+r4,'Ом'))+
  row('Со стороны V1: R1 — при V+ = 0',si(r1,'Ом'))+
  row('Для плавающего источника между входами: R1 + R3',si(r1+r3,'Ом'))+
@@ -665,13 +670,13 @@ if(sp0.length<4){var vv=[],f=(tr||0)/100,g=(tv||0)/100,dd=dv||0,ov=(vs||0)/1000,
  W={thn:Infinity,thx:-Infinity,tln:Infinity,tlx:-Infinity,pn:Infinity,px:-Infinity};
  for(k=0;k<(1<<vv.length);k++){var pc=cp(p0);for(j=0;j<vv.length;j++)pc[vv[j][0]]=(k>>j)&1?vv[j][2]:vv[j][1];var q=th(pc);
   W.thn=Math.min(W.thn,q.vth);W.thx=Math.max(W.thx,q.vth);W.tln=Math.min(W.tln,q.vtl);W.tlx=Math.max(W.tlx,q.vtl);W.pn=Math.min(W.pn,q.pL,q.pH);W.px=Math.max(W.px,q.pL,q.pH);}
- h+=row('VTH при заданных разбросах',fmt(W.thn,4)+' … '+fmt(W.thx,4)+' В')+row('VTL при заданных разбросах',fmt(W.tln,4)+' … '+fmt(W.tlx,4)+' В')+
+ h+=row('VTH при заданных разбросах',fmt(W.thn,4)+' … '+(vi1===null?fmt(W.thx,4):fx(W.thx,vi1))+' В')+row('VTL при заданных разбросах',(vi0===null?fmt(W.tln,4):fx(W.tln,vi0))+' … '+fmt(W.tlx,4)+' В')+
   row('Гистерезис при любом сочетании не меньше VTH,мин − VTL,макс',fmt(W.thn-W.tlx,4)+' В');}
 var bad=[],risk=[],miss=[];
 if(W&&!(W.thn>W.tlx))risk.push('при заданных разбросах наименьший верхний порог '+fx(W.thn,W.tlx)+' В не выше наибольшего нижнего '+fx(W.tlx,W.thn)+' В — гистерезис не гарантирован');
 if(vi0===null)miss.push('размах входного сигнала');
 else{var oH=gt(vi1,r.vth),oL=lt(vi0,r.vtl);
- h+=row('Входной сигнал и пороги',fmt(vi0,4)+' … '+fmt(vi1,4)+' В: '+(oH?'выше VTH':'не выше VTH')+', '+(oL?'ниже VTL':'не ниже VTL'));
+ h+=row('Входной сигнал и пороги',fx(vi0,W?W.tln:r.vtl)+' … '+fx(vi1,W?W.thx:r.vth)+' В: '+(oH?'выше VTH':'не выше VTH')+', '+(oL?'ниже VTL':'не ниже VTL'));
  if(!oH)bad.push('наибольшее напряжение сигнала '+fx(vi1,r.vth)+' В не выше верхнего порога '+fx(r.vth,vi1)+' В — выход не переключится');
  if(!oL)bad.push('наименьшее напряжение сигнала '+fx(vi0,r.vtl)+' В не ниже нижнего порога '+fx(r.vtl,vi0)+' В — выход не вернётся');
  if(W){if(oH&&!gt(vi1,W.thx))risk.push('при заданных разбросах верхний порог доходит до '+fx(W.thx,vi1)+' В — наибольшее напряжение сигнала '+fx(vi1,W.thx)+' В может его не пересечь');
@@ -843,7 +848,7 @@ h+=row('Наименьшее напряжение на выходе по Uкэ �
 var top=vo===null?null:t==='simple'?vo:t==='re'?vo+B.ie2*re:vo+vbe;
 h+=row('Наибольшее напряжение на выходе по UКЭО',top===null?'UКЭО не задано':fx(top,v1)+' В');
 var pp=A.p.concat(B.p),pm=Math.max.apply(null,pp),nm=t==='wilson'?['Q1','Q2','Q3']:['Q1','Q2'];
-h+=row('Мощность транзисторов при Uвых = '+fmt(v1,4)+' В: '+nm.join(' / '),B.p.map(function(x){return si(x,'Вт');}).join(' / '))+
+h+=row('Мощность транзисторов при Uвых = '+fmt(v1,4)+' В: '+nm.join(' / '),B.p.map(function(x){return pt===null?si(x,'Вт'):sx(x,pt/1000,'Вт');}).join(' / '))+
  row(t==='re'?'Мощность резисторов: R / RE1 / RE2':'Мощность резистора R',B.pr.map(function(x){return si(x,'Вт');}).join(' / '));
 var bad=[],miss=[];
 if(lim===null)miss.push('Uкэ нас');else if(lt(v0,lim))bad.push('при Uвых = '+fx(v0,lim)+' В выходной транзистор уходит в насыщение: нужно не меньше '+fx(lim,v0)+' В — ток зеркала здесь не держится');

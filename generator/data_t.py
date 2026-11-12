@@ -44,7 +44,10 @@ function gt(a,b){return a>b+Math.abs(b)*1e-9;}
 function lt(a,b){return a<b-Math.abs(b)*1e-9;}
 function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
 function le(a,b){return a<=b+Math.abs(b)*1e-9;}
-function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fmt(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fmt(x,p);}return fmt(x,12);}
+// fe — как fmt, но и в экспоненциальной записи (|x| < 1e-4 или ≥ 1e7) печатает p значащих цифр: иначе fx терял гарантию
+// «по ту же сторону порога» — fmt там всегда даёт три цифры.
+function fe(x,p){var s=Number(x.toPrecision(p)),a=Math.abs(s);if(a===0||(a<1e7&&a>=1e-4))return fmt(x,p);var t=s.toExponential(p-1).replace(/(\.\d*?)0+e/,'$1e').replace('.e','e');return t.replace('e+','·10^').replace('e','·10^').replace('.',',');}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fe(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fe(x,p);}return fe(x,12);}
 function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
 function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
 function sg(x){return x>0?'+':'';}
@@ -340,6 +343,8 @@ function rv(x){return x<1e7?fmt(x,8):x.toFixed(3).replace(/\.?0+$/,'').replace('
 function pe(e){var a=Math.abs(e);if(a<1e-12)return '0 ppm';if(a<1e-4)return sg(e)+fmt(e*1e6)+' ppm';if(a<1e-2)return sg(e)+fmt(e*1e6)+' ppm ('+sg(e)+fmt(e*100)+' %)';return sg(e)+fmt(e*100)+' %';}
 function pz(x){return x>=1e4?fmt(x/1e4)+' %':fmt(x)+' ppm';}
 function pq(x,lim){return lim>=1e4?fx(x/1e4,lim/1e4)+' %':fx(x,lim)+' ppm';}
+// Введённое допустимое отклонение печатается как введено.
+function pv(x){return x>=1e4?fmt(x/1e4,12)+' %':fmt(x,12)+' ppm';}
 function sync(){var m=S('mode');hideF('chip',m!=='bin');hideF('bits',m!=='tim');}
 function init(){$('mode').addEventListener('change',sync);sync();}
 function calc(){
@@ -393,14 +398,16 @@ else{
  if(cnt>1)h+=row('Та же погрешность у других пар',(cnt-1)+' — все с меньшим ARR');}
 var d=pp===null?0:pp*1e-6,lo=(1+e)*(1-d)-1,hi=(1+e)*(1+d)-1,ae=Math.abs(e)*1e6,wp=Math.max(Math.abs(lo),Math.abs(hi))*1e6;
 h+=row('Погрешность частоты из-за деления',pe(e));
-if(pp!==null)h+=row('С учётом точности тактирования ±'+fmt(pp)+' ppm',Math.max(Math.abs(lo),Math.abs(hi))>=1e-2?'от '+sg(lo)+fmt(lo*100)+' до '+sg(hi)+fmt(hi*100)+' %':'от '+sg(lo)+fmt(lo*1e6)+' до '+sg(hi)+fmt(hi*1e6)+' ppm');
-if(tl!==null)h+=row('Допустимое отклонение','±'+fmt(tl)+' ppm'+(tl>=100?' (±'+fmt(tl/1e4)+' %)':''));
+// Края — fx относительно допустимого отклонения, если оно задано: число у вывода не округляется через порог.
+function ed(v,pc){var k=pc?100:1e6,x=v*k,L=tl===null?null:(v<0?-tl:tl)*k/1e6;return sg(v)+(L===null?fmt(x):fx(x,L));}
+if(pp!==null)h+=row('С учётом точности тактирования ±'+fmt(pp,12)+' ppm',Math.max(Math.abs(lo),Math.abs(hi))>=1e-2?'от '+ed(lo,1)+' до '+ed(hi,1)+' %':'от '+ed(lo,0)+' до '+ed(hi,0)+' ppm');
+if(tl!==null)h+=row('Допустимое отклонение','±'+fmt(tl,12)+' ppm'+(tl>=100?' (±'+fmt(tl/1e4,12)+' %)':''));
 var st;
-if(tl!==null&&gt(ae,tl))st='Отклонение частоты '+pq(ae,tl)+' больше допустимого '+pq(tl,ae)+' — уже из-за деления, без учёта точности тактирования';
-else if(tl!==null&&pp!==null&&gt(wp,tl))st='Риск: с учётом точности тактирования ±'+fmt(pp)+' ppm отклонение может достигать '+pq(wp,tl)+' — больше допустимого '+pq(tl,wp);
+if(tl!==null&&gt(ae,tl))st='Отклонение частоты '+pq(ae,tl)+' больше допустимого '+pv(tl)+' — уже из-за деления, без учёта точности тактирования';
+else if(tl!==null&&pp!==null&&gt(wp,tl))st='Риск: с учётом точности тактирования ±'+fmt(pp)+' ppm отклонение может достигать '+pq(wp,tl)+' — больше допустимого '+pv(tl);
 else if(tl===null)st='Недостаточно данных: допустимое отклонение частоты не задано; '+lab+', погрешность деления '+(ae===0?'0 ppm':pz(ae))+(pp!==null?', с учётом тактирования до '+pz(wp):', точность тактирования не задана');
-else if(pp===null)st='Недостаточно данных: точность источника тактирования не задана — погрешность деления '+pq(ae,tl)+' не больше допустимой '+pq(tl,ae)+', но вклад кварца не учтён';
-else st='Оценка: '+lab+', отклонение частоты не больше '+pq(wp,tl)+' при допустимом '+pq(tl,wp);
+else if(pp===null)st='Недостаточно данных: точность источника тактирования не задана — погрешность деления '+pq(ae,tl)+' не больше допустимой '+pv(tl)+', но вклад кварца не учтён';
+else st='Оценка: '+lab+', отклонение частоты не больше '+pq(wp,tl)+' при допустимом '+pv(tl);
 var n=m==='tim'?'Частота обновления таймера в режиме счёта вверх: PSC делит тактовую частоту на PSC + 1, счётчик считает от 0 до ARR — это ARR + 1 тиков (reference manual STM32, AN4013). Перебраны все PSC от 0 до 65 535 и для каждого — два соседних целых ARR; из пар с наименьшей погрешностью выбрана пара с наибольшим ARR: шаг скважности ШИМ 1/(ARR + 1) самый мелкий. Повторитель RCR и счёт вверх-вниз (center-aligned) меняют период — для них смотрите reference manual. ':
  (m==='int'?'Делитель на M: fвых = fвх/M. Частота обратно пропорциональна M, поэтому ближайший по частоте коэффициент — не всегда округление fвх/fвых: сравниваются оба соседних целых. ':'Каждый разряд двоичного счётчика делит частоту пополам: выход n-го разряда — fвх/2ⁿ. Из соседних степеней двойки выбрана ближайшая по частоте'+(S('chip')==='4060'?' среди выведенных у 74HC4060':'')+'. ');
 n+='Погрешность деления — систематическая и точная; точность кварца в ppm добавляется к ней и меняется с температурой и временем — границы показаны для наихудшего сочетания.';
