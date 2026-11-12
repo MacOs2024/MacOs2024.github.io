@@ -670,7 +670,7 @@ if(tr===null)sp0.push('допуск резисторов');if(dv===null)sp0.push
 if(sp0.length<4){var vv=[],f=(tr||0)/100,g=(tv||0)/100,dd=dv||0,ov=(vs||0)/1000,j,k;
  function add(key,x,d){if(d>0)vv.push([key,x-d,x+d]);}
  add('R1',R1,R1*f);if(R2!==null)add('R2',R2,R2*f);if(inv)add('R3',R3,R3*f);if(oc)add('Rp',rp,rp*f);if(rl!==null)add('RL',rl,rl*f);
- add('Vr',vr,Math.abs(vr)*g);if(oc)add('Vpu',vpu,vpu*g);else add('VOH',voh,dd);add('VOL',vol,dd);add('v',0,ov);
+ add('Vr',vr,Math.abs(vr)*g);if(oc)add('Vpu',vpu,Math.abs(vpu)*g);else add('VOH',voh,dd);add('VOL',vol,dd);add('v',0,ov);
  // Гистерезис — разность порогов одной схемы при одном сочетании (hn, hx), а не VTH,мин − VTL,макс разных сочетаний:
  // смещение и Vоп сдвигают оба порога вместе. Пока гистерезис положителен, его наименьшее значение — в углу.
  W={thn:Infinity,thx:-Infinity,tln:Infinity,tlx:-Infinity,pn:Infinity,px:-Infinity,hn:Infinity,hx:-Infinity};
