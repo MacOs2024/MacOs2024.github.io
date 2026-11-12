@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Делитель частоты: как считается</h2>
 <div class="formula">Двоичный счётчик: fвых = fвх / 2ⁿ,&nbsp;&nbsp;разрядов не меньше ⌈log₂(fвх/fвых)⌉<br>Целочисленный делитель: fвых = fвх / M, M — ближайший по частоте из ⌊fвх/fвых⌋ и ⌊fвх/fвых⌋ + 1<br>Таймер STM32: fвых = fтакт / ((PSC + 1)·(ARR + 1)),&nbsp;&nbsp;PSC ≤ 65 535,&nbsp;&nbsp;1 ≤ ARR ≤ 2¹⁶ − 1 или 2³² − 1<br>Погрешность: δ = (fвх/fвых)/N − 1;&nbsp;&nbsp;с кварцем ±δк: от (1 + δ)(1 − δк) − 1 до (1 + δ)(1 + δк) − 1</div>
@@ -162,7 +174,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему ARR на единицу меньше коэффициента?</h3><p>Счётчик таймера считает от 0 до ARR включительно — это ARR + 1 тиков, и только потом переполняется. Так же PSC делит частоту на PSC + 1. Поэтому для деления на 36 000 в ARR записывают 35 999.</p><h3>Почему калькулятор выбирает наибольший ARR?</h3><p>Одну и ту же частоту часто дают много пар PSC и ARR. Для ШИМ лучше та, где ARR больше: скважность меняется шагом 1/(ARR + 1), и шаг получается мельче. Для простого прерывания по времени выбор пары не важен.</p><h3>Что делать, если нужная частота не делится нацело?</h3><p>Тогда калькулятор ищет пару с наименьшей погрешностью перебором всех вариантов и показывает её в ppm и процентах. Если и она больше допустимой, остаётся сменить тактовую частоту или кварц.</p><h3>Зачем учитывать точность кварца?</h3><p>Выходная частота делителя пропорциональна тактовой: если кварц ушёл на 50 ppm, на те же 50 ppm уйдёт и выход. Погрешность деления и погрешность кварца складываются, и при узком допуске, например у интерфейсов связи, важна их сумма.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.st.com/resource/en/reference_manual/rm0008-stm32f101xx-stm32f102xx-stm32f103xx-stm32f105xx-and-stm32f107xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf" rel="nofollow noopener" target="_blank">RM0008. Reference manual: STM32F101xx, STM32F102xx, STM32F103xx, STM32F105xx and STM32F107xx advanced Arm-based 32-bit MCUs</a> — STMicroelectronics — Редакция Rev 21, февраль 2021; положения видны в выдаче, номера разделов — нет — раздел регистр TIMx_PSC: частота счётчика CK_CNT = fCK_PSC/(PSC[15:0] + 1), делитель от 1 до 65 536, в режиме счёта вверх счётчик идёт от 0 до значения TIMx_ARR, затем с 0 и событие переполнения (та же фраза в выдаче — RM0368 и RM0390), пока значение перезагрузки равно нулю, счётчик стоит (в выдаче — RM0033, RM0401, RM0038) — обращение 04.10.2026</li><li><a href="https://www.st.com/resource/en/application_note/an4013-introduction-to-timers-for-stm32-mcus-stmicroelectronics.pdf" rel="nofollow noopener" target="_blank">AN4013. STM32 cross-series timer overview (прежнее название — Introduction to timers for STM32 MCUs)</a> — STMicroelectronics — Редакция Rev 14, февраль 2026 (по выдаче); формула видна в выдаче двумя поисками — раздел Update_event = TIM_CLK/((PSC + 1)·(ARR + 1)·(RCR + 1)), пример: TIM_CLK = 72 МГц, PSC = 1, ARR = 65 535, RCR = 0 → 549,3 Гц — обращение 04.10.2026</li><li><a href="https://assets.nexperia.com/documents/data-sheet/74HC_HCT4060.pdf" rel="nofollow noopener" target="_blank">74HC4060; 74HCT4060. 14-stage binary ripple counter with oscillator</a> — Nexperia — Редакция паспорт 74HC_HCT4060 на дату обращения; положения видны в выдаче двумя поисками — раздел 14-разрядный счётчик с генератором; десять буферизованных выходов Q3–Q9 и Q11–Q13, выводы: Q11 — 1, Q12 — 2, Q13 — 3, Q3 — 7, Q4 — 5, Q5 — 4, Q6 — 6, Q7 — 14, Q8 — 13, Q9 — 15, генератор можно заменить внешним сигналом на входе RS — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/ds/symlink/cd4060b.pdf" rel="nofollow noopener" target="_blank">CD4060B. CMOS 14-Stage Ripple-Carry Binary Counter/Divider and Oscillator</a> — Texas Instruments — Редакция SCHS049C, редакция октябрь 2003; выходы Q4–Q10, Q12–Q14 видны только на сторонних страницах — для сравнения — раздел 14 разрядов, генератор RC или кварцевый; выхода Q11 и Q1–Q3 нет (по сторонним описаниям) — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Таймер считает вверх, без повторителя RCR; частота на входе таймера задана пользователем.</li><li>Двоичный счётчик делит на 2 на каждом разряде; у 74HC4060 доступны только выведенные разряды.</li><li>Лучший делитель — с наименьшим модулем относительной ошибки частоты; при равной ошибке — с наибольшим ARR или наибольшим делителем.</li><li>Точность кварца — симметричный допуск ±ppm; наихудшая граница складывается с погрешностью деления.</li></ul><p><b>Границы применимости:</b></p><ul><li>Счёт вверх-вниз (center-aligned), повторитель RCR, дробные делители и ФАПЧ не рассчитываются.</li><li>Задержки ripple-счётчика, джиттер и фазовый шум не учитываются.</li><li>Тактовую частоту таймера по дереву тактирования калькулятор не выводит — её берут из reference manual.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="kvarc-kondensatory.html">Конденсаторы кварцевого резонатора</a></li><li><a href="ne555-astabilnyy.html">Таймер NE555 — астабильный режим</a></li><li><a href="shim-srednee-napryazhenie.html">ШИМ: скважность, среднее напряжение и мощность</a></li><li><a href="trigger-shmitta.html">Триггер Шмитта на компараторе или ОУ</a></li></ul></section>
 </main>

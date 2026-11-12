@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Токовое зеркало: как считается</h2>
 <div class="formula">Модель транзистора: Iк = Is·e<sup>Uбэ/VT</sup>·(1 + Uкэ/VA),&nbsp;&nbsp;Iб = Is·e<sup>Uбэ/VT</sup>/β,&nbsp;&nbsp;VT = k·T/q<br>Простое: Iоп = (Vпит − Uбэ)/R,&nbsp;&nbsp;Iвых = Iоп·(1 + Uвых/VA)/(1 + Uбэ/VA + 2/β);&nbsp;&nbsp;при Uвых = Uбэ и VA → ∞: Iвых = Iоп/(1 + 2/β)<br>Rвых = (VA + Uкэ)/Iвых = ro;&nbsp;&nbsp;рассогласование: Iвых ∝ e<sup>ΔUбэ/VT</sup><br>С эмиттерными резисторами: Uбэ1 + Iэ1·RE = Uбэ2 + Iэ2·RE,&nbsp;&nbsp;Iк2/Iк1 = (1 + Uкэ2/VA)/(1 + Uбэ/VA)·e<sup>(Iэ1·RE − Iэ2·RE + ΔUбэ)/VT</sup> — решается численно; разброс ≈ ΔUбэ/(VT + Iэ·RE)<br>Уилсона: Iоп = (Vпит − Uбэ2 − Uбэ3)/R,&nbsp;&nbsp;Iвых/Iоп = 1/(1 + 2/(β·(β + 2))) при VA → ∞,&nbsp;&nbsp;Rвых ≈ β·ro/2<br>Граница соответствия: Uвых ≥ Uкэ нас, у схемы с RE — плюс Iэ·RE, у схемы Уилсона — плюс Uбэ;&nbsp;&nbsp;мощность транзистора Uкэ·Iк + Uбэ·Iб</div>
@@ -164,7 +176,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Почему выходной ток зеркала больше опорного?</h3><p>Из-за эффекта Эрли: у выходного транзистора Uкэ больше, чем у диодного, и при том же Uбэ его коллекторный ток больше в (1 + Uкэ2/VA)/(1 + Uбэ/VA) раз. При VA = 82 В и 10 В на выходе это около 11 %. Ошибку уменьшают эмиттерные резисторы или схема Уилсона.</p><h3>Зачем нужны эмиттерные резисторы?</h3><p>Они уменьшают влияние разброса Uбэ: рассогласование 2 мВ без них даёт около 8 % разницы токов, а с падением 0,5 В на резисторах — доли процента. Заодно растёт выходное сопротивление. Плата — большее наименьшее напряжение на выходе и требования к точности самих резисторов.</p><h3>Что такое граница соответствия?</h3><p>Наименьшее напряжение на выходе, при котором выходной транзистор ещё в активном режиме и зеркало держит ток: Uкэ нас по паспорту, плюс падение на RE или Uбэ у схемы Уилсона. Ниже неё ток падает.</p><h3>Можно ли собрать зеркало из двух отдельных транзисторов?</h3><p>Можно, но у отдельных транзисторов разброс Uбэ обычно больше, чем у согласованной пары в одном корпусе, а нагреваются они по-разному — и Uбэ расходится ещё сильнее. Для точного зеркала берут сдвоенные согласованные транзисторы или ставят эмиттерные резисторы.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-3-kirchhoffs-rules" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.3 Kirchhoff&#x27;s Rules — законы токов и напряжений: из них на странице выведены токи всех трёх схем — обращение 04.10.2026</li><li><a href="https://www.nist.gov/pml/special-publication-330/sp-330-section-2" rel="nofollow noopener" target="_blank">NIST Special Publication 330: The International System of Units (SI)</a> — National Institute of Standards and Technology — Редакция редакция 2019 — раздел раздел 2: определяющие константы SI — k = 1,380649·10⁻²³ Дж/К, e = 1,602176634·10⁻¹⁹ Кл; VT = k·T/q — обращение 04.10.2026</li><li>Microelectronic Circuits, 7th Edition — A. S. Sedra, K. C. Smith; Oxford University Press — Редакция 7-е издание, 2015; номера разделов — по оглавлению в выдаче, текст книги не открывался — раздел гл. 8, разд. 8.2: базовое зеркало, Iвых/Iоп = 1/(1 + 2/β), выходное сопротивление ro, разд. 8.6.2 The Wilson Current Mirror: 1/(1 + 2/(β·(β + 2))), Rвых ≈ β·ro/2 — формулы видны в пересказах выдачи — обращение 04.10.2026</li><li><a href="https://artofelectronics.net/wp-content/uploads/2015/01/AoE_3e_table-of-contents.pdf" rel="nofollow noopener" target="_blank">The Art of Electronics, 3rd Edition</a> — P. Horowitz, W. Hill; Cambridge University Press — Редакция 3-е издание, 2015; раздел — по оглавлению, текст книги не открывался — раздел 2.3.7 Current mirrors, с. 101 — обращение 04.10.2026</li><li><a href="https://wiki.analog.com/university/courses/electronics/text/chapter-11" rel="nofollow noopener" target="_blank">Chapter 11: The Current Mirror</a> — Analog Devices Wiki, University Program — Редакция онлайн-учебник на дату обращения; положения видны в выдаче — раздел эмиттерные резисторы повышают выходное сопротивление зеркала, зеркало Уилсона: ошибка по β второго порядка, высокое выходное сопротивление — обращение 04.10.2026</li><li><a href="https://assets.nexperia.com/documents/data-sheet/BCM847BS.pdf" rel="nofollow noopener" target="_blank">BCM847BS NPN/NPN matched double transistor. Product data sheet</a> — Nexperia — Редакция 27 декабря 2022; значения видны в выдаче — раздел |VBE1 − VBE2| не больше 2 мВ, hFE1/hFE2 не меньше 0,9 при IC = 2 мА, VCE = 5 В, hFE 200…450 при 2 мА и 5 В; VCEO 45 В; IC до 100 мА; применение — токовые зеркала — обращение 04.10.2026</li><li><a href="https://assets.nexperia.com/documents/data-sheet/BCM857BS.pdf" rel="nofollow noopener" target="_blank">BCM857BS PNP/PNP matched double transistor. Product data sheet</a> — Nexperia — Редакция 4 июля 2023; значения видны в выдаче — раздел |VBE1 − VBE2| не больше 2 мВ, hFE1/hFE2 не меньше 0,9 при IC = −2 мА, VCE = −5 В — обращение 04.10.2026</li><li><a href="https://assets.nexperia.com/documents/spice-model/BCM847BS.txt" rel="nofollow noopener" target="_blank">BCM847BS SPICE model</a> — Nexperia — Редакция модель на дату обращения; параметры видны в выдаче — раздел VAF = 82 В, BF = 324,4, IS = 1,822·10⁻¹⁴ А — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Транзисторы в активном режиме: Iк = Is·e^(Uбэ/VT)·(1 + Uкэ/VA), Iб = Is·e^(Uбэ/VT)/β; β и VA одинаковы у всех транзисторов.</li><li>Uбэ эталонного транзистора — введённое значение при рабочем токе; разности Uбэ — по экспоненциальному закону.</li><li>Температура всех транзисторов одинакова и равна введённой; разброс — при обоих знаках |ΔUбэ| и крайних значениях RE.</li></ul><p><b>Границы применимости:</b></p><ul><li>Саморазогрев, тепловая связь транзисторов и зависимость β от тока не учитываются.</li><li>Граница соответствия — по паспортному Uкэ нас; вблизи неё ток начинает падать раньше.</li><li>Сопротивления баз и эмиттеров самих транзисторов, рассогласование β и VA не учитываются.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="bazovyy-rezistor-tranzistora.html">Базовый резистор транзисторного ключа</a></li><li><a href="rezistor-svetodioda.html">Резистор для светодиода</a></li><li><a href="differencialnyy-usilitel.html">Дифференциальный усилитель на ОУ</a></li><li><a href="trigger-shmitta.html">Триггер Шмитта на компараторе или ОУ</a></li><li><a href="stabilitron-rezistor.html">Балластный резистор для стабилитрона</a></li></ul></section>
 </main>

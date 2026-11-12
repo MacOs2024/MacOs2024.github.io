@@ -30,6 +30,9 @@
     ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
 </script>
 <!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 <style>
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
@@ -56,6 +59,9 @@ select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;ba
 .btn:hover{background:#f0ad24}
 .btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
 .btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
 .result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
 .result.on{display:block}
 .rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -112,6 +118,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 @media print{
  @page{margin:16mm 14mm}
  body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
  .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
  main{max-width:none;padding:0;margin:0}
  h1{font-size:16pt;margin:0 0 4px}
@@ -146,7 +153,12 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
 <div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
 </section>
-<!-- РСЯ БЛОК 1: сюда будет вставлен код рекламы на Этапе 4 -->
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
 <section class="article">
 <h2>Дифференциальный усилитель: как считается</h2>
 <div class="formula">V+ = V2·R4/(R3 + R4) + Vref·R3/(R3 + R4)<br>Vвых = V+·(1 + R2/R1) − V1·R2/R1<br>Vвых = Aд·(V2 − V1) + Aсф·(V1 + V2)/2 + Vref·R3·(1 + R2/R1)/(R3 + R4)<br>Aд = [R4·(R1 + R2) + R2·(R3 + R4)] / [2·R1·(R3 + R4)],&nbsp;&nbsp;Aсф = (R1·R4 − R2·R3) / [R1·(R3 + R4)],&nbsp;&nbsp;КОСС = |Aд / Aсф|<br>при R2/R1 = R4/R3: Vвых = (R2/R1)·(V2 − V1) + Vref<br>наихудший КОСС при допуске ±t — перебор 16 сочетаний; для сравнения ≈ (1 + Aд)/(4t)</div>
@@ -164,7 +176,7 @@ table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
 <h3>Чем этот усилитель отличается от инвертирующего и неинвертирующего включения ОУ?</h3><p>Он усиливает разность двух напряжений и подавляет их общую часть. Инвертирующее и неинвертирующее включение — частные случаи: если подключить к общему проводу один из входов, останется одна из этих схем. Каждую по отдельности считает калькулятор операционного усилителя.</p><h3>Почему КОСС так сильно зависит от резисторов?</h3><p>Синфазное усиление пропорционально разности R1·R4 − R2·R3. При точном равенстве отношений она равна нулю, но резисторы с допуском ±1 % дают разность до 4 % — и при единичном усилении КОСС падает примерно до 50, то есть 34 дБ, даже с идеальным ОУ. Нужны резисторы 0,1 % и точнее, согласованные сборки или интегральный разностный усилитель.</p><h3>Почему у входов разные входные сопротивления и чем это плохо?</h3><p>Вход V2 нагружен делителем R3 + R4, вход V1 — резистором R1, причём его ток зависит и от второго входа. Источники с заметным выходным сопротивлением нагружаются по-разному, их сопротивления складываются с R1 и R3 и нарушают равенство отношений — КОСС падает. Для высокоомных датчиков ставят буферы или инструментальный усилитель.</p><h3>Что такое Vref и как его подключать?</h3><p>Это напряжение на нижнем выводе R4. При равных отношениях оно прибавляется к выходу, так сдвигают выход в середину диапазона однополярного ОУ. Источник Vref должен быть низкоомным: его выходное сопротивление складывается с R4 и тоже снижает КОСС.</p>
 </div>
 </section>
-<!-- РСЯ БЛОК 2: сюда будет вставлен код рекламы на Этапе 4 -->
+
 <section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/10-3-kirchhoffs-rules" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 10.3 Kirchhoff&#x27;s Rules — правило узлов: из него на странице выведены V+ и Vвых — обращение 04.10.2026</li><li><a href="https://www.ti.com/lit/sboa274" rel="nofollow noopener" target="_blank">Difference Amplifier (Subtractor) Circuit. Analog Engineer&#x27;s Circuit (SBOA274)</a> — Texas Instruments — Редакция редакция на дату обращения; положения видны в выдаче поиска, сам PDF в окружении не открывается — раздел КОСС разностного усилителя определяется допуском резисторов, CMRR(дБ) ≈ 20·lg[(1 + G)/(α·ε)]: α = 4 — наихудший случай, α = 0,33 — вероятное значение; на странице — для сравнения — обращение 04.10.2026</li><li><a href="https://www.analog.com/en/resources/analog-dialogue/articles/deeper-look-into-difference-amplifiers.html" rel="nofollow noopener" target="_blank">A Deeper Look into Difference Amplifiers</a> — Analog Devices, Analog Dialogue, Harry Holt — Редакция том 48, февраль 2014 — по выдаче; пример виден в выдаче — раздел при единичном усилении и резисторах 1 % КОСС 50 (около 34 дБ), при 0,1 % — 500 (около 54 дБ) даже с идеальным ОУ — обращение 04.10.2026</li><li><a href="https://www.analog.com/media/en/training-seminars/design-handbooks/designers-guide-instrument-amps-complete.pdf" rel="nofollow noopener" target="_blank">A Designer&#x27;s Guide to Instrumentation Amplifiers, 3rd Edition</a> — Analog Devices, Charles Kitchin, Lew Counts — Редакция 3-е издание; положение видно в выдаче — раздел гл. II: входные сопротивления инвертирующего и неинвертирующего входов невелики и не равны — 100 и 200 кОм при резисторах по 100 кОм, разбаланс сопротивлений источников снижает КОСС — обращение 04.10.2026</li></ul><p><b>Допущения:</b></p><ul><li>Идеальный ОУ: входы не потребляют ток, напряжения входов равны, усиление бесконечно.</li><li>Сопротивления источников V1 и V2 прибавляются к R1 и R3; источник Vref идеальный.</li><li>Наихудший случай — все 16 сочетаний ±t для R1–R4; сопротивления источников допуска не имеют.</li></ul><p><b>Границы применимости:</b></p><ul><li>Собственный КОСС ОУ, смещение нуля, входные токи, конечное усиление и полоса не учитываются.</li><li>Частотная зависимость КОСС — ёмкости монтажа и входов — не рассматривается.</li><li>Границы выхода и синфазного диапазона берутся из паспорта ОУ для ваших питания и нагрузки.</li></ul></section>
 <section class="related"><h2>Смотрите также</h2><ul><li><a href="ou-usilenie.html">Операционный усилитель: коэффициент усиления</a></li><li><a href="most-uitstona.html">Мост Уитстона</a></li><li><a href="delitel-napryazheniya.html">Делитель напряжения на резисторах</a></li><li><a href="trigger-shmitta.html">Триггер Шмитта на компараторе или ОУ</a></li><li><a href="filtr-sallena-ki.html">Активный фильтр Саллена–Ки второго порядка</a></li></ul></section>
 </main>
