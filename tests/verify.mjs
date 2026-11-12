@@ -1757,6 +1757,18 @@ await invalid("zamykanie-na-zemlyu-it.html", { u0: "220 В" }, "Введите �
 // Сценарий с запретом: фрагменты present обязаны быть, absent — нет.
 // Нужен для рискованных вердиктов: проверить, что при недостатке данных
 // страница не выдаёт «минимум» или «зона есть».
+// Как calculateWithout, но экспонента в результате допустима: при добротности меньше 1e-4 честная запись Q — «3,16·10^-5».
+async function calculateExp(file, values, present, absent, scenarioKind = "functional") {
+  kind = scenarioKind; recordScenario(file);
+  const dom = await load(file); setValues(dom.window.document, values);
+  dom.window.document.getElementById("go").click();
+  await new Promise(resolve => dom.window.setTimeout(resolve, 0));
+  const result = dom.window.document.getElementById("res").textContent.replace(/\s+/g, " ").trim();
+  for (const fragment of present) check(result.includes(fragment), `${file}: ожидалось «${fragment}», получено «${result}»`);
+  for (const fragment of absent) check(!result.includes(fragment), `${file}: при ${JSON.stringify(values)} не должно быть «${fragment}», получено «${result}»`);
+  check(!/NaN|Infinity|undefined/.test(result), `${file}: NaN/Infinity в результате «${result}»`);
+  dom.window.close();
+}
 async function calculateWithout(file, values, present, absent, scenarioKind = "functional") {
   kind = scenarioKind; recordScenario(file);
   const dom = await load(file); setValues(dom.window.document, values);
@@ -4560,6 +4572,13 @@ await calculateWithout("filtr-sallena-ki.html", { typ: "hp", rb: "32", ra: "10" 
   ["Оценка", "Добротность Q = ", "через C1"], "boundary");
 await calculateWithout("filtr-sallena-ki.html", { typ: "hp", rb: "33", ra: "10" }, ["Добротность Qотрицательная: полюса в правой полуплоскости",
   "СтатусФильтр самовозбуждается: K = 4,3 больше порога 4,2 — полюса в правой полуплоскости, схема генерирует"], ["Оценка", "Частота среза"], "boundary");
+// Замечание Codex (P2): малая добротность — вычитание почти равных чисел в (a2 + √(a2² + 4))/2 давало «0 Гц» для ФНЧ и бесконечность для ФВЧ.
+// ФНЧ: R1 = 100 Ом, R2 = 1 МОм, C1 = 10 пФ, C2 = 1 мкФ, K = 1 — Q = 3,16·10⁻⁵, f0 = 5,033 кГц, срез по −3 дБ — бисекция |den|² = 2
+// в Decimal на 60 знаков: 0,159139029 Гц (≈ 1/(2π·(R1 + R2)·C2)). ФВЧ: R1 = 1 МОм, R2 = 100 Ом, C1 = 1 мкФ, C2 = 10 пФ — 159,1565 МГц.
+await calculateExp("filtr-sallena-ki.html", { r1: "100", r1_unit: "1", r2: "1", r2_unit: "1000000", c1: "10", c1_unit: "1e-12", c2: "1", c2_unit: "1e-06" },
+  ["Частота среза по уровню −3 дБ от K159,1 мГц", "Собственная частота f0 = 1/(2π·√(R1·R2·C1·C2))5,033 кГц"], ["K0 Гц", "Частота среза по уровню −3 дБ от K0"]);
+await calculateExp("filtr-sallena-ki.html", { typ: "hp", r1: "1", r1_unit: "1000000", r2: "100", r2_unit: "1", c1: "1", c1_unit: "1e-06", c2: "10", c2_unit: "1e-12" },
+  ["Частота среза по уровню −3 дБ от K159,2 МГц"], ["Infinity", "∞"]);
 // Разброс: сетка 5^4 по R1, R2, C1, C2 и уточнение золотым сечением — Q 0,7054…0,7797, f0 1012…1141 Гц.
 await calculate("filtr-sallena-ki.html", { tr: "1", tc: "5" }, ["Усиление в полосе пропускания K = 1 + Rb/Ra1 — 0 дБ, повторитель", "Собственная частота f0 = 1/(2π·√(R1·R2·C1·C2))1,073 кГц", "Порог самовозбуждения по усилению Kпред1,909 при K = 1",
   "Добротность Q = √(R1·R2·C1·C2)/(R1·C2 + R2·C2 + R1·C1·(1 − K))0,7416", "Усиление на частоте f0: K·Q0,7416 — -2,596 дБ", "Частота среза по уровню −3 дБ от K1,123 кГц",
