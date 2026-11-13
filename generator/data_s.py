@@ -650,8 +650,11 @@ else{VTH=P('vth');VTL=P('vtl');
    // Vоп — корень квадратного уравнения строго между VOL и VTH (в любом порядке: при VTH < VOL порог лежит ниже VOL, R1/R2 > 0 и тогда); R1/R2 = (VTH − Vоп)/(Vоп − VOL).
    var Gq=1/rp,Gt=Gq+1/R2+GL,al=vpu*Gq/Gt,bq=(1/R2)/Gt;A=bq;B=al-VTL-vol-(bq-1)*VTH;C=-al*VTH+VTL*vol;D=B*B-4*A*C;
    if(D>=0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if((rts[i]-vol)*(VTH-rts[i])>0){vr=rts[i];break;}}}
+   // VTH = VOL: порог VTH = Vоп + (Vоп − VOL)·R1/R2 выполняется только при Vоп = VOL при любом R1 — тогда R1 определяет нижний порог VTL = Vоп − (Vвых,выс − Vоп)·R1/R2.
+   var dgn=Math.abs(VTH-vol)<=1e-12*Math.max(1,Math.abs(vol));
+   if(isNaN(vr)&&dgn){var ohd=al+bq*vol;if(ohd>vol&&vol>VTL){vr=vol;R1=(vol-VTL)/(ohd-vol)*R2;}}
    if(isNaN(vr))return err('С этими подтяжкой, Rп и R2 такие пороги не получить: увеличьте напряжение подтяжки или уменьшите Rп.');
-   R1=(VTH-vr)/(vr-vol)*R2;}
+   if(!dgn)R1=(VTH-vr)/(vr-vol)*R2;}
   hs=row('Рассчитанные: R1 / опорное напряжение Vоп',sp(R1,'Ом')+' / '+fmt(vr,4)+' В');}}
 var p0={inv:inv,oc:oc,R1:R1,R2:R2,R3:R3,Rp:rp,RL:rl,Vr:vr,Vpu:vpu,VOH:voh,VOL:vol,v:0},r=th(p0);
 if(![r.vth,r.vtl,r.oh].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
