@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Шум приёмника: коэффициент шума каскадов — ВольтКальк</title>
+<meta name="description" content="Расчёт коэффициента шума цепочки из до пяти каскадов по формуле Фрииса F = F1 + (F2−1)/G1 + …: вклад каждого каскада, пассивные аттенюаторы с F = L, влияние порядка каскадов (МШУ в начале и после потерь), шумовая температура, минимальный обнаружимый сигнал MDS = kT0 + 10·lg B + NF и чувствительность при заданном SNR.">
+<link rel="canonical" href="https://macos2024.github.io/shum-prinimnika-kaskad.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Шум приёмника: коэффициент шума каскадов — ВольтКальк">
+<meta property="og:description" content="Расчёт коэффициента шума цепочки из до пяти каскадов по формуле Фрииса F = F1 + (F2−1)/G1 + …: вклад каждого каскада, пассивные аттенюаторы с F = L, влияние порядка каскадов (МШУ в начале и после потерь), шумовая температура, минимальный обнаружимый сигнал MDS = kT0 + 10·lg B + NF и чувствительность при заданном SNR.">
+<meta property="og:url" content="https://macos2024.github.io/shum-prinimnika-kaskad.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Шум приёмника: коэффициент шума каскадов","url":"https://macos2024.github.io/shum-prinimnika-kaskad.html","description":"Расчёт коэффициента шума цепочки из до пяти каскадов по формуле Фрииса F = F1 + (F2−1)/G1 + …: вклад каждого каскада, пассивные аттенюаторы с F = L, влияние порядка каскадов (МШУ в начале и после потерь), шумовая температура, минимальный обнаружимый сигнал MDS = kT0 + 10·lg B + NF и чувствительность при заданном SNR.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Шум приёмника: коэффициент шума каскадов","item":"https://macos2024.github.io/shum-prinimnika-kaskad.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему малошумящий усилитель ставят в самое начало приёмника?","acceptedAnswer":{"@type":"Answer","text":"Шум каждого следующего каскада делится на усиление всех предыдущих. МШУ с усилением 15–20 дБ уменьшает вклад следующих каскадов в 30–100 раз, поэтому коэффициент шума цепочки почти равен коэффициенту шума МШУ. Любые потери перед ним (кабель, фильтр, разъём) прибавляются к коэффициенту шума всей цепочки дБ за дБ."}},{"@type":"Question","name":"Чему равен коэффициент шума пассивного аттенюатора?","acceptedAnswer":{"@type":"Answer","text":"При температуре T0 — его потерям: у аттенюатора 3 дБ коэффициент шума 3 дБ и усиление −3 дБ. Это следует из теплового шума согласованного резистивного звена; калькулятор подставляет F = L и G = 1/L. Звено при другой температуре шумит иначе, это в расчёт не входит."}},{"@type":"Question","name":"Почему вместо −174 дБм/Гц на странице показано −173,98?","acceptedAnswer":{"@type":"Answer","text":"Произведение k·T0 при T0 = 290 К и постоянной Больцмана 1,380649·10⁻²³ Дж/К равно 4,004·10⁻²¹ Вт/Гц, то есть −173,98 дБм/Гц; число −174 — округление. Калькулятор использует точное значение, поэтому результаты могут отличаться от «округлённых» на 0,02 дБ."}},{"@type":"Question","name":"Что считается минимальным обнаружимым сигналом?","acceptedAnswer":{"@type":"Answer","text":"Здесь MDS — уровень сигнала на входе приёмника, равный его собственному шуму (SNR = 0 дБ). Определения у изготовителей различаются (например, SNR 3 дБ), поэтому для реального приёма вводят требуемое SNR и получают чувствительность Smin = MDS + SNR. Значение SNR берут из паспорта вида модуляции."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Шум приёмника: коэффициент шума каскадов</h1>
+<p class="intro">В приёмнике с несколькими каскадами шум почти целиком определяют первые: чем больше усиление до каскада, тем меньше его шум влияет на результат. Калькулятор считает коэффициент шума цепочки по формуле Фрииса, показывает вклад каждого каскада, сравнивает порядок «как введено», обратный и лучший, а затем находит порог шума, минимальный обнаружимый сигнал и чувствительность при требуемом SNR. Усиления и коэффициенты шума каскадов вводит пользователь по паспортам. Вычислить потери самого пассивного звена помогает <a href="attenyuator.html">калькулятор аттенюатора</a>, а перевод децибел — <a href="decibel.html">калькулятор децибел</a>; найденную чувствительность можно подставить в <a href="byudzhet-radiolinii-friis.html">бюджет радиолинии</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Шум приёмника: коэффициент шума каскадов</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_n"><label for="n">Число каскадов</label><div class="fw"><select id="n"><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option></select></div></div><div class="f" id="f_ord"><label for="ord">Порядок каскадов</label><div class="fw"><select id="ord"><option value="asis" selected>Как введено</option><option value="rev">Обратный порядок</option><option value="best">Наилучший из всех перестановок (перебор)</option></select></div></div><div class="f" id="f_k1"><label for="k1">Каскад 1: тип</label><div class="fw"><select id="k1"><option value="act" selected>Активный: усиление G и коэффициент шума NF</option><option value="att">Пассивный аттенюатор (кабель, фильтр): потери L</option></select></div></div><div class="f" id="f_g1"><label for="g1">Каскад 1: усиление G, дБ (активный) или потери L, дБ (аттенюатор)</label><div class="fw"><input id="g1" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""></div><div class="hint">Условные значения по умолчанию — замените паспортными. Усиление активного каскада может быть отрицательным (смеситель с потерями преобразования)</div></div><div class="f" id="f_e1"><label for="e1">Каскад 1: коэффициент шума NF, дБ</label><div class="fw"><input id="e1" type="text" inputmode="decimal" autocomplete="off" value="1,5" placeholder=""></div><div class="hint">Не меньше 0 дБ. Для аттенюатора не вводится: при температуре T0 его NF равен потерям</div></div><div class="f" id="f_k2"><label for="k2">Каскад 2: тип</label><div class="fw"><select id="k2"><option value="act">Активный: усиление G и коэффициент шума NF</option><option value="att" selected>Пассивный аттенюатор (кабель, фильтр): потери L</option></select></div></div><div class="f" id="f_g2"><label for="g2">Каскад 2: усиление G, дБ (активный) или потери L, дБ (аттенюатор)</label><div class="fw"><input id="g2" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""></div></div><div class="f" id="f_e2"><label for="e2">Каскад 2: коэффициент шума NF, дБ</label><div class="fw"><input id="e2" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""></div><div class="hint">Для аттенюатора не вводится</div></div><div class="f" id="f_k3"><label for="k3">Каскад 3: тип</label><div class="fw"><select id="k3"><option value="act" selected>Активный: усиление G и коэффициент шума NF</option><option value="att">Пассивный аттенюатор (кабель, фильтр): потери L</option></select></div></div><div class="f" id="f_g3"><label for="g3">Каскад 3: усиление G, дБ (активный) или потери L, дБ (аттенюатор)</label><div class="fw"><input id="g3" type="text" inputmode="decimal" autocomplete="off" value="15" placeholder=""></div></div><div class="f" id="f_e3"><label for="e3">Каскад 3: коэффициент шума NF, дБ</label><div class="fw"><input id="e3" type="text" inputmode="decimal" autocomplete="off" value="6" placeholder=""></div></div><div class="f" id="f_k4"><label for="k4">Каскад 4: тип</label><div class="fw"><select id="k4"><option value="act" selected>Активный: усиление G и коэффициент шума NF</option><option value="att">Пассивный аттенюатор (кабель, фильтр): потери L</option></select></div></div><div class="f" id="f_g4"><label for="g4">Каскад 4: усиление G, дБ (активный) или потери L, дБ (аттенюатор)</label><div class="fw"><input id="g4" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""></div></div><div class="f" id="f_e4"><label for="e4">Каскад 4: коэффициент шума NF, дБ</label><div class="fw"><input id="e4" type="text" inputmode="decimal" autocomplete="off" value="8" placeholder=""></div></div><div class="f" id="f_k5"><label for="k5">Каскад 5: тип</label><div class="fw"><select id="k5"><option value="act">Активный: усиление G и коэффициент шума NF</option><option value="att" selected>Пассивный аттенюатор (кабель, фильтр): потери L</option></select></div></div><div class="f" id="f_g5"><label for="g5">Каскад 5: усиление G, дБ (активный) или потери L, дБ (аттенюатор)</label><div class="fw"><input id="g5" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""></div></div><div class="f" id="f_e5"><label for="e5">Каскад 5: коэффициент шума NF, дБ</label><div class="fw"><input id="e5" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""></div><div class="hint">Для аттенюатора не вводится</div></div><div class="f" id="f_b"><label for="b">Полоса шума приёмника B</label><div class="fw"><input id="b" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><select id="b_unit" class="u" aria-label="Единицы: Полоса шума приёмника B"><option value="1">Гц</option><option value="1000.0">кГц</option><option value="1000000.0" selected>МГц</option></select></div><div class="hint">Эквивалентная шумовая полоса приёмника, не обязательно полоса по уровню −3 дБ; значение условное</div></div><div class="f" id="f_snr"><label for="snr">Требуемое отношение сигнал/шум SNR</label><div class="fw"><input id="snr" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">дБ</span></div><div class="hint">Для заданного качества приёма (например, по паспорту вида модуляции). Пусто — чувствительность по уровню SNR = 0 дБ (MDS)</div></div><div class="f" id="f_ta"><label for="ta">Шумовая температура источника (антенны) Ta</label><div class="fw"><input id="ta" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">К</span></div><div class="hint">Пусто — источник при стандартной температуре T0 = 290 К, как в определении коэффициента шума. Введите, если антенна «холоднее» или «горячее»</div></div><div class="f" id="f_ps"><label for="ps">Уровень сигнала на входе приёмника</label><div class="fw"><input id="ps" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">дБм</span></div><div class="hint">Из бюджета линии. Пусто — отношение сигнал/шум на выходе не оценивается</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
+<section class="article">
+<h2>Шум каскадной цепочки: как считается</h2>
+<div class="formula">Каскадная формула Фрииса: F = F<sub>1</sub> + (F<sub>2</sub> − 1)/G<sub>1</sub> + (F<sub>3</sub> − 1)/(G<sub>1</sub>·G<sub>2</sub>) + …,&nbsp;&nbsp;NF = 10·lg F<br>Шумовая температура: T<sub>e</sub> = (F − 1)·T<sub>0</sub>,&nbsp;&nbsp;T<sub>0</sub> = 290 К,&nbsp;&nbsp;T<sub>e</sub> = T<sub>1</sub> + T<sub>2</sub>/G<sub>1</sub> + T<sub>3</sub>/(G<sub>1</sub>·G<sub>2</sub>) + …<br>Пассивный аттенюатор при T<sub>0</sub>: F = L,&nbsp;&nbsp;G = 1/L<br>Порог шума: N = k·T<sub>0</sub> + 10·lg B + NF [дБм],&nbsp;&nbsp;k·T<sub>0</sub> = −173,98 дБм/Гц ≈ −174 дБм/Гц<br>MDS (SNR = 0 дБ) = N;&nbsp;&nbsp;чувствительность S<sub>min</sub> = N + SNR<sub>треб</sub>;&nbsp;&nbsp;с источником T<sub>a</sub>: N = 10·lg(k·(T<sub>a</sub> + T<sub>e</sub>)·B / 1 мВт)</div>
+<p><b>Что такое коэффициент шума.</b> Коэффициент шума F — отношение сигнал/шум на входе четырёхполюсника к отношению сигнал/шум на выходе при источнике шума с температурой T<sub>0</sub> = 290 К; он показывает, во сколько раз устройство ухудшает это отношение. Строгое определение для любых четырёхполюсников, а не только приёмников с большим усилением, и связь коэффициента шума всего приёмника с коэффициентами его частей дал Фриис (Proc. IRE, июль 1944, «Noise Figures of Radio Receivers»; текст статьи в окружении не открывался, содержание — по аннотации). Эквивалентная шумовая температура T<sub>e</sub> = (F − 1)·T<sub>0</sub> (Pozar, глава 10) не зависит от температуры источника: именно ею удобно складывать шумы разных источников.</p>
+<p><b>Каскадная формула.</b> Шум второго каскада, приведённый ко входу первого, делится на усиление первого, шум третьего — на произведение двух усилений и так далее: F = F<sub>1</sub> + (F<sub>2</sub> − 1)/G<sub>1</sub> + …. Поэтому малошумящий усилитель с большим усилением в начале цепочки «закрывает» шум последующих каскадов, а потери перед ним — нет. Калькулятор показывает вклад каждого каскада как долю избыточного шума F − 1: слагаемое (F<sub>i</sub> − 1) делится на общее усиление всех предыдущих. Для усиления в дБ и коэффициента шума в дБ перевод линейный: G = 10<sup>G(дБ)/10</sup>, F = 10<sup>NF(дБ)/10</sup>.</p>
+<p><b>Пассивный аттенюатор.</b> Для потерь L (в разах) при физической температуре T<sub>0</sub> выходной шум согласованного аттенюатора, нагруженного на источник той же температуры, равен тепловому шуму k·T<sub>0</sub>·B, а усиление G = 1/L. Тогда F = (шум на выходе)/(G·k·T<sub>0</sub>·B) = L. Вывод на странице: в выдаче поиска этого положения найти не удалось. Следствие: потери 3 дБ перед усилителем добавляют к коэффициенту шума всей цепочки столько же децибел, сколько составляют сами потери. Если аттенюатор не при T<sub>0</sub>, F = 1 + (L − 1)·T/T<sub>0</sub> — этого калькулятор не делает.</p>
+<p><b>Порядок каскадов.</b> Режим «обратный порядок» и «наилучший из всех перестановок» меняют цепочку, по которой считаются все результаты. Перебор перестановок прямой (до 5! = 120), он не использует эмпирических правил. Для активных каскадов с усилением больше 1 перебор ставит их в порядке возрастания меры шума (F − 1)/(1 − 1/G) — это известный результат теории цепочек; страница его не использует, и в источниках он не подтверждался. Пассивные потери перебор ставит после усилителей: в начале они прибавляются к шуму цепочки почти целиком. На практике порядок ограничен ещё и динамическим диапазоном и фильтрацией, чего калькулятор не учитывает.</p>
+<p><b>MDS и чувствительность.</b> Тепловой шум в полосе B при температуре T<sub>0</sub> равен k·T<sub>0</sub>·B; в дБм это −173,98 + 10·lg B (число округляют до −174 дБм/Гц). Приёмник с коэффициентом шума NF имеет порог шума N = −173,98 + 10·lg B + NF. Минимальный обнаружимый сигнал MDS в этой записи — сигнал, равный шуму (SNR = 0 дБ); чувствительность при заданном SNR на SNR децибел выше. Если задана шумовая температура источника T<sub>a</sub> (например, антенна, смотрящая в холодное небо), порог шума считается по k·(T<sub>a</sub> + T<sub>e</sub>)·B. Если ввести уровень сигнала на входе приёмника, например из <a href="byudzhet-radiolinii-friis.html">бюджета радиолинии</a>, калькулятор найдёт отношение сигнал/шум и сравнит его с требуемым.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="attenyuator.html">Аттенюатор</a> подбирает резисторы на заданные потери, а здесь потери — число для цепочки. Усиление операционного усилителя считает <a href="ou-usilenie.html">калькулятор ОУ</a>, перевод децибел — <a href="decibel.html">калькулятор децибел</a>.</p>
+<h2>Шум каскадной цепочки: пример расчёта</h2>
+<p>Цепочка (значения условные): МШУ с усилением 20 дБ и коэффициентом шума 1,5 дБ, кабель с потерями 3 дБ, усилитель 15 дБ с коэффициентом шума 6 дБ. По формуле Фрииса F = 1,4125 + (1,9953 − 1)/100 + (3,9811 − 1)/(100·0,5012) = 1,482, то есть <b>1,708 дБ</b>: 85,6 % избыточного шума даёт сам МШУ. Если кабель стоит перед МШУ, F = 1,9953 + (1,4125 − 1)/0,5012 + (3,9811 − 1)/(0,5012·100) = 2,878, то есть <b>4,59 дБ</b>: потери перед усилителем добавляются к его шуму почти целиком. Перебор всех порядков ставит кабель после усилителя (1-3-2) и даёт 1,592 дБ. Калькулятор показывает все три результата.</p>
+<p>При полосе 1 МГц порог шума N = −173,98 + 60 + 1,708 = <b>−112,3 дБм</b>; чувствительность при SNR 10 дБ — −102,3 дБм. Если сигнал на входе приёмника −90 дБм, отношение сигнал/шум 22,27 дБ.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему малошумящий усилитель ставят в самое начало приёмника?</h3><p>Шум каждого следующего каскада делится на усиление всех предыдущих. МШУ с усилением 15–20 дБ уменьшает вклад следующих каскадов в 30–100 раз, поэтому коэффициент шума цепочки почти равен коэффициенту шума МШУ. Любые потери перед ним (кабель, фильтр, разъём) прибавляются к коэффициенту шума всей цепочки дБ за дБ.</p><h3>Чему равен коэффициент шума пассивного аттенюатора?</h3><p>При температуре T0 — его потерям: у аттенюатора 3 дБ коэффициент шума 3 дБ и усиление −3 дБ. Это следует из теплового шума согласованного резистивного звена; калькулятор подставляет F = L и G = 1/L. Звено при другой температуре шумит иначе, это в расчёт не входит.</p><h3>Почему вместо −174 дБм/Гц на странице показано −173,98?</h3><p>Произведение k·T0 при T0 = 290 К и постоянной Больцмана 1,380649·10⁻²³ Дж/К равно 4,004·10⁻²¹ Вт/Гц, то есть −173,98 дБм/Гц; число −174 — округление. Калькулятор использует точное значение, поэтому результаты могут отличаться от «округлённых» на 0,02 дБ.</p><h3>Что считается минимальным обнаружимым сигналом?</h3><p>Здесь MDS — уровень сигнала на входе приёмника, равный его собственному шуму (SNR = 0 дБ). Определения у изготовителей различаются (например, SNR 3 дБ), поэтому для реального приёма вводят требуемое SNR и получают чувствительность Smin = MDS + SNR. Значение SNR берут из паспорта вида модуляции.</p>
+</div>
+</section>
+
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://doi.org/10.1109/JRPROC.1944.232049" rel="nofollow noopener" target="_blank">Noise Figures of Radio Receivers</a> — H. T. Friis; Proceedings of the IRE — Редакция т. 32, № 7, с. 419–422, июль 1944, DOI 10.1109/JRPROC.1944.232049 (библиографические данные и аннотация видны в выдаче двумя поисками; текст статьи не открывался) — раздел строгое определение коэффициента шума; связь коэффициента шума приёмника с коэффициентами шума составляющих — по аннотации; сама каскадная формула на странице приведена по пересказу в лекциях (см. ниже) и подтверждена выводом из определения — обращение 13.11.2026</li><li>Microwave Engineering — D. M. Pozar; Wiley — Редакция 4-е изд., 2012 (оглавление видно в выдаче; в 3-м изд., 2004, четвертьволновый трансформатор — раздел 2.5, в 4-м — 5.4); текст книги в окружении не открывался — раздел глава 10 «Noise and Nonlinear Distortion»: 10.1 Noise in Microwave Circuits, 10.2 Noise Figure — по оглавлению; каскадная формула и Te = T0·(F − 1) в тексте книги НЕ подтверждены (в выдаче только лекции по этой теме) — обращение 13.11.2026</li><li><a href="https://people.ece.ubc.ca/edc/7860.jan2021/lec12.pdf" rel="nofollow noopener" target="_blank">ECE 7860, Lecture 12: Noise Figure</a> — University of British Columbia — Редакция лекция на дату обращения; для сравнения, виден пересказ в выдаче — раздел F = F1 + (F2−1)/G1 + (F3−1)/(G1G2) + …; Te = T0·(F − 1); T0 = 290 К; kT0 = 4·10⁻²¹ Вт/Гц = −174 дБм/Гц — обращение 13.11.2026</li></ul><p><b>Допущения:</b></p><ul><li>Каскады линейны, согласованы, шум каждого — тепловой; коэффициент шума каждого активного каскада и его усиление заданы пользователем по паспорту.</li><li>Пассивные звенья находятся при температуре T0 = 290 К: F = L, G = 1/L.</li><li>Полоса шума B — эквивалентная шумовая полоса приёмника; постоянная Больцмана k = 1,380649·10⁻²³ Дж/К, T0 = 290 К.</li><li>MDS — уровень сигнала, равный шуму приёмника (SNR = 0 дБ).</li></ul><p><b>Границы применимости:</b></p><ul><li>Нелинейность, динамический диапазон, зеркальный канал, фазовый шум и помехи не рассматриваются.</li><li>Пассивное звено при температуре, отличной от 290 К, и рассогласование между каскадами не учитываются.</li><li>Коэффициент шума зависит от частоты, режима и сопротивления источника; страница использует единственное число на каскад.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="decibel.html">Децибелы: усиление и ослабление</a></li><li><a href="attenyuator.html">Резистивный аттенюатор (T и П)</a></li><li><a href="byudzhet-radiolinii-friis.html">Бюджет радиолинии по формуле Фрииса</a></li><li><a href="ou-usilenie.html">Операционный усилитель: коэффициент усиления</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fe(x,p){var s=Number(x.toPrecision(p)),a=Math.abs(s);if(a===0||(a<1e7&&a>=1e-4))return fmt(x,p);var t=s.toExponential(p-1).replace(/(\.\d*?)0+e/,'$1e').replace('.e','e');return t.replace('e+','·10^').replace('e','·10^').replace('.',',');}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fe(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fe(x,p);}return fe(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function sg(x){return x>0?'+':'';}
+function rd(x){return Math.round(x*1e9)/1e9;}
+// Малый зазор в дБ словами: иначе fmt вывел бы «1·10^-6».
+function dbs(x){if(x!==0&&Math.abs(x)<1e-3)return (x<0?'−':'')+'меньше 0,001';return fmt(x);}
+// Мощность в ваттах из дБм словами за пределами диапазона si: иначе вышли бы числа вроде 1·10^-30 Вт.
+function pw(dbm){if(dbm<-120)return 'меньше 1 фВт';if(dbm>120)return 'больше 1 ГВт';return si(Math.pow(10,dbm/10)*1e-3,'Вт');}
+function perms(a){if(a.length<=1)return [a.slice()];var r=[];for(var i=0;i<a.length;i++){var rest=a.slice(0,i).concat(a.slice(i+1));perms(rest).forEach(function(p){r.push([a[i]].concat(p));});}return r;}
+
+var KB=1.380649e-23,T0=290,LN=Math.LN10;
+function sync(){var n=Number(S('n'));for(var i=1;i<=5;i++){var hid=i>n;hideF('k'+i,hid);hideF('g'+i,hid);hideF('e'+i,hid||S('k'+i)==='att');}}
+function init(){var ids=['n','k1','k2','k3','k4','k5'];for(var i=0;i<ids.length;i++)$(ids[i]).addEventListener('change',sync);sync();}
+// Избыточный шум каскада e = F − 1 = 10^(NF/10) − 1 (expm1 — без потери точности при малом NF); вклад в F − 1 равен e·(усиление всех предыдущих)^-1.
+function chain(order,st){var gc=0,c=[],S_=0,nf=[];for(var j=0;j<order.length;j++){var s=st[order[j]],cj=s.e*Math.pow(10,-gc/10);c.push(cj);S_+=cj;nf.push(10/LN*Math.log1p(S_));gc+=s.g;}return {c:c,S:S_,nf:nf,g:gc};}
+function db(x){if(x!==0&&Math.abs(x)<1e-3)return (x<0?'−':'')+'меньше 0,001';return fmt(x);}
+function fl(x){return x<1e6?fmt(x):'свыше миллиона';}
+function kk(x){if(x===0)return '0 К';if(x<1e-3)return 'меньше 0,001 К';if(x>=1e6)return 'свыше миллиона К';return fmt(x)+' К';}
+function pc(x){return x<1e-6?'меньше 0,0001 %':fmt(100*x)+' %';}
+function calc(){
+var n=Number(S('n')),od=S('ord'),st=[],desc=[];
+for(var i=1;i<=n;i++){var k=S('k'+i),g=P('g'+i);
+ if(isNaN(g))return err('Каскад '+i+': введите усиление или потери числом в дБ.');
+ if(k==='att'){if(g<0||g>100)return err('Каскад '+i+': потери аттенюатора — от 0 до 100 дБ.');
+  st.push({g:-g,e:Math.expm1(g*LN/10)});desc.push('аттенюатор, потери L = '+db(g)+' дБ (F = L, G = 1/L)');}
+ else{var e=P('e'+i);if(isNaN(e))return err('Каскад '+i+': введите коэффициент шума числом в дБ.');
+  if(g<-100||g>100)return err('Каскад '+i+': усиление — от −100 до +100 дБ.');
+  if(e<0||e>100)return err('Каскад '+i+': коэффициент шума — от 0 до 100 дБ (меньше 0 дБ быть не может).');
+  st.push({g:g,e:Math.expm1(e*LN/10)});desc.push('G = '+db(g)+' дБ, NF = '+db(e)+' дБ');}}
+var b=P('b');if(isNaN(b))return err('Введите полосу шума числом.');
+if(b<=0||b>1e12)return err('Полоса шума — больше 0 и не больше 1 ТГц.');
+var snr=OPT('snr'),ta=OPT('ta'),ps=OPT('ps');
+if(snr!==null){if(isNaN(snr))return err('Требуемое SNR — число в дБ. Если его нет, оставьте поле пустым.');if(snr<-50||snr>100)return err('Требуемое SNR — от −50 до +100 дБ.');}
+if(ta!==null){if(isNaN(ta))return err('Шумовая температура источника — число в кельвинах. Если её нет, оставьте поле пустым.');if(ta<0||ta>1e6)return err('Шумовая температура источника — от 0 до 1 000 000 К.');}
+if(ps!==null){if(isNaN(ps))return err('Уровень сигнала — число в дБм. Если его нет, оставьте поле пустым.');if(ps<-250||ps>100)return err('Уровень сигнала — от −250 до +100 дБм.');}
+var idx=[];for(var q=0;q<n;q++)idx.push(q);
+var asis=chain(idx,st),rev=chain(idx.slice().reverse(),st),bestO=idx,bestC=asis;
+perms(idx).forEach(function(p){var r=chain(p,st);if(r.S<bestC.S-bestC.S*1e-12){bestC=r;bestO=p;}});
+var ord=od==='rev'?idx.slice().reverse():(od==='best'?bestO:idx),ch=od==='rev'?rev:(od==='best'?bestC:asis);
+var S_=ch.S,nft=10/LN*Math.log1p(S_),te=S_*T0,kt=10*Math.log10(KB*T0*1e3);
+var nstd=kt+10*Math.log10(b)+nft;
+var nn=nstd;
+if(ta!==null){if(ta+te===0)return err('Шумовая температура системы равна нулю (Ta = 0 при идеальных каскадах): порог шума не определён.');nn=10*Math.log10(KB*(ta+te)*b*1e3);}
+var h='';
+for(var j=0;j<n;j++){var sh=S_>0?ch.c[j]/S_:0;
+ h+=row('Позиция '+(j+1)+': каскад '+(ord[j]+1)+' — '+desc[ord[j]],'вклад '+(S_>0?pc(sh):'0 %')+' избыточного шума; КШ цепочки до этой позиции включительно '+db(ch.nf[j])+' дБ');}
+h+=row('Суммарное усиление цепочки',db(ch.g)+' дБ')+row('Коэффициент шума цепочки F = F1 + (F2 − 1)/G1 + (F3 − 1)/(G1·G2) + …',fl(1+S_)+' ('+db(nft)+' дБ)')+row('Шумовая температура цепочки Te = (F − 1)·T0, T0 = 290 К',kk(te));
+h+=row('Для сравнения: как введено / обратный / наилучший порядок',db(10/LN*Math.log1p(asis.S))+' дБ / '+db(10/LN*Math.log1p(rev.S))+' дБ / '+db(10/LN*Math.log1p(bestC.S))+' дБ (порядок '+bestO.map(function(x){return x+1;}).join('-')+')');
+h+=row('Тепловой шум kT0 при T0 = 290 К (округляют до −174)',fmt(kt,5)+' дБм/Гц')+row('Порог шума приёмника N = kT0 + 10·lg B + NF'+(ta!==null?' — при источнике Ta':''),db(nn)+' дБм ('+pw(nn)+')');
+if(ta!==null)h+=row('Шумовая температура системы Tсист = Ta + Te',kk(ta+te))+row('Для сравнения: порог шума при стандартном T0',db(nstd)+' дБм');
+h+=row('Минимальный обнаружимый сигнал MDS (SNR = 0 дБ)',db(nn)+' дБм ('+pw(nn)+')');
+var sm=null;
+if(snr!==null){sm=nn+snr;h+=row('Чувствительность при SNR = '+db(snr)+' дБ: Smin = MDS + SNR',db(sm)+' дБм ('+pw(sm)+')');}
+var so=null,st_;
+if(ps!==null){so=rd(ps-nn);h+=row('Отношение сигнал/шум при уровне сигнала '+db(ps)+' дБм',(snr!==null?fx(so,snr):db(so))+' дБ');}
+var ordtxt=od==='asis'?'в порядке ввода':(od==='rev'?'в обратном порядке':'в наилучшем порядке '+bestO.map(function(x){return x+1;}).join('-'));
+if(ps!==null&&snr!==null){
+ if(ge(so,snr))st_='Оценка: отношение сигнал/шум '+fx(so,snr)+' дБ не меньше требуемых '+fx(snr,so)+' дБ при тепловом шуме; помехи, фазовый шум, нелинейность и потери в тракте после последнего каскада не учтены';
+ else st_='Оценка: отношение сигнал/шум '+fx(so,snr)+' дБ меньше требуемых '+fx(snr,so)+' дБ — не хватает '+db(snr-so)+' дБ';}
+else if(ps!==null)st_='Недостаточно данных для вывода о приёме: требуемое SNR не задано; отношение сигнал/шум при заданном уровне '+db(so)+' дБ';
+else if(snr!==null)st_='Оценка: для SNR '+db(snr)+' дБ нужен сигнал на входе не ниже '+db(sm)+' дБм; уровень сигнала не задан — вывода о приёме нет';
+else st_='Оценка: коэффициент шума цепочки '+db(nft)+' дБ '+ordtxt+', MDS '+db(nn)+' дБм; требуемое SNR и уровень сигнала не заданы — вывода о приёме нет';
+var nt='Коэффициент шума каждого активного каскада — по паспорту при нужной частоте и режиме, калькулятор его не подставляет. Пассивное звено считается при температуре T0 (F = L); холодное или горячее звено даёт другой шум. Определение MDS как сигнала, равного шуму (SNR = 0 дБ), условно — у разных изготовителей встречаются 3 дБ и другие уровни. Нелинейность, динамический диапазон и зеркальный канал не рассматриваются.';
+out(h+row('Статус',st_)+note(nt));
+}
+
+</script>
+</body>
+</html>

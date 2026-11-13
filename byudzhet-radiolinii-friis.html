@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Бюджет радиолинии по формуле Фрииса — ВольтКальк</title>
+<meta name="description" content="Расчёт бюджета радиолинии в свободном пространстве по формуле Фрииса: потери 20·lg(4πd/λ), уровень на входе приёмника с учётом усилений антенн, потерь в фидерах, поглощения и дождя, запас относительно чувствительности приёмника, дальность при заданном запасе, проверка дальней зоны 2D²/λ и радиус первой зоны Френеля.">
+<link rel="canonical" href="https://macos2024.github.io/byudzhet-radiolinii-friis.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Бюджет радиолинии по формуле Фрииса — ВольтКальк">
+<meta property="og:description" content="Расчёт бюджета радиолинии в свободном пространстве по формуле Фрииса: потери 20·lg(4πd/λ), уровень на входе приёмника с учётом усилений антенн, потерь в фидерах, поглощения и дождя, запас относительно чувствительности приёмника, дальность при заданном запасе, проверка дальней зоны 2D²/λ и радиус первой зоны Френеля.">
+<meta property="og:url" content="https://macos2024.github.io/byudzhet-radiolinii-friis.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Бюджет радиолинии по формуле Фрииса","url":"https://macos2024.github.io/byudzhet-radiolinii-friis.html","description":"Расчёт бюджета радиолинии в свободном пространстве по формуле Фрииса: потери 20·lg(4πd/λ), уровень на входе приёмника с учётом усилений антенн, потерь в фидерах, поглощения и дождя, запас относительно чувствительности приёмника, дальность при заданном запасе, проверка дальней зоны 2D²/λ и радиус первой зоны Френеля.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Бюджет радиолинии по формуле Фрииса","item":"https://macos2024.github.io/byudzhet-radiolinii-friis.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Значит ли положительный запас, что линия будет работать?","acceptedAnswer":{"@type":"Answer","text":"Нет. Положительный запас говорит лишь о том, что в свободном пространстве уровень на входе приёмника выше его чувствительности. Реальный уровень колеблется из-за многолучёвости, дождя, затенения зоны Френеля и несовпадения поляризаций, а чувствительность зависит от скорости передачи и помех. Достаточность запаса определяет пользователь по требуемой доступности линии; калькулятор пишет «Оценка»."}},{"@type":"Question","name":"Почему потери в свободном пространстве растут с частотой?","acceptedAnswer":{"@type":"Answer","text":"Потери в формуле Фрииса вызваны не поглощением, а тем, что эффективная площадь приёмной антенны с заданным усилением пропорциональна λ². Чем выше частота, тем меньше площадь изотропной антенны и тем меньше мощности она перехватывает. Антенна с неизменной физической площадью, напротив, на высоких частотах даёт большее усиление; усиление нужно вводить отдельно."}},{"@type":"Question","name":"Что означает проверка дальней зоны 2D²/λ?","acceptedAnswer":{"@type":"Answer","text":"Формула Фрииса предполагает плоскую волну на раскрыве приёмной антенны. Для больших антенн это выполняется только на расстоянии порядка 2D²/λ и дальше. Если ввести размер антенны D, калькулятор сравнит расстояние с этой границей и при нарушении не станет делать вывод о запасе. Граница — распространённое условие, а не точный порог."}},{"@type":"Question","name":"Куда вводить потери на дождь и поглощение в атмосфере?","acceptedAnswer":{"@type":"Answer","text":"В одно из двух полей потерь: суммарно в дБ на всю трассу или погонно в дБ/км (погонные умножаются на расстояние); можно заполнить оба — они сложатся. Значения зависят от частоты, интенсивности дождя и климата и берутся из данных о трассе — калькулятор их не подставляет. Если поля пусты, потери принимаются равными нулю, и страница об этом пишет."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Бюджет радиолинии по формуле Фрииса</h1>
+<p class="intro">Бюджет линии складывает в децибелах всё, что даёт и отнимает сигнал на пути от передатчика к приёмнику: мощность, усиления антенн, потери в фидерах и разъёмах, потери на трассе. Калькулятор считает уровень на входе приёмника по формуле Фрииса для свободного пространства, сравнивает его с чувствительностью из паспорта и находит дальность при заданном запасе. Это оценка идеальной трассы: замирания и препятствия она не включает. Отрезок фидера как линию передачи разбирает <a href="shlejf-lambda-chetvert.html">калькулятор входного сопротивления шлейфа</a>, а шум приёмника — <a href="shum-prinimnika-kaskad.html">калькулятор шума каскадов</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Бюджет радиолинии по формуле Фрииса</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Что считать</label><div class="fw"><select id="mode"><option value="budget" selected>Бюджет линии: уровень на входе приёмника и запас</option><option value="range">Дальность при заданном запасе на замирания</option></select></div></div><div class="f" id="f_f"><label for="f">Частота f</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="2400" placeholder=""><select id="f_unit" class="u" aria-label="Единицы: Частота f"><option value="1000000.0" selected>МГц</option><option value="1000000000.0">ГГц</option><option value="1000.0">кГц</option></select></div></div><div class="f" id="f_d"><label for="d">Расстояние между антеннами d</label><div class="fw"><input id="d" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><select id="d_unit" class="u" aria-label="Единицы: Расстояние между антеннами d"><option value="1000.0" selected>км</option><option value="1">м</option></select></div></div><div class="f" id="f_ptu"><label for="ptu">Единицы мощности передатчика</label><div class="fw"><select id="ptu"><option value="dbm" selected>дБм</option><option value="mw">мВт</option><option value="w">Вт</option></select></div></div><div class="f" id="f_pt"><label for="pt">Мощность передатчика Pt на его выходе, в выбранных выше единицах</label><div class="fw"><input id="pt" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""></div><div class="hint">Условное значение. Мощность на выходе передатчика, до фидера; 0 дБм = 1 мВт, 30 дБм = 1 Вт</div></div><div class="f" id="f_gt"><label for="gt">Усиление передающей антенны Gt</label><div class="fw"><input id="gt" type="text" inputmode="decimal" autocomplete="off" value="14" placeholder=""><span class="u">дБи</span></div><div class="hint">По паспорту антенны, в направлении на приёмник (дБи — относительно изотропной); значение условное. Может быть отрицательным</div></div><div class="f" id="f_gr"><label for="gr">Усиление приёмной антенны Gr</label><div class="fw"><input id="gr" type="text" inputmode="decimal" autocomplete="off" value="14" placeholder=""><span class="u">дБи</span></div><div class="hint">По паспорту антенны; значение условное</div></div><div class="f" id="f_lft"><label for="lft">Потери в фидере и разъёмах передатчика</label><div class="fw"><input id="lft" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">дБ</span></div><div class="hint">Кабель, разъёмы, грозозащита между передатчиком и антенной; 0 — если антенна на выходе передатчика</div></div><div class="f" id="f_lfr"><label for="lfr">Потери в фидере и разъёмах приёмника</label><div class="fw"><input id="lfr" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><span class="u">дБ</span></div></div><div class="f" id="f_la"><label for="la">Потери на поглощение в атмосфере и дождь, суммарно на трассе</label><div class="fw"><input id="la" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">дБ</span></div><div class="hint">Вводит пользователь по данным о трассе и частоте; калькулятор их не подставляет. Пусто — не учитываются</div></div><div class="f" id="f_lk"><label for="lk">Погонные потери на поглощение и дождь</label><div class="fw"><input id="lk" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">дБ/км</span></div><div class="hint">Умножаются на расстояние в километрах; если заполнены оба поля потерь, они складываются. Пусто — не учитываются</div></div><div class="f" id="f_sens"><label for="sens">Чувствительность приёмника Smin по паспорту</label><div class="fw"><input id="sens" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">дБм</span></div><div class="hint">Уровень на входе приёмника для нужного качества приёма при выбранной скорости, из паспорта. Пусто — запас не оценивается. В режиме дальности обязательна</div></div><div class="f" id="f_mreq"><label for="mreq">Требуемый запас на замирания</label><div class="fw"><input id="mreq" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">дБ</span></div><div class="hint">Сколько децибел сверх чувствительности нужно оставить на замирания, дождь, старение; выбирают по требуемой доступности линии. Пусто — запас сравнивается с нулём. В режиме дальности обязателен</div></div><div class="f" id="f_dd"><label for="dd">Наибольший размер антенны D</label><div class="fw"><input id="dd" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="dd_unit" class="u" aria-label="Единицы: Наибольший размер антенны D"><option value="1" selected>м</option><option value="0.01">см</option></select></div><div class="hint">Для проверки дальней зоны d ≥ 2D²/λ. Пусто — дальняя зона не проверяется</div></div><div class="f" id="f_d1"><label for="d1">Расстояние от передатчика до препятствия d1</label><div class="fw"><input id="d1" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="d1_unit" class="u" aria-label="Единицы: Расстояние от передатчика до препятствия d1"><option value="1000.0" selected>км</option><option value="1">м</option></select></div><div class="hint">Для радиуса первой зоны Френеля в этой точке. Пусто — в середине трассы, где зона шире всего</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
+<section class="article">
+<h2>Бюджет радиолинии: как считается</h2>
+<div class="formula">Потери в свободном пространстве: Lfs = 20·lg(4π·d/λ) дБ,&nbsp;&nbsp;λ = c/f,&nbsp;&nbsp;Lfs = 32,448 + 20·lg f<sub>МГц</sub> + 20·lg d<sub>км</sub><br>Формула Фрииса: Pr = Pt·Gt·Gr·(λ/(4π·d))²&nbsp;&nbsp;или в децибелах&nbsp;&nbsp;Pr = Pt + Gt + Gr − Lfs<br>Бюджет: Pr = Pt − Lф1 + Gt − Lfs − Lпогл + Gr − Lф2&nbsp;&nbsp;[дБм],&nbsp;&nbsp;запас M = Pr − Smin<br>Дальность: Lfs(d) + Lпогл(d) = Pt − Lф1 + Gt + Gr − Lф2 − Smin − Mтреб<br>Дальняя зона: d ≥ 2D²/λ;&nbsp;&nbsp;первая зона Френеля: r<sub>1</sub> = √(λ·d<sub>1</sub>·d<sub>2</sub>/(d<sub>1</sub> + d<sub>2</sub>))</div>
+<p><b>Откуда формула.</b> Изотропный излучатель, питаемый мощностью Pt, создаёт на расстоянии d плотность потока Pt/(4π·d²). Антенна с усилением Gt увеличивает её в Gt раз в нужном направлении. Эффективная площадь приёмной антенны — Gr·λ²/(4π) (изотропная апертура λ²/(4π) умножается на усиление), поэтому принятая мощность Pr = Pt·Gt/(4π·d²)·Gr·λ²/(4π) = Pt·Gt·Gr·(λ/(4π·d))². Это формула Фрииса (H. T. Friis, Proc. IRE, 1946); связь апертуры с усилением и условия применимости разобраны в главе 2 Balanis, «Antenna Theory». Множитель (λ/(4π·d))² — единственное, что зависит от расстояния и частоты; ITU-R P.525 называет его обратную величину, взятую в децибелах, основными потерями передачи в свободном пространстве между изотропными антеннами: Lfs = 20·lg(4π·d/λ). Усиления антенн в эти потери не входят и прибавляются отдельно.</p>
+<p><b>Децибелы.</b> Каждое удвоение расстояния добавляет 20·lg 2 = 6,02 дБ потерь, каждое удвоение частоты — столько же (при неизменном усилении антенн). Удобная запись в практических единицах — Lfs = 32,448 + 20·lg f(МГц) + 20·lg d(км): число 32,448 = 20·lg(4π·10<sup>9</sup>/c), в ITU-R P.525-4 оно округлено до 32,4 (по выдаче). Мощность в дБм — десять десятичных логарифмов её отношения к 1 мВт; перевод мощности, усиления и ослабления отдельно считает <a href="decibel.html">калькулятор децибелов</a>.</p>
+<p><b>Запас и дальность.</b> Чувствительность Smin приёмник получает из паспорта для выбранной скорости и качества; запас M = Pr − Smin — сколько децибел уровень выше неё. Калькулятор не объявляет «линия будет работать»: он сравнивает M с запасом Mтреб, который задаёт пользователь, и пишет «Оценка». Запас нужен потому, что реальный уровень колеблется: замирания из-за многолучёвости, дождь на частотах выше нескольких ГГц, затенение препятствиями, рассогласование поляризации, КСВ антенн и старение. Сколько запаса достаточно, определяют по требуемой доступности линии и данным о трассе — на странице таких цифр нет. В режиме дальности уравнение Lfs(d) + Lпогл(d) = Pt − Lф1 + Gt + Gr − Lф2 − Smin − Mтреб решается для d: при суммарных потерях на поглощение дальность выражается формулой, при погонных (дБ/км) — делением отрезка, потому что левая часть строго растёт с d.</p>
+<p><b>Дальняя зона.</b> Формула Фрииса верна, когда каждая антенна находится в дальней зоне другой. Часто используют условие d ≥ 2D²/λ, где D — наибольший размер антенны (пересказ приведён в описании формулы Фрииса; номер раздела у Balanis подтвердить не удалось), и d ≫ λ. Если ввести D, калькулятор сравнивает расстояние с 2D²/λ: при нарушении вердикт о запасе не выводится, потому что расчётные потери недостоверны. Это одно из распространённых условий, но не единственное: для электрически малых и промежуточных антенн в литературе встречаются другие границы (например, 5D). Если D не введён, страница прямо пишет, что дальняя зона не проверена. При расстоянии меньше длины волны расчёт не выполняется.</p>
+<p><b>Зона Френеля.</b> Радиус n-й зоны — геометрическое место точек, для которых путь через них длиннее прямого на n·λ/2; при радиусе много меньше расстояний r<sub>n</sub> = √(n·λ·d<sub>1</sub>·d<sub>2</sub>/(d<sub>1</sub> + d<sub>2</sub>)). Первая зона шире всего в середине трассы (r<sub>1</sub> = ½·√(λ·d)). ITU-R P.526 для гладких препятствий называет просвет не менее 0,6·r<sub>1</sub> (по выдаче); калькулятор показывает r<sub>1</sub> и 0,6·r<sub>1</sub> как справку и не проверяет рельеф: если препятствие вошло в зону, потери превысят свободное пространство, а вердикт о запасе станет слишком оптимистичным.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="dlina-antenny.html">Длина антенны</a> считает размеры самого излучателя, <a href="shlejf-lambda-chetvert.html">шлейф и четвертьволновый трансформатор</a> — согласование линии, <a href="shum-prinimnika-kaskad.html">шум каскадов</a> — реальную чувствительность приёмника по его коэффициенту шума: эту чувствительность можно ввести в бюджет линии.</p>
+<h2>Бюджет радиолинии: пример расчёта</h2>
+<p>Линия Wi-Fi 2,4 ГГц на 5 км (значения условные): передатчик 20 дБм, антенны по 14 дБи, потери в каждом фидере 1 дБ. Длина волны 124,9 мм; потери в свободном пространстве Lfs = 20·lg(4π·5000/0,1249) = <b>114,03 дБ</b>. ЭИИМ = 20 − 1 + 14 = 33 дБм. Уровень на входе приёмника: 20 − 1 + 14 − 114,03 + 14 − 1 = <b>−68,03 дБм</b>. При чувствительности из паспорта −90 дБм запас 21,97 дБ в идеальных условиях: при нужном запасе 15 дБ калькулятор напишет, что запас не меньше заданного, при 25 дБ — что не хватает 3,03 дБ. Радиус первой зоны Френеля в середине трассы ½·√(λ·d) = 12,5 м, просвет 0,6·r<sub>1</sub> — 7,5 м.</p>
+<p>Обратная задача: при чувствительности −90 дБм и запасе 20 дБ допустимая сумма потерь 20 − 1 + 14 + 14 − 1 + 90 − 20 = 116 дБ, и по формуле Фрииса дальность составляет <b>6,272 км</b>. Каждые лишние 6,02 дБ запаса сокращают её вдвое; погонные потери 0,05 дБ/км уменьшают её до 6,057 км.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Значит ли положительный запас, что линия будет работать?</h3><p>Нет. Положительный запас говорит лишь о том, что в свободном пространстве уровень на входе приёмника выше его чувствительности. Реальный уровень колеблется из-за многолучёвости, дождя, затенения зоны Френеля и несовпадения поляризаций, а чувствительность зависит от скорости передачи и помех. Достаточность запаса определяет пользователь по требуемой доступности линии; калькулятор пишет «Оценка».</p><h3>Почему потери в свободном пространстве растут с частотой?</h3><p>Потери в формуле Фрииса вызваны не поглощением, а тем, что эффективная площадь приёмной антенны с заданным усилением пропорциональна λ². Чем выше частота, тем меньше площадь изотропной антенны и тем меньше мощности она перехватывает. Антенна с неизменной физической площадью, напротив, на высоких частотах даёт большее усиление; усиление нужно вводить отдельно.</p><h3>Что означает проверка дальней зоны 2D²/λ?</h3><p>Формула Фрииса предполагает плоскую волну на раскрыве приёмной антенны. Для больших антенн это выполняется только на расстоянии порядка 2D²/λ и дальше. Если ввести размер антенны D, калькулятор сравнит расстояние с этой границей и при нарушении не станет делать вывод о запасе. Граница — распространённое условие, а не точный порог.</p><h3>Куда вводить потери на дождь и поглощение в атмосфере?</h3><p>В одно из двух полей потерь: суммарно в дБ на всю трассу или погонно в дБ/км (погонные умножаются на расстояние); можно заполнить оба — они сложатся. Значения зависят от частоты, интенсивности дождя и климата и берутся из данных о трассе — калькулятор их не подставляет. Если поля пусты, потери принимаются равными нулю, и страница об этом пишет.</p>
+</div>
+</section>
+
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li>A Note on a Simple Transmission Formula — H. T. Friis; Proceedings of the IRE — Редакция т. 34, № 5, с. 254–256, май 1946 (библиографические данные и аннотация видны в выдаче двумя поисками; текст статьи не открывался — формула на странице выведена из изотропной апертуры) — раздел простая формула передачи Pr = Pt·Gt·Gr·(λ/4πd)²; обсуждение ограничений — по аннотации — обращение 13.11.2026</li><li><a href="https://www.itu.int/rec/R-REC-P.525" rel="nofollow noopener" target="_blank">Recommendation ITU-R P.525. Calculation of free-space attenuation</a> — ITU-R (Международный союз электросвязи, сектор радиосвязи) — Редакция P.525-5 (11/2024), «в силе» по выдаче; предыдущие P.525-4 (08/2019) и P.525-3 (11/2016) — та же зависимость в других записях (по выдаче). Текст рекомендации в окружении не открывался — сайт itu.int закрыт сетевой политикой — раздел основные потери передачи в свободном пространстве между изотропными антеннами Lbf = 20·lg(4πd/λ), d и λ в одних единицах (по выдаче); номер уравнения в выдаче не подтверждён и не приписан, P.525-4: запись через частоту с постоянной 32,4 при d в км и f в МГц (по выдаче) — обращение 13.11.2026</li><li>Antenna Theory: Analysis and Design — C. A. Balanis; Wiley — Редакция 3-е изд., 2005 (оглавление видно в выдаче); глава 2 — раздел 2.17 Friis Transmission Equation and Radar Range Equation — по оглавлению, условие дальней зоны d ≥ 2D²/λ подтверждено только в пересказе формулы Фрииса, номер раздела Balanis не подтверждён и не приписан — обращение 13.11.2026</li><li><a href="https://www.itu.int/rec/R-REC-P.526" rel="nofollow noopener" target="_blank">Recommendation ITU-R P.526. Propagation by diffraction</a> — ITU-R — Редакция редакции P.526-5 … P.526-14 (по выдаче); какая именно сверена с текстом — не подтверждено, текст не открывался — раздел радиус эллипсоида Френеля √(λ·d1·d2/(d1 + d2)) и просвет не менее 0,6 радиуса первой зоны для гладких препятствий — по выдаче; формула радиуса на странице выведена из условия разности хода — обращение 13.11.2026</li></ul><p><b>Допущения:</b></p><ul><li>Свободное пространство в прямой видимости между двумя антеннами; земля, препятствия и многолучёвость не учтены.</li><li>Скорость света c = 299 792 458 м/с; атмосфера не меняет длину волны.</li><li>Усиления антенн заданы в направлении на корреспондента; поляризации согласованы, антенны согласованы с фидерами.</li><li>Чувствительность приёмника, усиления, потери в фидерах, поглощение и дождь вводит пользователь; значения по умолчанию условные.</li></ul><p><b>Границы применимости:</b></p><ul><li>Замирания, многолучёвость, отражение от земли, затенение зоны Френеля, рефракция и помехи не рассчитываются; запас на них задаёт пользователь.</li><li>Формула неприменима в ближней зоне: расстояние меньше длины волны отвергается, при введённом размере антенны проверяется d ≥ 2D²/λ.</li><li>Радиус зоны Френеля — справка; рельеф и радиогоризонт не проверяются.</li><li>Потери в фидерах и разъёмах — числа в дБ, от частоты и длины кабеля не вычисляются.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="decibel.html">Децибелы: усиление и ослабление</a></li><li><a href="dlina-antenny.html">Длина антенны: диполь, вертикал, рамка</a></li><li><a href="shlejf-lambda-chetvert.html">Входное сопротивление шлейфа и λ/4-трансформатор</a></li><li><a href="shum-prinimnika-kaskad.html">Шум приёмника: коэффициент шума каскадов</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fe(x,p){var s=Number(x.toPrecision(p)),a=Math.abs(s);if(a===0||(a<1e7&&a>=1e-4))return fmt(x,p);var t=s.toExponential(p-1).replace(/(\.\d*?)0+e/,'$1e').replace('.e','e');return t.replace('e+','·10^').replace('e','·10^').replace('.',',');}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fe(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fe(x,p);}return fe(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function sg(x){return x>0?'+':'';}
+function rd(x){return Math.round(x*1e9)/1e9;}
+// Малый зазор в дБ словами: иначе fmt вывел бы «1·10^-6».
+function dbs(x){if(x!==0&&Math.abs(x)<1e-3)return (x<0?'−':'')+'меньше 0,001';return fmt(x);}
+// Мощность в ваттах из дБм словами за пределами диапазона si: иначе вышли бы числа вроде 1·10^-30 Вт.
+function pw(dbm){if(dbm<-120)return 'меньше 1 фВт';if(dbm>120)return 'больше 1 ГВт';return si(Math.pow(10,dbm/10)*1e-3,'Вт');}
+function perms(a){if(a.length<=1)return [a.slice()];var r=[];for(var i=0;i<a.length;i++){var rest=a.slice(0,i).concat(a.slice(i+1));perms(rest).forEach(function(p){r.push([a[i]].concat(p));});}return r;}
+
+var C0=299792458;
+function sync(){hideF('d',S('mode')==='range');}
+function init(){$('mode').addEventListener('change',sync);sync();}
+function calc(){
+var rg=S('mode')==='range',pu=S('ptu');
+var f=P('f'),pt=P('pt'),gta=P('gt'),gra=P('gr'),l1=P('lft'),l2=P('lfr'),d=rg?0:P('d');
+if([f,pt,gta,gra,l1,l2,d].some(isNaN))return err('Заполните числами частоту, мощность передатчика, усиления антенн, потери в фидерах'+(rg?'.':' и расстояние.'));
+if(f<1e5||f>3e11)return err('Частота — от 100 кГц до 300 ГГц.');
+if(pu!=='dbm'&&pt<=0)return err('Мощность передатчика должна быть больше нуля.');
+var ptd=pu==='dbm'?pt:10*Math.log10(pt*(pu==='w'?1000:1));
+if(ptd<-100||ptd>100)return err('Мощность передатчика — от −100 до +100 дБм (до 10 МВт).');
+if(gta<-50||gta>100||gra<-50||gra>100)return err('Усиление антенны — от −50 до +100 дБи.');
+if(l1<0||l1>100||l2<0||l2>100)return err('Потери в фидере и разъёмах — от 0 до 100 дБ.');
+var la=OPT('la'),lk=OPT('lk'),sens=OPT('sens'),mreq=OPT('mreq'),dd=OPT('dd'),d1=OPT('d1');
+if(la!==null){if(isNaN(la))return err('Потери на поглощение и дождь — число. Если их нет, оставьте поле пустым.');if(la<0||la>1000)return err('Потери на поглощение и дождь — от 0 до 1000 дБ.');}
+if(lk!==null){if(isNaN(lk))return err('Погонные потери — число. Если их нет, оставьте поле пустым.');if(lk<0||lk>1000)return err('Погонные потери — от 0 до 1000 дБ/км.');}
+if(sens!==null){if(isNaN(sens))return err('Чувствительность приёмника — число в дБм. Если её нет, оставьте поле пустым.');if(sens<-200||sens>100)return err('Чувствительность приёмника — от −200 до +100 дБм.');}
+if(mreq!==null){if(isNaN(mreq))return err('Требуемый запас — число в дБ. Если его нет, оставьте поле пустым.');if(mreq<0||mreq>100)return err('Требуемый запас — от 0 до 100 дБ.');}
+if(dd!==null){if(isNaN(dd))return err('Размер антенны — число. Если он неизвестен, оставьте поле пустым.');if(dd<=0||dd>1000)return err('Размер антенны — больше 0 и не больше 1000 м.');}
+if(d1!==null){if(isNaN(d1))return err('Расстояние до препятствия — число. Если оно не нужно, оставьте поле пустым.');if(d1<=0)return err('Расстояние до препятствия должно быть больше нуля.');}
+if(rg&&(sens===null||mreq===null))return err('В режиме дальности введите чувствительность приёмника (из паспорта) и требуемый запас на замирания: без них дальность не определена.');
+if(!rg&&(d<=0||d>1e12))return err('Расстояние — больше 0 и не больше 1 Тм (1000 млн км).');
+var lam=C0/f,lat=la===null?0:la,gam=lk===null?0:lk,gs=ptd+gta+gra-l1-l2;
+function F(x){return 20*Math.log10(4*Math.PI*x/lam);}
+// Обратная задача: Lfs(d) + Lсумм + γ·d/1000 = Pt − Lф1 + Gt + Gr − Lф2 − Smin − Mтреб. Потери и Lfs растут с d — решение единственно.
+if(rg){var Lm=gs-sens-mreq;
+ if(gam===0){d=Math.pow(10,(Lm-lat)/20)*lam/(4*Math.PI);
+  if(!(d>=lam*(1-1e-9)))return err('Бюджет линии позволяет дальность меньше длины волны λ = '+si(lam,'м')+': это ближняя зона, формула Фрииса неприменима. Увеличьте мощность или усиление, уменьшите потери, запас или чувствительность.');}
+ else{if(gt(F(lam)+lat+gam*lam/1000,Lm))return err('Бюджет линии позволяет дальность меньше длины волны λ = '+si(lam,'м')+': это ближняя зона, формула Фрииса неприменима. Увеличьте мощность или усиление, уменьшите потери, запас или чувствительность.');
+  var lo=lam,hi=Math.pow(10,(Lm-lat)/20)*lam/(4*Math.PI);
+  for(var i=0;i<200;i++){var m=Math.sqrt(lo*hi);if(F(m)+lat+gam*m/1000>Lm)hi=m;else lo=m;}d=Math.sqrt(lo*hi);}
+ if(!(d<=1e12))return err('Дальность по такому бюджету больше 1 Тм (1000 млн км) — вне применимости модели.');}
+else if(lt(d,lam))return err('Расстояние '+si(d,'м')+' меньше длины волны λ = '+si(lam,'м')+': это ближняя зона, формула Фрииса неприменима.');
+if(d1!==null&&!(d1<d))return err('Расстояние до препятствия d1 должно быть меньше расстояния между антеннами, '+si(d,'м')+'.');
+var fs=F(d),at=lat+gam*d/1000,pr=gs-fs-at,eirp=ptd-l1+gta;
+var ff=dd!==null,dff=ff?2*dd*dd/lam:0,viol=ff&&lt(d,dff);
+var a1=d1===null?d/2:d1,r1=Math.sqrt(lam*a1*(d-a1)/d);
+var M=sens===null?null:rd(pr-sens);
+var h='';
+if(rg)h+=row('Допустимая сумма потерь Lfs + потери на поглощение = Pt − Lф1 + Gt + Gr − Lф2 − Smin − Mтреб',dbs(gs-sens-mreq)+' дБ')+row('Дальность d при заданном запасе',si(d,'м'));
+h+=row('Длина волны λ = c/f',si(lam,'м'))+row('Потери в свободном пространстве Lfs = 20·lg(4πd/λ)',dbs(fs)+' дБ'+(rg?' на расстоянии '+si(d,'м'):''))+
+ row('ЭИИМ = Pt − Lф1 + Gt',dbs(eirp)+' дБм ('+pw(eirp)+')');
+if(at>0)h+=row('Потери на поглощение и дождь Lпогл',dbs(at)+' дБ');
+h+=row('Уровень на входе приёмника Pr = Pt − Lф1 + Gt − Lfs − Lпогл + Gr − Lф2',dbs(pr)+' дБм ('+pw(pr)+')');
+if(sens!==null){ h+=row('Чувствительность приёмника Smin (из паспорта)',dbs(sens)+' дБм')+row('Запас относительно чувствительности M = Pr − Smin',(mreq!==null?fx(M,mreq):dbs(M))+' дБ');
+ if(mreq!==null)h+=row(rg?'Требуемый запас (задан)':'Требуемый запас на замирания (задан)',dbs(mreq)+' дБ');}
+h+=row('Радиус первой зоны Френеля r1 = √(λ·d1·d2/(d1 + d2))'+(d1===null?' в середине трассы':' на расстоянии '+si(d1,'м')+' от передатчика'),si(r1,'м'))+row('Просвет не менее 0,6·r1 (критерий ITU-R P.526 для гладких препятствий)',si(0.6*r1,'м'));
+h+=ff?row('Дальняя зона d ≥ 2D²/λ',sx(d,dff,'м')+(viol?' < ':' ≥ ')+sx(dff,d,'м')):row('Дальняя зона d ≥ 2D²/λ','не проверена — размер антенны D не введён');
+var cav='замирания, многолучёвость, затенение зоны Френеля, рассогласование поляризации и антенн в запас не включены';
+var st;
+if(viol)st='Вне области применимости: расстояние '+sx(d,dff,'м')+' меньше 2D²/λ = '+sx(dff,d,'м')+' — антенны не в дальней зоне друг друга, формула Фрииса недостоверна; вывода о запасе нет';
+else if(rg)st='Оценка: при чувствительности '+dbs(sens)+' дБм и запасе '+dbs(mreq)+' дБ дальность в свободном пространстве не более '+si(d,'м')+(ff?'':'; дальняя зона не проверена — размер антенны не введён')+'; '+cav;
+else if(M===null)st='Недостаточно данных: чувствительность приёмника не задана, запас не определён; уровень на входе приёмника Pr = '+dbs(pr)+' дБм';
+else if(mreq!==null){
+ if(ge(M,mreq))st='Оценка: запас '+fx(M,mreq)+' дБ не меньше заданных '+fx(mreq,M)+' дБ в идеальных условиях'+(ff?'':'; дальняя зона не проверена')+'; '+cav;
+ else st='Оценка: запас '+fx(M,mreq)+' дБ меньше заданных '+fx(mreq,M)+' дБ — не хватает '+dbs(mreq-M)+' дБ';}
+else if(M>0)st='Оценка: уровень на входе приёмника выше чувствительности на '+dbs(M)+' дБ в идеальных условиях'+(ff?'':'; дальняя зона не проверена')+'; '+cav+'; нужный запас задайте сами';
+else if(M===0)st='Оценка: уровень на входе приёмника равен чувствительности, запас 0 дБ — любое замирание ведёт к потере приёма';
+else st='Оценка: уровень на входе приёмника ниже чувствительности на '+dbs(-M)+' дБ даже в свободном пространстве';
+var nt='Модель — свободное пространство в прямой видимости между двумя антеннами: земля, препятствия, отражения и многолучёвость не учтены, поэтому результат — оценка сверху для идеальной трассы, а не обещание связи. '+(la===null&&lk===null?'Потери на поглощение и дождь не введены — приняты равными нулю. ':'Потери на поглощение и дождь введены пользователем. ')+'Чувствительность и усиления — по паспортам, значения по умолчанию условные.';
+out(h+row('Статус',st)+note(nt));
+}
+
+</script>
+</body>
+</html>

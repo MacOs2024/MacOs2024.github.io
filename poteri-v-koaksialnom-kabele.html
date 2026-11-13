@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Потери в коаксиальном кабеле — ВольтКальк</title>
+<meta name="description" content="Расчёт затухания коаксиального кабеля на рабочей частоте по паспортному затуханию на опорной частоте или на двух частотах: закон √f для потерь в проводниках и линейный по частоте член для диэлектрика, потери в дБ на длине линии, КПД и мощность на выходе.">
+<link rel="canonical" href="https://macos2024.github.io/poteri-v-koaksialnom-kabele.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Потери в коаксиальном кабеле — ВольтКальк">
+<meta property="og:description" content="Расчёт затухания коаксиального кабеля на рабочей частоте по паспортному затуханию на опорной частоте или на двух частотах: закон √f для потерь в проводниках и линейный по частоте член для диэлектрика, потери в дБ на длине линии, КПД и мощность на выходе.">
+<meta property="og:url" content="https://macos2024.github.io/poteri-v-koaksialnom-kabele.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Потери в коаксиальном кабеле","url":"https://macos2024.github.io/poteri-v-koaksialnom-kabele.html","description":"Расчёт затухания коаксиального кабеля на рабочей частоте по паспортному затуханию на опорной частоте или на двух частотах: закон √f для потерь в проводниках и линейный по частоте член для диэлектрика, потери в дБ на длине линии, КПД и мощность на выходе.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Потери в коаксиальном кабеле","item":"https://macos2024.github.io/poteri-v-koaksialnom-kabele.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему страница не подставляет паспортное затухание сама?","acceptedAnswer":{"@type":"Answer","text":"У разных кабелей, даже с одним названием RG-58 или RG-213, затухание различается от изготовителя к изготовителю и от партии к партии, а в паспортах одной модели встречаются разные редакции. Подставленное по умолчанию значение выглядело бы как проверенное, поэтому поля паспортных данных пустые."}},{"@type":"Question","name":"Достаточно ли одной точки?","acceptedAnswer":{"@type":"Answer","text":"Для оценки вблизи опорной частоты — да. Если рабочая частота отличается от опорной в разы, одна точка и закон √f дают заметную ошибку (в примере для RG-213 — до 25 % при десятикратной экстраполяции): диэлектрик добавляет член, растущий быстрее. Две паспортные точки по разные стороны от рабочей частоты надёжнее."}},{"@type":"Question","name":"Что значит «отрицательный коэффициент недопустим»?","acceptedAnswer":{"@type":"Answer","text":"Потери в проводниках и в диэлектрике не могут быть отрицательными. Если две паспортные точки дают отрицательное k1 или k2, то они не согласуются с моделью (чаще всего перепутаны единицы или точки сняты у разных кабелей), и страница не выдаёт число."}},{"@type":"Question","name":"Учитывает ли страница КСВ нагрузки?","acceptedAnswer":{"@type":"Answer","text":"Нет. Потери считаются для согласованной линии. При рассогласовании отражённая волна дважды идёт по кабелю, и суммарные потери больше; на высоких частотах и в длинных линиях это заметно."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Потери в коаксиальном кабеле</h1>
+<p class="intro">Паспорт кабеля даёт затухание на нескольких частотах, а работать приходится на другой. Калькулятор пересчитывает паспортное затухание на рабочую частоту: потери в проводниках растут как <b>√f</b>, потери в диэлектрике — пропорционально <b>f</b>. Затем считает потери на длине линии, КПД и мощность на выходе. Паспортные данные вводит пользователь — страница их не подставляет. Z0 кабеля по размерам находит <a href="volnovoe-soprotivlenie-linii.html">калькулятор волнового сопротивления</a>, отражение от нагрузки — <a href="ksv-otrazhenie.html">калькулятор КСВ</a>, перевод отношений мощности — <a href="decibel.html">калькулятор децибел</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Потери в коаксиальном кабеле</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Паспортные данные</label><div class="fw"><select id="mode"><option value="one" selected>Одна частота (закон √f, диэлектрик — по tgδ и εr, если заданы)</option><option value="two">Две частоты: найти k1·√f + k2·f по двум точкам</option></select></div></div><div class="f" id="f_au"><label for="au">Единица паспортного затухания</label><div class="fw"><select id="au"><option value="m100" selected>дБ на 100 м</option><option value="m1">дБ на метр</option><option value="ft100">дБ на 100 футов</option></select></div></div><div class="f" id="f_f0"><label for="f0">Опорная частота f0 из паспорта</label><div class="fw"><input id="f0" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="f0_unit" class="u" aria-label="Единицы: Опорная частота f0 из паспорта"><option value="1000000.0" selected>МГц</option><option value="1000000000.0">ГГц</option><option value="1000.0">кГц</option></select></div><div class="hint">Частота, на которой в паспорте указано затухание</div></div><div class="f" id="f_a0"><label for="a0">Паспортное затухание на f0</label><div class="fw"><input id="a0" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""></div><div class="hint">В единице, выбранной выше. Страница это значение не подставляет — возьмите из паспорта своего кабеля</div></div><div class="f" id="f_tg"><label for="tg">tgδ диэлектрика (необязательно)</label><div class="fw"><input id="tg" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""></div><div class="hint">Из паспорта диэлектрика. Только вместе с εr; пусто — все потери считаются потерями в проводниках (тогда на частотах выше опорной оценка занижена)</div></div><div class="f" id="f_er"><label for="er">εr диэлектрика (необязательно)</label><div class="fw"><input id="er" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""></div><div class="hint">Только вместе с tgδ</div></div><div class="f" id="f_f1"><label for="f1">Частота f1 из паспорта</label><div class="fw"><input id="f1" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="f1_unit" class="u" aria-label="Единицы: Частота f1 из паспорта"><option value="1000000.0" selected>МГц</option><option value="1000000000.0">ГГц</option><option value="1000.0">кГц</option></select></div></div><div class="f" id="f_a1"><label for="a1">Паспортное затухание на f1</label><div class="fw"><input id="a1" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""></div><div class="hint">В единице, выбранной выше</div></div><div class="f" id="f_f2"><label for="f2">Частота f2 из паспорта</label><div class="fw"><input id="f2" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="f2_unit" class="u" aria-label="Единицы: Частота f2 из паспорта"><option value="1000000.0" selected>МГц</option><option value="1000000000.0">ГГц</option><option value="1000.0">кГц</option></select></div><div class="hint">Должна заметно отличаться от f1</div></div><div class="f" id="f_a2"><label for="a2">Паспортное затухание на f2</label><div class="fw"><input id="a2" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""></div><div class="hint">В единице, выбранной выше</div></div><div class="f" id="f_f"><label for="f">Рабочая частота f</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="145" placeholder=""><select id="f_unit" class="u" aria-label="Единицы: Рабочая частота f"><option value="1000000.0" selected>МГц</option><option value="1000000000.0">ГГц</option><option value="1000.0">кГц</option></select></div><div class="hint">От 1 МГц до 100 ГГц</div></div><div class="f" id="f_len"><label for="len">Длина линии</label><div class="fw"><input id="len" type="text" inputmode="decimal" autocomplete="off" value="20" placeholder=""><select id="len_unit" class="u" aria-label="Единицы: Длина линии"><option value="1" selected>м</option><option value="0.3048">фут</option><option value="1000">км</option></select></div></div><div class="f" id="f_pin"><label for="pin">Мощность на входе линии (необязательно)</label><div class="fw"><input id="pin" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="pin_unit" class="u" aria-label="Единицы: Мощность на входе линии (необязательно)"><option value="1" selected>Вт</option><option value="0.001">мВт</option><option value="1000">кВт</option></select></div><div class="hint">Пусто — мощности не считаются, остаются потери в дБ и КПД</div></div><div class="f" id="f_tol"><label for="tol">Разброс паспортного затухания ± (необязательно)</label><div class="fw"><input id="tol" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">%</span></div><div class="hint">Допуск изготовителя, старение, влага, температура — по вашей оценке; пусто — разброс не учитывается</div></div><div class="f" id="f_bud"><label for="bud">Допустимые потери в линии (необязательно)</label><div class="fw"><input id="bud" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><span class="u">дБ</span></div><div class="hint">Из бюджета линии; пусто — вывод о достаточности линии не делается</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
+<section class="article">
+<h2>Потери в коаксиальном кабеле: как считается</h2>
+<div class="formula">α(f) = k1·√f + k2·f,&nbsp;&nbsp;потери в линии A = α·L дБ,&nbsp;&nbsp;Pвых = Pвх·10<sup>−A/10</sup>,&nbsp;&nbsp;КПД = 10<sup>−A/10</sup><br>Одна точка (α0 на f0): k2 = (20/ln 10)·π·√εr·tgδ / c ≈ 9,102·10<sup>−8</sup>·√εr·tgδ дБ/(м·Гц),&nbsp;&nbsp;k1 = (α0 − k2·f0) / √f0<br>Две точки: k2 = (α2/√f2 − α1/√f1) / (√f2 − √f1),&nbsp;&nbsp;k1 = α1/√f1 − k2·√f1</div>
+<p><b>Почему √f и f.</b> У линии с малыми потерями затухание складывается из потерь в проводниках и в диэлектрике: α ≈ R′/(2·Z0) + G′·Z0/2 (Позар, глава 2, раздел о линиях с потерями; текст здесь не использовался, а вывод повторён). Из-за скин-эффекта погонное сопротивление R′ пропорционально √f (скин-слой уменьшается как 1/√f), поэтому первый член растёт как √f. Погонная проводимость диэлектрика G′ = ω·C′·tgδ пропорциональна f, а Z0 от частоты почти не зависит, поэтому второй член растёт как f: α<sub>d</sub> = π·f·√εr·tgδ/c неп/м, или 8,686 · π · f · √εr · tgδ / c дБ/м. В единицах, принятых в паспортах, это 0,09102·√εr·tgδ дБ/м на каждый МГц, или 2,774·√εr·tgδ дБ/100 фут на МГц. Модель с двумя коэффициентами k1 и k2 для кабеля описана и в радиолюбительской заметке PA3FWM (в выдаче видна только формулировка; страницу открыть не удалось).</p>
+<p><b>Как работают режимы.</b> «Одна частота»: берётся паспортное затухание α0 на f0. Если заданы tgδ и εr, из них считается диэлектрический член k2, остаток относится к проводникам: k1 = (α0 − k2·f0)/√f0; если диэлектрический член окажется больше паспортного затухания, расчёт отклоняется. Если tgδ и εr не заданы, принимается k2 = 0 — все потери в проводниках, и страница прямо пишет, что выше опорной частоты такая оценка занижена. «Две частоты»: k1 и k2 находятся из линейной системы 2×2; при близких частотах система вырождена, и расчёт отклоняется; отрицательный k1 или k2 означает, что точки не согласуются с моделью (например, перепутаны единицы или кабель сильно отличается от идеального), и расчёт тоже отклоняется. Если точки лежат ровно на законе √f, k2 получается нулём с точностью до округления и принимается равным нулю.</p>
+<p><b>Мощность и разброс.</b> Потери A в децибелах переводятся в долю мощности η = 10<sup>−A/10</sup>; в кабеле рассеивается Pвх·(1 − η). Разброс паспортного затухания (допуск, старение, влага, температура) вводится в процентах и даёт интервал потерь. Если задан бюджет потерь, страница сравнивает с ним номинальное значение и значение с разбросом; без бюджета или без разброса вывод «в бюджете» не делается — статус «Недостаточно данных».</p>
+<table class="t"><tr><th scope="col">Частота, МГц</th><th scope="col">Belden 8240 (RG-58), дБ/100 фут</th><th scope="col">Belden 8267 (RG-213), дБ/100 фут</th></tr>
+<tr><td>10</td><td>1,1</td><td>0,55</td></tr><tr><td>100</td><td>3,8</td><td>1,9</td></tr><tr><td>400</td><td>8,4</td><td>4,1</td></tr><tr><td>1000</td><td>14,5</td><td>8,0</td></tr></table>
+<p>Таблица взята из выдачи поиска по паспортам Belden (8240 описан в старых паспортах как RG-58A/U type; у 8267 в версиях паспорта различается значение на 1 МГц), редакцию нужно сверить с актуальным паспортом. Это пример данных, а не значения по умолчанию страницы.</p>
+<p><b>Чем отличается от соседних страниц.</b> Здесь вводится затухание из паспорта, а не размеры кабеля: Z0 по размерам даёт <a href="volnovoe-soprotivlenie-linii.html">калькулятор волнового сопротивления линии</a>. Отражение от нагрузки и потери на рассогласование — <a href="ksv-otrazhenie.html">калькулятор КСВ</a>. Перевод потерь в дБ в отношение мощностей — <a href="decibel.html">калькулятор децибел</a>, а фиксированные ослабления по мощности — <a href="attenyuator.html">калькулятор аттенюатора</a>.</p>
+<h2>Потери в коаксиальном кабеле: пример расчёта</h2>
+<p>Кабель Belden 8240 (RG-58): по выдаче поиска 1,1 дБ/100 фут на 10 МГц и 3,8 дБ/100 фут на 100 МГц (взято из паспорта в выдаче, редакцию сверить). По двум точкам k1 = 0,010925 дБ/м на √МГц и k2 = 0,00015426 дБ/м на МГц (в дБ/100 фут — 0,33298 и 0,0047018). Предсказание для 400 МГц — 8,540 дБ/100 фут против 8,4 в паспорте (на 1,7 % больше), для 1000 МГц — 15,23 против 14,5 (на 5,0 % больше): модель точна там, где точки близки, и расходится при удалении от них.</p>
+<p>Кабель Belden 8267 (RG-213) известен одной точкой: 1,9 дБ/100 фут на 100 МГц. Если принять, что все потери — в проводниках (закон √f), оценка на 10 МГц получается 0,6008 дБ/100 фут против 0,55 в паспорте (на 9,2 % больше), а на 1000 МГц — 6,008 против 8,0 (на 24,9 % меньше): без диэлектрического члена выше опорной частоты оценка занижена. С условными tgδ = 0,0003 и εr = 2,25 эти ошибки меньше, но и они остаются заметными при десятикратной экстраполяции.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему страница не подставляет паспортное затухание сама?</h3><p>У разных кабелей, даже с одним названием RG-58 или RG-213, затухание различается от изготовителя к изготовителю и от партии к партии, а в паспортах одной модели встречаются разные редакции. Подставленное по умолчанию значение выглядело бы как проверенное, поэтому поля паспортных данных пустые.</p><h3>Достаточно ли одной точки?</h3><p>Для оценки вблизи опорной частоты — да. Если рабочая частота отличается от опорной в разы, одна точка и закон √f дают заметную ошибку (в примере для RG-213 — до 25 % при десятикратной экстраполяции): диэлектрик добавляет член, растущий быстрее. Две паспортные точки по разные стороны от рабочей частоты надёжнее.</p><h3>Что значит «отрицательный коэффициент недопустим»?</h3><p>Потери в проводниках и в диэлектрике не могут быть отрицательными. Если две паспортные точки дают отрицательное k1 или k2, то они не согласуются с моделью (чаще всего перепутаны единицы или точки сняты у разных кабелей), и страница не выдаёт число.</p><h3>Учитывает ли страница КСВ нагрузки?</h3><p>Нет. Потери считаются для согласованной линии. При рассогласовании отражённая волна дважды идёт по кабелю, и суммарные потери больше; на высоких частотах и в длинных линиях это заметно.</p>
+</div>
+</section>
+
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.wiley.com/en-us/Microwave+Engineering,+4th+Edition-p-9781118213636" rel="nofollow noopener" target="_blank">Microwave Engineering</a> — David M. Pozar, John Wiley &amp; Sons — Редакция 4th ed., 2011–2012 (ISBN 978-0-470-63155-3). Номера и названия разделов видны в выдаче поиска (оглавление издателя: 2.7 Lossy Transmission Lines, 3.5 Coaxial Line, 3.8 Microstrip Line; в оглавлении издания 2020 г. нумерация главы 2 иная: 2.3, 2.5, 2.6). Текст книги в окружении не читался — формулы выведены на странице, номер издания и разделов сверить по экземпляру — раздел глава 2: линия с потерями, α ≈ R/(2·Z0) + G·Z0/2 при малых потерях (2.7 Lossy Transmission Lines — по оглавлению издателя; текст не читался, вывод на странице), затухание в диэлектрике α_d = k·tgδ/2 (TEM) — выведено на странице из G′ = ω·C′·tgδ — обращение 13.11.2026</li><li><a href="https://pa3fwm.nl/technotes/tn33b-cable-attenuation.html" rel="nofollow noopener" target="_blank">Cable attenuation (technote tn33b)</a> — PA3FWM (радиолюбительские технические заметки) — Редакция дата и автор по выдаче не видны; страница в окружении не открывалась, видна только формулировка модели k1·√f + k2·f с двумя числами на тип кабеля — раздел модель α = k1·√f + k2·f: k1 — потери в меди, k2 — в диэлектрике (справка для сравнения) — обращение 13.11.2026</li><li><a href="https://catalog.belden.com/techdata/en/8240_techdata.pdf" rel="nofollow noopener" target="_blank">8240 techdata (Belden 8240, coax 50 Ω, RG-58/RG-58A/U type)</a> — Belden — Редакция данные по выдаче поиска (техданные и сторонние копии): 10 МГц 1,1; 100 МГц 3,8; 400 МГц 8,4; 1000 МГц 14,5 дБ/100 фут; редакцию сверить с актуальным паспортом; в старых паспортах кабель назван RG-58A/U type — раздел Nominal Attenuation — только как пример данных, не значения по умолчанию — обращение 13.11.2026</li><li><a href="https://catalog.belden.com/techdata/en/8267_techdata.pdf" rel="nofollow noopener" target="_blank">8267 techdata (Belden 8267, coax 50 Ω, RG-213/U type)</a> — Belden — Редакция данные по выдаче: 10 МГц 0,55; 100 МГц 1,9; 400 МГц 4,1; 1000 МГц 8,0 дБ/100 фут; значение на 1 МГц различается между редакциями (0,17 и 0,27); редакцию сверить — раздел Nominal Attenuation — только как пример данных — обращение 13.11.2026</li><li><a href="https://www.physics.nist.gov/cuu/pdf/all_2018.pdf" rel="nofollow noopener" target="_blank">CODATA Recommended Values of the Fundamental Physical Constants: 2018</a> — NIST — Редакция CODATA 2018; Z0 = 376,730 313 668(57) Ом видно в выдаче двумя запросами; c = 299 792 458 м/с (точное значение по определению метра) — раздел c = 299 792 458 м/с — в константе диэлектрического члена — обращение 13.11.2026</li></ul><p><b>Допущения:</b></p><ul><li>Линия согласована (КСВ близок к 1), однородная, с ТЭМ-полем; потери в проводниках растут как √f (скин-слой много меньше толщины проводника), в диэлектрике — как f при постоянном tgδ.</li><li>Паспортное затухание считается номинальным на указанной частоте и температуре; температуру и влагу пользователь учитывает через разброс.</li><li>Диэлектрический член задаётся парой tgδ и εr; в режиме двух точек он находится из данных.</li></ul><p><b>Границы применимости:</b></p><ul><li>Рабочая и паспортные частоты — от 1 МГц до 100 ГГц; вне этого интервала модель не применяется.</li><li>КСВ нагрузки, температура, влага, изгибы и старение кабеля не моделируются; при рассогласовании потери больше расчётных.</li><li>Данные Belden в тексте — пример из выдачи поиска, актуальные значения берут из паспорта кабеля.</li><li>Вдали от опорной частоты (более чем в 10 раз) результат — экстраполяция с заметно большей погрешностью.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="volnovoe-soprotivlenie-linii.html">Волновое сопротивление линии</a></li><li><a href="ksv-otrazhenie.html">КСВ и коэффициент отражения</a></li><li><a href="decibel.html">Децибелы: усиление и ослабление</a></li><li><a href="attenyuator.html">Резистивный аттенюатор (T и П)</a></li><li><a href="skin-effekt.html">Скин-эффект: глубина проникновения тока</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function nf(x,p){if(!isFinite(x))return 'не определено';p=p||4;if(x===0)return '0';var s=Number(x.toPrecision(p));if(s===0)return '0';
+ var t=String(s);if(/e\+/i.test(t)){var ee=s.toExponential(p-1).split('e+');t=ee[0].replace('.','')+new Array(Number(ee[1])-(p-1)+1).join('0');if(s<0&&t.charAt(0)!=='-')t='-'+t;}
+ else if(/e/i.test(t)){t=s.toFixed(Math.min(100,Math.max(0,p-1-Math.floor(Math.log10(Math.abs(s))))));}
+ if(t.indexOf('.')>=0)t=t.replace(/0+$/,'').replace(/\.$/,'');return t.replace('.',',');}
+function pp(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return 4;for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return p;}return 12;}
+function fx(x,lim){return nf(x,pp(x,lim));}
+var PRE=[[1e12,'Т'],[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п'],[1e-15,'ф']];
+function pi_(x,p){var a=Math.abs(x),i;for(i=0;i<PRE.length-1;i++){if(a>=PRE[i][0]*(1-1e-12))break;}
+ if(i>0&&Math.abs(Number((a/PRE[i][0]).toPrecision(p)))>=1000)i--;return i;}
+function sv(x,unit,p){p=p||4;if(!isFinite(x))return 'не определено';if(x===0)return '0 '+unit;if(Math.abs(x)<1e-15*(1-1e-12))return 'менее 1 ф'+unit;
+ var i=pi_(x,p);return nf(x/PRE[i][0],p)+' '+PRE[i][1]+unit;}
+function sx(x,lim,unit){var i=pi_(x,4);var k=PRE[i][0];return fx(x/k,lim/k)+' '+PRE[i][1]+unit;}
+function sl(x,lim,unit){var i=pi_(x,4);var k=PRE[i][0];return nf(lim/k,pp(x/k,lim/k))+' '+PRE[i][1]+unit;}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function pc(fr){var v=fr*100;if(v===0)return '0 %';if(v<1e-4)return 'менее 0,0001 %';return nf(v,4)+' %';}
+function dbs(x){return x>0&&x<1e-4?'менее 0,0001 дБ':nf(x,4)+' дБ';}
+
+var C0=299792458,KD=20/Math.LN10*Math.PI/C0;
+var AU={m100:0.01,m1:1,ft100:1/30.48},AL={m100:'дБ/100 м',m1:'дБ/м',ft100:'дБ/100 фут'};
+function sync(){var t=S('mode')==='two';['f0','a0','tg','er'].forEach(function(i){hideF(i,t);});['f1','a1','f2','a2'].forEach(function(i){hideF(i,!t);});}
+function init(){$('mode').addEventListener('change',sync);sync();}
+function calc(){
+var two=S('mode')==='two',key=S('au'),au=AU[key];
+var f=P('f'),L=P('len'),pin=OPT('pin'),tol=OPT('tol'),bud=OPT('bud');
+if(isNaN(f)||isNaN(L))return err('Заполните числами рабочую частоту и длину линии.');
+if(f<1e6||f>1e11)return err('Рабочая частота — от 1 МГц до 100 ГГц: ниже скин-слой сравним с радиусом проводника, выше возможны высшие типы волн, и модель α = k1·√f + k2·f перестаёт быть применимой.');
+if(L<=0||L>1e5)return err('Длина линии — больше 0 и не больше 100000 м.');
+if(pin!==null){if(isNaN(pin))return err('Мощность на входе — число. Если она не нужна, оставьте поле пустым.');if(pin<=0||pin>1e9)return err('Мощность на входе — больше 0 и не больше 1000000000 Вт.');}
+if(tol!==null){if(isNaN(tol))return err('Разброс — число в процентах. Если он не нужен, оставьте поле пустым.');if(tol<0||tol>=100)return err('Разброс паспортного затухания — от 0 до 100 % (не включая 100).');}
+if(bud!==null){if(isNaN(bud))return err('Допустимые потери — число в децибелах. Если их нет, оставьте поле пустым.');if(bud<=0||bud>1e6)return err('Допустимые потери — больше 0 и не больше 1000000 дБ.');}
+var k1,k2,tg=null,er=null,ex='',h='';
+function chk(a,fq,nm){if(isNaN(fq)||isNaN(a))return nm+': введите частоту и паспортное затухание числами. Паспортное затухание страница не подставляет — оно берётся из паспорта вашего кабеля.';
+ if(fq<1e6||fq>1e11)return nm+': частота — от 1 МГц до 100 ГГц.';if(a<=0||a*au>1000)return nm+': паспортное затухание — больше 0 и не больше 1000 дБ/м в пересчёте.';return '';}
+if(!two){
+ var f0=P('f0'),a0=P('a0'),m=chk(a0,f0,'Опорная точка');if(m)return err(m);
+ tg=OPT('tg');er=OPT('er');
+ if((tg===null)!==(er===null))return err('Задайте tgδ и εr вместе или оставьте оба поля пустыми: диэлектрический член считается по обоим.');
+ if(tg!==null){if(isNaN(tg)||isNaN(er))return err('tgδ и εr — числа. Если их нет в паспорте, оставьте оба поля пустыми.');
+  if(tg<=0||tg>0.5)return err('tgδ — больше 0 и не больше 0,5.');if(er<1||er>100)return err('εr диэлектрика — от 1 до 100.');}
+ var A0=a0*au;k2=tg===null?0:KD*Math.sqrt(er)*tg;
+ var rest=A0-k2*f0;
+ if(rest<0){if(-rest>A0*1e-9)return err('Потери в диэлектрике при tgδ = '+nf(tg)+' и εr = '+nf(er)+' на частоте f0 — '+nf(k2*f0*100,4)+' дБ/100 м, больше паспортного затухания '+nf(A0*100,4)+' дБ/100 м. Проверьте tgδ, εr и единицу затухания.');rest=0;}
+ k1=rest/Math.sqrt(f0);
+ if(f/f0>10||f/f0<0.1)ex='; рабочая частота отличается от опорной более чем в 10 раз — это экстраполяция модели, погрешность заметно больше';
+}else{
+ var f1=P('f1'),a1=P('a1'),f2=P('f2'),a2=P('a2'),m1=chk(a1,f1,'Точка 1'),m2=chk(a2,f2,'Точка 2');
+ if(m1)return err(m1);if(m2)return err(m2);
+ if(Math.abs(f2-f1)<1e-3*Math.max(f1,f2))return err('Частоты f1 и f2 различаются меньше чем на 0,1 %: по таким двум точкам коэффициенты k1 и k2 не определяются (система вырождена).');
+ var A1=a1*au,A2=a2*au,s1=Math.sqrt(f1),s2=Math.sqrt(f2);
+ k2=(A2/s2-A1/s1)/(s2-s1);k1=A1/s1-k2*s1;
+ var Amax=Math.max(A1,A2);
+ if(k1<0){if(-k1*Math.max(s1,s2)<=1e-9*Amax)k1=0;else return err('Коэффициент потерь в проводниках k1 получился отрицательным ('+nf(k1*1000,4)+' дБ/м на √МГц): паспортные точки не согласуются с моделью k1·√f + k2·f. Отрицательный член недопустим. Проверьте значения и единицы.');}
+ if(k2<0){if(-k2*Math.max(f1,f2)<=1e-9*Amax)k2=0;else return err('Коэффициент потерь в диэлектрике k2 получился отрицательным ('+nf(k2*1e6,4)+' дБ/м на МГц): затухание растёт медленнее √f, и модель k1·√f + k2·f к этим точкам неприменима. Отрицательный член недопустим. Проверьте значения и единицы.');}
+ if(f<Math.min(f1,f2)*(1-1e-9)||f>Math.max(f1,f2)*(1+1e-9))ex='; рабочая частота вне интервала паспортных частот — это экстраполяция модели, погрешность растёт';
+}
+var ac=k1*Math.sqrt(f),ad=k2*f,al=ac+ad,A=al*L;
+function ef(a){return Math.max(Math.exp(-a*Math.LN10/10),5e-324);}
+var eta=ef(A),pdis=-Math.expm1(-A*Math.LN10/10);
+if(![ac,ad,al,A].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+h+=row('Потери в проводниках k1: дБ/м на √МГц',nf(k1*1000,5));
+h+=row('Потери в диэлектрике k2: дБ/м на МГц',k2===0?(two?'0':'0 — не выделены, tgδ и εr не заданы'):nf(k2*1e6,5));
+h+=row('Затухание на частоте f',nf(al*100,5)+' дБ/100 м'+(key==='m100'?'':' ('+nf(al/au,5)+' '+AL[key]+')'));
+h+=row('из него в проводниках / в диэлектрике',nf(ac*100,4)+' / '+nf(ad*100,4)+' дБ/100 м');
+h+=row('Потери в линии A = α·L',nf(A,5)+' дБ');
+h+=row('КПД линии Pвых / Pвх = 10^(−A/10)',pc(eta));
+if(pin!==null){h+=row('Мощность на входе',sv(pin,'Вт'));h+=row('Мощность на выходе',sv(pin*eta,'Вт'));h+=row('Рассеивается в кабеле',sv(pin*pdis,'Вт'));}
+var Ahi=tol===null?A:A*(1+tol/100);
+if(tol!==null){h+=row('Потери с учётом разброса ±'+nf(tol)+' %','от '+nf(A*(1-tol/100),4)+' до '+nf(Ahi,4)+' дБ');h+=row('КПД с учётом разброса','от '+pc(ef(Ahi))+' до '+pc(ef(A*(1-tol/100))));}
+if(bud!==null)h+=row('Допустимые потери в линии',nf(bud,4)+' дБ');
+var st,why=[],risk=null;
+if(bud!==null){
+ if(gt(A,bud))risk='потери в линии '+fx(A,bud)+' дБ больше допустимых '+nf(bud,pp(A,bud))+' дБ уже по паспортному значению';
+ else if(tol!==null&&gt(Ahi,bud))risk='по паспортному значению потери '+fx(A,bud)+' дБ не больше допустимых, но с разбросом +'+nf(tol)+' % они достигают '+fx(Ahi,bud)+' дБ — больше допустимых '+nf(bud,pp(Ahi,bud))+' дБ';
+}
+if(bud===null)why.push('допустимые потери не заданы — вывод о достаточности линии не делается; по введённым данным потери '+nf(A,4)+' дБ');
+else if(tol===null&&!risk)why.push('разброс паспортного затухания не задан — по паспортному значению потери '+fx(A,bud)+' дБ не больше допустимых '+nf(bud,pp(A,bud))+' дБ, но запас не оценён');
+if(risk)st='Риск: '+risk;
+else if(why.length)st='Недостаточно данных: '+why.join('; ');
+else st='Оценка: потери '+fx(Ahi,bud)+' дБ'+(tol!==null?' (с разбросом +'+nf(tol)+' %)':'')+' не больше допустимых '+nf(bud,pp(Ahi,bud))+' дБ';
+st+=ex;
+var n=two?'Коэффициенты найдены по двум паспортным точкам из системы α(f1) = k1·√f1 + k2·f1, α(f2) = k1·√f2 + k2·f2; отрицательный коэффициент не принимается. ':'Диэлектрический член '+(tg===null?'не задан: все потери приняты потерями в проводниках, поэтому выше опорной частоты оценка занижена, а ниже — завышена. ':'k2 = (20/ln 10)·π·√εr·tgδ / c найден из tgδ и εr; остаток паспортного затухания отнесён к проводникам. ');
+n+='Модель α = k1·√f + k2·f верна, пока толщина проводника много больше скин-слоя, tgδ почти не зависит от частоты, а КСВ линии близок к 1: при рассогласованной нагрузке потери в линии больше. Реальный кабель отклоняется от модели (оплётка, шаг скрутки, влага, старение), поэтому паспортные точки нужны близко к рабочей частоте. Значения Belden в примере взяты из выдачи поиска и требуют сверки с актуальным паспортом.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

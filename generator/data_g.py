@@ -1282,7 +1282,7 @@ faqs=[
  ("Почему проволочные резисторы не подходят?",
   "У них заметная собственная индуктивность, которая на высоких частотах превращает резистор в реактивный элемент. Согласование при этом уходит, а ослабление становится зависящим от частоты. Нужны безындукционные — тонкоплёночные или SMD."),
 ],
-related=["decibel","impedans-rlc","delitel-napryazheniya"],
+related=["decibel","impedans-rlc","delitel-napryazheniya","poteri-v-koaksialnom-kabele","shum-prinimnika-kaskad"],
 ),
 
 ]

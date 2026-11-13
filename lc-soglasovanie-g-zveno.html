@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Г-образная LC-цепь согласования — ВольтКальк</title>
+<meta name="description" content="Расчёт Г-образной LC-цепи согласования двух активных сопротивлений R1 &gt; R2 на частоте f: оба варианта (ФНЧ и ФВЧ), добротность Q = √(R1/R2 − 1), значения L и C с проверкой подстановкой, полоса по уровню −3 дБ, проверка требуемой полосы и потери из-за конечной добротности катушки.">
+<link rel="canonical" href="https://macos2024.github.io/lc-soglasovanie-g-zveno.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Г-образная LC-цепь согласования — ВольтКальк">
+<meta property="og:description" content="Расчёт Г-образной LC-цепи согласования двух активных сопротивлений R1 &gt; R2 на частоте f: оба варианта (ФНЧ и ФВЧ), добротность Q = √(R1/R2 − 1), значения L и C с проверкой подстановкой, полоса по уровню −3 дБ, проверка требуемой полосы и потери из-за конечной добротности катушки.">
+<meta property="og:url" content="https://macos2024.github.io/lc-soglasovanie-g-zveno.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Г-образная LC-цепь согласования","url":"https://macos2024.github.io/lc-soglasovanie-g-zveno.html","description":"Расчёт Г-образной LC-цепи согласования двух активных сопротивлений R1 > R2 на частоте f: оба варианта (ФНЧ и ФВЧ), добротность Q = √(R1/R2 − 1), значения L и C с проверкой подстановкой, полоса по уровню −3 дБ, проверка требуемой полосы и потери из-за конечной добротности катушки.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Г-образная LC-цепь согласования","item":"https://macos2024.github.io/lc-soglasovanie-g-zveno.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему нельзя выбрать добротность и полосу?","acceptedAnswer":{"@type":"Answer","text":"У цепи из двух элементов один параметр — Q — полностью определяется отношением сопротивлений: Q = √(R1/R2 − 1). Больше степеней свободы даёт цепь из трёх элементов (П- или Т-цепь): там Q задаётся отдельно и может быть выше, чем у Г-звена."}},{"@type":"Question","name":"Какой вариант выбрать — ФНЧ или ФВЧ?","acceptedAnswer":{"@type":"Answer","text":"Оба согласуют сопротивления на частоте f. ФНЧ подавляет гармоники и пропускает постоянный ток; ФВЧ разделяет цепи по постоянному току и подавляет низкие частоты. Выбирают по тому, что нужно вне частоты согласования, и по тому, какие значения L и C легче реализовать."}},{"@type":"Question","name":"Меняет ли расчёт то, что больше — сопротивление источника или нагрузки?","acceptedAnswer":{"@type":"Answer","text":"Значения L и C те же, но меняется схема: параллельный элемент стоит на стороне большего сопротивления. Передача мощности от направления не зависит, поэтому потери и полоса тоже не меняются."}},{"@type":"Question","name":"Почему полоса в расчёте не равна f/Q?","acceptedAnswer":{"@type":"Answer","text":"Правило f/Q годится для одиночного контура с заданной нагруженной добротностью. В согласующем звене нагруженная добротность равна Q/2, поэтому при Q ≫ 1 полоса по −3 дБ ближе к 2f/Q. Страница считает точные границы по передаче мощности."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Г-образная LC-цепь согласования</h1>
+<p class="intro">Две активные нагрузки с разными сопротивлениями можно согласовать на одной частоте двумя реактивными элементами в виде буквы Г. Калькулятор находит <b>L и C</b> для обоих вариантов — ФНЧ (последовательная катушка, параллельный конденсатор) и ФВЧ (последовательный конденсатор, параллельная катушка) — добротность Q, полосу по уровню −3 дБ и потери из-за конечной добротности катушки. Что получится после согласования, показывает <a href="ksv-otrazhenie.html">калькулятор КСВ</a>; сопротивление линии по размерам — <a href="volnovoe-soprotivlenie-linii.html">калькулятор волнового сопротивления</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Г-образная LC-цепь согласования</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_big"><label for="big">Какое сопротивление больше</label><div class="fw"><select id="big"><option value="src" selected>Больше сопротивление источника: R1 — источник, R2 — нагрузка</option><option value="load">Больше сопротивление нагрузки: R1 — нагрузка, R2 — источник</option></select></div></div><div class="f" id="f_var"><label for="var">Вариант для топологии, полосы и потерь</label><div class="fw"><select id="var"><option value="lp" selected>ФНЧ: последовательная L и параллельная C</option><option value="hp">ФВЧ: последовательная C и параллельная L</option></select></div></div><div class="f" id="f_r1"><label for="r1">Большее сопротивление R1</label><div class="fw"><input id="r1" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><select id="r1_unit" class="u" aria-label="Единицы: Большее сопротивление R1"><option value="1" selected>Ом</option><option value="1000">кОм</option></select></div></div><div class="f" id="f_r2"><label for="r2">Меньшее сопротивление R2</label><div class="fw"><input id="r2" type="text" inputmode="decimal" autocomplete="off" value="5" placeholder=""><select id="r2_unit" class="u" aria-label="Единицы: Меньшее сопротивление R2"><option value="1" selected>Ом</option><option value="1000">кОм</option></select></div><div class="hint">R1 должно быть больше R2: цепь из двух элементов только понижает или повышает сопротивление в одном направлении</div></div><div class="f" id="f_f"><label for="f">Частота согласования f</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="7" placeholder=""><select id="f_unit" class="u" aria-label="Единицы: Частота согласования f"><option value="1000000.0" selected>МГц</option><option value="1000.0">кГц</option><option value="1000000000.0">ГГц</option><option value="1">Гц</option></select></div></div><div class="f" id="f_qc"><label for="qc">Добротность катушки Q на частоте f (необязательно)</label><div class="fw"><input id="qc" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""></div><div class="hint">Q = X / r, по паспорту катушки или измерению; пусто — потери в катушке не считаются</div></div><div class="f" id="f_bw"><label for="bw">Требуемая полоса вокруг f (необязательно)</label><div class="fw"><input id="bw" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="bw_unit" class="u" aria-label="Единицы: Требуемая полоса вокруг f (необязательно)"><option value="1000000.0" selected>МГц</option><option value="1000.0">кГц</option><option value="1">Гц</option><option value="1000000000.0">ГГц</option></select></div><div class="hint">Полная ширина полосы сигнала с центром на f; пусто — достаточность полосы не проверяется</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
+<section class="article">
+<h2>Г-образная LC-цепь согласования: как считается</h2>
+<div class="formula">Q = √(R1/R2 − 1),&nbsp;&nbsp;X<sub>посл</sub> = Q·R2,&nbsp;&nbsp;X<sub>парал</sub> = R1/Q,&nbsp;&nbsp;ω = 2πf<br>ФНЧ: L = Q·R2/ω (последовательная),&nbsp;&nbsp;C = Q/(ω·R1) (параллельная)<br>ФВЧ: C = 1/(ω·Q·R2) (последовательная),&nbsp;&nbsp;L = R1/(ω·Q) (параллельная)<br>Проверка: Z<sub>вх</sub> = R (подстановкой L и C в комплексное сопротивление)<br>Полоса: приближённо 2f/Q при Q ≫ 1 (нагруженная добротность Q/2); точно — по уровню −3 дБ передачи мощности</div>
+<p><b>Откуда формулы.</b> Параллельный элемент всегда стоит на стороне большего сопротивления R1, последовательный — на стороне меньшего R2. Пусть источник R1 и параллельная проводимость jB, затем последовательное сопротивление jX и нагрузка R2. Со стороны источника проводимость цепи равна jB + 1/(R2 + jX), и для согласования она должна быть равна 1/R1. Вещественная часть: R2/(R2² + X²) = 1/R1, откуда X² = R2·(R1 − R2) = (Q·R2)², Q = √(R1/R2 − 1). Мнимая часть: B = X/(R1·R2) = Q/R1, то есть реактивное сопротивление параллельного элемента R1/Q. Для схемы, где источник R2, а нагрузка R1, получаются те же значения (проверено подстановкой). В главе 5 учебника Позара (<i>Microwave Engineering</i>, раздел 5.1 о согласовании сосредоточенными элементами, «L-цепи») по оглавлению издателя в выдаче разбираются два решения для произвольной нагрузки — аналитически и на диаграмме Смита; текст книги не использовался, формулы выведены заново. Q = √(R1/R2 − 1) и то, что Q и полоса согласования при двух элементах фиксированы, видны и в учебнике Steer (LibreTexts, раздел о L-цепи) в выдаче поиска. Ссылку на ARRL Handbook подтвердить не удалось, и она не ставится.</p>
+<p><b>Два варианта.</b> Реактивные сопротивления одинаковые по модулю в обоих вариантах, но знак разный. ФНЧ: последовательная катушка с реактивным сопротивлением +Q·R2 и параллельный конденсатор с −R1/Q. ФВЧ: последовательный конденсатор −Q·R2 и параллельная катушка +R1/Q. Низкочастотный вариант пропускает постоянный ток и подавляет гармоники, высокочастотный разделяет цепи по постоянному току и подавляет низкие частоты. Оба варианта согласуют сопротивления на частоте f одинаково, различается только поведение вне неё.</p>
+<p><b>Полоса.</b> Q звена нельзя выбрать: Q = √(R1/R2 − 1) определяется только отношением сопротивлений. Поэтому полоса фиксирована. Практическое правило «полоса равна f/Q» для передачи мощности между источником и нагрузкой неточно: контур нагружен и источником, и нагрузкой, нагруженная добротность равна Q/2, и при Q ≫ 1 ширина полосы по уровню −3 дБ близка к 2f/Q. Для Q = 3 точный расчёт даёт для ФНЧ 3,817…9,134 МГц на частоте 7 МГц — ширину 5,318 МГц, а f/Q = 2,333 МГц, 2f/Q = 4,667 МГц; полоса несимметрична. Поэтому страница показывает границы по −3 дБ, найденные поиском делением отрезка по частоте, а правила f/Q и 2f/Q — только для сравнения. Если полоса получается слишком узкой, цепь составляют из нескольких Г-звеньев с промежуточными сопротивлениями; если слишком широкой — используют П- или Т-цепь с большей Q.</p>
+<p><b>Добротность катушки.</b> Катушка с добротностью Q<sub>к</sub> = X/r имеет последовательное сопротивление потерь r = X/Q<sub>к</sub> на частоте f. У ФНЧ катушка стоит в последовательной ветви, у ФВЧ — в параллельной. Потери считаются точным расчётом передачи мощности цепью с этой катушкой при тех же L и C. Для грубой оценки при Q<sub>к</sub> ≫ Q потери близки к 4,34·Q/Q<sub>к</sub> дБ (в проверенных случаях точное значение на 0,3–2,5 % меньше), но страница показывает не оценку, а расчёт.</p>
+<table class="t"><tr><th scope="col">R1 / R2</th><th scope="col">2</th><th scope="col">4</th><th scope="col">5</th><th scope="col">10</th><th scope="col">26</th><th scope="col">101</th></tr><tr><td>Q</td><td>1</td><td>1,732</td><td>2</td><td>3</td><td>5</td><td>10</td></tr></table>
+<p><b>Чем отличается от соседних страниц.</b> Здесь согласуются два активных сопротивления на одной частоте. Что получится, если оставить рассогласованную нагрузку, — <a href="ksv-otrazhenie.html">калькулятор КСВ и коэффициента отражения</a>. Резонанс одного LC-контура — <a href="rezonans-lc.html">калькулятор резонансной частоты</a>, фильтр из тех же элементов — <a href="lc-filtr-raschet.html">калькулятор LC-фильтра</a>. Сопротивление линии по размерам даёт <a href="volnovoe-soprotivlenie-linii.html">калькулятор волнового сопротивления</a>.</p>
+<h2>Г-образная LC-цепь согласования: пример расчёта</h2>
+<p>Усилитель с выходным сопротивлением 50 Ом нужно согласовать с нагрузкой 5 Ом на частоте 7 МГц (источник — большее сопротивление). Q = √(50/5 − 1) = <b>3</b>. ФНЧ: последовательная катушка L = 3·5/(2π·7·10⁶) = <b>341 нГн</b> (15 Ом) и параллельный конденсатор C = 3/(2π·7·10⁶·50) = <b>1,364 нФ</b> (16,67 Ом). ФВЧ: последовательный конденсатор <b>1,516 нФ</b> и параллельная катушка <b>378,9 нГн</b>. Подстановкой в уравнение: Z<sub>вх</sub> = 50 + j0 Ом.</p>
+<p>Полоса по −3 дБ у ФНЧ — от 3,817 до 9,134 МГц, у ФВЧ — от 5,364 до 12,84 МГц. Если катушка имеет добротность 50 на 7 МГц, потери у ФНЧ — 0,2567 дБ, у ФВЧ — 0,2566 дБ. Второй пример: 200 Ом и 50 Ом на 14,2 МГц. Q = 1,732, ФНЧ: L = 970,6 нГн и C = 97,06 пФ, ФВЧ: C = 129,4 пФ и L = 1,294 мкГн.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему нельзя выбрать добротность и полосу?</h3><p>У цепи из двух элементов один параметр — Q — полностью определяется отношением сопротивлений: Q = √(R1/R2 − 1). Больше степеней свободы даёт цепь из трёх элементов (П- или Т-цепь): там Q задаётся отдельно и может быть выше, чем у Г-звена.</p><h3>Какой вариант выбрать — ФНЧ или ФВЧ?</h3><p>Оба согласуют сопротивления на частоте f. ФНЧ подавляет гармоники и пропускает постоянный ток; ФВЧ разделяет цепи по постоянному току и подавляет низкие частоты. Выбирают по тому, что нужно вне частоты согласования, и по тому, какие значения L и C легче реализовать.</p><h3>Меняет ли расчёт то, что больше — сопротивление источника или нагрузки?</h3><p>Значения L и C те же, но меняется схема: параллельный элемент стоит на стороне большего сопротивления. Передача мощности от направления не зависит, поэтому потери и полоса тоже не меняются.</p><h3>Почему полоса в расчёте не равна f/Q?</h3><p>Правило f/Q годится для одиночного контура с заданной нагруженной добротностью. В согласующем звене нагруженная добротность равна Q/2, поэтому при Q ≫ 1 полоса по −3 дБ ближе к 2f/Q. Страница считает точные границы по передаче мощности.</p>
+</div>
+</section>
+
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.wiley.com/en-us/Microwave+Engineering,+4th+Edition-p-9781118213636" rel="nofollow noopener" target="_blank">Microwave Engineering</a> — David M. Pozar, John Wiley &amp; Sons — Редакция 4th ed., 2011–2012 (ISBN 978-0-470-63155-3). Номера и названия разделов видны в выдаче поиска (оглавление издателя: 2.7 Lossy Transmission Lines, 3.5 Coaxial Line, 3.8 Microstrip Line; в оглавлении издания 2020 г. нумерация главы 2 иная: 2.3, 2.5, 2.6). Текст книги в окружении не читался — формулы выведены на странице, номер издания и разделов сверить по экземпляру — раздел 5.1 Matching with Lumped Elements (L Networks) — название и положение по оглавлению издателя в выдаче (в оглавлении издания 2020 г. раздел начинается на с. 205); текст книги не читался, Q = √(R1/R2 − 1), X_посл = Q·R2, X_парал = R1/Q — выведены на странице подстановкой в уравнение согласования — обращение 13.11.2026</li><li><a href="https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Fundamentals_of_Microwave_and_RF_Design_(Steer)/10%3A_Impedance_Matching/10.04%3A_The_L_Matching_Network" rel="nofollow noopener" target="_blank">The L Matching Network (Fundamentals of Microwave and RF Design, раздел 10.4)</a> — Michael B. Steer; LibreTexts, Engineering — Редакция онлайн-учебник на дату обращения; в выдаче видно: при двух элементах Q и полоса согласования фиксированы, Q = √(R_большее/R_меньшее − 1); справка для сравнения — раздел 10.4 The L Matching Network — обращение 13.11.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/15-3-rlc-series-circuits-with-ac" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 15.3 RLC Series Circuits with AC — реактивные сопротивления XL = ωL, XC = 1/(ωC) — обращение 13.11.2026</li></ul><p><b>Допущения:</b></p><ul><li>R1 и R2 — чисто активные, постоянные на частоте согласования; элементы идеальные, кроме учтённой по желанию добротности катушки.</li><li>Согласование точное на одной частоте f; вне её передача определяется самой цепью (полоса по −3 дБ считается точным расчётом цепи).</li><li>Катушка с добротностью Q моделируется последовательным сопротивлением r = X / Q на частоте f; конденсатор идеальный.</li></ul><p><b>Границы применимости:</b></p><ul><li>Паразитные параметры элементов (собственная ёмкость катушки, индуктивность выводов конденсатора) и зависимость R1, R2 от частоты не учитываются; настройку проверяют измерением.</li><li>Согласуются только активные сопротивления; комплексную нагрузку сначала компенсируют добавочным элементом.</li><li>Требуемая полоса проверяется по уровню −3 дБ: равномерность в полосе и фазовые искажения не оцениваются.</li><li>Правило «BW ≈ f/Q» источником не подтверждено (ARRL Handbook в выдаче не найден): страница показывает точный расчёт по −3 дБ и оба правила, f/Q и 2f/Q, только для сравнения.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="ksv-otrazhenie.html">КСВ и коэффициент отражения</a></li><li><a href="volnovoe-soprotivlenie-linii.html">Волновое сопротивление линии</a></li><li><a href="rezonans-lc.html">Резонансная частота LC-контура</a></li><li><a href="lc-filtr-raschet.html">Пассивный LC-фильтр Баттерворта</a></li><li><a href="impedans-rlc.html">Импеданс последовательной RLC-цепи</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function nf(x,p){if(!isFinite(x))return 'не определено';p=p||4;if(x===0)return '0';var s=Number(x.toPrecision(p));if(s===0)return '0';
+ var t=String(s);if(/e\+/i.test(t)){var ee=s.toExponential(p-1).split('e+');t=ee[0].replace('.','')+new Array(Number(ee[1])-(p-1)+1).join('0');if(s<0&&t.charAt(0)!=='-')t='-'+t;}
+ else if(/e/i.test(t)){t=s.toFixed(Math.min(100,Math.max(0,p-1-Math.floor(Math.log10(Math.abs(s))))));}
+ if(t.indexOf('.')>=0)t=t.replace(/0+$/,'').replace(/\.$/,'');return t.replace('.',',');}
+function pp(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return 4;for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return p;}return 12;}
+function fx(x,lim){return nf(x,pp(x,lim));}
+var PRE=[[1e12,'Т'],[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п'],[1e-15,'ф']];
+function pi_(x,p){var a=Math.abs(x),i;for(i=0;i<PRE.length-1;i++){if(a>=PRE[i][0]*(1-1e-12))break;}
+ if(i>0&&Math.abs(Number((a/PRE[i][0]).toPrecision(p)))>=1000)i--;return i;}
+function sv(x,unit,p){p=p||4;if(!isFinite(x))return 'не определено';if(x===0)return '0 '+unit;if(Math.abs(x)<1e-15*(1-1e-12))return 'менее 1 ф'+unit;
+ var i=pi_(x,p);return nf(x/PRE[i][0],p)+' '+PRE[i][1]+unit;}
+function sx(x,lim,unit){var i=pi_(x,4);var k=PRE[i][0];return fx(x/k,lim/k)+' '+PRE[i][1]+unit;}
+function sl(x,lim,unit){var i=pi_(x,4);var k=PRE[i][0];return nf(lim/k,pp(x/k,lim/k))+' '+PRE[i][1]+unit;}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function pc(fr){var v=fr*100;if(v===0)return '0 %';if(v<1e-4)return 'менее 0,0001 %';return nf(v,4)+' %';}
+function dbs(x){return x>0&&x<1e-4?'менее 0,0001 дБ':nf(x,4)+' дБ';}
+
+function cmul(a,b){return [a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]];}
+function cinv(a){var d=a[0]*a[0]+a[1]*a[1];return [a[0]/d,-a[1]/d];}
+function init(){}
+function calc(){
+var srcBig=S('big')==='src',hp=S('var')==='hp';
+var r1=P('r1'),r2=P('r2'),f=P('f'),qc=OPT('qc'),bw=OPT('bw');
+if([r1,r2,f].some(isNaN))return err('Введите R1, R2 и частоту числами.');
+if(r1<=0||r2<=0||r1>1e9||r2<1e-3||r2>1e9)return err('Сопротивления R1 и R2 — от 0,001 до 1000000000 Ом.');
+if(r1===r2)return err('R1 равно R2: цепь согласования не нужна (Q = 0), реактивные элементы не требуются.');
+if(r1<r2)return err('R1 должно быть больше R2: меньшее сопротивление вводится в поле R2, а то, какое из них источник и какое нагрузка, выбирается переключателем «Какое сопротивление больше».');
+if(r1/r2>1e8)return err('Отношение R1/R2 больше 100000000: добротность Q превысила бы 10000, такая цепь нереализуема, расчёт не выполняется.');
+if(f<1e3||f>1e11)return err('Частота согласования — от 1 кГц до 100 ГГц.');
+if(qc!==null){if(isNaN(qc))return err('Добротность катушки — число. Если её нет, оставьте поле пустым.');if(qc<=0||qc>1e5)return err('Добротность катушки — больше 0 и не больше 100000.');}
+if(bw!==null){if(isNaN(bw))return err('Требуемая полоса — число. Если она не нужна, оставьте поле пустым.');if(bw<=0)return err('Требуемая полоса должна быть больше нуля.');if(bw>=2*f)return err('Требуемая полоса должна быть меньше 2f: полоса с центром на f не может начинаться ниже нуля.');}
+var Q=Math.sqrt((r1-r2)/r2),w=2*Math.PI*f;
+var Ls=Q*r2/w,Cp=Q/(w*r1),Cs=1/(w*Q*r2),Lp=r1/(w*Q);
+if(![Q,Ls,Cp,Cs,Lp].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+function abcd(fq,isHp,qq){var wq=2*Math.PI*fq,Z,Y,r;
+ if(!isHp){r=qq?Q*r2/qq:0;Z=[r,wq*Ls];Y=[0,wq*Cp];}
+ else{r=qq?r1/Q/qq:0;Z=[0,-1/(wq*Cs)];Y=cinv([r,wq*Lp]);}
+ var YZ=cmul(Y,Z);
+ if(srcBig)return {A:[1,0],B:Z,C:Y,D:[1+YZ[0],YZ[1]],Rs:r1,Rl:r2};
+ return {A:[1+YZ[0],YZ[1]],B:Z,C:Y,D:[1,0],Rs:r2,Rl:r1};}
+function gainF(fq,isHp,qq){var m=abcd(fq,isHp,qq),x=m.A[0]*m.Rl+m.B[0]+m.C[0]*m.Rs*m.Rl+m.D[0]*m.Rs,y=m.A[1]*m.Rl+m.B[1]+m.C[1]*m.Rs*m.Rl+m.D[1]*m.Rs;
+ return 4*m.Rs*m.Rl/(x*x+y*y);}
+function zin(isHp){var m=abcd(f,isHp,0),num=[m.A[0]*m.Rl+m.B[0],m.A[1]*m.Rl+m.B[1]],den=[m.C[0]*m.Rl+m.D[0],m.C[1]*m.Rl+m.D[1]];return cmul(num,cinv(den));}
+function edge(isHp,up){var far=up?f*1e4:f/1e4;if(gainF(far,isHp,0)>=0.5)return null;
+ var a=Math.log(up?f:far),b=Math.log(up?far:f);
+ for(var i=0;i<200;i++){var mm=(a+b)/2,gm=gainF(Math.exp(mm),isHp,0);if(up){if(gm>0.5)a=mm;else b=mm;}else{if(gm>0.5)b=mm;else a=mm;}}
+ return Math.exp((a+b)/2);}
+var lo=edge(hp,false),hi=edge(hp,true),h='';
+h+=row('Добротность звена Q = √(R1/R2 − 1)',nf(Q,5));
+h+=row('Отношение R1 / R2',nf(r1/r2,5));
+h+=row('ФНЧ: последовательная катушка L = Q·R2/ω и параллельный конденсатор C = Q/(ω·R1)',sv(Ls,'Гн')+' и '+sv(Cp,'Ф'));
+h+=row('ФВЧ: последовательный конденсатор C = 1/(ω·Q·R2) и параллельная катушка L = R1/(ω·Q)',sv(Cs,'Ф')+' и '+sv(Lp,'Гн'));
+h+=row('Реактивные сопротивления: последовательного элемента Q·R2 и параллельного R1/Q',sv(Q*r2,'Ом')+' и '+sv(r1/Q,'Ом'));
+var topo=srcBig?(hp?'источник R1 → параллельная катушка L на землю → последовательный конденсатор C → нагрузка R2':'источник R1 → параллельный конденсатор C на землю → последовательная катушка L → нагрузка R2'):(hp?'источник R2 → последовательный конденсатор C → параллельная катушка L на землю → нагрузка R1':'источник R2 → последовательная катушка L → параллельный конденсатор C на землю (на выводах нагрузки) → нагрузка R1');
+h+=row('Схема выбранного варианта ('+(hp?'ФВЧ':'ФНЧ')+')',topo);
+var zi=zin(hp),zref=srcBig?r1:r2;
+h+=row('Проверка подстановкой L и C: сопротивление со стороны источника при нагрузке '+(srcBig?'R2':'R1'),nf(zi[0],8)+' Ом, реактивная часть '+(Math.abs(zi[1])<1e-9*zref?'0':nf(zi[1],3))+' Ом (нужно '+nf(zref,8)+' Ом)');
+var dc=hp?'Последовательный конденсатор разделяет цепи по постоянному току; на частотах ниже f передача падает.':'Постоянный ток идёт через последовательную катушку; на частотах выше f передача падает, гармоники подавляются.';
+h+=row('Свойство варианта',dc);
+var bws='';
+if(lo!==null&&hi!==null)bws='от '+sv(lo,'Гц')+' до '+sv(hi,'Гц')+', ширина '+sv(hi-lo,'Гц');
+else if(lo===null&&hi!==null)bws='от постоянного тока до '+sv(hi,'Гц')+' (снизу потери на постоянном токе меньше 3 дБ: 4·R1·R2 / (R1 + R2)² = '+nf(4*r1*r2/((r1+r2)*(r1+r2)),4)+')';
+else if(hi===null&&lo!==null)bws='от '+sv(lo,'Гц')+' и выше (сверху потери меньше 3 дБ: 4·R1·R2 / (R1 + R2)² = '+nf(4*r1*r2/((r1+r2)*(r1+r2)),4)+')';
+else bws='не ограничена: потери меньше 3 дБ во всём диапазоне расчёта';
+h+=row('Полоса по уровню −3 дБ передачи мощности ('+(hp?'ФВЧ':'ФНЧ')+', точный расчёт)',bws);
+h+=row('Правила для сравнения: f/Q и 2f/Q',sv(f/Q,'Гц')+' и '+sv(2*f/Q,'Гц')+' — оценки при Q ≫ 1; при малых Q и несимметричной полосе они неточны');
+var ilp=NaN,ihp=NaN;
+if(qc!==null){ilp=-10*Math.log10(gainF(f,false,qc));ihp=-10*Math.log10(gainF(f,true,qc));
+ h+=row('Потери на катушке при Q катушки '+nf(qc,4)+': ФНЧ (катушка последовательная)',dbs(ilp)+' (КПД '+pc(Math.pow(10,-ilp/10))+')');
+ h+=row('Потери на катушке: ФВЧ (катушка параллельная)',dbs(ihp)+' (КПД '+pc(Math.pow(10,-ihp/10))+')');}
+else h+=row('Потери на катушке','не оценены — добротность катушки не задана');
+var st,risk=[];
+if(bw!==null){
+ var nl=f-bw/2,nh=f+bw/2;
+ if(lo!==null&&gt(lo,nl))risk.push('нижняя граница полосы −3 дБ '+sx(lo,nl,'Гц')+' выше нижнего края требуемой полосы '+sl(lo,nl,'Гц'));
+ if(hi!==null&&lt(hi,nh))risk.push('верхняя граница полосы −3 дБ '+sx(hi,nh,'Гц')+' ниже верхнего края требуемой полосы '+sl(hi,nh,'Гц'));
+}
+if(risk.length)st='Риск: '+risk.join('; ')+' — часть сигнала ослабится больше чем на 3 дБ; нужна цепь из нескольких Г-звеньев с промежуточным сопротивлением';
+else if(bw===null)st='Недостаточно данных: требуемая полоса не задана — достаточность полосы Г-звена не проверена; по расчёту Q = '+nf(Q,4)+', полоса по −3 дБ '+bws;
+else st='Оценка: Q = '+nf(Q,4)+'; полоса по −3 дБ ('+(hp?'ФВЧ':'ФНЧ')+') перекрывает требуемую полосу '+sv(bw,'Гц')+' с центром на '+sv(f,'Гц')+' при идеальных элементах'+(qc!==null?'; потери на катушке '+dbs(hp?ihp:ilp):'');
+var n='Расчёт — идеальные элементы без паразитных параметров, чисто активные R1 и R2 на одной частоте. Значения L и C те же при любом расположении источника и нагрузки: переключатель «Какое сопротивление больше» меняет схему (параллельный элемент всегда стоит на стороне большего сопротивления), а передача мощности между источником и нагрузкой от направления не зависит. Полоса Г-звена фиксирована отношением R1/R2 — выбрать её независимо нельзя; узкую полосу даёт П- или Т-цепь с большей Q, широкую — несколько Г-звеньев. Потери на катушке посчитаны точным расчётом цепи при тех же L и C, то есть вместе с небольшой расстройкой из-за сопротивления катушки; конденсатор считается идеальным. Сопротивление источника и нагрузки меняется с частотой, а реальные катушки и конденсаторы имеют паразитные индуктивность и ёмкость: настройку проверяют измерением.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
