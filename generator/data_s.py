@@ -625,22 +625,23 @@ else{VTH=P('vth');VTL=P('vtl');
    if(!(g1>0))return err('С этим Vоп пороги не получить: Vоп должно быть того же знака, что VTL − (VTH − VTL)·VOL/(VOH − VOL) = '+fmt(u,4)+' В.');
    if(g2<-1e-12)return err('С Vоп = '+fmt(vr,4)+' В такие пороги не получить даже без R2: нужно |Vоп| не меньше '+fmt(Math.abs(u)/(1-k),4)+' В.');
    R3=R1*g1/k;R2=g2>1e-12?R1*g1/g2:null;}
-  else{if(!(vr>0))return err('Для подбора с открытым коллектором опорное напряжение должно быть больше нуля.');
-   if(!(VTL>vol))return err('Нижний порог должен быть выше VOL.');if(!(VTH<vpu))return err('Верхний порог должен быть ниже напряжения подтяжки.');
-   // Правило узлов в двух состояниях даёт квадратное уравнение для G3 = 1/R3 с одним положительным корнем.
+  else{// Условий на знак Vоп, на VTL − VOL и на VTH − Vподт нет: Vоп выше Vподт поднимает порог выше Vподт, R2 тянет узел вниз и опускает VTL ниже VOL.
+   // Допустимость — по корню (G3 > 0, G2 ≥ 0) и прямому расчёту порогов ниже.
+   // Правило узлов в двух состояниях даёт квадратное уравнение для G3 = 1/R3 (уже умноженное на VTL); берётся корень с G3 > 0 и G2 ≥ 0.
    var Gp=1/rp,aa=G1*vr*(VTH-VTL),G3=NaN,G2=NaN;A=VTH*(vol-VTL);B=aa+VTH*vol*(Gp+GL)-VTL*vpu*Gp;C=aa*(Gp+GL);D=B*B-4*A*C;
-   if(D>=0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if(rts[i]>0){G3=rts[i];
+   if(D>=0&&A!==0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if(rts[i]>0){var Gh=Gp+GL+rts[i],g2c;
     // G2 — из уравнения низкого состояния (делит на VTL) или, если VTL близок к нулю, из уравнения высокого (делит на VTH, VTH > VTL): обе формулы точны.
-    var Gh=Gp+GL+G3;G2=Math.abs(VTL)>=1e-3*Math.abs(VTH)?((vr-VTL)*G1+(vol-VTL)*G3)/VTL:((vr*G1*Gh+G3*vpu*Gp)/VTH+G3*G3)/Gh-G1-G3;break;}}}
-   if(!(G3>0)||G2<-1e-12*G1)return err('С этими Vоп, подтяжкой и R1 такие пороги не получить: увеличьте Vоп или напряжение подтяжки либо уменьшите Rп.');
+    g2c=Math.abs(VTL)>=1e-3*Math.abs(VTH)?((vr-VTL)*G1+(vol-VTL)*rts[i])/VTL:((vr*G1*Gh+rts[i]*vpu*Gp)/VTH+rts[i]*rts[i])/Gh-G1-rts[i];
+    if(g2c>=-1e-12*G1){G3=rts[i];G2=g2c;break;}}}}
+   if(!(G3>0))return err('С этими Vоп, подтяжкой и R1 такие пороги не получить: измените Vоп или напряжение подтяжки либо уменьшите Rп.');
    R3=1/G3;R2=G2>1e-12*G1?1/G2:null;}
   hs=row('Рассчитанные резисторы: R2 / R3',(R2===null?'не нужен':sp(R2,'Ом'))+' / '+sp(R3,'Ом'));}
  else{R2=P('r2');if(isNaN(R2))return err('Введите R2 — резистор обратной связи.');if(R2<=0)return err('R2 должно быть больше нуля.');
   if(!oc){var m=(VTH-VTL)/(voh-vol);vr=(VTH+vol*m)/(1+m);R1=m*R2;}
   else{// VTL может быть ниже VOL: VTL = Vоп − (Vвых,выс − Vоп)·R1/R2 — условия на знак VTL − VOL у неинвертирующей схемы нет; допустимость — по корню и прямому расчёту порогов.
-   // Vоп — корень квадратного уравнения между VOL и VTH; R1/R2 = (VTH − Vоп)/(Vоп − VOL).
+   // Vоп — корень квадратного уравнения строго между VOL и VTH (в любом порядке: при VTH < VOL порог лежит ниже VOL, R1/R2 > 0 и тогда); R1/R2 = (VTH − Vоп)/(Vоп − VOL).
    var Gq=1/rp,Gt=Gq+1/R2+GL,al=vpu*Gq/Gt,bq=(1/R2)/Gt;A=bq;B=al-VTL-vol-(bq-1)*VTH;C=-al*VTH+VTL*vol;D=B*B-4*A*C;
-   if(D>=0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if(rts[i]>vol&&rts[i]<VTH){vr=rts[i];break;}}}
+   if(D>=0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if((rts[i]-vol)*(VTH-rts[i])>0){vr=rts[i];break;}}}
    if(isNaN(vr))return err('С этими подтяжкой, Rп и R2 такие пороги не получить: увеличьте напряжение подтяжки или уменьшите Rп.');
    R1=(VTH-vr)/(vr-vol)*R2;}
   hs=row('Рассчитанные: R1 / опорное напряжение Vоп',sp(R1,'Ом')+' / '+fmt(vr,4)+' В');}}
