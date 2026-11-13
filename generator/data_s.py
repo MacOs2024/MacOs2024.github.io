@@ -447,17 +447,21 @@ h+=row('Добротность Q = √(R1·R2·C1·C2)/'+(hp?'(R1·C1 + R1·C2 +
 if(pk){var z=1-1/(2*q*q),fp;gp=K*q/Math.sqrt(1-1/(4*q*q));fp=hp?f0/Math.sqrt(z):f0*Math.sqrt(z);
  h+=row('Подъём АЧХ над K',fmt(db(gp/K),4)+' дБ: наибольшее усиление '+fmt(gp,4)+' на частоте '+sp(fp,'Гц'));}
 else h+=row('Подъём АЧХ над K','нет: Q не больше 1/√2 ≈ 0,7071');
-var risk=[],miss=[];
+var risk=[],miss=[],wg=0,ws=0,wtol=false;
 if(tr===null||tc===null)miss.push('допуски резисторов и конденсаторов');
 else{var ft=tr/100,fc=tc/100,lo=[R1*(1-ft),R2*(1-ft),C1*(1-fc),C2*(1-fc)],hi=[R1*(1+ft),R2*(1+ft),C1*(1+fc),C2*(1+fc)];
  var Kl=rb>0?1+rb*(1-ft)/(ra*(1+ft)):1,Kh=rb>0?1+rb*(1+ft)/(ra*(1-ft)):1,qn=Infinity,qx=0,fn=Infinity,fh=0,un=false,j;
+ wtol=(tr>0||tc>0);
+ // Требования к ОУ в сочетании допусков yy при усилении KK: GBW ≥ 100·K·f, SR ≥ 2π·f·Gмакс·Vвх; f — большая из f0 и −3 дБ (ФНЧ) или наибольшая частота сигнала (ФВЧ); пик — как у номинала.
+ var rq=function(yy,KK){var rr=qv(hp,yy,KK);if(!(rr.d>0))return;var qq=rr.q,f0c=1/(2*Math.PI*Math.sqrt(yy[0]*yy[1]*yy[2]*yy[3])),a2c=2-1/(qq*qq),sqc=Math.hypot(a2c,2),yc=a2c>0?(a2c+sqc)/2:2/(sqc-a2c),f3c=hp?f0c/Math.sqrt(yc):f0c*Math.sqrt(yc),gpc=qq>Math.SQRT1_2?KK*qq/Math.sqrt(1-1/(4*qq*qq)):KK,frc=hp?fm:Math.max(f0c,f3c);
+  if(frc===null)return;wg=Math.max(wg,100*KK*frc);if(vin!==null)ws=Math.max(ws,2*Math.PI*frc*Math.max(KK,gpc)*vin/1e6);};
  // 32 угла: R1, R2, C1, C2 и K на краях допусков. Q вдоль одного элемента ∝ √x/(β + γ·x) —
  // внутренний максимум при x = β/γ, если β, γ > 0; минимум Q и d — в углах (d линеен по каждому элементу).
  for(var k=0;k<32;k++){var y0=[];for(j=0;j<4;j++)y0.push((k>>j)&1?hi[j]:lo[j]);var KK=(k&16)?Kh:Kl,r0=qv(hp,y0,KK);
   var ff=1/(2*Math.PI*Math.sqrt(y0[0]*y0[1]*y0[2]*y0[3]));fn=Math.min(fn,ff);fh=Math.max(fh,ff);
-  if(!(r0.d>0)){un=true;continue;}qn=Math.min(qn,r0.q);qx=Math.max(qx,r0.q);
+  if(!(r0.d>0)){un=true;continue;}qn=Math.min(qn,r0.q);qx=Math.max(qx,r0.q);rq(y0,KK);
   for(j=0;j<4;j++){var ya=y0.slice(),yb=y0.slice();ya[j]=lo[j];yb[j]=hi[j];var da=qv(hp,ya,KK).d,dd=qv(hp,yb,KK).d,gm=(dd-da)/(hi[j]-lo[j]),bt=da-gm*lo[j];
-   if(bt>0&&gm>0){var xs=bt/gm;if(xs>lo[j]&&xs<hi[j]){ya[j]=xs;var rs=qv(hp,ya,KK);if(rs.d>0)qx=Math.max(qx,rs.q);}}}}
+   if(bt>0&&gm>0){var xs=bt/gm;if(xs>lo[j]&&xs<hi[j]){ya[j]=xs;var rs=qv(hp,ya,KK);if(rs.d>0){qx=Math.max(qx,rs.q);rq(ya,KK);}}}}}
  h+=row('f0 при допусках ±'+fmt(tr)+' % и ±'+fmt(tc)+' %',sp(fn,'Гц')+' … '+sp(fh,'Гц'));
  if(un){h+=row('Q при допусках','не ограничена: в части сочетаний K достигает порога');risk.push('при допусках ±'+fmt(tr)+' % и ±'+fmt(tc)+' % в части сочетаний K достигает порога самовозбуждения');}
  else h+=row('Q при допусках',fmt(qn,4)+' … '+fmt(qx,4));}
@@ -467,16 +471,16 @@ var fr=hp?fm:Math.max(f0,f3);
 if(gb===null)miss.push('GBW ОУ');
 if(sr===null||vin===null)miss.push('скорость нарастания ОУ и амплитуда сигнала');
 if(fr===null){if(gb!==null||sr!==null)miss.push('наибольшая частота сигнала');}
-else{if(gb!==null){var gr=100*K*fr;h+=row('GBW по правилу TI: не меньше 100·K·f',sx(gr,gb,'Гц')+' при f = '+sp(fr,'Гц')+'; GBW ОУ '+sx(gb,gr,'Гц'));
+else{if(gb!==null){var gr=Math.max(100*K*fr,wg);h+=row('GBW по правилу TI: не меньше 100·K·f'+(wtol?' — наибольшее по допускам':''),sx(gr,gb,'Гц')+(wtol?' (по номиналам '+si(100*K*fr,'Гц')+')':' при f = '+sp(fr,'Гц'))+'; GBW ОУ '+sx(gb,gr,'Гц'));
   if(lt(gb,gr))risk.push('GBW ОУ '+sx(gb,gr,'Гц')+' меньше 100·K·f = '+sx(gr,gb,'Гц')+' по правилу TI — частота и добротность отклонятся от расчёта');}
- if(sr!==null&&vin!==null){var sq=2*Math.PI*fr*Math.max(K,gp)*vin/1e6;h+=row('Скорость нарастания по правилу TI: не меньше 2π·f·Gмакс·Vвх',fx(sq,sr)+' В/мкс; SR ОУ '+fx(sr,sq)+' В/мкс');
+ if(sr!==null&&vin!==null){var sq=Math.max(2*Math.PI*fr*Math.max(K,gp)*vin/1e6,ws);h+=row('Скорость нарастания по правилу TI: не меньше 2π·f·Gмакс·Vвх'+(wtol?' — наибольшая по допускам':''),fx(sq,sr)+' В/мкс'+(wtol?' (по номиналам '+fmt(2*Math.PI*fr*Math.max(K,gp)*vin/1e6,4)+' В/мкс)':'')+'; SR ОУ '+fx(sr,sq)+' В/мкс');
   if(lt(sr,sq))risk.push('скорость нарастания ОУ '+fx(sr,sq)+' В/мкс меньше '+fx(sq,sr)+' В/мкс — выходной синус исказится');}}
 var st;
 if(risk.length)st='Риск: '+risk.join('; ');
 else if(miss.length)st='Недостаточно данных: не заданы '+miss.join(', ')+'; по номиналам f0 = '+sp(f0,'Гц')+', Q = '+fmt(q,4);
 else st='Оценка: f0 = '+sp(f0,'Гц')+', Q = '+fmt(q,4)+'; в наихудшем сочетании допусков K ниже порога, GBW и скорость нарастания ОУ не меньше требуемых по правилу TI';
 n+='Требования к ОУ — правило из примеров TI (SBOA226, SBOA225): GBW не меньше 100·K·f и скорость нарастания не меньше 2π·f·Vпик; f — большая из f0 и частоты −3 дБ для ФНЧ и наибольшая частота сигнала для ФВЧ, амплитуда на выходе — с подъёмом АЧХ. Это оценка: конечная полоса ОУ отклоняет частоту и добротность от расчёта. ';
-n+='Разброс f0 и Q — перебор 32 сочетаний крайних значений элементов и усиления с поиском внутреннего максимума Q вдоль каждого элемента.';
+n+='Разброс f0 и Q — перебор 32 сочетаний крайних значений элементов и усиления с поиском внутреннего максимума Q вдоль каждого элемента; при заданных допусках GBW и скорость нарастания проверяются по наихудшему из этих сочетаний, а не по номиналу.';
 out(h+row('Статус',st)+note(n));
 }
 ''',
