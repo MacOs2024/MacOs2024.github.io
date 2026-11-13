@@ -313,7 +313,8 @@ else{VTH=P('vth');VTL=P('vtl');
    // Допустимость — по корню (G3 > 0, G2 ≥ 0) и прямому расчёту порогов ниже.
    // Правило узлов в двух состояниях даёт квадратное уравнение для G3 = 1/R3 (уже умноженное на VTL); берётся корень с G3 > 0 и G2 ≥ 0.
    var Gp=1/rp,aa=G1*vr*(VTH-VTL),G3=NaN,G2=NaN;A=VTH*(vol-VTL);B=aa+VTH*vol*(Gp+GL)-VTL*vpu*Gp;C=aa*(Gp+GL);D=B*B-4*A*C;
-   if(D>=0&&A!==0){rts=[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)];for(i=0;i<2;i++){if(rts[i]>0){var Gh=Gp+GL+rts[i],g2c;
+   // Корни без вычитания близких чисел: q = −(B + sign(B)·√D)/2, G3 = q/A и C/q. При A = 0 (VTL = VOL) уравнение линейное, остаётся единственный корень C/q = −C/B.
+   if(D>=0){var sqD=Math.sqrt(D),qd=-0.5*(B+(B>=0?sqD:-sqD));rts=[];if(A!==0&&isFinite(qd/A))rts.push(qd/A);if(qd!==0&&isFinite(C/qd))rts.push(C/qd);for(i=0;i<rts.length;i++){if(rts[i]>0){var Gh=Gp+GL+rts[i],g2c;
     // G2 — из уравнения низкого состояния (делит на VTL) или, если VTL близок к нулю, из уравнения высокого (делит на VTH, VTH > VTL): обе формулы точны.
     g2c=Math.abs(VTL)>=1e-3*Math.abs(VTH)?((vr-VTL)*G1+(vol-VTL)*rts[i])/VTL:((vr*G1*Gh+rts[i]*vpu*Gp)/VTH+rts[i]*rts[i])/Gh-G1-rts[i];
     if(g2c>=-1e-12*G1){G3=rts[i];G2=g2c;break;}}}}
