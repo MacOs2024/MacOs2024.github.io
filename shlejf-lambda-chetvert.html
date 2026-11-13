@@ -248,14 +248,19 @@ function gt(a,b){return a>b+Math.abs(b)*1e-9;}
 function lt(a,b){return a<b-Math.abs(b)*1e-9;}
 function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
 function le(a,b){return a<=b+Math.abs(b)*1e-9;}
-function fe(x,p){var s=Number(x.toPrecision(p)),a=Math.abs(s);if(a===0||(a<1e7&&a>=1e-4))return fmt(x,p);var t=s.toExponential(p-1).replace(/(\.\d*?)0+e/,'$1e').replace('.e','e');return t.replace('e+','·10^').replace('e','·10^').replace('.',',');}
+function fe(x,p){var s=Number(x.toPrecision(p)),a=Math.abs(s);if(a===0||(a<1e7&&a>=1e-4))return fmt(x,p);
+ // Без записи «·10^»: малые числа словами, большие — целым с пробелами между тройками цифр.
+ if(a<1e-12)return x<0?'больше −0,000000000001':'меньше 0,000000000001';
+ if(a<1e-4)return s.toFixed(p-1-Math.floor(Math.log10(a))).replace('-','−').replace('.',',');
+ if(a>=1e15)return (x<0?'меньше −':'больше ')+'1 000 000 000 000 000';
+ return (x<0?'−':'')+s.toFixed(0).replace('-','').replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0');}
 function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fe(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fe(x,p);}return fe(x,12);}
 function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
 function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
 function sg(x){return x>0?'+':'';}
 function rd(x){return Math.round(x*1e9)/1e9;}
 // Малый зазор в дБ словами: иначе fmt вывел бы «1·10^-6».
-function dbs(x){if(x!==0&&Math.abs(x)<1e-3)return (x<0?'−':'')+'меньше 0,001';return fmt(x);}
+function dbs(x){if(x!==0&&Math.abs(x)<1e-3)return x<0?'больше −0,001':'меньше 0,001';return fe(x,4);}
 // Мощность в ваттах из дБм словами за пределами диапазона si: иначе вышли бы числа вроде 1·10^-30 Вт.
 function pw(dbm){if(dbm<-120)return 'меньше 1 фВт';if(dbm>120)return 'больше 1 ГВт';return si(Math.pow(10,dbm/10)*1e-3,'Вт');}
 function perms(a){if(a.length<=1)return [a.slice()];var r=[];for(var i=0;i<a.length;i++){var rest=a.slice(0,i).concat(a.slice(i+1));perms(rest).forEach(function(p){r.push([a[i]].concat(p));});}return r;}
@@ -296,7 +301,7 @@ var zt=Math.sqrt(z1)*Math.sqrt(z2),ll=vf*C0/f,l=ll/4,vb=Math.max(z1,z2)/Math.min
 var h=row('Волновое сопротивление трансформатора Zт = √(Z1·Z2)',si(zt,'Ом'))+row('Длина волны в линии λл = vf·c/f',si(ll,'м'))+row('Длина трансформатора l = λл/4',si(l,'м'))+
  row('КСВ без трансформатора max(Z1, Z2)/min(Z1, Z2)',vtxt({v:vb}))+row('Проверка: Zт²/Z2 — входное сопротивление на частоте f',si(Number((zt*zt/z2).toPrecision(12)),'Ом')+' (должно быть Z1 = '+si(z1,'Ом')+')');
 var st='Оценка: Zт = √(Z1·Z2) = '+si(zt,'Ом')+', длина λ/4 = '+si(l,'м')+' при vf = '+dbs(vf)+'; на частоте f КСВ равен 1 (идеальная линия без потерь)';
-if(fc!==null){var z=zin(zt,'arb',z2,0,(0.25*fc/f)%0.5),zi=Math.abs(z.im)<1e-12*Math.max(z1,z2,zt)?0:z.im,w=vs(z1,z.re,zi);
+if(fc!==null){var z=zin(zt,'arb',z2,0,(0.25*fc/f)%0.5),zi=Math.abs(z.im)<1e-12*Math.abs(z.re)?0:z.im,w=vs(z1,z.re,zi);
  h+=row('Отношение частоты проверки к расчётной',dbs(fc/f))+row('Входное сопротивление на частоте проверки',sv(z.re,'Ом')+(zi<0?' − j':' + j')+sv(Math.abs(zi),'Ом'))+row('КСВ относительно Z1 на частоте проверки',vtxt(w));
  st+='; на '+si(fc,'Гц')+' КСВ около '+vtxt(w);}
 var nt='Трансформатор согласует только активные сопротивления и точно — на одной частоте; вне неё КСВ растёт. Длины 3λ/4, 5λ/4 тоже дают Zт, но с более узкой полосой. Волновое сопротивление Zт должно быть осуществимо выбранным типом линии — это проверяют отдельно. Потери в линии не учтены.';
@@ -329,18 +334,18 @@ if(z.inf){
   row('Эквивалентные L и C','не определены — реактивность не ограничена');
  st='Оценка: при этой длине входное сопротивление не ограничено (резонанс линии); по обе стороны от неё реактивность имеет противоположные знаки';}
 else{
- var re=z.re,im=Math.abs(z.im)<1e-12*sc?0:z.im,big=re>=1e9||Math.abs(im)>=1e9,mag=Math.hypot(re,im);
+ var re=z.re,im=Math.abs(z.im)<1e-12*Math.abs(z.re)?0:z.im,big=re>=1e9||Math.abs(im)>=1e9,mag=Math.hypot(re,im);
  var ph=(re===0&&im===0)?null:Math.atan2(im,re)*180/Math.PI;
  var kind=im===0?'чисто активное':(im>0?'индуктивное (X > 0)':'ёмкостное (X < 0)');
  var rs=re>=1e9?'свыше 1 ГОм (не ограничено)':sv(re,'Ом'),is=Math.abs(im)>=1e9?'свыше 1 ГОм (не ограничено)':sv(Math.abs(im),'Ом');
- h+=row('Входное сопротивление Zin = R + jX',rs+(im<0?' − j':' + j')+is)+row('Модуль и фаза Zin',big?'модуль свыше 1 ГОм (не ограничен); фаза '+dbs(ph)+'°':(ph===null?'0; фаза не определена (Zin = 0)':sv(mag,'Ом')+', '+dbs(ph)+'°'))+row('Характер реактивности',kind);
+ h+=row('Входное сопротивление Zin = R + jX',rs+(im<0?' − j':' + j')+(is.indexOf('свыше')===0?' ':'')+is)+row('Модуль и фаза Zin',big?'модуль свыше 1 ГОм (не ограничен); фаза '+dbs(ph)+'°':(ph===null?'0; фаза не определена (Zin = 0)':sv(mag,'Ом')+', '+dbs(ph)+'°'))+row('Характер реактивности',kind);
  var lc;
  if(f===null)lc='не оценены — частота не введена';
  else if(im===0)lc='нет: сопротивление чисто активное';
  else if(im>0)lc='последовательная индуктивность L = X/(2πf) = '+sv(im/(2*Math.PI*f),'Гн');
  else lc='последовательная ёмкость C = 1/(2πf·|X|) = '+sv(1/(2*Math.PI*f*(-im)),'Ф');
  h+=row('Эквивалентные L или C'+(f===null?'':' на частоте '+si(f,'Гц')),lc);
- st='Оценка: Zin = '+rs+(im<0?' − j':' + j')+is+', '+kind+'; КСВ '+vtxt(vsw)+' (линия без потерь)';}
+ st='Оценка: Zin = '+rs+(im<0?' − j':' + j')+(is.indexOf('свыше')===0?' ':'')+is+', '+kind+'; КСВ '+vtxt(vsw)+' (линия без потерь)';}
 h+=row('Модуль коэффициента отражения |Γ| (на нагрузке и на входе)',dbs(vsw.g))+row('КСВ на входе линии',vtxt(vsw));
 var nt='Линия считается без потерь, Z0 вещественное; затухание кабеля, неоднородности и разброс коэффициента укорочения не учтены. '+(ld==='arb'?'':'Короткозамкнутый и разомкнутый шлейф отражают всю мощность, поэтому КСВ не ограничен. ')+'Реактивность вблизи четверти волны меняется очень резко: малая погрешность длины заметно меняет Zin.';
 out(h+row('Статус',st)+note(nt));
