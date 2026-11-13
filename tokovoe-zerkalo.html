@@ -322,16 +322,24 @@ if(dv!==null){var mp=Math.exp(dv/1000/VT),ms=[mp,1/mp],ios=[],j;
   for(var q2=0;q2<pcs.length;q2++)pmw=Math.max(pmw,Math.max.apply(null,pcs[q2]));}
  h+=row('Наибольшая мощность транзистора при Uвых = '+fmt(v1,4)+' В с тем же рассогласованием'+(t==='re'&&tr!==null?' и допуском RE':''),pt===null?si(pmw,'Вт'):sx(pmw,pt/1000,'Вт'));
  if(t==='re'){var s1=simple(mp,v0).io,s0=simple(1/mp,v0).io,sn=simple(1,v0).io;h+=row('Без эмиттерных резисторов было бы',fmt(100*(s0/sn-1),3)+' … +'+fmt(100*(s1/sn-1),3)+' %');}}
+// У схемы с RE Uкэ выходного транзистора зависит от тока, а тот — от рассогласования и RE: наименьшее Uкэ при Uвых,мин и наибольшее при Uвых,макс
+// ищется по обоим знакам ΔUбэ и крайним RE1, RE2 (углы: Uкэ2 = Uвых − Iэ2·RE2 монотонно по каждому из них).
+var vcw=null,vcx=null;
+if(t==='re'&&(dv!==null||tr!==null)){var mq=dv===null?[1]:[Math.exp(dv/1000/VT),Math.exp(-dv/1000/VT)],rq=tr===null?[re]:[re*(1-tr/100),re*(1+tr/100)];vcw=Infinity;vcx=-Infinity;
+ for(var jq=0;jq<mq.length;jq++)for(var aq=0;aq<rq.length;aq++)for(var cq=0;cq<rq.length;cq++){vcw=Math.min(vcw,rem(mq[jq],v0,rq[aq],rq[cq]).vce);vcx=Math.max(vcx,rem(mq[jq],v1,rq[aq],rq[cq]).vce);}}
 var lim=vs===null?null:t==='simple'?vs:t==='re'?vs+A.ie2*re:vbe+vs;
 h+=row('Наименьшее напряжение на выходе по Uкэ нас — граница соответствия',lim===null?'Uкэ нас не задано':fx(lim,v0)+' В'+(t==='re'?' = Uкэ нас + Iэ2·RE':t==='wilson'?' = Uбэ + Uкэ нас':''));
 var top=vo===null?null:t==='simple'?vo:t==='re'?vo+B.ie2*re:vo+vbe;
 h+=row('Наибольшее напряжение на выходе по UКЭО',top===null?'UКЭО не задано':fx(top,v1)+' В');
+if(vcw!==null)h+=row('Uкэ выходного транзистора с рассогласованием'+(tr!==null?' и допуском RE':'')+': наименьшее при Uвых = '+fmt(v0,4)+' В / наибольшее при '+fmt(v1,4)+' В',(vs===null?si(vcw,'В'):sx(vcw,vs,'В'))+' / '+(vo===null?si(vcx,'В'):sx(vcx,vo,'В')));
 var pp=A.p.concat(B.p),pm=Math.max.apply(null,pp),nm=t==='wilson'?['Q1','Q2','Q3']:['Q1','Q2'];
 h+=row('Мощность транзисторов при Uвых = '+fmt(v1,4)+' В: '+nm.join(' / '),B.p.map(function(x){return pt===null?si(x,'Вт'):sx(x,pt/1000,'Вт');}).join(' / '))+
  row(t==='re'?'Мощность резисторов: R / RE1 / RE2':'Мощность резистора R',B.pr.map(function(x){return si(x,'Вт');}).join(' / '));
 var bad=[],risk=[],miss=[];
-if(lim===null)miss.push('Uкэ нас');else if(lt(v0,lim))bad.push('при Uвых = '+fx(v0,lim)+' В выходной транзистор уходит в насыщение: нужно не меньше '+fx(lim,v0)+' В — ток зеркала здесь не держится');
-if(top===null)miss.push('UКЭО');else if(gt(B.vce,vo))bad.push('при Uвых = '+fmt(v1,4)+' В Uкэ выходного транзистора '+fx(B.vce,vo)+' В больше UКЭО '+fx(vo,B.vce)+' В');
+if(lim===null)miss.push('Uкэ нас');else if(lt(v0,lim)){bad.push('при Uвых = '+fx(v0,lim)+' В выходной транзистор уходит в насыщение: нужно не меньше '+fx(lim,v0)+' В — ток зеркала здесь не держится');}
+else if(vcw!==null&&lt(vcw,vs))risk.push('при рассогласовании и допуске RE Uкэ выходного транзистора при Uвых = '+fmt(v0,4)+' В доходит до '+fx(vcw,vs)+' В — ниже Uкэ нас '+fx(vs,vcw)+' В');
+if(top===null)miss.push('UКЭО');else if(!gt(B.vce,vo)&&vcx!==null&&gt(vcx,vo))risk.push('при рассогласовании и допуске RE Uкэ выходного транзистора при Uвых = '+fmt(v1,4)+' В доходит до '+fx(vcx,vo)+' В — больше UКЭО '+fx(vo,vcx)+' В');
+else if(gt(B.vce,vo))bad.push('при Uвых = '+fmt(v1,4)+' В Uкэ выходного транзистора '+fx(B.vce,vo)+' В больше UКЭО '+fx(vo,B.vce)+' В');
 if(pt===null)miss.push('Ptot');else if(gt(pm*1000,pt))bad.push('мощность транзистора '+fx(pm*1000,pt)+' мВт больше Ptot '+fx(pt,pm*1000)+' мВт');
 else if(pmw!==null&&gt(pmw*1000,pt))risk.push('при рассогласовании мощность транзистора доходит до '+fx(pmw*1000,pt)+' мВт — больше Ptot '+fx(pt,pmw*1000)+' мВт');
 var st,rng=si(A.io,'А')+(v1>v0?' … '+si(B.io,'А'):'')+' при Uвых '+fmt(v0,4)+(v1>v0?' … '+fmt(v1,4):'')+' В';
