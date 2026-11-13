@@ -301,7 +301,7 @@ faqs=[
  ("Складываются ли децибелы каскадов?",
   "Да, в этом их главное удобство: усиление последовательных каскадов складывается в дБ вместо перемножения коэффициентов. Каскады +20 дБ и −6 дБ дают итог +14 дБ."),
 ],
-related=["rc-filtr","rms-amplituda","power-energy-units"],
+related=["rc-filtr","rms-amplituda","power-energy-units","byudzhet-radiolinii-friis","shum-prinimnika-kaskad"],
 ),
 
 dict(
@@ -407,7 +407,7 @@ faqs=[
  ("Почему угол отрицательный?",
   "Отрицательный φ означает преобладание ёмкости: ток опережает напряжение. Положительный угол соответствует индуктивной цепи, где ток отстаёт."),
 ],
-related=["reaktivnoe-soprotivlenie","rezonans-lc","power-factor-compensation","blokirovochnyy-kondensator"],
+related=["reaktivnoe-soprotivlenie","rezonans-lc","power-factor-compensation","blokirovochnyy-kondensator","ksv-otrazhenie"],
 ),
 
 dict(
@@ -1412,7 +1412,7 @@ faqs=[
  ("Можно ли подключить диполь 73 Ом к кабелю 50 Ом?",
   "Можно: рассогласование даёт КСВ около 1,5, что приемлемо для большинства трансиверов. Для точного согласования применяют четвертьволновый трансформатор или симметрирующее устройство — оно заодно устраняет ток по оплётке."),
 ],
-related=["rezonans-lc","reaktivnoe-soprotivlenie","impedans-rlc"],
+related=["rezonans-lc","reaktivnoe-soprotivlenie","impedans-rlc","ksv-otrazhenie","shlejf-lambda-chetvert"],
 ),
 
 dict(

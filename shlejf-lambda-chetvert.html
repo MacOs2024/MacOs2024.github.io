@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Входное сопротивление шлейфа и λ/4-трансформатор</title>
+<meta name="description" content="Расчёт входного сопротивления отрезка линии без потерь по формуле Zin = Z0·(ZL + jZ0·tg βl)/(Z0 + jZL·tg βl): короткозамкнутый и разомкнутый шлейф, произвольная нагрузка R + jX, длина в долях λ или в метрах с коэффициентом укорочения, знак реактивности, эквивалентные индуктивность и ёмкость, КСВ; синтез четвертьволнового трансформатора Zт = √(Z1·Z2).">
+<link rel="canonical" href="https://macos2024.github.io/shlejf-lambda-chetvert.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Входное сопротивление шлейфа и λ/4-трансформатор">
+<meta property="og:description" content="Расчёт входного сопротивления отрезка линии без потерь по формуле Zin = Z0·(ZL + jZ0·tg βl)/(Z0 + jZL·tg βl): короткозамкнутый и разомкнутый шлейф, произвольная нагрузка R + jX, длина в долях λ или в метрах с коэффициентом укорочения, знак реактивности, эквивалентные индуктивность и ёмкость, КСВ; синтез четвертьволнового трансформатора Zт = √(Z1·Z2).">
+<meta property="og:url" content="https://macos2024.github.io/shlejf-lambda-chetvert.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Входное сопротивление шлейфа и λ/4-трансформатор","url":"https://macos2024.github.io/shlejf-lambda-chetvert.html","description":"Расчёт входного сопротивления отрезка линии без потерь по формуле Zin = Z0·(ZL + jZ0·tg βl)/(Z0 + jZL·tg βl): короткозамкнутый и разомкнутый шлейф, произвольная нагрузка R + jX, длина в долях λ или в метрах с коэффициентом укорочения, знак реактивности, эквивалентные индуктивность и ёмкость, КСВ; синтез четвертьволнового трансформатора Zт = √(Z1·Z2).","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Входное сопротивление шлейфа и λ/4-трансформатор","item":"https://macos2024.github.io/shlejf-lambda-chetvert.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему на четверть волны входное сопротивление шлейфа бесконечно?","acceptedAnswer":{"@type":"Answer","text":"Короткозамкнутый шлейф длиной λ/4 ведёт себя как параллельный резонансный контур: ток нагрузки через четверть волны превращается в напряжение на входе, а само входное сопротивление Zin = jZ0·tg βl при βl = π/2 стремится к бесконечности. Калькулятор считает Zin без тангенса, поэтому на этой длине пишет «не ограничено», а рядом — меньше и больше четверти волны — показывает знак реактивности."}},{"@type":"Question","name":"Как определить, индуктивный шлейф или ёмкостный?","acceptedAnswer":{"@type":"Answer","text":"По знаку мнимой части Zin. У короткозамкнутого шлейфа короче четверти волны X = Z0·tg βl положительная — шлейф ведёт себя как катушка, между λ/4 и λ/2 — как конденсатор; у разомкнутого знаки обратные. Калькулятор показывает знак и эквивалентную индуктивность или ёмкость на заданной частоте."}},{"@type":"Question","name":"Можно ли согласовать четвертьволновым трансформатором комплексную нагрузку?","acceptedAnswer":{"@type":"Answer","text":"Нет, с активным сопротивлением Zт = √(Z1·Z2) можно согласовать только активные нагрузки. Реактивность нагрузки нужно сначала скомпенсировать — шлейфом или элементом, — после чего согласовать оставшуюся активную часть. Калькулятор принимает в режиме синтеза только вещественные Z1 и Z2."}},{"@type":"Question","name":"Что такое коэффициент укорочения?","acceptedAnswer":{"@type":"Answer","text":"Отношение скорости волны в линии к скорости света. В кабеле с диэлектрической проницаемостью ε он равен 1/√ε, поэтому физическая длина λ/4 в кабеле короче четверти длины волны в воздухе. Значение берут из паспорта кабеля; калькулятор его не подставляет."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Входное сопротивление шлейфа и λ/4-трансформатор</h1>
+<p class="intro">Отрезок линии передачи меняет сопротивление нагрузки: через четверть волны он превращает короткое замыкание в разрыв, а через долю длины волны — в катушку или конденсатор. Калькулятор считает входное сопротивление отрезка без потерь на заданной частоте, показывает знак и эквивалентную индуктивность или ёмкость, КСВ, а в режиме синтеза подбирает четвертьволновый трансформатор между двумя активными сопротивлениями. Потери в реальном кабеле эта модель не включает. Реактивные сопротивления сосредоточенных элементов считает <a href="reaktivnoe-soprotivlenie.html">калькулятор реактивного сопротивления</a>, а как использовать линию в тракте — <a href="byudzhet-radiolinii-friis.html">бюджет радиолинии</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Входное сопротивление шлейфа и λ/4-трансформатор</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Что считать</label><div class="fw"><select id="mode"><option value="zin" selected>Входное сопротивление отрезка линии</option><option value="syn">Четвертьволновый трансформатор между Z1 и Z2</option></select></div></div><div class="f" id="f_z0"><label for="z0">Волновое сопротивление линии Z0</label><div class="fw"><input id="z0" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><select id="z0_unit" class="u" aria-label="Единицы: Волновое сопротивление линии Z0"><option value="1" selected>Ом</option><option value="1000.0">кОм</option></select></div><div class="hint">Вещественное, линия без потерь</div></div><div class="f" id="f_load"><label for="load">Нагрузка на конце линии</label><div class="fw"><select id="load"><option value="short">Короткое замыкание</option><option value="open">Холостой ход</option><option value="arb" selected>Произвольная ZL = R + jX</option></select></div></div><div class="f" id="f_rl"><label for="rl">Активная часть нагрузки R</label><div class="fw"><input id="rl" type="text" inputmode="decimal" autocomplete="off" value="75" placeholder=""><select id="rl_unit" class="u" aria-label="Единицы: Активная часть нагрузки R"><option value="1" selected>Ом</option><option value="1000.0">кОм</option><option value="1000000.0">МОм</option></select></div><div class="hint">Не меньше нуля</div></div><div class="f" id="f_xl"><label for="xl">Реактивная часть нагрузки X</label><div class="fw"><input id="xl" type="text" inputmode="decimal" autocomplete="off" value="25" placeholder=""><select id="xl_unit" class="u" aria-label="Единицы: Реактивная часть нагрузки X"><option value="1" selected>Ом</option><option value="1000.0">кОм</option></select></div><div class="hint">Положительная — индуктивная, отрицательная — ёмкостная</div></div><div class="f" id="f_lenm"><label for="lenm">Как задана длина</label><div class="fw"><select id="lenm"><option value="frac" selected>В долях длины волны в линии</option><option value="met">В метрах, с коэффициентом укорочения</option></select></div></div><div class="f" id="f_lf"><label for="lf">Длина l в долях длины волны в линии λл</label><div class="fw"><input id="lf" type="text" inputmode="decimal" autocomplete="off" value="0,125" placeholder=""><span class="u">λ</span></div><div class="hint">0,25 — четверть волны; 0,5 — полволны</div></div><div class="f" id="f_lm"><label for="lm">Физическая длина отрезка l</label><div class="fw"><input id="lm" type="text" inputmode="decimal" autocomplete="off" value="0,5" placeholder=""><select id="lm_unit" class="u" aria-label="Единицы: Физическая длина отрезка l"><option value="1" selected>м</option><option value="0.01">см</option><option value="0.001">мм</option></select></div></div><div class="f" id="f_vf"><label for="vf">Коэффициент укорочения vf = v/c</label><div class="fw"><input id="vf" type="text" inputmode="decimal" autocomplete="off" value="0,66" placeholder=""></div><div class="hint">Скорость волны в линии относительно скорости света, по паспорту кабеля; значение условное. Больше 0, не больше 1</div></div><div class="f" id="f_f"><label for="f">Частота f</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder=""><select id="f_unit" class="u" aria-label="Единицы: Частота f"><option value="1000000.0" selected>МГц</option><option value="1000000000.0">ГГц</option><option value="1000.0">кГц</option></select></div><div class="hint">В режиме долей λ необязательна: нужна для эквивалентных L и C. В метрах и при синтезе обязательна</div></div><div class="f" id="f_z1"><label for="z1">Сопротивление Z1 со стороны источника</label><div class="fw"><input id="z1" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><select id="z1_unit" class="u" aria-label="Единицы: Сопротивление Z1 со стороны источника"><option value="1" selected>Ом</option><option value="1000.0">кОм</option></select></div><div class="hint">Вещественное и положительное</div></div><div class="f" id="f_z2"><label for="z2">Сопротивление нагрузки Z2</label><div class="fw"><input id="z2" type="text" inputmode="decimal" autocomplete="off" value="200" placeholder=""><select id="z2_unit" class="u" aria-label="Единицы: Сопротивление нагрузки Z2"><option value="1" selected>Ом</option><option value="1000.0">кОм</option></select></div><div class="hint">Вещественное и положительное</div></div><div class="f" id="f_fc"><label for="fc">Проверить КСВ на другой частоте</label><div class="fw"><input id="fc" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="fc_unit" class="u" aria-label="Единицы: Проверить КСВ на другой частоте"><option value="1000000.0" selected>МГц</option><option value="1000000000.0">ГГц</option><option value="1000.0">кГц</option></select></div><div class="hint">Трансформатор рассчитан на частоту f. Пусто — КСВ на другой частоте не оценивается</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
+<section class="article">
+<h2>Шлейф и четвертьволновая линия: как считается</h2>
+<div class="formula">Zin = Z0·(ZL + jZ0·tg βl)/(Z0 + jZL·tg βl),&nbsp;&nbsp;βl = 2π·l/λл,&nbsp;&nbsp;λл = vf·c/f<br>Короткое замыкание: Zin = jZ0·tg βl;&nbsp;&nbsp;холостой ход: Zin = −jZ0·ctg βl;&nbsp;&nbsp;l = λ/4: Zin = Z0²/ZL<br>Без деления на cos βl: Re Zin = Z0²·R/Δ,&nbsp;&nbsp;Im Zin = Z0·[X·Z0·cos 2βl + ½(Z0² − X² − R²)·sin 2βl]/Δ,&nbsp;&nbsp;Δ = (Z0·cos βl − X·sin βl)² + R²·sin² βl<br>КСВ = (1 + |Γ|)/(1 − |Γ|),&nbsp;&nbsp;Γ = (ZL − Z0)/(ZL + Z0);&nbsp;&nbsp;L = X/(2πf),&nbsp;&nbsp;C = 1/(2πf·|X|)<br>Четвертьволновый трансформатор: Zт = √(Z1·Z2),&nbsp;&nbsp;l = λл/4</div>
+<p><b>Откуда формула.</b> В линии без потерь напряжение и ток — сумма падающей и отражённой волн; отношение напряжения к току на расстоянии l от нагрузки даёт Zin = Z0·(ZL + jZ0·tg βl)/(Z0 + jZL·tg βl) (Pozar, «Microwave Engineering», раздел 2.3 «The Terminated Lossless Transmission Line»; номер уравнения в книге подтвердить не удалось и в карточке источников не указан). Здесь β = 2π/λл — фазовая постоянная, λл = vf·c/f — длина волны в линии, vf — коэффициент укорочения. Отсюда следуют частные случаи, которые можно проверить подстановкой: нагрузка ZL = 0 даёт Zin = jZ0·tg βl, холостой ход — Zin = −jZ0·ctg βl, а при l = λ/4 любая нагрузка превращается в Z0²/ZL — линия работает инвертором сопротивления.</p>
+<p><b>Четверть волны и бесконечность.</b> Тангенс при βl = π/2 не существует: короткозамкнутый шлейф длиной λ/4 имеет бесконечное входное сопротивление, как параллельный резонансный контур. Поэтому страница считает через cos βl и sin βl и пользуется тем, что при l = λ/4 числитель и знаменатель умножены на cos βl = 0. Вблизи этой длины значение огромно, но конечно, а его знак различает стороны: у короткозамкнутого шлейфа короче четверти волны реактивность индуктивная (jZ0·tg βl, X &gt; 0), длиннее — ёмкостная; у разомкнутого — наоборот. Когда сопротивление превышает 1 ГОм, калькулятор пишет «не ограничено», а не число.</p>
+<p><b>Эквивалентные L и C.</b> Реактивная часть Zin = R + jX на частоте f эквивалентна последовательно включённой катушке L = X/(2πf) при X &gt; 0 или конденсатору C = 1/(2πf·|X|) при X &lt; 0 — вместе с последовательным сопротивлением R. Эквивалент верен только на этой частоте: у линии реактивность зависит от частоты не так, как у катушки или конденсатора. Для короткозамкнутого шлейфа короче λ/4 это катушка, поэтому шлейф используют как индуктивность на СВЧ, а разомкнутый — как ёмкость.</p>
+<p><b>КСВ.</b> Для линии без потерь модуль коэффициента отражения |Γ| = |ZL − Z0|/|ZL + Z0| одинаков вдоль всей линии, поэтому КСВ на входе равен КСВ на нагрузке. Выражение (1 + |Γ|)/(1 − |Γ|) вычитает близкие числа при почти полном отражении (|Γ| → 1) и даёт ноль в знаменателе при чисто реактивной нагрузке; страница считает КСВ как (1 + |Γ|)²·Δ₀/(4·R·Z0), Δ₀ = (R + Z0)² + X² (так как 1 − |Γ|² = 4·R·Z0/Δ₀), и пишет «не ограничен» при R = 0.</p>
+<p><b>Четвертьволновый трансформатор.</b> Отрезок длиной λл/4 с волновым сопротивлением Zт превращает нагрузку Z2 во входное сопротивление Zт²/Z2. Чтобы оно равнялось Z1, нужно Zт = √(Z1·Z2) (Pozar, раздел 5.4 «The Quarter-Wave Transformer» в 4-м издании, 2.5 в 3-м). Совпадение точное на одной частоте f0; при другой частоте угол βl отличается от π/2, и КСВ растёт — для проверки введите частоту. Реактивные нагрузки четвертьволновый трансформатор не согласует: нужно сначала скомпенсировать реактивность. Трансформатор между 50 и 200 Ом требует линии 100 Ом; если такую линию нельзя выполнить, это граница метода.</p>
+<p><b>Чем отличается от соседних страниц.</b> <a href="reaktivnoe-soprotivlenie.html">Реактивное сопротивление</a> катушки и конденсатора — сосредоточенные элементы, <a href="impedans-rlc.html">импеданс RLC</a> — цепь из них, а здесь распределённая линия, чей эквивалент зависит от длины. Длину самой антенны считает <a href="dlina-antenny.html">калькулятор длины антенны</a>; потери на трассе — <a href="byudzhet-radiolinii-friis.html">бюджет радиолинии</a>.</p>
+<h2>Шлейф и четвертьволновая линия: пример расчёта</h2>
+<p>Линия 50 Ом, нагрузка 75 + j25 Ом, длина λ/8 (βl = 45°, tg βl = 1): Zin = 50·(75 + j25 + j50)/(50 + j(75 + j25)) = 50·(75 + j75)/(25 + j75) = <b>60 − j30 Ом</b> — ёмкостное сопротивление; на 100 МГц это последовательная ёмкость 53,05 пФ, КСВ равен 1,768.</p>
+<p>Шлейф из кабеля с коэффициентом укорочения 0,66 на 100 МГц: λл = 1,9786 м. Короткозамкнутый отрезок 0,2 м (0,1011 λл, βl = 36,39°) даёт Zin = j50·tg 36,39° = <b>j36,85 Ом</b> — это катушка около 58,6 нГн; разомкнутый такой же отрезок — −j50·ctg 36,39° = −j67,85 Ом, то есть конденсатор около 23,5 пФ. При длине ровно λл/4 = 49,47 см короткозамкнутый шлейф имеет Zin не ограничено.</p>
+<p>Трансформатор между 50 и 200 Ом: Zт = √(50·200) = <b>100 Ом</b>. На 100 МГц при vf = 0,66 его длина λл/4 = <b>49,47 см</b>. КСВ без него 4, на расчётной частоте с ним — 1; при частоте 120 МГц (на 20 % выше) КСВ около 1,58.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему на четверть волны входное сопротивление шлейфа бесконечно?</h3><p>Короткозамкнутый шлейф длиной λ/4 ведёт себя как параллельный резонансный контур: ток нагрузки через четверть волны превращается в напряжение на входе, а само входное сопротивление Zin = jZ0·tg βl при βl = π/2 стремится к бесконечности. Калькулятор считает Zin без тангенса, поэтому на этой длине пишет «не ограничено», а рядом — меньше и больше четверти волны — показывает знак реактивности.</p><h3>Как определить, индуктивный шлейф или ёмкостный?</h3><p>По знаку мнимой части Zin. У короткозамкнутого шлейфа короче четверти волны X = Z0·tg βl положительная — шлейф ведёт себя как катушка, между λ/4 и λ/2 — как конденсатор; у разомкнутого знаки обратные. Калькулятор показывает знак и эквивалентную индуктивность или ёмкость на заданной частоте.</p><h3>Можно ли согласовать четвертьволновым трансформатором комплексную нагрузку?</h3><p>Нет, с активным сопротивлением Zт = √(Z1·Z2) можно согласовать только активные нагрузки. Реактивность нагрузки нужно сначала скомпенсировать — шлейфом или элементом, — после чего согласовать оставшуюся активную часть. Калькулятор принимает в режиме синтеза только вещественные Z1 и Z2.</p><h3>Что такое коэффициент укорочения?</h3><p>Отношение скорости волны в линии к скорости света. В кабеле с диэлектрической проницаемостью ε он равен 1/√ε, поэтому физическая длина λ/4 в кабеле короче четверти длины волны в воздухе. Значение берут из паспорта кабеля; калькулятор его не подставляет.</p>
+</div>
+</section>
+
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li>Microwave Engineering — D. M. Pozar; Wiley — Редакция 4-е изд., 2012 (оглавление видно в выдаче; в 3-м изд., 2004, четвертьволновый трансформатор — раздел 2.5, в 4-м — 5.4); текст книги в окружении не открывался — раздел 2.3 The Terminated Lossless Transmission Line и подраздел «особые случаи» — Zin = Z0·(ZL + jZ0·tg βl)/(Z0 + jZL·tg βl), короткое замыкание, холостой ход, λ/4 (формулы в пересказе справочных материалов; номера уравнений НЕ подтверждены и не приписаны), 5.4 The Quarter-Wave Transformer (в 3-м изд. — 2.5) — по оглавлению; Zт = √(Z1·Z2) — в пересказе справочных материалов — обращение 13.11.2026</li><li><a href="https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Microwave_and_RF_Design_II_-_Transmission_Lines_(Steer)/02%3A_Transmission_Lines/2.04%3A_Special_Cases_of_Lossless_Terminated_Lines" rel="nofollow noopener" target="_blank">Fundamentals of Microwave and RF Design — Special Cases of Lossless Terminated Lines</a> — M. B. Steer; LibreTexts — Редакция онлайн-издание на дату обращения; для сравнения, виден пересказ формул в выдаче двумя поисками — раздел короткозамкнутая линия Zin = jZ0·tg βl; линия λ/4 — Z0²/ZL — обращение 13.11.2026</li></ul><p><b>Допущения:</b></p><ul><li>Линия без потерь, волновое сопротивление Z0 вещественное и постоянное по длине; нагрузка пассивная (R ≥ 0).</li><li>Длина волны в линии λл = vf·c/f, где vf задан пользователем (по паспорту кабеля), c = 299 792 458 м/с.</li><li>Эквивалентные L и C — последовательные, верны только на заданной частоте.</li></ul><p><b>Границы применимости:</b></p><ul><li>Затухание кабеля, неоднородности, разъёмы и разброс vf не учитываются; для линий длиннее 1000 длин волн расчёт отвергается.</li><li>Четвертьволновый трансформатор рассчитывается для вещественных Z1, Z2 на одной частоте; полоса и реализуемость Zт — отдельная проверка.</li><li>Результат вблизи четверти волны очень чувствителен к длине; значения свыше 1 ГОм показываются как «не ограничено».</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="reaktivnoe-soprotivlenie.html">Реактивное сопротивление конденсатора и катушки</a></li><li><a href="impedans-rlc.html">Импеданс последовательной RLC-цепи</a></li><li><a href="dlina-antenny.html">Длина антенны: диполь, вертикал, рамка</a></li><li><a href="byudzhet-radiolinii-friis.html">Бюджет радиолинии по формуле Фрииса</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function fe(x,p){var s=Number(x.toPrecision(p)),a=Math.abs(s);if(a===0||(a<1e7&&a>=1e-4))return fmt(x,p);
+ // Без записи «·10^»: малые числа словами, большие — целым с пробелами между тройками цифр.
+ if(a<1e-12)return x<0?'больше −0,000000000001':'меньше 0,000000000001';
+ if(a<1e-4)return s.toFixed(p-1-Math.floor(Math.log10(a))).replace('-','−').replace('.',',');
+ if(a>=1e15)return (x<0?'меньше −':'больше ')+'1 000 000 000 000 000';
+ return (x<0?'−':'')+s.toFixed(0).replace('-','').replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0');}
+function fx(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return fe(x,4);for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return fe(x,p);}return fe(x,12);}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function sx(x,lim,u){var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];for(var i=0;i<Pr.length-1;i++){if(Math.abs(x)>=Pr[i][0])break;}return fx(x/Pr[i][0],lim/Pr[i][0])+' '+Pr[i][1]+u;}
+function sg(x){return x>0?'+':'';}
+function rd(x){return Math.round(x*1e9)/1e9;}
+// Малый зазор в дБ словами: иначе fmt вывел бы «1·10^-6».
+function dbs(x){if(x!==0&&Math.abs(x)<1e-3)return x<0?'больше −0,001':'меньше 0,001';return fe(x,4);}
+// Мощность в ваттах из дБм словами за пределами диапазона si: иначе вышли бы числа вроде 1·10^-30 Вт.
+function pw(dbm){if(dbm<-120)return 'меньше 1 фВт';if(dbm>120)return 'больше 1 ГВт';return si(Math.pow(10,dbm/10)*1e-3,'Вт');}
+function perms(a){if(a.length<=1)return [a.slice()];var r=[];for(var i=0;i<a.length;i++){var rest=a.slice(0,i).concat(a.slice(i+1));perms(rest).forEach(function(p){r.push([a[i]].concat(p));});}return r;}
+
+var C0=299792458;
+function sync(){var sy=S('mode')==='syn',ar=S('load')==='arb',mt=S('lenm')==='met';
+ hideF('z0',sy);hideF('load',sy);hideF('rl',sy||!ar);hideF('xl',sy||!ar);hideF('lenm',sy);hideF('lf',sy||mt);hideF('lm',sy||!mt);
+ hideF('vf',!sy&&!mt);hideF('z1',!sy);hideF('z2',!sy);hideF('fc',!sy);}
+function init(){$('mode').addEventListener('change',sync);$('load').addEventListener('change',sync);$('lenm').addEventListener('change',sync);sync();}
+// cos и sin угла θ = 2π·u для приведённой длины u ∈ [0; 0,5) долей λ — с точностью до общего знака, который в Zin сокращается.
+// Вблизи четверти волны берём разность u − 1/4, вблизи нуля — сам u: так нет потери точности там, где cos θ или sin θ мал.
+function cs(u){
+ if(u<1e-12||0.5-u<1e-12)return [1,0];
+ if(Math.abs(u-0.25)<1e-12)return [0,1];
+ if(u<0.125)return [Math.cos(2*Math.PI*u),Math.sin(2*Math.PI*u)];
+ if(u>0.375){var w=u-0.5;return [Math.cos(2*Math.PI*w),Math.sin(2*Math.PI*w)];}
+ var v=u-0.25;return [-Math.sin(2*Math.PI*v),Math.cos(2*Math.PI*v)];}
+// Zin = Z0·(ZL·cos θ + jZ0·sin θ)/(Z0·cos θ + jZL·sin θ), ZL = R + jX. Вещественная часть Z0²·R/знам. и мнимая
+// Z0·(X·Z0·(c² − s²) + (Z0² − X² − R²)·s·c)/знам., знам. = (Z0·c − X·s)² + R²·s² — без деления на cos θ, то есть без tg.
+// Холостой ход: −jZ0·c/s. inf — полюс: знаменатель нуль.
+function zin(z0,kind,R,X,u){var a=cs(u),c=a[0],s=a[1];
+ if(kind==='open'){if(s===0)return {inf:true};return {re:0,im:-z0*c/s};}
+ var R_=kind==='short'?0:R,X_=kind==='short'?0:X,den=Math.pow(z0*c-X_*s,2)+R_*R_*s*s;
+ if(den===0)return {inf:true};
+ return {re:z0*z0*R_/den,im:z0*(X_*z0*(c*c-s*s)+(z0*z0-X_*X_-R_*R_)*s*c)/den};}
+// КСВ на нагрузке R + jX при опорном z0 (в линии без потерь он же на входе): |Γ|² = N/D, КСВ = (1+|Γ|)²·D/(4·R·z0) — без вычитания близких чисел.
+function vs(z0,R,X){var D=Math.pow(R+z0,2)+X*X,N=Math.pow(R-z0,2)+X*X,g=Math.sqrt(N/D);return {g:g,v:R===0?Infinity:Math.pow(1+g,2)*D/(4*R*z0)};}
+function vtxt(o){if(!isFinite(o.v))return 'не ограничен (полное отражение, |Γ| = 1)';if(o.v>=1e7)return 'свыше 10 миллионов (практически не ограничен)';return fmt(o.v);}
+function sv(x,u){var a=Math.abs(x);if(a===0)return '0 '+u;if(a>=1e12)return 'больше 1 Т'+u;if(a<1e-12)return 'меньше 1 п'+u;return si(x,u);}
+function calcSyn(){
+var z1=P('z1'),z2=P('z2'),vf=P('vf'),f=P('f'),fc=OPT('fc');
+if([z1,z2,vf,f].some(isNaN))return err('Заполните числами сопротивления Z1 и Z2, коэффициент укорочения и частоту.');
+if(z1<1e-3||z1>1e6||z2<1e-3||z2>1e6)return err('Сопротивления Z1 и Z2 — от 1 мОм до 1 МОм.');
+if(!(vf>0&&vf<=1))return err('Коэффициент укорочения — больше 0 и не больше 1.');
+if(f<1e3||f>1e12)return err('Частота — от 1 кГц до 1 ТГц.');
+if(fc!==null){if(isNaN(fc))return err('Частота проверки — число. Если она не нужна, оставьте поле пустым.');if(fc<=0||fc>1e13)return err('Частота проверки — больше 0 и не больше 10 ТГц.');}
+var zt=Math.sqrt(z1)*Math.sqrt(z2),ll=vf*C0/f,l=ll/4,vb=Math.max(z1,z2)/Math.min(z1,z2);
+var h=row('Волновое сопротивление трансформатора Zт = √(Z1·Z2)',si(zt,'Ом'))+row('Длина волны в линии λл = vf·c/f',si(ll,'м'))+row('Длина трансформатора l = λл/4',si(l,'м'))+
+ row('КСВ без трансформатора max(Z1, Z2)/min(Z1, Z2)',vtxt({v:vb}))+row('Проверка: Zт²/Z2 — входное сопротивление на частоте f',si(Number((zt*zt/z2).toPrecision(12)),'Ом')+' (должно быть Z1 = '+si(z1,'Ом')+')');
+var st='Оценка: Zт = √(Z1·Z2) = '+si(zt,'Ом')+', длина λ/4 = '+si(l,'м')+' при vf = '+dbs(vf)+'; на частоте f КСВ равен 1 (идеальная линия без потерь)';
+if(fc!==null){var z=zin(zt,'arb',z2,0,(0.25*fc/f)%0.5),zi=Math.abs(z.im)<1e-12*Math.abs(z.re)?0:z.im,w=vs(z1,z.re,zi);
+ h+=row('Отношение частоты проверки к расчётной',dbs(fc/f))+row('Входное сопротивление на частоте проверки',sv(z.re,'Ом')+(zi<0?' − j':' + j')+sv(Math.abs(zi),'Ом'))+row('КСВ относительно Z1 на частоте проверки',vtxt(w));
+ st+='; на '+si(fc,'Гц')+' КСВ около '+vtxt(w);}
+var nt='Трансформатор согласует только активные сопротивления и точно — на одной частоте; вне неё КСВ растёт. Длины 3λ/4, 5λ/4 тоже дают Zт, но с более узкой полосой. Волновое сопротивление Zт должно быть осуществимо выбранным типом линии — это проверяют отдельно. Потери в линии не учтены.';
+out(h+row('Статус',st)+note(nt));}
+function calc(){
+if(S('mode')==='syn')return calcSyn();
+var z0=P('z0'),ld=S('load'),ar=ld==='arb',R=ar?P('rl'):0,X=ar?P('xl'):0,mt=S('lenm')==='met';
+var fr=mt?NaN:P('lf'),lm=mt?P('lm'):NaN,vf=mt?P('vf'):NaN,f=mt?P('f'):OPT('f');
+if(isNaN(z0)||isNaN(R)||isNaN(X)||(mt?[lm,vf,f].some(isNaN):isNaN(fr)))return err('Заполните числами волновое сопротивление, нагрузку и длину'+(mt?', коэффициент укорочения и частоту.':'.'));
+if(z0<1e-3||z0>1e6)return err('Волновое сопротивление Z0 — от 1 мОм до 1 МОм.');
+if(R<0||R>1e12)return err('Активная часть нагрузки R — от 0 до 1 ТОм.');
+if(Math.abs(X)>1e12)return err('Реактивная часть нагрузки X — от −1 ТОм до +1 ТОм.');
+if(!mt&&f!==null){if(isNaN(f))return err('Частота — число. Если она не нужна, оставьте поле пустым.');if(f<1e3||f>1e12)return err('Частота — от 1 кГц до 1 ТГц.');}
+var ll=NaN,frac;
+if(mt){if(lm<0)return err('Длина отрезка не может быть отрицательной.');if(!(vf>0&&vf<=1))return err('Коэффициент укорочения — больше 0 и не больше 1.');if(f<1e3||f>1e12)return err('Частота — от 1 кГц до 1 ТГц.');
+ ll=vf*C0/f;frac=lm/ll;}
+else{if(fr<0)return err('Длина отрезка не может быть отрицательной.');frac=fr;}
+if(frac>1000)return err('Длина больше 1000 длин волн в линии — для такой линии потери нельзя не учитывать, модель без потерь неприменима.');
+var u=frac-0.5*Math.floor(frac/0.5);if(u>=0.5)u=0;
+var cc=cs(u),th=360*frac,z=zin(z0,ld,R,X,u),sc=Math.max(z0,R,Math.abs(X));
+var h='';
+h+=row('Нагрузка ZL',ld==='short'?'0 — короткое замыкание':ld==='open'?'не ограничена — холостой ход':sv(R,'Ом')+(X<0?' − j':' + j')+sv(Math.abs(X),'Ом'));
+if(mt)h+=row('Длина волны в линии λл = vf·c/f',si(ll,'м'))+row('Длина l в долях λл',dbs(frac));
+h+=row('Электрическая длина βl = 2π·l/λл',dbs(th)+'° ('+dbs(2*Math.PI*frac)+' рад)');
+if(frac>=0.5)h+=row('Приведённая длина (Zin повторяется через λ/2)',dbs(u)+' λл');
+h+=row('tg βl',cc[0]===0?'не ограничен (βl = 90° + k·180°, четверть волны)':(Math.abs(cc[1]/cc[0])>=1e6?(cc[1]/cc[0]>0?'+':'−')+'свыше миллиона по модулю (не ограничен)':dbs(cc[1]/cc[0])));
+var vsw=ld==='arb'?vs(z0,R,X):{g:1,v:Infinity},st;
+if(z.inf){
+ h+=row('Входное сопротивление Zin','не ограничено — резонанс линии (разомкнутая цепь на входе)')+row('Знак реактивности','меняется при переходе через эту длину: по одну сторону индуктивная, по другую ёмкостная')+
+  row('Эквивалентные L и C','не определены — реактивность не ограничена');
+ st='Оценка: при этой длине входное сопротивление не ограничено (резонанс линии); по обе стороны от неё реактивность имеет противоположные знаки';}
+else{
+ var re=z.re,im=Math.abs(z.im)<1e-12*Math.abs(z.re)?0:z.im,big=re>=1e9||Math.abs(im)>=1e9,mag=Math.hypot(re,im);
+ var ph=(re===0&&im===0)?null:Math.atan2(im,re)*180/Math.PI;
+ var kind=im===0?'чисто активное':(im>0?'индуктивное (X > 0)':'ёмкостное (X < 0)');
+ var rs=re>=1e9?'свыше 1 ГОм (не ограничено)':sv(re,'Ом'),is=Math.abs(im)>=1e9?'свыше 1 ГОм (не ограничено)':sv(Math.abs(im),'Ом');
+ h+=row('Входное сопротивление Zin = R + jX',rs+(im<0?' − j':' + j')+(is.indexOf('свыше')===0?' ':'')+is)+row('Модуль и фаза Zin',big?'модуль свыше 1 ГОм (не ограничен); фаза '+dbs(ph)+'°':(ph===null?'0; фаза не определена (Zin = 0)':sv(mag,'Ом')+', '+dbs(ph)+'°'))+row('Характер реактивности',kind);
+ var lc;
+ if(f===null)lc='не оценены — частота не введена';
+ else if(im===0)lc='нет: сопротивление чисто активное';
+ else if(im>0)lc='последовательная индуктивность L = X/(2πf) = '+sv(im/(2*Math.PI*f),'Гн');
+ else lc='последовательная ёмкость C = 1/(2πf·|X|) = '+sv(1/(2*Math.PI*f*(-im)),'Ф');
+ h+=row('Эквивалентные L или C'+(f===null?'':' на частоте '+si(f,'Гц')),lc);
+ st='Оценка: Zin = '+rs+(im<0?' − j':' + j')+(is.indexOf('свыше')===0?' ':'')+is+', '+kind+'; КСВ '+vtxt(vsw)+' (линия без потерь)';}
+h+=row('Модуль коэффициента отражения |Γ| (на нагрузке и на входе)',dbs(vsw.g))+row('КСВ на входе линии',vtxt(vsw));
+var nt='Линия считается без потерь, Z0 вещественное; затухание кабеля, неоднородности и разброс коэффициента укорочения не учтены. '+(ld==='arb'?'':'Короткозамкнутый и разомкнутый шлейф отражают всю мощность, поэтому КСВ не ограничен. ')+'Реактивность вблизи четверти волны меняется очень резко: малая погрешность длины заметно меняет Zin.';
+out(h+row('Статус',st)+note(nt));
+}
+
+</script>
+</body>
+</html>

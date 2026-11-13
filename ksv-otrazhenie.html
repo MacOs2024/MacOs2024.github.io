@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>КСВ и коэффициент отражения — ВольтКальк</title>
+<meta name="description" content="Расчёт КСВ, коэффициента отражения Γ (модуль и фаза), обратных потерь RL, потерь на рассогласование и отражённой мощности по комплексной нагрузке ZL = R + jX и волновому сопротивлению Z0, а также обратная задача: по КСВ или RL найти |Γ| и допустимый разброс сопротивления нагрузки.">
+<link rel="canonical" href="https://macos2024.github.io/ksv-otrazhenie.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="КСВ и коэффициент отражения — ВольтКальк">
+<meta property="og:description" content="Расчёт КСВ, коэффициента отражения Γ (модуль и фаза), обратных потерь RL, потерь на рассогласование и отражённой мощности по комплексной нагрузке ZL = R + jX и волновому сопротивлению Z0, а также обратная задача: по КСВ или RL найти |Γ| и допустимый разброс сопротивления нагрузки.">
+<meta property="og:url" content="https://macos2024.github.io/ksv-otrazhenie.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"КСВ и коэффициент отражения","url":"https://macos2024.github.io/ksv-otrazhenie.html","description":"Расчёт КСВ, коэффициента отражения Γ (модуль и фаза), обратных потерь RL, потерь на рассогласование и отражённой мощности по комплексной нагрузке ZL = R + jX и волновому сопротивлению Z0, а также обратная задача: по КСВ или RL найти |Γ| и допустимый разброс сопротивления нагрузки.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"КСВ и коэффициент отражения","item":"https://macos2024.github.io/ksv-otrazhenie.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Почему КСВ у передатчика часто меньше, чем у антенны?","acceptedAnswer":{"@type":"Answer","text":"Отражённая волна на пути обратно идёт по кабелю с потерями и ослабляется, поэтому у передатчика она меньше, чем у нагрузки. Длинный кабель с большим затуханием «маскирует» плохую антенну: КСВ на входе выглядит лучше. Этот калькулятор считает КСВ в плоскости нагрузки; потери кабеля считает отдельная страница."}},{"@type":"Question","name":"Почему нельзя ввести R = 0 и X = 0?","acceptedAnswer":{"@type":"Answer","text":"Это короткое замыкание: Γ = −1, КСВ не ограничен, мощность не поглощается. Страница не принимает такую пару как «нагрузку» — вероятнее всего, поля остались незаполненными. Чисто реактивная нагрузка (R = 0, X ≠ 0) допустима и даёт |Γ| = 1 и КСВ «не ограничен»."}},{"@type":"Question","name":"Что значит «не ограничен» вместо числа?","acceptedAnswer":{"@type":"Answer","text":"При |Γ| = 1 знаменатель 1 − |Γ| равен нулю и КСВ как отношение не имеет конечного значения. Для разрыва цепи или очень большого R можно ввести 1000000000000 Ом — получится очень большое, но конечное число."}},{"@type":"Question","name":"Чем потери на рассогласование отличаются от обратных потерь?","acceptedAnswer":{"@type":"Answer","text":"RL показывает, насколько отражённая мощность меньше падающей. Потери на рассогласование показывают, какая доля падающей мощности не доходит до нагрузки. При RL = 20 дБ отражается 1 %, и до нагрузки не доходит 0,0436 дБ — для большинства задач это пренебрежимо, но допустимое значение определяет сама задача."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>КСВ и коэффициент отражения</h1>
+<p class="intro">Калькулятор считает, какая часть падающей волны отражается от нагрузки <b>ZL = R + jX</b> на линии с волновым сопротивлением Z0: коэффициент отражения Γ, КСВ, обратные потери RL, потери на рассогласование и отражённую мощность. Можно решить и обратную задачу: по КСВ или RL найти |Γ| и разброс сопротивления, который ещё укладывается в заданный КСВ. Z0 линии по её геометрии находит <a href="volnovoe-soprotivlenie-linii.html">калькулятор волнового сопротивления</a>, согласование Г-образной LC-цепью — <a href="lc-soglasovanie-g-zveno.html">калькулятор Г-звена</a>, а потери самого кабеля — <a href="poteri-v-koaksialnom-kabele.html">калькулятор потерь в коаксиальном кабеле</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — КСВ и коэффициент отражения</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Что задано</label><div class="fw"><select id="mode"><option value="load" selected>Нагрузка ZL = R + jX и Z0</option><option value="vswr">КСВ: найти |Γ| и допустимый разброс</option><option value="rl">Обратные потери RL: найти |Γ| и КСВ</option></select></div></div><div class="f" id="f_z0"><label for="z0">Волновое сопротивление линии Z0</label><div class="fw"><input id="z0" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">Ом</span></div><div class="hint">Коаксиальные кабели для связи и антенн — как правило 50 или 75 Ом; точное значение вашего кабеля — по паспорту или по его размерам</div></div><div class="f" id="f_r"><label for="r">Активная часть нагрузки R</label><div class="fw"><input id="r" type="text" inputmode="decimal" autocomplete="off" value="75" placeholder=""><span class="u">Ом</span></div><div class="hint">R = 0 допустимо только при X ≠ 0 (чисто реактивная нагрузка, вся мощность отражается)</div></div><div class="f" id="f_x"><label for="x">Реактивная часть нагрузки X со знаком</label><div class="fw"><input id="x" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder=""><span class="u">Ом</span></div><div class="hint">Плюс — индуктивная нагрузка, минус — ёмкостная (соглашение e^(jωt), как у большинства учебников по СВЧ)</div></div><div class="f" id="f_s"><label for="s">КСВ</label><div class="fw"><input id="s" type="text" inputmode="decimal" autocomplete="off" value="1.5" placeholder=""></div><div class="hint">Не меньше 1; допустимый КСВ задаёт изготовитель оборудования</div></div><div class="f" id="f_rl"><label for="rl">Обратные потери RL</label><div class="fw"><input id="rl" type="text" inputmode="decimal" autocomplete="off" value="14" placeholder=""><span class="u">дБ</span></div><div class="hint">Чем больше RL, тем лучше согласование; 0 дБ — вся мощность отражается</div></div><div class="f" id="f_pin"><label for="pin">Падающая мощность (необязательно)</label><div class="fw"><input id="pin" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="pin_unit" class="u" aria-label="Единицы: Падающая мощность (необязательно)"><option value="1" selected>Вт</option><option value="0.001">мВт</option><option value="1000">кВт</option></select></div><div class="hint">Мощность волны, идущей к нагрузке; пусто — мощности не считаются</div></div><div class="f" id="f_slim"><label for="slim">Допустимый КСВ по паспорту оборудования (необязательно)</label><div class="fw"><input id="slim" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""></div><div class="hint">Пусто — вывод о пригодности согласования не делается</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
+<section class="article">
+<h2>КСВ и коэффициент отражения: как считается</h2>
+<div class="formula">Γ = (ZL − Z0) / (ZL + Z0),&nbsp;&nbsp;|Γ|² = ((R − Z0)² + X²) / ((R + Z0)² + X²)<br>КСВ = (1 + |Γ|) / (1 − |Γ|),&nbsp;&nbsp;|Γ| = (КСВ − 1) / (КСВ + 1)<br>RL = −20·lg|Γ| дБ<br>Потери на рассогласование ML = −10·lg(1 − |Γ|²) дБ,&nbsp;&nbsp;1 − |Γ|² = 4·R·Z0 / ((R + Z0)² + X²)<br>Pотр = |Γ|²·Pпад,&nbsp;&nbsp;Pнагр = (1 − |Γ|²)·Pпад</div>
+<p><b>Откуда берётся Γ.</b> На линии без потерь напряжение — сумма падающей и отражённой волн: U(z) = U⁺·(e<sup>−jβz</sup> + Γ·e<sup>jβz</sup>), ток — их разность, делённая на Z0. В плоскости нагрузки (z = 0) U = U⁺·(1 + Γ), I = (U⁺/Z0)·(1 − Γ), а нагрузка обязана удовлетворять ZL = U/I. Отсюда ZL/Z0 = (1 + Γ)/(1 − Γ) и Γ = (ZL − Z0)/(ZL + Z0). Эта запись — основа главы о линии, нагруженной на произвольное сопротивление, в учебнике Позара (<i>Microwave Engineering</i>, глава 2); текст книги здесь не использовался, формула выведена заново. При ZL = Z0 отражения нет, при ZL = 0 (короткое замыкание) Γ = −1, при разрыве цепи Γ = +1, у чисто реактивной нагрузки |Γ| = 1. Знак реактивной части: плюс — индуктивность, минус — ёмкость (соглашение e<sup>jωt</sup>).</p>
+<p><b>КСВ.</b> Вдоль линии модуль напряжения |U(z)| меняется от U⁺·(1 − |Γ|) в минимуме до U⁺·(1 + |Γ|) в максимуме; их отношение — коэффициент стоячей волны по напряжению: КСВ = (1 + |Γ|)/(1 − |Γ|). Обратная связь: |Γ| = (КСВ − 1)/(КСВ + 1). У нагрузки без реактивной части КСВ равен R/Z0 или Z0/R — тому, что больше. При |Γ| = 1 КСВ не ограничен; страница пишет это словом, а не числом.</p>
+<p><b>Обратные потери и потери на рассогласование.</b> Обратные потери RL = −20·lg|Γ| — это то же отношение падающей и отражённой мощностей в децибелах: RL = 10·lg(Pпад/Pотр). Чем больше RL, тем лучше согласование; RL = 0 дБ означает полное отражение. Потери на рассогласование показывают, какая доля мощности не доходит до нагрузки: ML = −10·lg(1 − |Γ|²). Они не равны обратным потерям: при RL = 13,98 дБ (|Γ| = 0,2) до нагрузки не доходит 4 % мощности, то есть ML = 0,1773 дБ.</p>
+<p><b>Как избегается потеря точности.</b> Разность 1 − |Γ|² при хорошем согласовании — вычитание двух почти равных чисел. Страница считает её тождеством 1 − |Γ|² = 4·R·Z0/((R + Z0)² + X²), КСВ − 1 — через |ZL − Z0|·(|ZL + Z0| + |ZL − Z0|)/(2·R·Z0), числитель Re Γ — как (R − Z0)(R + Z0) + X². Поэтому для нагрузки, отличающейся от Z0 на 10<sup>−9</sup> относительно, результат остаётся верным. При R = 0 (X ≠ 0) |Γ| = 1, потери на рассогласование и КСВ не ограничены.</p>
+<p><b>Обратная задача.</b> По заданному КСВ (или RL) находится |Γ| и круг радиуса |Γ| на диаграмме Смита, внутри которого должна лежать нагрузка. Для чисто активной нагрузки он превращается в отрезок: R от Z0/КСВ до Z0·КСВ. Например, при КСВ не больше 1,5 на линии 50 Ом сопротивление нагрузки может отличаться от 50 Ом от 33,33 до 75 Ом, то есть от −33,3 % до +50 %.</p>
+<table class="t"><tr><th scope="col">КСВ</th><th scope="col">|Γ|</th><th scope="col">RL, дБ</th><th scope="col">ML, дБ</th><th scope="col">Отражается, %</th></tr>
+<tr><td>1,1</td><td>0,04762</td><td>26,44</td><td>0,009859</td><td>0,2268</td></tr>
+<tr><td>1,2</td><td>0,09091</td><td>20,83</td><td>0,03604</td><td>0,8264</td></tr>
+<tr><td>1,5</td><td>0,2</td><td>13,98</td><td>0,1773</td><td>4</td></tr>
+<tr><td>2</td><td>0,3333</td><td>9,542</td><td>0,5115</td><td>11,11</td></tr>
+<tr><td>3</td><td>0,5</td><td>6,021</td><td>1,249</td><td>25</td></tr>
+<tr><td>5</td><td>0,6667</td><td>3,522</td><td>2,553</td><td>44,44</td></tr>
+<tr><td>10</td><td>0,8182</td><td>1,743</td><td>4,807</td><td>66,94</td></tr></table>
+<p><b>Чем отличается от соседних страниц.</b> Здесь нагрузка и Z0 — исходные данные. Откуда взять Z0 по размерам кабеля или полоски, показывает <a href="volnovoe-soprotivlenie-linii.html">калькулятор волнового сопротивления линии</a>. Как уменьшить КСВ индуктивностью и ёмкостью, считает <a href="lc-soglasovanie-g-zveno.html">калькулятор Г-образной цепи</a>. Сколько мощности теряется в самом кабеле, — <a href="poteri-v-koaksialnom-kabele.html">калькулятор потерь в коаксиальном кабеле</a>. Перевод отношений мощности в децибелы — <a href="decibel.html">калькулятор децибел</a>.</p>
+<h2>КСВ и коэффициент отражения: пример расчёта</h2>
+<p>Нагрузка 75 Ом на линии 50 Ом. Γ = (75 − 50)/(75 + 50) = 0,2, КСВ = 1,2/0,8 = <b>1,5</b>, RL = −20·lg 0,2 = <b>13,98 дБ</b>, до нагрузки доходит 1 − 0,04 = 96 % мощности, потери на рассогласование — <b>0,1773 дБ</b>. При падающей мощности 100 Вт отражается 4 Вт, в нагрузку уходит 96 Вт.</p>
+<p>Нагрузка 50 + j50 Ом на линии 50 Ом (индуктивная). Γ = j50/(100 + j50) = 0,2 + j0,4, то есть |Γ| = 0,4472 при фазе 63,43°. КСВ = 1,4472/0,5528 = <b>2,618</b>, RL = <b>6,99 дБ</b>, ML = −10·lg 0,8 = <b>0,9691 дБ</b>; при 100 Вт отражается 20 Вт. Реактивная часть нагрузки мощность не рассеивает, но увеличивает отражение.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Почему КСВ у передатчика часто меньше, чем у антенны?</h3><p>Отражённая волна на пути обратно идёт по кабелю с потерями и ослабляется, поэтому у передатчика она меньше, чем у нагрузки. Длинный кабель с большим затуханием «маскирует» плохую антенну: КСВ на входе выглядит лучше. Этот калькулятор считает КСВ в плоскости нагрузки; потери кабеля считает отдельная страница.</p><h3>Почему нельзя ввести R = 0 и X = 0?</h3><p>Это короткое замыкание: Γ = −1, КСВ не ограничен, мощность не поглощается. Страница не принимает такую пару как «нагрузку» — вероятнее всего, поля остались незаполненными. Чисто реактивная нагрузка (R = 0, X ≠ 0) допустима и даёт |Γ| = 1 и КСВ «не ограничен».</p><h3>Что значит «не ограничен» вместо числа?</h3><p>При |Γ| = 1 знаменатель 1 − |Γ| равен нулю и КСВ как отношение не имеет конечного значения. Для разрыва цепи или очень большого R можно ввести 1000000000000 Ом — получится очень большое, но конечное число.</p><h3>Чем потери на рассогласование отличаются от обратных потерь?</h3><p>RL показывает, насколько отражённая мощность меньше падающей. Потери на рассогласование показывают, какая доля падающей мощности не доходит до нагрузки. При RL = 20 дБ отражается 1 %, и до нагрузки не доходит 0,0436 дБ — для большинства задач это пренебрежимо, но допустимое значение определяет сама задача.</p>
+</div>
+</section>
+
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.wiley.com/en-us/Microwave+Engineering,+4th+Edition-p-9781118213636" rel="nofollow noopener" target="_blank">Microwave Engineering</a> — David M. Pozar, John Wiley &amp; Sons — Редакция 4th ed., 2011–2012 (ISBN 978-0-470-63155-3). Номера и названия разделов видны в выдаче поиска (оглавление издателя: 2.7 Lossy Transmission Lines, 3.5 Coaxial Line, 3.8 Microstrip Line; в оглавлении издания 2020 г. нумерация главы 2 иная: 2.3, 2.5, 2.6). Текст книги в окружении не читался — формулы выведены на странице, номер издания и разделов сверить по экземпляру — раздел глава 2: линия без потерь, нагруженная на произвольное сопротивление (по оглавлению издателя в выдаче); Γ = (ZL − Z0)/(ZL + Z0), КСВ = (1 + |Γ|)/(1 − |Γ|), RL = −20·lg|Γ|, доля мощности 1 − |Γ|² — выведены на странице, номера разделов и формул по книге не сверены — обращение 13.11.2026</li><li><a href="https://my.ece.utah.edu/~cfurse/ece5320/lecture/L3/L3.pdf" rel="nofollow noopener" target="_blank">Лекция L3 «Terminated lossless lines» курса ECE 5320</a> — University of Utah, Department of Electrical and Computer Engineering — Редакция на дату обращения; в выдаче указано, что тема соответствует главе 2 учебника Позара (Text Section 2-3): коэффициент отражения, КСВ — раздел Γ = (S − 1)/(S + 1), КСВ = (1 + |Γ|)/(1 − |Γ|), RL = −20·lg|Γ|: соотношения видны в выдаче в конспектах курсов, опирающихся на Позара (справка для сравнения) — обращение 13.11.2026</li><li><a href="https://openstax.org/books/university-physics-volume-2/pages/15-3-rlc-series-circuits-with-ac" rel="nofollow noopener" target="_blank">University Physics Volume 2</a> — OpenStax, Rice University — Редакция онлайн-редакция 2016 — раздел 15.3 RLC Series Circuits with AC — реактивные сопротивления XL = ωL, XC = 1/(ωC), знак реактивности — обращение 13.11.2026</li></ul><p><b>Допущения:</b></p><ul><li>Линия без потерь, одна частота; нагрузка линейная, пассивная, задана полным сопротивлением ZL = R + jX в плоскости подключения.</li><li>Z0 вещественно (для комплексного Z0 нужна иная формула Γ).</li><li>Соглашение e^(jωt): X > 0 — индуктивность, X < 0 — ёмкость; фаза Γ отнесена к плоскости нагрузки.</li></ul><p><b>Границы применимости:</b></p><ul><li>Потери кабеля не учитываются: КСВ у передатчика при длинном кабеле меньше КСВ на нагрузке.</li><li>Нагрузка с отрицательным R (активные цепи) и комплексное Z0 не поддерживаются.</li><li>Допустимый КСВ задаёт изготовитель оборудования; без него страница не делает вывода о пригодности и пишет «Недостаточно данных».</li><li>ZL антенны зависит от частоты, высоты и окружения: расчёт относится к введённому значению и не заменяет измерение антенным анализатором.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="lc-soglasovanie-g-zveno.html">Г-образная LC-цепь согласования</a></li><li><a href="volnovoe-soprotivlenie-linii.html">Волновое сопротивление линии</a></li><li><a href="poteri-v-koaksialnom-kabele.html">Потери в коаксиальном кабеле</a></li><li><a href="decibel.html">Децибелы: усиление и ослабление</a></li><li><a href="dlina-antenny.html">Длина антенны: диполь, вертикал, рамка</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function nf(x,p){if(!isFinite(x))return 'не определено';p=p||4;if(x===0)return '0';var s=Number(x.toPrecision(p));if(s===0)return '0';
+ var t=String(s);if(/e\+/i.test(t)){var ee=s.toExponential(p-1).split('e+');t=ee[0].replace('.','')+new Array(Number(ee[1])-(p-1)+1).join('0');if(s<0&&t.charAt(0)!=='-')t='-'+t;}
+ else if(/e/i.test(t)){t=s.toFixed(Math.min(100,Math.max(0,p-1-Math.floor(Math.log10(Math.abs(s))))));}
+ if(t.indexOf('.')>=0)t=t.replace(/0+$/,'').replace(/\.$/,'');return t.replace('.',',');}
+function pp(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return 4;for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return p;}return 12;}
+function fx(x,lim){return nf(x,pp(x,lim));}
+var PRE=[[1e12,'Т'],[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п'],[1e-15,'ф']];
+function pi_(x,p){var a=Math.abs(x),i;for(i=0;i<PRE.length-1;i++){if(a>=PRE[i][0]*(1-1e-12))break;}
+ if(i>0&&Math.abs(Number((a/PRE[i][0]).toPrecision(p)))>=1000)i--;return i;}
+function sv(x,unit,p){p=p||4;if(!isFinite(x))return 'не определено';if(x===0)return '0 '+unit;if(Math.abs(x)<1e-15*(1-1e-12))return 'менее 1 ф'+unit;
+ var i=pi_(x,p);return nf(x/PRE[i][0],p)+' '+PRE[i][1]+unit;}
+function sx(x,lim,unit){var i=pi_(x,4);var k=PRE[i][0];return fx(x/k,lim/k)+' '+PRE[i][1]+unit;}
+function sl(x,lim,unit){var i=pi_(x,4);var k=PRE[i][0];return nf(lim/k,pp(x/k,lim/k))+' '+PRE[i][1]+unit;}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function pc(fr){var v=fr*100;if(v===0)return '0 %';if(v<1e-4)return 'менее 0,0001 %';return nf(v,4)+' %';}
+function dbs(x){return x>0&&x<1e-4?'менее 0,0001 дБ':nf(x,4)+' дБ';}
+
+function sync(){var m=S('mode');hideF('r',m!=='load');hideF('x',m!=='load');hideF('s',m!=='vswr');hideF('rl',m!=='rl');hideF('slim',m==='vswr');}
+function init(){$('mode').addEventListener('change',sync);sync();}
+function gs(x){return x!==0&&Math.abs(x)<1e-4?'менее 0,0001':nf(x,4);}
+function sm1s(x){return x<1e-12?'менее 0,000000000001':nf(x,4);}
+function calc(){
+var m=S('mode'),z0=P('z0');
+if(isNaN(z0))return err('Введите волновое сопротивление Z0 числом в омах.');
+if(z0<=0||z0>1e5)return err('Волновое сопротивление Z0 — больше 0 и не больше 100000 Ом.');
+var pin=OPT('pin'),slim=m==='vswr'?null:OPT('slim');
+if(pin!==null){if(isNaN(pin))return err('Падающая мощность — число. Если она не нужна, оставьте поле пустым.');if(pin<=0||pin>1e9)return err('Падающая мощность — больше 0 и не больше 1000000000 Вт.');}
+if(slim!==null){if(isNaN(slim))return err('Допустимый КСВ — число. Если его нет в паспорте, оставьте поле пустым.');if(slim<1||slim>1e12)return err('Допустимый КСВ — от 1 до 1000000000000.');}
+var R=0,X=0,Sv=0,RLv=0,g,refl,deliv,ML,Sm1,Sinf=false,RLinf=false,gre=null,gim=null,ph=null,Nn=0,Dd=0;
+if(m==='load'){
+ R=P('r');X=P('x');
+ if(isNaN(R)||isNaN(X))return err('Введите R и X числами в омах: R — активная часть, X — реактивная со знаком (плюс — индуктивность, минус — ёмкость).');
+ if(R<0)return err('Активная часть R не может быть отрицательной: пассивная нагрузка не отдаёт мощность в линию.');
+ if(R>1e12||Math.abs(X)>1e12)return err('R и модуль X — не больше 1000000000000 Ом. Для разрыва цепи достаточно очень большого R.');
+ R=R+0;X=X+0;
+ if(R===0&&X===0)return err('R = 0 и X = 0 — короткое замыкание, а не нагрузка с определённым сопротивлением. Допустимо R = 0 только при X ≠ 0 (чисто реактивная нагрузка); для приближения к короткому замыканию введите малое R, например 0,001 Ом.');
+ Dd=Math.hypot(R+z0,X);Nn=Math.hypot(R-z0,X);
+ g=Nn/Dd;refl=g*g;
+ if(R===0){Sinf=true;deliv=0;ML=Infinity;Sm1=Infinity;}
+ else{Sm1=Nn*(Dd+Nn)/(2*R*z0);deliv=4*R*z0/(Dd*Dd);ML=10*Math.log1p(Nn*Nn/(4*R*z0))/Math.LN10;}
+ RLinf=Nn===0;RLv=RLinf?Infinity:(R===0?0:10*Math.log1p(4*R*z0/(Nn*Nn))/Math.LN10);
+ gre=((R-z0)*(R+z0)+X*X)/(Dd*Dd);gim=2*X*z0/(Dd*Dd);
+ if(Nn>0)ph=Math.atan2(gim,gre)*180/Math.PI;
+}else if(m==='vswr'){
+ Sv=P('s');
+ if(isNaN(Sv))return err('Введите КСВ числом.');
+ if(Sv<1)return err('КСВ не может быть меньше 1: при полном согласовании он равен 1, при полном отражении не ограничен.');
+ if(Sv>1e12)return err('КСВ — не больше 1000000000000.');
+ Sm1=Sv-1;g=Sm1/(Sv+1);refl=g*g;deliv=4*Sv/((Sv+1)*(Sv+1));ML=10*Math.log1p(Sm1*Sm1/(4*Sv))/Math.LN10;
+ RLinf=Sm1===0;RLv=RLinf?Infinity:10*Math.log1p(4*Sv/(Sm1*Sm1))/Math.LN10;
+}else{
+ RLv=P('rl');
+ if(isNaN(RLv))return err('Введите обратные потери RL числом в децибелах.');
+ if(RLv<0||RLv>1000)return err('Обратные потери RL — от 0 до 1000 дБ: у пассивной нагрузки они не бывают отрицательными, 0 дБ означает полное отражение.');
+ var a=RLv*Math.LN10/20,ex=Math.expm1(-a);
+ g=Math.exp(-a);refl=g*g;deliv=-Math.expm1(-2*a);Sinf=RLv===0;
+ Sm1=Sinf?Infinity:2*g/(-ex);ML=Sinf?Infinity:(refl<0.5?-10*Math.log1p(-refl)/Math.LN10:-10*Math.log10(deliv));
+}
+Sv=1+Sm1;
+var h='';
+if(m==='load')h+=row('Нормированная нагрузка z = ZL / Z0',nf(R/z0)+' + j·'+nf(X/z0)+(X<0?' (ёмкостная)':(X>0?' (индуктивная)':' (чисто активная)')));
+h+=row('Модуль коэффициента отражения |Γ|',gs(g));
+if(m==='load')h+=row('Коэффициент отражения Γ = (ZL − Z0)/(ZL + Z0)',gs(gre)+(gim<0?' − j·':' + j·')+gs(Math.abs(gim))+(Nn>0?'; фаза '+(ph!==0&&Math.abs(ph)<1e-4?'около 0 (меньше 0,0001°)':nf(ph,4)+'°'):'; фаза не определена (Γ = 0)'));
+h+=row('КСВ = (1 + |Γ|) / (1 − |Γ|)',Sinf?'не ограничен (|Γ| = 1, вся мощность отражается)':nf(Sv,4)+(Sm1<1e-3?' (КСВ − 1 = '+sm1s(Sm1)+')':''));
+h+=row('Обратные потери RL = −20·lg|Γ|',RLinf?'не ограничены (Γ = 0, отражения нет)':dbs(RLv));
+h+=row('Потери на рассогласование −10·lg(1 − |Γ|²)',Sinf?'не ограничены (до нагрузки доходит 0 % мощности)':dbs(ML));
+h+=row('Отражается от падающей мощности |Γ|²',pc(refl));
+h+=row('Доходит до нагрузки 1 − |Γ|²',Sinf?'0 %':pc(deliv));
+if(pin!==null){h+=row('Отражённая мощность при падающей '+sv(pin,'Вт'),sv(pin*refl,'Вт'));h+=row('Мощность в нагрузке',sv(pin*deliv,'Вт'));}
+if(m!=='load'){
+ if(Sinf)h+=row('Допустимый разброс чисто активной нагрузки','не ограничен: при |Γ| = 1 допустимо любое R, в том числе 0 и разрыв');
+ else{h+=row('Допустимый разброс чисто активной нагрузки: от Z0/КСВ до Z0·КСВ','от '+sv(z0/Sv,'Ом')+' до '+sv(z0*Sv,'Ом'));
+  h+=row('Отклонение R от Z0, при котором КСВ не превышает '+nf(Sv,4),Sm1===0?'0 % (только R = Z0)':(Sm1<1e-6?'менее 0,0001 % в обе стороны':'от −'+nf(100*Sm1/Sv,4)+' % до +'+nf(100*Sm1,4)+' %'));}
+ h+=row('Допустимый круг на диаграмме Смита','|Γ| '+(g!==0&&g<1e-4?'менее 0,0001':'не больше '+nf(g,4))+': нагрузка любого вида внутри этого круга даёт КСВ не больше '+(Sinf?'неограниченного':nf(Sv,4)));
+}
+var st;
+if(m==='vswr')st='Оценка: при КСВ не более '+nf(Sv,4)+' отражается не более '+pc(refl)+' падающей мощности, потери на рассогласование не более '+(Sinf?'неограниченных':dbs(ML))+'; допустимый КСВ для оборудования здесь задаёт сам пользователь';
+else if(slim===null)st='Недостаточно данных: допустимый КСВ по паспорту оборудования не задан — вывод о пригодности согласования не делается. По введённым данным КСВ '+(Sinf?'не ограничен':nf(Sv,4))+', |Γ| = '+gs(g);
+else if(Sinf)st='Риск: КСВ не ограничен (|Γ| = 1), допустимый по паспорту — '+nf(slim,4)+'. Нагрузка полностью отражает мощность';
+else if(gt(Sv,slim))st='Риск: КСВ '+fx(Sv,slim)+' больше допустимого '+nf(slim,pp(Sv,slim))+' по паспорту оборудования (для введённой нагрузки на одной частоте)';
+else st='Оценка: КСВ '+fx(Sv,slim)+' не больше допустимого '+nf(slim,pp(Sv,slim))+' по паспорту; нагрузка введена на одной частоте — на других частотах и при изменении окружения антенны КСВ другой';
+var n='Модель — линия без потерь, одна частота. ZL — полное сопротивление нагрузки в плоскости её подключения к линии; фаза Γ тоже отнесена к этой плоскости. Потери в самом кабеле уменьшают КСВ у передатчика по сравнению с КСВ на нагрузке (длинный кабель с большим затуханием скрывает плохое согласование) — этот расчёт относится к нагрузке. Потери на рассогласование — доля мощности, не дошедшая до нагрузки, а не КПД антенны и не потери в кабеле. ';
+n+='Значения вблизи согласования считаются по тождествам без вычитания близких чисел (1 − |Γ|² = 4·R·Z0 / |ZL + Z0|²), поэтому точны и при КСВ, очень близком к 1.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>

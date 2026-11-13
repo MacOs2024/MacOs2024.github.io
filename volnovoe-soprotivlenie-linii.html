@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Волновое сопротивление линии — ВольтКальк</title>
+<meta name="description" content="Расчёт волнового сопротивления Z0 коаксиального кабеля, двухпроводной линии и микрополосковой линии (формулы Хаммерстада–Йенсена с областью применимости) по размерам и диэлектрической проницаемости, эффективная проницаемость, фазовая скорость, погонные индуктивность и ёмкость, а также подбор диаметра жилы или ширины полоски под заданное Z0.">
+<link rel="canonical" href="https://macos2024.github.io/volnovoe-soprotivlenie-linii.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВольтКальк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Волновое сопротивление линии — ВольтКальк">
+<meta property="og:description" content="Расчёт волнового сопротивления Z0 коаксиального кабеля, двухпроводной линии и микрополосковой линии (формулы Хаммерстада–Йенсена с областью применимости) по размерам и диэлектрической проницаемости, эффективная проницаемость, фазовая скорость, погонные индуктивность и ёмкость, а также подбор диаметра жилы или ширины полоски под заданное Z0.">
+<meta property="og:url" content="https://macos2024.github.io/volnovoe-soprotivlenie-linii.html">
+<meta property="og:image" content="https://macos2024.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ВольтКальк — инженерные калькуляторы по электрике">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Волновое сопротивление линии","url":"https://macos2024.github.io/volnovoe-soprotivlenie-linii.html","description":"Расчёт волнового сопротивления Z0 коаксиального кабеля, двухпроводной линии и микрополосковой линии (формулы Хаммерстада–Йенсена с областью применимости) по размерам и диэлектрической проницаемости, эффективная проницаемость, фазовая скорость, погонные индуктивность и ёмкость, а также подбор диаметра жилы или ширины полоски под заданное Z0.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Требуется JavaScript","inLanguage":"ru","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ВольтКальк","url":"https://macos2024.github.io/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://macos2024.github.io/"},{"@type":"ListItem","position":2,"name":"Волновое сопротивление линии","item":"https://macos2024.github.io/volnovoe-soprotivlenie-linii.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Что такое εэфф у микрополоска?","acceptedAnswer":{"@type":"Answer","text":"Поле полоски идёт и в подложке, и в воздухе над ней. Эффективная проницаемость — такое значение однородной среды, при котором линия имела бы те же Z0 и скорость; она лежит между 1 и εr. Именно по εэфф считаются скорость, длина волны и электрические длины отрезков."}},{"@type":"Question","name":"Почему расчёт микрополоска отказывается работать при W/h меньше 0,01 или больше 100?","acceptedAnswer":{"@type":"Answer","text":"Это границы области, где авторы формулы заявляют точность. За ними значение выдавалось бы без оценки погрешности. Для таких линий нужен электромагнитный расчёт или данные изготовителя платы."}},{"@type":"Question","name":"Учитывает ли страница толщину меди и частоту?","acceptedAnswer":{"@type":"Answer","text":"Нет. Формула — квазистатическая, для полоски нулевой толщины. Толщина меди слегка уменьшает Z0, а на высоких частотах εэфф растёт (дисперсия). Для точного 50-омного трека на плате ориентируйтесь на стек изготовителя."}},{"@type":"Question","name":"Зачем в двухпроводной линии arcosh, а не просто логарифм?","acceptedAnswer":{"@type":"Answer","text":"Приближение ln(2D/d) верно, когда провода далеко друг от друга. Когда расстояние сравнимо с диаметром, оно завышает Z0; arcosh(D/d) точен для любых D больше d."}}]}]}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111301996', 'ym');
+    ym(111301996, 'init', {ssr:true, webvisor:false, clickmap:false, trackLinks:true, accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika -->
+<!-- Yandex.RTB -->
+<script type="text/javascript">window.yaContextCb=window.yaContextCb||[];</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f4f5f2;color:#1c2422;line-height:1.55;font-size:16px}
+a{color:#0d5c50}
+.top{background:#0f2e2a;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:.2px}
+.brand em{color:#f5b942;font-style:normal}
+.top a.all{color:#cfe3df;text-decoration:none;font-size:14px}
+main{max-width:780px;margin:0 auto;padding:16px}
+.crumbs{font-size:13px;color:#5c6660;margin:4px 0 10px}
+.crumbs a{color:#5c6660}
+h1{font-size:25px;line-height:1.25;margin:6px 0 8px}
+.intro{color:#3d4642;margin:0 0 14px}
+.card{background:#fff;border:1px solid #e2e6e0;border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(15,46,42,.05)}
+.f{margin:0 0 12px}
+.f label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.fw{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;padding:10px 12px;font-size:17px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;color:#1c2422}
+input[type=text]:focus{outline:2px solid #0d5c50;border-color:#0d5c50}
+select{padding:10px;font-size:15px;border:1px solid #8a938d;border-radius:9px;background:#fbfcfa;max-width:100%;color:#1c2422}
+.u{font-size:15px;color:#5c6660;min-width:34px}
+.hint{font-size:13px;color:#6b746e;margin-top:3px}
+.btn{display:block;width:100%;margin-top:6px;padding:13px;font-size:17px;font-weight:700;color:#102a26;background:#f5b942;border:none;border-radius:10px;cursor:pointer}
+.btn:hover{background:#f0ad24}
+.btn:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #0d5c50;outline-offset:2px}
+.btn2{margin-top:2px;margin-bottom:10px;padding:8px 12px;font-size:14px;background:#eef1ec;border:1px solid #cdd4cf;border-radius:8px;cursor:pointer}
+.yan-ad{margin:24px 0;max-width:100%}
+.yan-ad-label{font-size:12px;color:#68756e;margin-bottom:6px}
+.yan-ad-slot{width:100%;min-height:250px}
+.result{display:none;margin-top:14px;border-top:1px dashed #d8ded8;padding-top:12px}
+.result.on{display:block}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;background:#fdf6e7;border-left:4px solid #f5b942;border-radius:6px;margin-bottom:6px;flex-wrap:wrap}
+.rr b{font-family:Consolas,Menlo,monospace;font-size:17px;font-weight:700}
+.rnote{font-size:14px;color:#4b5450;background:#eef4f0;border-radius:6px;padding:8px 10px;margin-top:6px}
+.rerr{background:#fdeaea;border-left:4px solid #d4544a;padding:9px 11px;border-radius:6px;font-size:15px}
+.article{margin-top:26px}
+.article h2{font-size:20px;margin:22px 0 8px}
+.article p{margin:8px 0}
+.article a{overflow-wrap:anywhere}
+.article ul{margin:8px 0;padding-left:22px}
+.formula{background:#fff;border:1px solid #e2e6e0;border-radius:9px;padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:16px;overflow-x:auto;margin:10px 0}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid #dde2dc;padding:6px 8px;text-align:center}
+table.t th{background:#eef1ec}
+.faq h3{font-size:16px;margin:14px 0 4px}
+.related ul{padding-left:20px}
+.src{margin-top:26px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:14px 16px;font-size:14px}
+.src h2{font-size:17px;margin:0 0 8px}
+.src ul{margin:6px 0;padding-left:20px}
+.src .st{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:2px}
+.src .st-verified{background:#e3f3e8;color:#1c5c33}
+.src .st-agent{background:#fdf6e7;color:#7a5b10}
+.src .st-estimate{background:#eef1ec;color:#4b5450}
+.src .st-pending{background:#fdeaea;color:#a3352b}
+footer{margin:34px auto 0;max-width:780px;padding:18px 16px 26px;font-size:13px;color:#5c6660;border-top:1px solid #e2e6e0}
+.privacy-settings{margin:4px 0 0;padding:0;border:0;background:transparent;color:#0d5c50;text-decoration:underline;font:inherit;cursor:pointer}
+.hero{padding:22px 0 6px}
+.hero h1{font-size:27px}
+.hero p{color:#3d4642}
+.searchwrap{position:relative;margin:10px 0 4px}
+.search{width:100%;padding:12px 40px 12px 14px;font-size:17px;border:1px solid #cdd4cf;border-radius:10px;background:#fff}
+#qclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;font-size:22px;line-height:1;color:#6b746e;cursor:pointer;display:none}
+#qclear.on{display:block}
+#empty{margin:18px 0;padding:14px 16px;background:#fff;border:1px solid #e2e6e0;border-radius:12px;color:#4b5450}
+#empty[hidden]{display:none}
+.cat{font-size:20px;margin:26px 0 10px;border-left:4px solid #f5b942;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.ccard{display:block;background:#fff;border:1px solid #e2e6e0;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1c2422}
+.ccard:hover{border-color:#0d5c50}
+.ccard b{display:block;color:#0d5c50;margin-bottom:3px;font-size:15px}
+.ccard span{font-size:13px;color:#5c6660}
+@media(max-width:520px){
+h1{font-size:21px}.hero h1{font-size:22px}.rr{flex-direction:column;gap:2px}
+table.t{table-layout:fixed;font-size:13px}
+table.t th,table.t td{padding:6px 4px;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.pdfbtn{display:none;width:100%;margin-top:10px;padding:11px;font-size:15px;font-weight:600;color:#0f2e2a;background:#eef4f0;border:1px solid #b9cdc5;border-radius:9px;cursor:pointer}
+.pdfbtn:hover{background:#e2ece7}
+.pdfbtn.on{display:block}
+#printhead{display:none}
+#printfoot{display:none}
+@media print{
+ @page{margin:16mm 14mm}
+ body{background:#fff;font-size:12pt}
+ .yan-ad{display:none!important}
+ .top,footer,.crumbs,.article,.related,.src,.pdfbtn,.btn,.btn2,.hint,#go{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ h1{font-size:16pt;margin:0 0 4px}
+ .intro{display:none}
+ .card{border:none;box-shadow:none;padding:0;background:#fff}
+ #printhead{display:block;border-bottom:2px solid #0f2e2a;padding-bottom:6px;margin-bottom:10px}
+ #printhead .pt{font-weight:700;font-size:13pt;color:#0f2e2a}
+ #printhead .pd{font-size:10pt;color:#555}
+ .f{display:none!important}
+ #pvals{font-size:11pt}
+ #pvals div{padding:2.5px 0;border-bottom:1px dotted #bbb;page-break-inside:avoid}
+ #pvals b{font-weight:700}
+ .result{display:block!important;border-top:2px solid #0f2e2a;margin-top:10px;padding-top:8px}
+ .rr{background:#f2f2f2;border-left:3px solid #444;page-break-inside:avoid}
+ .rnote{font-size:10pt;background:#f7f7f7}
+ #printfoot{display:block!important;margin-top:14px;padding-top:6px;border-top:1px solid #bbb;font-size:9pt;color:#555}
+}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html">⚡ Вольт<em>Кальк</em></a><a class="all" href="index.html">Все калькуляторы</a></header>
+<main>
+<nav class="crumbs"><a href="index.html">Главная</a> › Электроника</nav>
+<h1>Волновое сопротивление линии</h1>
+<p class="intro">Калькулятор находит волновое сопротивление <b>Z0</b> линии по её размерам и диэлектрической проницаемости — для коаксиального кабеля, двухпроводной линии и микрополоска на печатной плате — вместе с фазовой скоростью и погонными индуктивностью и ёмкостью. Обратный режим подбирает диаметр жилы или ширину полоски под нужное Z0. Что делать с Z0 дальше: <a href="ksv-otrazhenie.html">КСВ и отражение от нагрузки</a>, <a href="poteri-v-koaksialnom-kabele.html">потери в кабеле</a>, <a href="lc-soglasovanie-g-zveno.html">согласование Г-образной цепью</a>.</p>
+<section class="card">
+<div id="printhead"><div class="pt">⚡ ВольтКальк — Волновое сопротивление линии</div><div class="pd" id="pdate"></div></div>
+<div id="pvals"></div>
+<div class="f" id="f_mode"><label for="mode">Что найти</label><div class="fw"><select id="mode"><option value="fwd" selected>Z0 по размерам линии</option><option value="inv">Размер под заданное Z0: диаметр жилы или ширину полоски</option></select></div></div><div class="f" id="f_ty"><label for="ty">Тип линии</label><div class="fw"><select id="ty"><option value="coax" selected>Коаксиальный кабель</option><option value="twin">Двухпроводная линия</option><option value="strip">Микрополосковая линия</option></select></div></div><div class="f" id="f_cD"><label for="cD">Внутренний диаметр экрана D (диаметр диэлектрика)</label><div class="fw"><input id="cD" type="text" inputmode="decimal" autocomplete="off" value="3" placeholder=""><select id="cD_unit" class="u" aria-label="Единицы: Внутренний диаметр экрана D (диаметр диэлектрика)"><option value="0.001" selected>мм</option><option value="0.01">см</option><option value="0.0254">дюйм</option><option value="1e-06">мкм</option></select></div></div><div class="f" id="f_cd"><label for="cd">Диаметр центральной жилы d</label><div class="fw"><input id="cd" type="text" inputmode="decimal" autocomplete="off" value="0.9" placeholder=""><select id="cd_unit" class="u" aria-label="Единицы: Диаметр центральной жилы d"><option value="0.001" selected>мм</option><option value="0.01">см</option><option value="0.0254">дюйм</option><option value="1e-06">мкм</option></select></div><div class="hint">У многопроволочной жилы — диаметр описанной окружности</div></div><div class="f" id="f_tD"><label for="tD">Расстояние между осями проводов D</label><div class="fw"><input id="tD" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder=""><select id="tD_unit" class="u" aria-label="Единицы: Расстояние между осями проводов D"><option value="0.001" selected>мм</option><option value="0.01">см</option><option value="0.0254">дюйм</option><option value="1e-06">мкм</option></select></div></div><div class="f" id="f_td"><label for="td">Диаметр каждого провода d</label><div class="fw"><input id="td" type="text" inputmode="decimal" autocomplete="off" value="1" placeholder=""><select id="td_unit" class="u" aria-label="Единицы: Диаметр каждого провода d"><option value="0.001" selected>мм</option><option value="0.01">см</option><option value="0.0254">дюйм</option><option value="1e-06">мкм</option></select></div><div class="hint">D должно быть больше d: провода не касаются</div></div><div class="f" id="f_mW"><label for="mW">Ширина полоски W</label><div class="fw"><input id="mW" type="text" inputmode="decimal" autocomplete="off" value="3.06" placeholder=""><select id="mW_unit" class="u" aria-label="Единицы: Ширина полоски W"><option value="0.001" selected>мм</option><option value="0.01">см</option><option value="0.0254">дюйм</option><option value="1e-06">мкм</option></select></div><div class="hint">Область применимости формулы: W/h от 0,01 до 100</div></div><div class="f" id="f_mh"><label for="mh">Толщина подложки h между полоской и экраном</label><div class="fw"><input id="mh" type="text" inputmode="decimal" autocomplete="off" value="1.6" placeholder=""><select id="mh_unit" class="u" aria-label="Единицы: Толщина подложки h между полоской и экраном"><option value="0.001" selected>мм</option><option value="0.01">см</option><option value="0.0254">дюйм</option><option value="1e-06">мкм</option></select></div></div><div class="f" id="f_er"><label for="er">Относительная диэлектрическая проницаемость εr</label><div class="fw"><input id="er" type="text" inputmode="decimal" autocomplete="off" value="2.25" placeholder=""></div><div class="hint">Коаксиал и двухпроводная — диэлектрик, заполняющий линию (полиэтилен около 2,25 — справка, уточняйте по паспорту); микрополоск — подложка, для неё от 1 до 128 (не включая 128)</div></div><div class="f" id="f_z0t"><label for="z0t">Требуемое Z0</label><div class="fw"><input id="z0t" type="text" inputmode="decimal" autocomplete="off" value="50" placeholder=""><span class="u">Ом</span></div></div><div class="f" id="f_f"><label for="f">Рабочая частота (необязательно)</label><div class="fw"><input id="f" type="text" inputmode="decimal" autocomplete="off" value="" placeholder=""><select id="f_unit" class="u" aria-label="Единицы: Рабочая частота (необязательно)"><option value="1000000.0" selected>МГц</option><option value="1000000000.0">ГГц</option><option value="1000.0">кГц</option></select></div><div class="hint">Нужна для длины волны в линии; пусто — длина волны не считается</div></div>
+<button id="go" class="btn" type="button">Рассчитать</button>
+<div id="res" class="result" aria-live="polite"></div>
+<button id="pdf" class="pdfbtn" type="button">📄 Сохранить расчёт в PDF</button>
+<div id="printfoot">Расчёт выполнен на ВольтКальк (https://macos2024.github.io). Носит справочный характер и не заменяет проект и нормативные документы (ПУЭ, ГОСТ).</div>
+</section>
+<aside class="yan-ad" aria-label="Реклама"><div class="yan-ad-label">Реклама</div><div id="yandex_rtb_R-A-19823062-1" class="yan-ad-slot"></div></aside>
+<script type="text/javascript">
+window.yaContextCb.push(function(){
+Ya.Context.AdvManager.render({blockId:"R-A-19823062-1",renderTo:"yandex_rtb_R-A-19823062-1"});
+});
+</script>
+<section class="article">
+<h2>Волновое сопротивление линии: как считается</h2>
+<div class="formula">Коаксиал: Z0 = η0 / (2π·√εr) · ln(D/d) ≈ 59,96 / √εr · ln(D/d) Ом<br>Двухпроводная: Z0 = η0 / (π·√εr) · arcosh(D/d) ≈ 119,92 / √εr · ln(2D/d) при D ≫ d<br>Микрополоск (Хаммерстад–Йенсен), u = W/h:<br>&nbsp;&nbsp;Z0 = η0 / (2π·√εэфф) · ln( f(u)/u + √(1 + (2/u)²) ),&nbsp;&nbsp;f(u) = 6 + (2π − 6)·exp(−(30,666/u)<sup>0,7528</sup>)<br>&nbsp;&nbsp;εэфф = (εr + 1)/2 + (εr − 1)/2 · (1 + 10/u)<sup>−a(u)·b(εr)</sup><br>&nbsp;&nbsp;a(u) = 1 + ln[(u⁴ + (u/52)²) / (u⁴ + 0,432)] / 49 + ln[1 + (u/18,1)³] / 18,7,&nbsp;&nbsp;b(εr) = 0,564·((εr − 0,9)/(εr + 3))<sup>0,053</sup><br>Для всех: v = c / √εэфф,&nbsp;&nbsp;L′ = Z0·√εэфф / c,&nbsp;&nbsp;C′ = √εэфф / (c·Z0)</div>
+<p><b>Откуда формулы коаксиала и двухпроводной линии.</b> У линии с поперечным электромагнитным полем (ТЭМ) волновое сопротивление Z0 = √(L′/C′), а скорость v = 1/√(L′C′). Погонная индуктивность и ёмкость находятся из статики. У коаксиала заряд q на единицу длины жилы создаёт поле E = q/(2π·ε·r); интегрируя от d/2 до D/2, получаем напряжение (q/(2πε))·ln(D/d) и ёмкость C′ = 2πε/ln(D/d), а индуктивность L′ = (μ0/2π)·ln(D/d). Тогда Z0 = η0/(2π√εr)·ln(D/d), где η0 = μ0·c = 376,7303 Ом — волновое сопротивление вакуума (CODATA 2018). У двух параллельных проводов с диаметром d и расстоянием D между осями метод изображений даёт C′ = πε/arcosh(D/d), L′ = (μ0/π)·arcosh(D/d), откуда Z0 = η0/(π√εr)·arcosh(D/d). Это совпадает с ln(2D/d) только при D, много большем d; страница считает точный arcosh. Для проверки ёмкость двух цилиндров была посчитана численно методом зарядов-нитей — совпадение с arcosh до 14 знаков. Таблица параметров L, C, R, G этих линий есть в главе 2 учебника Позара; текст таблицы здесь не использовался.</p>
+<p><b>Микрополосок.</b> Поле такой линии частично в подложке и частично в воздухе, поэтому оно не чисто ТЭМ, а квазиТЭМ: вводят эффективную проницаемость εэфф между 1 и εr. Хаммерстад и Йенсен (IEEE MTT-S International Microwave Symposium Digest, Вашингтон, 1980, с. 407–409) предложили замкнутые аппроксимации εэфф(u) и Z0(u) для u = W/h, их же использует Qucs. Страница берёт формулы по технической документации Qucs (оригинал статьи не открывался). В документации Qucs указаны погрешности аппроксимации: εэфф лучше 0,2 % при εr меньше 128 и W/h от 0,01 до 100; Z0 при εr = 1 лучше 0,01 % при W/h не больше 1 и 0,03 % при W/h не больше 1000. Вне W/h от 0,01 до 100 и вне εr от 1 до 128 расчёт не выполняется. В выдаче по документации Qucs итоговая формула записана с делением на √εr; по физике деление идёт на √εэфф (так и считает страница), и такие значения сходятся с независимой аппроксимацией Шнайдера–Уилера (она даёт, например, 49,21 Ом против 49,29 Ом при W = h и εr = 9,8). Запись в выдаче — вопрос к ручной сверке с оригиналом.</p>
+<p><b>Чего формула не знает.</b> Толщина полоски (меди) уменьшает Z0 и увеличивает εэфф; для неё в документации Qucs есть поправка Уилера с изменениями Хаммерстада и Йенсена, но запись в выдаче вызывает вопросы к одному из слагаемых, поэтому страница её не использует. Дисперсия — рост εэфф с частотой, шероховатость меди и паяльная маска тоже не учитываются. Для печатных плат Z0 лучше заказывать у изготовителя по стеку, который он гарантирует.</p>
+<p><b>Обратный режим.</b> Для коаксиала и двухпроводной линии отношение D/d находится обращением формулы: D/d = exp(2π·Z0·√εr/η0) для коаксиала и D/d = ch(π·Z0·√εr/η0) для двухпроводной. Для микрополоска Z0(u) монотонно убывает при росте u на всей области применимости, и ширина находится делением отрезка по u от 0,01 до 100; если нужное Z0 для заданной проницаемости в этот диапазон не попадает, расчёт не выполняется.</p>
+<table class="t"><tr><th scope="col">Линия</th><th scope="col">Размеры</th><th scope="col">εr</th><th scope="col">Z0, Ом</th></tr>
+<tr><td>Коаксиал</td><td>D/d = 3,333</td><td>2,25</td><td>48,13</td></tr>
+<tr><td>Двухпроводная</td><td>D/d = 10</td><td>1</td><td>358,9</td></tr>
+<tr><td>Микрополоск</td><td>W/h = 1</td><td>9,8</td><td>49,29</td></tr>
+<tr><td>Микрополоск</td><td>W/h = 2</td><td>4,4</td><td>48,69</td></tr></table>
+<p><b>Чем отличается от соседних страниц.</b> Страница даёт Z0 как исходное число для <a href="ksv-otrazhenie.html">расчёта КСВ и коэффициента отражения</a> и для <a href="lc-soglasovanie-g-zveno.html">согласования Г-образной цепью</a>. Полное затухание кабеля определяет <a href="poteri-v-koaksialnom-kabele.html">калькулятор потерь в коаксиальном кабеле</a>. Длину простой штыревой антенны по частоте даёт <a href="dlina-antenny.html">калькулятор длины антенны</a>.</p>
+<h2>Волновое сопротивление линии: пример расчёта</h2>
+<p>Коаксиал с диаметром диэлектрика D = 3 мм, жилой d = 0,9 мм и полиэтиленовой изоляцией (εr = 2,25 — условное значение, берите из паспорта кабеля): ln(3/0,9) = 1,204, Z0 = 59,96/1,5·1,204 = <b>48,13 Ом</b>. Скорость v = c/1,5 = 199 862 км/с (коэффициент укорочения 0,6667), L′ = 240,8 нГн/м, C′ = 104,0 пФ/м. Для 50 Ом при том же D жила нужна d = <b>858,8 мкм</b> (0,8588 мм).</p>
+<p>Микрополоск на FR-4 (εr = 4,4 — условное значение) с подложкой h = 1,6 мм: для Z0 = 50 Ом нужно W/h = 1,9138, то есть W = <b>3,062 мм</b>; при этом εэфф = 3,331 и скорость 164 254 км/с. На частоте 1 ГГц длина волны в такой линии 164,3 мм, четверть волны — 41,06 мм. Для подложки с εr = 9,8 той же толщины ширина под 50 Ом — 1,554 мм.</p>
+<div class="faq"><h2>Частые вопросы</h2>
+<h3>Что такое εэфф у микрополоска?</h3><p>Поле полоски идёт и в подложке, и в воздухе над ней. Эффективная проницаемость — такое значение однородной среды, при котором линия имела бы те же Z0 и скорость; она лежит между 1 и εr. Именно по εэфф считаются скорость, длина волны и электрические длины отрезков.</p><h3>Почему расчёт микрополоска отказывается работать при W/h меньше 0,01 или больше 100?</h3><p>Это границы области, где авторы формулы заявляют точность. За ними значение выдавалось бы без оценки погрешности. Для таких линий нужен электромагнитный расчёт или данные изготовителя платы.</p><h3>Учитывает ли страница толщину меди и частоту?</h3><p>Нет. Формула — квазистатическая, для полоски нулевой толщины. Толщина меди слегка уменьшает Z0, а на высоких частотах εэфф растёт (дисперсия). Для точного 50-омного трека на плате ориентируйтесь на стек изготовителя.</p><h3>Зачем в двухпроводной линии arcosh, а не просто логарифм?</h3><p>Приближение ln(2D/d) верно, когда провода далеко друг от друга. Когда расстояние сравнимо с диаметром, оно завышает Z0; arcosh(D/d) точен для любых D больше d.</p>
+</div>
+</section>
+
+<section class="src"><h2>Основание расчёта<span class="st st-estimate">Оценка, не нормативный вердикт</span></h2><p><b>Источники:</b></p><ul><li><a href="https://www.wiley.com/en-us/Microwave+Engineering,+4th+Edition-p-9781118213636" rel="nofollow noopener" target="_blank">Microwave Engineering</a> — David M. Pozar, John Wiley &amp; Sons — Редакция 4th ed., 2011–2012 (ISBN 978-0-470-63155-3). Номера и названия разделов видны в выдаче поиска (оглавление издателя: 2.7 Lossy Transmission Lines, 3.5 Coaxial Line, 3.8 Microstrip Line; в оглавлении издания 2020 г. нумерация главы 2 иная: 2.3, 2.5, 2.6). Текст книги в окружении не читался — формулы выведены на странице, номер издания и разделов сверить по экземпляру — раздел глава 2: параметры L, C, R, G коаксиальной, двухпроводной и плоской линий (Table 2.1 — по выдаче, текст не читался), 3.5 Coaxial Line; 3.8 Microstrip Line (названия по оглавлению издателя в выдаче), формулы Z0 коаксиала и двухпроводной линии выведены на странице из электростатики цилиндров — обращение 13.11.2026</li><li><a href="https://ieeexplore.ieee.org/document/1124303" rel="nofollow noopener" target="_blank">Accurate Models for Microstrip Computer-Aided Design</a> — E. Hammerstad, O. Jensen; IEEE MTT-S International Microwave Symposium Digest — Редакция Вашингтон, 28–30 мая 1980, том 80, с. 407–409, DOI 10.1109/MWSYM.1980.1124303. В выдаче видны библиография и аннотация (импеданс, эффективная проницаемость, затухание одиночной и связанных линий, дисперсия и конечная толщина). Полный текст не открывался — формулы взяты из пересказа Qucs; оригинал сверить — раздел формулы Z0(u) и εэфф(u) для одиночной микрополосковой линии — по пересказу Qucs — обращение 13.11.2026</li><li><a href="https://qucs.sourceforge.net/tech/node75.html" rel="nofollow noopener" target="_blank">Qucs Technical Documentation: Microstrip Line (single line, Hammerstad and Jensen model)</a> — Qucs project (qucs.sourceforge.net) — Редакция онлайн-версия на дату обращения; разделы с формулами 11.4–11.6 (Z0, f(u)), 11.15–11.18 (εэфф, a(u), b(εr)); в выдаче итоговая формула Z_L записана с √εr — на странице используется √εэфф (сверено с независимой аппроксимацией Шнайдера–Уилера), запись сверить с оригиналом — раздел Z_L1, f_u = 6 + (2π − 6)·exp(−(30,666·h/W)^0,7528); εэфф, a(u), b(εr), заявленные точности: Z0 лучше 0,01 % при W/h ≤ 1 и 0,03 % при W/h ≤ 1000; εэфф лучше 0,2 % при εr &lt; 128 и 0,01 ≤ W/h ≤ 100, поправка на толщину полоски не использована (запись в выдаче вызывает вопросы) — обращение 13.11.2026</li><li><a href="https://www.physics.nist.gov/cuu/pdf/all_2018.pdf" rel="nofollow noopener" target="_blank">CODATA Recommended Values of the Fundamental Physical Constants: 2018</a> — NIST — Редакция CODATA 2018; Z0 = 376,730 313 668(57) Ом видно в выдаче двумя запросами; c = 299 792 458 м/с (точное значение по определению метра) — раздел волновое сопротивление вакуума Z0 = μ0·c; Z0 = 376,730 313 668 Ом — обращение 13.11.2026</li></ul><p><b>Допущения:</b></p><ul><li>Коаксиал и двухпроводная линия — идеальная ТЭМ-линия: однородный диэлектрик, круглые проводники, нет потерь и соседних проводящих тел.</li><li>Микрополосок — квазистатическая модель Хаммерстада–Йенсена для полоски нулевой толщины на однородной подложке с экраном снизу; εr и h берутся из паспорта платы.</li><li>Скорость, L′ и C′ связаны с Z0 и εэфф соотношениями ТЭМ-линии.</li></ul><p><b>Границы применимости:</b></p><ul><li>Микрополосок рассчитывается только при W/h от 0,01 до 100 и εr от 1 до 128 (не включая 128); вне области расчёта нет.</li><li>Толщина меди, шероховатость, дисперсия, паяльная маска и соседние проводники не учитываются; Z0 платы уточняют у изготовителя.</li><li>Формула Хаммерстада–Йенсена взята из пересказа Qucs; оригинал 1980 года не сверялся — в notes аудита это вынесено в ручную сверку.</li><li>Для вспененной или частично воздушной изоляции кабеля вместо εr нужно вводить эффективное значение.</li></ul></section>
+<section class="related"><h2>Смотрите также</h2><ul><li><a href="ksv-otrazhenie.html">КСВ и коэффициент отражения</a></li><li><a href="poteri-v-koaksialnom-kabele.html">Потери в коаксиальном кабеле</a></li><li><a href="lc-soglasovanie-g-zveno.html">Г-образная LC-цепь согласования</a></li><li><a href="dlina-antenny.html">Длина антенны: диполь, вертикал, рамка</a></li><li><a href="shirina-dorozhki-pcb.html">Ширина дорожки печатной платы (IPC‑2221)</a></li></ul></section>
+</main>
+<footer>© ВольтКальк — Онлайн-калькуляторы для электрика и радиолюбителя.<br>Расчёты носят справочный характер и не заменяют проект и нормативные документы (ПУЭ, ГОСТ). Для ответственных решений консультируйтесь со специалистом. Работы в электроустановках выполняйте при снятом напряжении.<br><a href="about.html">О проекте</a> · <a href="privacy.html">Политика конфиденциальности</a></footer>
+<script>
+
+var $=function(id){return document.getElementById(id)};
+function N(value){var v=String(value).trim().replace(',','.').replace(/\s+/g,'');
+if(v===''||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(v))return NaN;
+var n=Number(v);return isFinite(n)?n:NaN;}
+function P(id){var el=$(id);if(!el)return NaN;var n=N(el.value);if(isNaN(n))return NaN;
+var u=$(id+'_unit');return u?n*N(u.value):n;}
+function S(id){var el=$(id);return el?el.value:'';}
+function fmt(x,d){d=d||4;if(!isFinite(x))return '—';if(x===0)return '0';
+var s=Number(x.toPrecision(d));var a=Math.abs(s);var t;
+if(a>=1e7||a<1e-4){t=s.toExponential(2).replace('e+','·10^').replace('e','·10^');}else{t=String(s);}
+return t.replace('.',',');}
+function si(x,unit){if(!isFinite(x))return '—';if(x===0)return '0 '+unit;
+var Pr=[[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п']];
+for(var i=0;i<Pr.length;i++){if(Math.abs(x)>=Pr[i][0])return fmt(x/Pr[i][0])+' '+Pr[i][1]+unit;}
+return fmt(x/1e-12)+' п'+unit;}
+function tf(x){if(!isFinite(x))return '—';if(x>=3600)return fmt(x/3600,3)+' ч';if(x>=60)return fmt(x/60,3)+' мин';return si(x,'с');}
+function row(l,v){return '<div class="rr"><span>'+l+'</span><b>'+v+'</b></div>';}
+function note(t){return '<div class="rnote">'+t+'</div>';}
+function out(h){var r=$('res');r.innerHTML=h;r.removeAttribute('role');r.classList.add('on');var b=$('pdf');if(b)b.classList.add('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function err(m){var r=$('res');r.innerHTML='<div class="rerr">'+m+'</div>';r.setAttribute('role','alert');r.classList.add('on');var b=$('pdf');if(b)b.classList.remove('on');if(r.scrollIntoView)r.scrollIntoView({block:'nearest'});}
+function buildPrint(){
+var d=new Date();
+var dd=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+var pd=$('pdate');if(pd)pd.textContent='Дата расчёта: '+dd;
+var box=$('pvals');if(!box)return;
+var h='',fs=document.querySelectorAll('.f');
+for(var i=0;i<fs.length;i++){
+ if(fs[i].style.display==='none')continue;
+ var lab=fs[i].querySelector('label');
+ var inp=fs[i].querySelector('input[type=text]');
+ var sel=fs[i].querySelector('select');
+ if(!lab)continue;
+ var name=lab.textContent.replace(/\s+/g,' ').trim();
+ var val='',un='';
+ if(inp){
+  if(String(inp.value).trim()==='')continue;
+  val=String(inp.value).trim();
+  var us=fs[i].querySelector('select.u');
+  if(us)un=' '+us.options[us.selectedIndex].text;
+  else{var sp=fs[i].querySelector('span.u');if(sp)un=' '+sp.textContent;}
+ }else if(sel){val=sel.options[sel.selectedIndex].text;}
+ else continue;
+ h+='<div>'+name+': <b>'+val+un+'</b></div>';
+}
+var extra=document.querySelectorAll('.rv');
+for(var k=0;k<extra.length;k++){
+ var v=String(extra[k].value).trim();
+ if(v!=='')h+='<div>R'+(k+1)+': <b>'+v+'</b></div>';
+}
+box.innerHTML=h;
+}
+function hideF(id,hide){var f=$('f_'+id);if(f)f.style.display=hide?'none':'';}
+document.addEventListener('DOMContentLoaded',function(){
+var b=$('go');if(b)b.addEventListener('click',function(){calc()});
+var pb=$('pdf');if(pb)pb.addEventListener('click',function(){buildPrint();window.print();});
+var inp=document.querySelectorAll('input');
+for(var i=0;i<inp.length;i++){inp[i].addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();calc();}});}
+if(typeof init==='function')init();
+});
+
+
+function gt(a,b){return a>b+Math.abs(b)*1e-9;}
+function lt(a,b){return a<b-Math.abs(b)*1e-9;}
+function ge(a,b){return a>=b-Math.abs(b)*1e-9;}
+function le(a,b){return a<=b+Math.abs(b)*1e-9;}
+function nf(x,p){if(!isFinite(x))return 'не определено';p=p||4;if(x===0)return '0';var s=Number(x.toPrecision(p));if(s===0)return '0';
+ var t=String(s);if(/e\+/i.test(t)){var ee=s.toExponential(p-1).split('e+');t=ee[0].replace('.','')+new Array(Number(ee[1])-(p-1)+1).join('0');if(s<0&&t.charAt(0)!=='-')t='-'+t;}
+ else if(/e/i.test(t)){t=s.toFixed(Math.min(100,Math.max(0,p-1-Math.floor(Math.log10(Math.abs(s))))));}
+ if(t.indexOf('.')>=0)t=t.replace(/0+$/,'').replace(/\.$/,'');return t.replace('.',',');}
+function pp(x,lim){if(Math.abs(x-lim)<=Math.abs(lim)*1e-9)return 4;for(var p=4;p<=12;p++){var r=Number(x.toPrecision(p));if((x<lim?lt(r,lim):gt(r,lim))&&r!==Number(lim.toPrecision(p)))return p;}return 12;}
+function fx(x,lim){return nf(x,pp(x,lim));}
+var PRE=[[1e12,'Т'],[1e9,'Г'],[1e6,'М'],[1e3,'к'],[1,''],[1e-3,'м'],[1e-6,'мк'],[1e-9,'н'],[1e-12,'п'],[1e-15,'ф']];
+function pi_(x,p){var a=Math.abs(x),i;for(i=0;i<PRE.length-1;i++){if(a>=PRE[i][0]*(1-1e-12))break;}
+ if(i>0&&Math.abs(Number((a/PRE[i][0]).toPrecision(p)))>=1000)i--;return i;}
+function sv(x,unit,p){p=p||4;if(!isFinite(x))return 'не определено';if(x===0)return '0 '+unit;if(Math.abs(x)<1e-15*(1-1e-12))return 'менее 1 ф'+unit;
+ var i=pi_(x,p);return nf(x/PRE[i][0],p)+' '+PRE[i][1]+unit;}
+function sx(x,lim,unit){var i=pi_(x,4);var k=PRE[i][0];return fx(x/k,lim/k)+' '+PRE[i][1]+unit;}
+function sl(x,lim,unit){var i=pi_(x,4);var k=PRE[i][0];return nf(lim/k,pp(x/k,lim/k))+' '+PRE[i][1]+unit;}
+function OPT(id){var el=$(id);if(!el)return null;if(String(el.value).trim()==='')return null;return P(id);}
+function pc(fr){var v=fr*100;if(v===0)return '0 %';if(v<1e-4)return 'менее 0,0001 %';return nf(v,4)+' %';}
+function dbs(x){return x>0&&x<1e-4?'менее 0,0001 дБ':nf(x,4)+' дБ';}
+
+var C0=299792458,ETA=376.730313668;
+function acoshT(t){return Math.log1p(t+Math.sqrt(t*(t+2)));}
+function msEps(u,er){var a=1+Math.log((Math.pow(u,4)+Math.pow(u/52,2))/(Math.pow(u,4)+0.432))/49+Math.log(1+Math.pow(u/18.1,3))/18.7;
+ var b=0.564*Math.pow((er-0.9)/(er+3),0.053);return (er+1)/2+(er-1)/2*Math.pow(1+10/u,-a*b);}
+function msZ(u,er){var fu=6+(2*Math.PI-6)*Math.exp(-Math.pow(30.666/u,0.7528));
+ return ETA/(2*Math.PI)*Math.log(fu/u+Math.sqrt(1+Math.pow(2/u,2)))/Math.sqrt(msEps(u,er));}
+function sync(){var ty=S('ty'),inv=S('mode')==='inv';
+ hideF('cD',ty!=='coax');hideF('cd',ty!=='coax'||inv);hideF('tD',ty!=='twin');hideF('td',ty!=='twin'||inv);
+ hideF('mW',ty!=='strip'||inv);hideF('mh',ty!=='strip');hideF('z0t',!inv);}
+function init(){$('mode').addEventListener('change',sync);$('ty').addEventListener('change',sync);sync();}
+function calc(){
+var ty=S('ty'),inv=S('mode')==='inv',er=P('er'),f=OPT('f'),zt=NaN;
+if(isNaN(er))return err('Введите относительную диэлектрическую проницаемость εr числом.');
+if(ty==='strip'){if(er<1||er>=128)return err('Для микрополоска εr — от 1 до 128, не включая 128: формулы Хаммерстада–Йенсена заявлены для εr меньше 128.');}
+else if(er<1||er>100)return err('Для коаксиала и двухпроводной линии εr — от 1 до 100.');
+if(f!==null){if(isNaN(f))return err('Частота — число. Если она не нужна, оставьте поле пустым.');if(f<=0||f>1e12)return err('Частота — больше 0 и не больше 1000 ГГц.');}
+if(inv){zt=P('z0t');if(isNaN(zt))return err('Введите требуемое Z0 числом в омах.');if(zt<=0||zt>1e4)return err('Требуемое Z0 — больше 0 и не больше 10000 Ом.');}
+var Z,ee=er,h='',dFound=null,uFound=null,ratio=NaN,uu=NaN,hh=NaN,Dm=NaN;
+if(ty==='coax'){
+ Dm=P('cD');if(isNaN(Dm))return err('Введите диаметр экрана D числом.');
+ if(Dm<=0)return err('Диаметр экрана D должен быть больше нуля.');
+ if(inv){var lr=2*Math.PI*zt*Math.sqrt(er)/ETA;if(lr>Math.log(1e6))return err('При таком Z0 и εr отношение D/d превысило бы 1000000: жила получилась бы слишком тонкой, расчёт не выполняется.');
+  ratio=Math.exp(lr);dFound=Dm/ratio;Z=zt;}
+ else{var d=P('cd');if(isNaN(d))return err('Введите диаметр жилы d числом.');
+  if(d<=0)return err('Диаметр жилы d должен быть больше нуля.');
+  if(d>=Dm)return err('Диаметр экрана D должен быть больше диаметра жилы d: иначе жила не помещается внутри экрана.');
+  ratio=Dm/d;if(ratio>1e6)return err('Отношение D/d больше 1000000 — вне диапазона расчёта.');
+  Z=ETA/(2*Math.PI*Math.sqrt(er))*Math.log1p((Dm-d)/d);}
+}else if(ty==='twin'){
+ Dm=P('tD');if(isNaN(Dm))return err('Введите расстояние между осями проводов D числом.');
+ if(Dm<=0)return err('Расстояние D должно быть больше нуля.');
+ if(inv){var arg=Math.PI*zt*Math.sqrt(er)/ETA;if(arg>Math.log(2e6))return err('При таком Z0 и εr отношение D/d превысило бы 1000000: провод получился бы слишком тонким, расчёт не выполняется.');
+  ratio=Math.cosh(arg);dFound=Dm/ratio;Z=zt;}
+ else{var d2=P('td');if(isNaN(d2))return err('Введите диаметр провода d числом.');
+  if(d2<=0)return err('Диаметр провода d должен быть больше нуля.');
+  if(d2>=Dm)return err('Расстояние D между осями должно быть больше диаметра d: провода не могут касаться или пересекаться.');
+  ratio=Dm/d2;if(ratio>1e6)return err('Отношение D/d больше 1000000 — вне диапазона расчёта.');
+  Z=ETA/(Math.PI*Math.sqrt(er))*acoshT((Dm-d2)/d2);}
+}else{
+ hh=P('mh');if(isNaN(hh))return err('Введите толщину подложки h числом.');
+ if(hh<=0)return err('Толщина подложки h должна быть больше нуля.');
+ if(inv){var zlo=msZ(100,er),zhi=msZ(0.01,er);
+  if(zt>zhi||zt<zlo)return err('Для εr = '+nf(er)+' ширина под Z0 = '+nf(zt)+' Ом выходит за область применимости формулы (W/h от 0,01 до 100, Z0 от '+nf(zlo,4)+' до '+nf(zhi,4)+' Ом). Расчёт не выполняется.');
+  var a=Math.log(0.01),b=Math.log(100);
+  for(var i=0;i<200;i++){var mm=(a+b)/2;if(msZ(Math.exp(mm),er)>zt)a=mm;else b=mm;}
+  uu=Math.exp((a+b)/2);uFound=uu;Z=zt;}
+ else{var W=P('mW');if(isNaN(W))return err('Введите ширину полоски W числом.');
+  if(W<=0)return err('Ширина полоски W должна быть больше нуля.');
+  uu=W/hh;if(lt(uu,0.01)||gt(uu,100))return err('Отношение W/h = '+nf(uu,4)+' вне области применимости формулы Хаммерстада–Йенсена (от 0,01 до 100): расчёт не выполняется, чтобы не выдавать значение за пределами заявленной точности.');
+  Z=msZ(uu,er);}
+ ee=msEps(uu,er);
+}
+var se=Math.sqrt(ee),v=C0/se,Lp=Z*se/C0,Cp=se/(C0*Z);
+if(![Z,ee,v,Lp,Cp].every(isFinite))return err('Значения вне диапазона надёжного расчёта.');
+if(inv){
+ if(ty==='strip')h+=row('Найденная ширина полоски W (W/h = '+nf(uFound,5)+')',sv(uFound*hh,'м'));
+ else h+=row('Найденный диаметр '+(ty==='coax'?'жилы':'провода')+' d (D/d = '+nf(ratio,5)+')',sv(dFound,'м'));
+}else if(ty==='strip')h+=row('Отношение W/h',nf(uu,5));
+else h+=row('Отношение D/d',nf(ratio,5));
+h+=row('Волновое сопротивление Z0',nf(Z,5)+' Ом');
+h+=row(ty==='strip'?'Эффективная диэлектрическая проницаемость εэфф':'Эффективная проницаемость εэфф (линия заполнена однородно)',nf(ee,5));
+h+=row('Фазовая скорость v = c / √εэфф',nf(v/1000,6)+' км/с');
+h+=row('Коэффициент укорочения (скорость относительно света) 1 / √εэфф',nf(1/se,5)+' ('+nf(100/se,4)+' %)');
+h+=row('Задержка на метр линии',sv(se/C0,'с/м'));
+h+=row('Погонная индуктивность L′ = Z0·√εэфф / c',sv(Lp,'Гн/м'));
+h+=row('Погонная ёмкость C′ = √εэфф / (c·Z0)',sv(Cp,'Ф/м'));
+if(f!==null){h+=row('Длина волны в линии λ = v / f',sv(v/f,'м'));h+=row('Четверть волны λ / 4',sv(v/f/4,'м'));h+=row('Длина волны в свободном пространстве c / f',sv(C0/f,'м'));}
+var st;
+if(ty==='strip')st='Оценка: Z0 = '+nf(Z,4)+' Ом по квазистатической формуле Хаммерстада–Йенсена для полоски нулевой толщины; её заявленная точность относится к аппроксимации, а не к реальной плате';
+else st='Оценка: Z0 = '+nf(Z,4)+' Ом по формуле однородной ТЭМ-линии; реальный кабель отличается допуском размеров, неоднородностью диэлектрика и вспененной изоляцией';
+var n='';
+if(ty==='strip')n+='Формула — квазистатическая, для полоски нулевой толщины. По документации Qucs, цитирующей Хаммерстада и Йенсена (IEEE MTT-S, 1980), погрешность аппроксимации εэфф лучше 0,2 % при εr меньше 128 и W/h от 0,01 до 100, а Z0 при εr = 1 — лучше 0,01 % при W/h не больше 1 и 0,03 % при W/h не больше 1000. Это ошибка аппроксимации относительно квазистатического решения, а не точность расчёта настоящей линии: толщина полоски, шероховатость, дисперсия с ростом частоты, допуски εr и h, паяльная маска и корпус дают заметно больше. Вне области W/h и εr расчёт не выполняется. Для платы Z0 уточняют по паспорту изготовителя печатных плат или измерением. ';
+else if(ty==='coax')n+='Формула точна для идеального коаксиала: однородный диэлектрик между двумя соосными цилиндрами, поле только поперечное. Вспененная и воздушная изоляция с распорками требуют εэфф вместо εr из паспорта. ';
+else n+='Формула — для двух одинаковых круглых проводов в однородной среде. У плоской ленточной линии с пластиковой перемычкой и у линии с экраном поблизости Z0 другое. ';
+n+='Скорость, L′ и C′ связаны с Z0 и εэфф соотношениями ТЭМ-линии: v = c / √εэфф, L′ = Z0·√εэфф / c, C′ = √εэфф / (c·Z0). Потери и дисперсия не рассматриваются.';
+out(h+row('Статус',st)+note(n));
+}
+
+</script>
+</body>
+</html>
